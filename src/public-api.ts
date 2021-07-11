@@ -4,6 +4,9 @@
 
 export * from './lib/cart-dish/cart-dish';
 export * from './lib/cart/cart';
+export * from './lib/cart/check-phone-response';
+export * from './lib/cart/check-response';
+export * from './lib/cart/phone';
 export * from './lib/dish/dish';
 export * from './lib/group/group';
 export * from './lib/modifier/modifier';

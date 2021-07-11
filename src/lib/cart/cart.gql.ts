@@ -43,6 +43,11 @@ export type OrderCartInput = {
 	}
 };
 
+export type CheckPhoneCodeInput = {
+	phone: string,
+	code: string
+};
+
 export const CartFragments = {
 	cart: gql`
 		fragment CartFragment on Cart {
@@ -83,6 +88,34 @@ export const CartGql = {
 				${CartFragments.cart}
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
+			`;
+		},
+		getPhone: (phone: string) => {
+			return gql`
+				query phone {
+					phone(phone: "${phone}") {
+						id
+						phone
+						isFirst
+						isConfirm
+						codeTime
+						confirmCode
+						customData
+					}
+				}
+			`;
+		},
+		checkPhone: (phone: string) => {
+			return gql`
+				query checkPhone {
+					checkPhone(phone: "${phone}") {
+						type
+						title
+						message
+						confirmed
+						firstbuy
+					}
+				}
 			`;
 		}
 	},
@@ -159,10 +192,10 @@ export const CartGql = {
 					$customer: Customer!
 				) {
 					orderCart(
-						cartId: $cartId
-						paymentMethodId: $paymentMethodId
-						selfService: $selfService
-						address: $address
+						cartId: $cartId,
+						paymentMethodId: $paymentMethodId,
+						selfService: $selfService,
+						address: $address,
 						customer: $customer
 					) {
 						cart {
@@ -192,10 +225,10 @@ export const CartGql = {
 					$customer: Customer!
 				) {
 					checkCart(
-						cartId: $cartId
-						paymentMethodId: $paymentMethodId
-						selfService: $selfService
-						address: $address
+						cartId: $cartId,
+						paymentMethodId: $paymentMethodId,
+						selfService: $selfService,
+						address: $address,
 						customer: $customer
 					) {
 						cart {
@@ -214,6 +247,25 @@ export const CartGql = {
 				}
 				${CartFragments.cart}
 			`;
-		}
+		},
+		checkPhoneCode: () => {
+			return gql`
+				mutation checkPhoneCode(
+					$phone: String!,
+					$code: String!
+				) {
+					checkPhoneCode(
+						phone: $phone,
+						code: $code
+					) {
+						type
+						title
+						message
+						confirmed
+						firstbuy
+					}
+				}
+			`;
+		},
 	}
 }

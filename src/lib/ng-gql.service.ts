@@ -3,8 +3,10 @@ import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, filter, take, map } from 'rxjs/operators';
 import { Cart } from './cart/cart';
-import { CartGql, AddToCartInput, RemoveFromCartInput, OrderCartInput } from './cart/cart.gql';
+import { CartGql, AddToCartInput, RemoveFromCartInput, OrderCartInput, CheckPhoneCodeInput } from './cart/cart.gql';
+import { CheckPhoneResponse } from './cart/check-phone-response';
 import { CheckResponse } from './cart/check-response';
+import { Phone } from './cart/phone';
 import { Dish } from './dish/dish';
 import { DishGql } from './dish/dish.gql';
 import { Group } from './group/group';
@@ -36,6 +38,8 @@ export class NgGqlService {
   navigationDataLoading: boolean;
 
   paymentMethodLoading: boolean;
+  getPhoneLoading: boolean;
+  checkPhoneLoading: boolean;
 
   customQueryiesDataByName: { [key: string]: BehaviorSubject<any> } = {};
   customQueriesDataLoadingByName: { [key: string]: boolean } = {};
@@ -160,6 +164,32 @@ export class NgGqlService {
     return this.cart$;
   }
 
+  getPhone$(phone: string): Observable<Phone> {
+    return this.apollo.watchQuery<any>({
+      query: CartGql.queries.getPhone(phone)
+    })
+      .valueChanges
+      .pipe(
+        map(({ data, loading }) => {
+          this.getPhoneLoading = loading;
+          return data.phone
+        })
+      );
+  }
+
+  checkPhone$(phone: string): Observable<CheckPhoneResponse> {
+    return this.apollo.watchQuery<any>({
+      query: CartGql.queries.checkPhone(phone)
+    })
+      .valueChanges
+      .pipe(
+        map(({ data, loading }) => {
+          this.checkPhoneLoading = loading;
+          return data.checkPhone
+        })
+      );
+  }
+
   getPaymentMethods$(cartId: string): Observable<PaymentMethod[]> {
     return this.apollo.watchQuery<any>({
       query: PaymentMethodGql.queries.getPaymentMethod(cartId)
@@ -215,6 +245,19 @@ export class NgGqlService {
       )
   }
 
+  checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
+    return this.apollo.mutate({
+      mutation: CartGql.mutations.checkPhoneCode(),
+      variables: data
+    })
+      .pipe(
+        map(({ data }) => {
+          const checkPhoneResponse: CheckPhoneResponse = data['checkPhoneCode'];
+          return checkPhoneResponse;
+        })
+      )
+  }
+
   removeDishFromCart$(data: RemoveFromCartInput): Observable<Cart> {
     return this.apollo.mutate({
       mutation: CartGql.mutations.removeDishFromCart(),
@@ -252,5 +295,35 @@ export class NgGqlService {
     return this.customQueryiesDataByName[name].pipe(
       filter(data => !!data)
     );
+  }
+
+  customMutation$(name: string, data: any, queryObject: any) {
+    let mutationString = '';
+    let mutationArgumentsStrings: string[] = [];
+    for(let key in data) {
+      let valueString = data[key];
+      if (typeof valueString !== 'number' && typeof valueString !== 'boolean') {
+        valueString = `"${valueString}"`;
+      } 
+      mutationArgumentsStrings.push(`${key}: ${valueString}`);
+    }
+    let mutationArgumentsString = mutationArgumentsStrings.length 
+      ? `(${mutationArgumentsStrings.join(', ')})`
+      : ``;
+    const query = JSON.stringify(queryObject)
+      .replace(/"/g, '')
+      .replace(/\:[a-z0-9]+/gi, '')
+      .replace(/\:/g, '');
+
+    return this.apollo.mutate({
+      mutation: gql`mutation ${name}${mutationArgumentsString}${query}`
+    })
+      .pipe(
+        map(({ data }) => {
+          const checkResponse: CheckResponse = data['checkCart'];
+          this.cart$.next(checkResponse.cart);
+          return checkResponse;
+        })
+      )
   }
 }

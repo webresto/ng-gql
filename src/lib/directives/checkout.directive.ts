@@ -78,8 +78,8 @@ export class CheckoutDirective {
           }
         }),*/
         debounceTime(1000)
-      ).subscribe();
-      //.subscribe(() => this.checkStreet());
+      )
+      .subscribe(() => this.checkStreet());
   }
 
   @HostListener('click')
@@ -210,14 +210,14 @@ export class CheckoutDirective {
     }
 
     this.isChecking.emit(true);
-    /* this.cartService
-      .checkStreetV2(data)
+    this.cartService
+      .checkCart$(data)
       .subscribe(
         //() => this.success.emit(true),
         //error => this.error.emit(error)
         result => this.isChecking.emit(false),
         error => this.isChecking.emit(false)
-      ); */
+      );
   }
 
 

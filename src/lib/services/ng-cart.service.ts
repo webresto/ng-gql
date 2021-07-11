@@ -101,6 +101,7 @@ export class NgCartService {
   }
 
   checkCart$(data: OrderCartInput): Observable<CheckResponse> {
+    console.log('Check cart$', data);
     return this.ngGqlService.checkCart$(data);
   }
 
