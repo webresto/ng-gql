@@ -5,4 +5,4 @@ publish:
   stage: publish
   only: [master] 
   script:
-    - npm publish
+    - NPM_TOKEN=${NPM_TOKEN} npm publish
