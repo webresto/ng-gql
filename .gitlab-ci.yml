@@ -5,4 +5,4 @@ publish:
   stage: publish
   only: [master] 
   script:
-    - echo $NPM_TOKEN && npm publish
+    - npm publish
