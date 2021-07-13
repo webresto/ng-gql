@@ -2,7 +2,7 @@ stages:
   - publish
 
 publish:
-  stage: 
+  stage: publish
   only: [master] 
   script:
     - npm publish
