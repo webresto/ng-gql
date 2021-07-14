@@ -1,0 +1,8 @@
+stages:
+  - publish
+
+publish:
+  stage: publish
+  only: [master] 
+  script:
+    - npm publish
