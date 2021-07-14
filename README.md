@@ -1,29 +1,51 @@
 # NgGql
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.0.
-
-## Code scaffolding
-
-Run `ng generate component component-name --project ng-gql` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ng-gql`.
-> Note: Don't forget to add `--project ng-gql` or else it will be added to the default project in your `angular.json` file. 
-
-## Build
-
-Run `ng build ng-gql` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Publishing
-
-After building your library with `ng build ng-gql`, go to the dist folder `cd dist/ng-gql` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test ng-gql` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
-
-
 ## Install
 
-RUN `npm install apollo-angular @apollo/client graphql`
+`npm install apollo-angular @apollo/client graphql subscriptions-transport-ws @webresto/ng-gql`
+
+## Fetching
+
+Query
+
+```
+import { Component } from '@angular/core';
+import { NgGqlService } from '@webresto/ng-gql';
+
+@Component({
+  selector: 'app-root',
+  template:  `<router-outlet></router-outlet>`
+})
+export class AppComponent {
+  constructor(public ngGql: NgGqlService) { 
+
+	this.ngGql
+		.customQuery$('restrictions', { 
+			restrictions: {
+				workTime: true,
+				periodPossibleForOrder: true,
+				timezone: true,
+				deliveryDescription: true,
+				minDeliveryTime: true
+			} 
+		})
+		.subscribe(data => console.log(data));
+
+  }
+}
+
+```
+
+## Methods
+
+Query
+
+`customQuery$(name: string, queryObject: any, data: any = {})`
+
+Mutation
+
+`customMutation$(name: string, queryObject: any, data: any = {})`
+
+Subscription
+
+`customSubscription$(name: string, queryObject: any, data: any = {})`

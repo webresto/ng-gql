@@ -6,6 +6,7 @@
     "@angular/core": "^11.2.7",
     "@apollo/client": "^3.3.18",
     "apollo-angular": "^2.4.0",
+    "subscriptions-transport-ws": "^0.9.19",
     "graphql": "^15.5.0"
   }
 }

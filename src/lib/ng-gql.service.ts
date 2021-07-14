@@ -272,7 +272,19 @@ export class NgGqlService {
       )
   }
 
-  customQuery$(name: string, queryObject: any) {
+  customQuery$(name: string, queryObject: any, data: any = {}) {
+    let queryArgumentsStrings: string[] = [];
+    for (let key in data) {
+      let valueString = data[key];
+      if (typeof valueString !== 'number' && typeof valueString !== 'boolean') {
+        valueString = `"${valueString}"`;
+      }
+      queryArgumentsStrings.push(`${key}: ${valueString}`);
+    }
+    let queryArgumentsString = queryArgumentsStrings.length
+      ? `(${queryArgumentsStrings.join(', ')})`
+      : ``;
+
     const query = JSON.stringify(queryObject)
       .replace(/"/g, '')
       .replace(/\:[a-z0-9]+/gi, '')
@@ -282,7 +294,7 @@ export class NgGqlService {
       this.customQueriesDataLoadingByName[name] = false;
     }
     if (!this.customQueryiesDataByName[name].getValue() && !this.customQueriesDataLoadingByName[name]) {
-      this.apollo.watchQuery<any>({ query: gql`query ${name}${query}` })
+      this.apollo.watchQuery<any>({ query: gql`query ${name}${queryArgumentsString}${query}` })
         .valueChanges
         .pipe(
           tap(({ data, loading }) => {
@@ -297,8 +309,7 @@ export class NgGqlService {
     );
   }
 
-  customMutation$(name: string, data: any, queryObject: any) {
-    let mutationString = '';
+  customMutation$(name: string, queryObject: any, data: any = {}) {
     let mutationArgumentsStrings: string[] = [];
     for(let key in data) {
       let valueString = data[key];
@@ -317,13 +328,6 @@ export class NgGqlService {
 
     return this.apollo.mutate({
       mutation: gql`mutation ${name}${mutationArgumentsString}${query}`
-    })
-      .pipe(
-        map(({ data }) => {
-          const checkResponse: CheckResponse = data['checkCart'];
-          this.cart$.next(checkResponse.cart);
-          return checkResponse;
-        })
-      )
+    });
   }
 }
