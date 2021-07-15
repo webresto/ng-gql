@@ -1,0 +1,30 @@
+import { Observable, BehaviorSubject } from 'rxjs';
+import { OrderCartInput } from '../cart/cart.gql';
+import { CheckResponse } from '../cart/check-response';
+import { EventMessage } from '../event-message/event-message';
+import { NgGqlService } from '../ng-gql.service';
+import { EventerService } from './eventer.service';
+export declare class NgCartService {
+    private ngGqlService;
+    private eventer;
+    cartId: string;
+    cart: BehaviorSubject<any>;
+    modifiers$: BehaviorSubject<any>;
+    modifiersMessage$: BehaviorSubject<any>;
+    messages: EventMessage[];
+    OrderFormChange: BehaviorSubject<any>;
+    constructor(ngGqlService: NgGqlService, eventer: EventerService);
+    getCartId(): string;
+    setCartId(cartId: any): any;
+    removeCartId(): void;
+    userCart$(): BehaviorSubject<any> | Observable<any>;
+    setModifiers(modifiers: any, messages?: EventMessage[]): void;
+    getModifiers(): Observable<any>;
+    initialStorage(): void;
+    addDishToCart$(data: any): Observable<import("../cart/cart").Cart>;
+    removeDishFromCart$(dishId: any, amount: any): Observable<import("../cart/cart").Cart>;
+    orderCart$(data: OrderCartInput): Observable<CheckResponse>;
+    checkCart$(data: OrderCartInput): Observable<CheckResponse>;
+    setDishCountToCart(dishId: any, amount: any): void;
+    setDishComment(dishId: any, comment: any): Observable<any>;
+}

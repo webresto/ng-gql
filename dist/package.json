@@ -1,0 +1,23 @@
+{
+  "name": "@webresto/ng-gql",
+  "version": "0.0.2",
+  "peerDependencies": {
+    "@angular/common": "^11.2.7",
+    "@angular/core": "^11.2.7",
+    "@apollo/client": "^3.3.18",
+    "apollo-angular": "^2.4.0",
+    "subscriptions-transport-ws": "^0.9.19",
+    "graphql": "^15.5.0"
+  },
+  "main": "bundles/webresto-ng-gql.umd.js",
+  "module": "fesm2015/webresto-ng-gql.js",
+  "es2015": "fesm2015/webresto-ng-gql.js",
+  "esm2015": "esm2015/webresto-ng-gql.js",
+  "fesm2015": "fesm2015/webresto-ng-gql.js",
+  "typings": "webresto-ng-gql.d.ts",
+  "metadata": "webresto-ng-gql.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

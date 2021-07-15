@@ -1,0 +1,21 @@
+import { gql } from 'apollo-angular';
+import { ModifierFragments } from '../modifier/modifier.gql';
+export const GroupModifierFragments = {
+    groupModifier: gql `
+		fragment GroupModifierFragment on GroupModifier {
+			modifierId
+			maxAmount
+			minAmount
+			required
+			childModifiers {
+				...ModifierFragment
+			}
+			group {
+				id
+				name
+			}
+		}
+		${ModifierFragments.modifier}
+	`
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ3JvdXAtbW9kaWZpZXIuZ3FsLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vc3JjL2xpYi9ncm91cC1tb2RpZmllci9ncm91cC1tb2RpZmllci5ncWwudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxFQUFFLEdBQUcsRUFBRSxNQUFNLGdCQUFnQixDQUFDO0FBQ3JDLE9BQU8sRUFBRSxpQkFBaUIsRUFBRSxNQUFNLDBCQUEwQixDQUFDO0FBRTdELE1BQU0sQ0FBQyxNQUFNLHNCQUFzQixHQUFHO0lBQ3JDLGFBQWEsRUFBRSxHQUFHLENBQUE7Ozs7Ozs7Ozs7Ozs7O0lBY2YsaUJBQWlCLENBQUMsUUFBUTtFQUM1QjtDQUNELENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBncWwgfSBmcm9tICdhcG9sbG8tYW5ndWxhcic7XG5pbXBvcnQgeyBNb2RpZmllckZyYWdtZW50cyB9IGZyb20gJy4uL21vZGlmaWVyL21vZGlmaWVyLmdxbCc7XG5cbmV4cG9ydCBjb25zdCBHcm91cE1vZGlmaWVyRnJhZ21lbnRzID0ge1xuXHRncm91cE1vZGlmaWVyOiBncWxgXG5cdFx0ZnJhZ21lbnQgR3JvdXBNb2RpZmllckZyYWdtZW50IG9uIEdyb3VwTW9kaWZpZXIge1xuXHRcdFx0bW9kaWZpZXJJZFxuXHRcdFx0bWF4QW1vdW50XG5cdFx0XHRtaW5BbW91bnRcblx0XHRcdHJlcXVpcmVkXG5cdFx0XHRjaGlsZE1vZGlmaWVycyB7XG5cdFx0XHRcdC4uLk1vZGlmaWVyRnJhZ21lbnRcblx0XHRcdH1cblx0XHRcdGdyb3VwIHtcblx0XHRcdFx0aWRcblx0XHRcdFx0bmFtZVxuXHRcdFx0fVxuXHRcdH1cblx0XHQke01vZGlmaWVyRnJhZ21lbnRzLm1vZGlmaWVyfVxuXHRgXG59O1xuIl19
