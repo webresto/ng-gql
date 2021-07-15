@@ -5,5 +5,5 @@ publish:
   stage: publish
   only: [master] 
   script:
-    - cd ./dist && npm publish --verbose
+    - cd ./dist && NPM_TOKEN=${NPM_TOKEN} && npm publish --verbose
 
