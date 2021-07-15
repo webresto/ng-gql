@@ -5,4 +5,4 @@ publish:
   stage: publish
   only: [master] 
   script:
-    - npm ci && npm build && cd dist &&  npm publish
+    - npm i && npm build && cd dist &&  npm publish
