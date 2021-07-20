@@ -2047,51 +2047,61 @@
         SetAmountDirective,
         CheckoutDirective,
     ];
-    var gqlLink = "stage4.api.lifenadym.webresto.dev/graphql";
+    var defaultUrl = 'https://stage4.api.lifenadym.webresto.dev/graphql';
     var NgGqlModule = /** @class */ (function () {
-        function NgGqlModule() {
+        function NgGqlModule(apollo, httpLink, config) {
+            // Create an http link:
+            var http = httpLink.create({
+                uri: config.url,
+            });
+            // Create a WebSocket link:
+            var ws$1 = new ws.WebSocketLink({
+                uri: config.url.replace('http', 'ws'),
+                options: {
+                    reconnect: true,
+                },
+            });
+            // using the ability to split links, you can send data to each link
+            // depending on what kind of operation is being sent
+            var link = core.split(
+            // split based on operation type
+            function (_a) {
+                var query = _a.query;
+                var _b = utilities.getMainDefinition(query), kind = _b.kind, operation = _b.operation;
+                return (kind === 'OperationDefinition' && operation === 'subscription');
+            }, ws$1, http);
+            if (apollo.client)
+                return;
+            apollo.create({
+                link: link,
+                cache: new core.InMemoryCache()
+            });
         }
+        NgGqlModule.forRoot = function (config) {
+            return {
+                ngModule: NgGqlModule,
+                providers: [
+                    {
+                        provide: 'config',
+                        useValue: config
+                    }
+                ]
+            };
+        };
         return NgGqlModule;
     }());
     NgGqlModule.decorators = [
         { type: i0.NgModule, args: [{
-                    providers: [
-                        {
-                            provide: i1.APOLLO_OPTIONS,
-                            useFactory: function (httpLink) {
-                                // Create an http link:
-                                var http = httpLink.create({
-                                    uri: "https://" + gqlLink,
-                                });
-                                // Create a WebSocket link:
-                                var ws$1 = new ws.WebSocketLink({
-                                    uri: "wss://" + gqlLink,
-                                    options: {
-                                        reconnect: true,
-                                    },
-                                });
-                                // using the ability to split links, you can send data to each link
-                                // depending on what kind of operation is being sent
-                                var link = core.split(
-                                // split based on operation type
-                                function (_a) {
-                                    var query = _a.query;
-                                    var _b = utilities.getMainDefinition(query), kind = _b.kind, operation = _b.operation;
-                                    return (kind === 'OperationDefinition' && operation === 'subscription');
-                                }, ws$1, http);
-                                return {
-                                    link: link,
-                                    cache: new core.InMemoryCache()
-                                };
-                            },
-                            deps: [http.HttpLink],
-                        },
-                    ],
                     imports: [],
                     exports: [DIRECTIVES],
                     declarations: [DIRECTIVES]
                 },] }
     ];
+    NgGqlModule.ctorParameters = function () { return [
+        { type: i1.Apollo },
+        { type: http.HttpLink },
+        { type: undefined, decorators: [{ type: i0.Inject, args: ['config',] }] }
+    ]; };
 
     var StateService = /** @class */ (function () {
         function StateService() {

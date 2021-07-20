@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FetchResult } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, filter, take, map } from 'rxjs/operators';
@@ -272,7 +273,7 @@ export class NgGqlService {
       )
   }
 
-  customQuery$(name: string, queryObject: any, data: any = {}) {
+  customQuery$<T = any>(name: string, queryObject: any, data: any = {}): Observable<T> {
     let queryArgumentsStrings: string[] = [];
     for (let key in data) {
       let valueString = data[key];
@@ -294,7 +295,7 @@ export class NgGqlService {
       this.customQueriesDataLoadingByName[name] = false;
     }
     if (!this.customQueryiesDataByName[name].getValue() && !this.customQueriesDataLoadingByName[name]) {
-      this.apollo.watchQuery<any>({ query: gql`query ${name}${queryArgumentsString}${query}` })
+      this.apollo.watchQuery<T, boolean>({ query: gql`query ${name}${queryArgumentsString}${query}` })
         .valueChanges
         .pipe(
           tap(({ data, loading }) => {
@@ -309,7 +310,7 @@ export class NgGqlService {
     );
   }
 
-  customMutation$(name: string, queryObject: any, data: any = {}) {
+  customMutation$<T = any>(name: string, queryObject: any, data = {}): Observable<FetchResult<T>> {
     let mutationArgumentsStrings: string[] = [];
     for(let key in data) {
       let valueString = data[key];

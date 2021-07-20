@@ -15,5 +15,5 @@ export class Dish {
 	parentGroup: {
 		id: string
 	};
-	modifiers: GroupModifier
+	modifiers: [GroupModifier]
 }

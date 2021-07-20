@@ -4,6 +4,7 @@ export class Modifier {
 	modifierId: string;
 	maxAmount: number;
 	minAmount: number;
+	amount?: number;
 	defaultAmount: number;
 	hideIfDefaultAmount: boolean;
 	dish: {

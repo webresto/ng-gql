@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
+import { Inject, ModuleWithProviders, NgModule } from '@angular/core';
 
-import { APOLLO_OPTIONS } from 'apollo-angular';
+import { Apollo, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { split, ApolloClientOptions } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
@@ -31,50 +31,69 @@ const DIRECTIVES = [
   CheckoutDirective,
 ];
 
-const gqlLink = `stage4.api.lifenadym.webresto.dev/graphql`
+export interface NgGqlConfig {
+  url: string;
+}
+
+const defaultUrl = 'https://stage4.api.lifenadym.webresto.dev/graphql';
 
 @NgModule({
-  providers: [
-    {
-      provide: APOLLO_OPTIONS,
-      useFactory(httpLink: HttpLink) {
-        // Create an http link:
-        const http = httpLink.create({
-          uri: `https://${gqlLink}`,
-        });
-
-        // Create a WebSocket link:
-        const ws = new WebSocketLink({
-          uri: `wss://${gqlLink}`,
-          options: {
-            reconnect: true,
-          },
-        });
-
-        // using the ability to split links, you can send data to each link
-        // depending on what kind of operation is being sent
-        const link = split(
-          // split based on operation type
-          ({ query }) => {
-            const { kind, operation } = getMainDefinition(query) as OperationDefinitionNode;
-            return (
-              kind === 'OperationDefinition' && operation === 'subscription'
-            );
-          },
-          ws,
-          http,
-        );
-
-        return {
-          link,
-          cache: new InMemoryCache()
-        };
-      },
-      deps: [HttpLink],
-    },
-  ],
   imports: [],
   exports: [DIRECTIVES],
   declarations: [DIRECTIVES]
 })
-export class NgGqlModule { }
+export class NgGqlModule {
+
+  constructor(
+    apollo: Apollo,
+    httpLink: HttpLink,
+    @Inject('config') config: NgGqlConfig
+  ) {
+
+    // Create an http link:
+    const http = httpLink.create({
+      uri: config.url,
+    });
+
+    // Create a WebSocket link:
+    const ws = new WebSocketLink({
+      uri: config.url.replace('http', 'ws'),
+      options: {
+        reconnect: true,
+      },
+    });
+
+    // using the ability to split links, you can send data to each link
+    // depending on what kind of operation is being sent
+    const link = split(
+      // split based on operation type
+      ({ query }) => {
+        const { kind, operation } = getMainDefinition(query) as OperationDefinitionNode;
+        return (
+          kind === 'OperationDefinition' && operation === 'subscription'
+        );
+      },
+      ws,
+      http,
+    );
+
+    if (apollo.client) return;
+
+    apollo.create({
+      link,
+      cache: new InMemoryCache()
+    });
+  }
+
+  static forRoot(config: NgGqlConfig): ModuleWithProviders<NgGqlModule> {
+    return {
+      ngModule: NgGqlModule,
+      providers: [
+        {
+          provide: 'config',
+          useValue: config
+        }
+      ]
+    }
+  }
+}

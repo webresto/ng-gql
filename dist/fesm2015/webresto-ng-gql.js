@@ -1,5 +1,5 @@
-import { ɵɵdefineInjectable, ɵɵinject, Injectable, EventEmitter, Directive, Input, Output, HostListener, Renderer2, ElementRef, NgModule } from '@angular/core';
-import { gql, Apollo, APOLLO_OPTIONS } from 'apollo-angular';
+import { ɵɵdefineInjectable, ɵɵinject, Injectable, EventEmitter, Directive, Input, Output, HostListener, Renderer2, ElementRef, NgModule, Inject } from '@angular/core';
+import { gql, Apollo } from 'apollo-angular';
 import { BehaviorSubject, throwError, of } from 'rxjs';
 import { tap, take, map, filter, debounceTime } from 'rxjs/operators';
 import { HttpLink } from 'apollo-angular/http';
@@ -1954,46 +1954,58 @@ const DIRECTIVES = [
     SetAmountDirective,
     CheckoutDirective,
 ];
-const gqlLink = `stage4.api.lifenadym.webresto.dev/graphql`;
+const defaultUrl = 'https://stage4.api.lifenadym.webresto.dev/graphql';
 class NgGqlModule {
+    constructor(apollo, httpLink, config) {
+        // Create an http link:
+        const http = httpLink.create({
+            uri: config.url,
+        });
+        // Create a WebSocket link:
+        const ws = new WebSocketLink({
+            uri: config.url.replace('http', 'ws'),
+            options: {
+                reconnect: true,
+            },
+        });
+        // using the ability to split links, you can send data to each link
+        // depending on what kind of operation is being sent
+        const link = split(
+        // split based on operation type
+        ({ query }) => {
+            const { kind, operation } = getMainDefinition(query);
+            return (kind === 'OperationDefinition' && operation === 'subscription');
+        }, ws, http);
+        if (apollo.client)
+            return;
+        apollo.create({
+            link,
+            cache: new InMemoryCache()
+        });
+    }
+    static forRoot(config) {
+        return {
+            ngModule: NgGqlModule,
+            providers: [
+                {
+                    provide: 'config',
+                    useValue: config
+                }
+            ]
+        };
+    }
 }
 NgGqlModule.decorators = [
     { type: NgModule, args: [{
-                providers: [
-                    {
-                        provide: APOLLO_OPTIONS,
-                        useFactory(httpLink) {
-                            // Create an http link:
-                            const http = httpLink.create({
-                                uri: `https://${gqlLink}`,
-                            });
-                            // Create a WebSocket link:
-                            const ws = new WebSocketLink({
-                                uri: `wss://${gqlLink}`,
-                                options: {
-                                    reconnect: true,
-                                },
-                            });
-                            // using the ability to split links, you can send data to each link
-                            // depending on what kind of operation is being sent
-                            const link = split(
-                            // split based on operation type
-                            ({ query }) => {
-                                const { kind, operation } = getMainDefinition(query);
-                                return (kind === 'OperationDefinition' && operation === 'subscription');
-                            }, ws, http);
-                            return {
-                                link,
-                                cache: new InMemoryCache()
-                            };
-                        },
-                        deps: [HttpLink],
-                    },
-                ],
                 imports: [],
                 exports: [DIRECTIVES],
                 declarations: [DIRECTIVES]
             },] }
+];
+NgGqlModule.ctorParameters = () => [
+    { type: Apollo },
+    { type: HttpLink },
+    { type: undefined, decorators: [{ type: Inject, args: ['config',] }] }
 ];
 
 class StateService {

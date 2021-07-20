@@ -1,3 +1,4 @@
+import { FetchResult } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Cart } from './cart/cart';
@@ -44,6 +45,6 @@ export declare class NgGqlService {
     checkCart$(data: OrderCartInput): Observable<CheckResponse>;
     checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse>;
     removeDishFromCart$(data: RemoveFromCartInput): Observable<Cart>;
-    customQuery$(name: string, queryObject: any, data?: any): Observable<any>;
-    customMutation$(name: string, queryObject: any, data?: any): Observable<import("@apollo/client/core").FetchResult<unknown, Record<string, any>, Record<string, any>>>;
+    customQuery$<T = any>(name: string, queryObject: any, data?: any): Observable<T>;
+    customMutation$<T = any>(name: string, queryObject: any, data?: {}): Observable<FetchResult<T>>;
 }
