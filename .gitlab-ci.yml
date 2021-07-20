@@ -5,4 +5,5 @@ publish:
   stage: publish
   only: [master] 
   script:
-    - cd dist &&  npm publish
+    - cd ./dist && npm publish
+
