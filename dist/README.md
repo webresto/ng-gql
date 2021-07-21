@@ -4,6 +4,19 @@
 
 `npm install apollo-angular @apollo/client graphql subscriptions-transport-ws @webresto/ng-gql`
 
+```
+import { NgGqlModule } from '@webresto/ng-gql';
+
+@NgModule({
+  imports: [
+    // ...
+    NgGqlModule.forRoot({ url: 'https://stage4.api.lifenadym.webresto.dev/graphql' }),
+    // ...
+  ]
+})
+export class AppModule { }
+```
+
 ## Fetching
 
 Query

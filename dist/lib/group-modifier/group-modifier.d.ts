@@ -7,6 +7,7 @@ export declare class GroupModifier {
     childModifiers: Modifier[];
     group: {
         id: string;
+        name: string;
     };
     totalAmount: number;
 }

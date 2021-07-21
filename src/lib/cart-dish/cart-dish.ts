@@ -9,5 +9,5 @@ export class CartDish {
 	comment: string;
 	weight: number;
 	totalWeight: number;
-	modifiers: CartModifier;
+	modifiers: [CartModifier];
 }
