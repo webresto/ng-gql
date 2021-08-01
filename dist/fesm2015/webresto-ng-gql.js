@@ -1,7 +1,7 @@
 import { ɵɵdefineInjectable, ɵɵinject, Injectable, EventEmitter, Directive, Input, Output, HostListener, Renderer2, ElementRef, NgModule, Inject } from '@angular/core';
 import { gql, Apollo } from 'apollo-angular';
-import { BehaviorSubject, throwError, of } from 'rxjs';
-import { tap, take, map, filter, debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, of, throwError } from 'rxjs';
+import { tap, take, map, catchError, switchMap, filter, debounceTime } from 'rxjs/operators';
 import { HttpLink } from 'apollo-angular/http';
 import { split, InMemoryCache } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
@@ -11,6 +11,9 @@ class CartDish {
 }
 
 class Cart {
+}
+
+class Order {
 }
 
 class CheckPhoneResponse {
@@ -39,6 +42,39 @@ class GroupModifier {
 
 class PaymentMethod {
 }
+
+const PaymentMethodFragments = {
+    paymentMethod: gql `
+		fragment PaymentMethodFragment on PaymentMethod {
+			id
+			type
+			title
+			description
+			adapter
+			order
+			enable
+			customData
+		}
+	`
+};
+const ɵ0 = (cartId = null) => {
+    if (cartId == 'null')
+        cartId = null;
+    const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
+    return gql `
+				query GetPaymentMethods {
+					paymentMethods:paymentMethod${queryArguments} {
+						...PaymentMethodFragment
+					}
+				}
+				${PaymentMethodFragments.paymentMethod}
+			`;
+};
+const PaymentMethodGql = {
+    queries: {
+        getPaymentMethod: ɵ0
+    }
+};
 
 const ImageFragments = {
     image: gql `
@@ -121,7 +157,7 @@ const DishFragments = {
 		${GroupModifierFragments.groupModifier}
 	`
 };
-const ɵ0 = () => gql `
+const ɵ0$1 = () => gql `
 			query GetDishes {
 				dishes {
 					...DishFragment
@@ -131,7 +167,7 @@ const ɵ0 = () => gql `
 		`;
 const DishGql = {
     queries: {
-        getDishes: ɵ0
+        getDishes: ɵ0$1
     }
 };
 
@@ -177,9 +213,44 @@ const CartFragments = {
 			discountTotal
 			state
 		}
-	`
+	`,
+    cartOrderData: gql `
+		fragment CartOrderDataFragment on Cart {
+			rmsDelivered
+			rmsId
+			rmsOrderNumber
+			rmsOrderData
+			rmsDeliveryDate
+			rmsErrorMessage
+			rmsErrorCode
+			rmsStatusCode
+			customer
+			address
+			paid
+			isPaymentPromise
+		}
+	`,
 };
-const ɵ0$1 = (cartId = null) => {
+const ɵ0$2 = (orderId) => {
+    const queryArguments = orderId ? `(orderNumber: "${orderId}")` : '';
+    return gql `
+				query getOrder {
+					getOrder${queryArguments} {
+						cart {
+							...CartFragment
+							...CartOrderDataFragment
+							paymentMethod {
+								...PaymentMethodFragment
+							}
+						}
+						customData
+					}
+				}
+				${CartFragments.cart}
+				${CartFragments.cartOrderData}
+				${PaymentMethodFragments.paymentMethod}
+			`;
+}, ɵ1 = (cartId = null) => {
     if (cartId == 'null')
         cartId = null;
     const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
@@ -187,19 +258,11 @@ const ɵ0$1 = (cartId = null) => {
 				query GetCart {
 					cart${queryArguments} {
 						...CartFragment
-						dishes {
-							...CartDishFragment
-						}
-						deliveryItem {
-							...DishFragment
-						}
 					}
 				}
 				${CartFragments.cart}
-				${CartDishFragments.cartDish}
-				${DishFragments.dish}
 			`;
-}, ɵ1 = (phone) => {
+}, ɵ2 = (phone) => {
     return gql `
 				query phone {
 					phone(phone: "${phone}") {
@@ -213,7 +276,7 @@ const ɵ0$1 = (cartId = null) => {
 					}
 				}
 			`;
-}, ɵ2 = (phone) => {
+}, ɵ3 = (phone) => {
     return gql `
 				query checkPhone {
 					checkPhone(phone: "${phone}") {
@@ -225,7 +288,7 @@ const ɵ0$1 = (cartId = null) => {
 					}
 				}
 			`;
-}, ɵ3 = () => {
+}, ɵ4 = () => {
     return gql `
 				mutation AddDishToCart(
 					$cartId: String, 
@@ -260,7 +323,7 @@ const ɵ0$1 = (cartId = null) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ4 = () => {
+}, ɵ5 = () => {
     return gql `
 				mutation cartRemoveDish(
 					$cartId: String!, 
@@ -285,7 +348,7 @@ const ɵ0$1 = (cartId = null) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ5 = () => {
+}, ɵ6 = () => {
     return gql `
 				mutation orderCart(
 					$cartId: String!, 
@@ -303,6 +366,12 @@ const ɵ0$1 = (cartId = null) => {
 					) {
 						cart {
 							...CartFragment
+							dishes {
+								...CartDishFragment
+							}
+							deliveryItem {
+								...DishFragment
+							}
 						}
 						message {
 							title
@@ -316,8 +385,10 @@ const ɵ0$1 = (cartId = null) => {
 					}
 				}
 				${CartFragments.cart}
+				${CartDishFragments.cartDish}
+				${DishFragments.dish}
 			`;
-}, ɵ6 = () => {
+}, ɵ7 = () => {
     return gql `
 				mutation checkCart(
 					$cartId: String!, 
@@ -335,6 +406,12 @@ const ɵ0$1 = (cartId = null) => {
 					) {
 						cart {
 							...CartFragment
+							dishes {
+								...CartDishFragment
+							}
+							deliveryItem {
+								...DishFragment
+							}
 						}
 						message {
 							title
@@ -348,14 +425,16 @@ const ɵ0$1 = (cartId = null) => {
 					}
 				}
 				${CartFragments.cart}
+				${CartDishFragments.cartDish}
+				${DishFragments.dish}
 			`;
-}, ɵ7 = () => {
+}, ɵ8 = () => {
     return gql `
 				mutation checkPhoneCode(
 					$phone: String!,
 					$code: String!
 				) {
-					checkPhoneCode(
+					setPhoneCode(
 						phone: $phone,
 						code: $code
 					) {
@@ -370,16 +449,17 @@ const ɵ0$1 = (cartId = null) => {
 };
 const CartGql = {
     queries: {
-        getCart: ɵ0$1,
-        getPhone: ɵ1,
-        checkPhone: ɵ2
+        getOrder: ɵ0$2,
+        getCart: ɵ1,
+        getPhone: ɵ2,
+        checkPhone: ɵ3
     },
     mutations: {
-        addDishToCart: ɵ3,
-        removeDishFromCart: ɵ4,
-        orderCart: ɵ5,
-        checkCart: ɵ6,
-        checkPhoneCode: ɵ7,
+        addDishToCart: ɵ4,
+        removeDishFromCart: ɵ5,
+        orderCart: ɵ6,
+        checkCart: ɵ7,
+        checkPhoneCode: ɵ8,
     }
 };
 
@@ -395,7 +475,7 @@ const GroupFragments = {
 		}
 	`
 };
-const ɵ0$2 = () => gql `
+const ɵ0$3 = () => gql `
 			query GetMenu {
 				groups {
 					...GroupFragment
@@ -423,7 +503,7 @@ const ɵ0$2 = () => gql `
 		`;
 const GroupGql = {
     queries: {
-        getGroups: ɵ0$2,
+        getGroups: ɵ0$3,
         getGroupsAndDishes: ɵ1$1
     }
 };
@@ -452,7 +532,7 @@ const NavigationFragments = {
 		}
 	`
 };
-const ɵ0$3 = () => gql `
+const ɵ0$4 = () => gql `
 			query GetNavigation {
 				navigation {
 					...NavigationFragment
@@ -462,40 +542,7 @@ const ɵ0$3 = () => gql `
 		`;
 const NavigationGql = {
     queries: {
-        getNavigationes: ɵ0$3
-    }
-};
-
-const PaymentMethodFragments = {
-    paymentMethod: gql `
-		fragment PaymentMethodFragment on PaymentMethod {
-			id
-			type
-			title
-			description
-			adapter
-			order
-			enable
-			customData
-		}
-	`
-};
-const ɵ0$4 = (cartId = null) => {
-    if (cartId == 'null')
-        cartId = null;
-    const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
-    return gql `
-				query GetPaymentMethods {
-					paymentMethods:paymentMethod${queryArguments} {
-						...PaymentMethodFragment
-					}
-				}
-				${PaymentMethodFragments.paymentMethod}
-			`;
-};
-const PaymentMethodGql = {
-    queries: {
-        getPaymentMethod: ɵ0$4
+        getNavigationes: ɵ0$4
     }
 };
 
@@ -598,6 +645,13 @@ class NgGqlService {
         }
         return this.dishes$;
     }
+    getOrder$(orderId = null) {
+        return this.apollo.watchQuery({
+            query: CartGql.queries.getOrder(orderId)
+        })
+            .valueChanges
+            .pipe(take(1), map(({ data }) => data.getOrder));
+    }
     getCart$(cartId = null) {
         if (!this.cart$.getValue() && !this.cartLoading) {
             this.apollo.watchQuery({
@@ -681,7 +735,7 @@ class NgGqlService {
             variables: data
         })
             .pipe(map(({ data }) => {
-            const checkPhoneResponse = data['checkPhoneCode'];
+            const checkPhoneResponse = data['setPhoneCode'];
             return checkPhoneResponse;
         }));
     }
@@ -696,10 +750,10 @@ class NgGqlService {
             return cart;
         }));
     }
-    customQuery$(name, queryObject, data = {}) {
+    customQuery$(name, queryObject, variables = {}) {
         let queryArgumentsStrings = [];
-        for (let key in data) {
-            let valueString = data[key];
+        for (let key in variables) {
+            let valueString = variables[key];
             if (typeof valueString !== 'number' && typeof valueString !== 'boolean') {
                 valueString = `"${valueString}"`;
             }
@@ -708,24 +762,45 @@ class NgGqlService {
         let queryArgumentsString = queryArgumentsStrings.length
             ? `(${queryArgumentsStrings.join(', ')})`
             : ``;
-        const query = JSON.stringify(queryObject)
+        const queryKey = (name + queryArgumentsString).replace(/[^a-z0-9]/gi, '');
+        let query = JSON.stringify(queryObject)
             .replace(/"/g, '')
             .replace(/\:[a-z0-9]+/gi, '')
             .replace(/\:/g, '');
-        if (!this.customQueryiesDataByName[name]) {
-            this.customQueryiesDataByName[name] = new BehaviorSubject(null);
-            this.customQueriesDataLoadingByName[name] = false;
+        if (queryArgumentsString) {
+            const queriesKeys = Object.keys(queryObject);
+            const countOfQueries = queriesKeys.length;
+            if (countOfQueries == 1) {
+                query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + queryArgumentsString);
+            }
         }
-        if (!this.customQueryiesDataByName[name].getValue() && !this.customQueriesDataLoadingByName[name]) {
-            this.apollo.watchQuery({ query: gql `query ${name}${queryArgumentsString}${query}` })
+        if (!this.customQueryiesDataByName[queryKey]) {
+            this.customQueryiesDataByName[queryKey] = new BehaviorSubject(null);
+            this.customQueriesDataLoadingByName[queryKey] = false;
+        }
+        if (!this.customQueryiesDataByName[queryKey].getValue() && !this.customQueriesDataLoadingByName[queryKey]) {
+            this.apollo.watchQuery({
+                query: gql `query ${name}${query}`,
+                fetchPolicy: 'no-cache'
+            })
                 .valueChanges
                 .pipe(tap(({ data, loading }) => {
-                this.customQueriesDataLoadingByName[name] = loading;
-                this.customQueryiesDataByName[name].next(data);
+                this.customQueriesDataLoadingByName[queryKey] = loading;
+                this.customQueryiesDataByName[queryKey].next(data);
+            }), catchError(error => {
+                this.customQueryiesDataByName[queryKey].next({
+                    error: error
+                });
+                return of(null);
             }))
                 .subscribe();
         }
-        return this.customQueryiesDataByName[name].pipe(filter(data => !!data));
+        return this.customQueryiesDataByName[queryKey].pipe(switchMap((data) => {
+            if (data && data.error) {
+                return throwError(data.error);
+            }
+            return of(data);
+        }), filter(data => !!data));
     }
     customMutation$(name, queryObject, data = {}) {
         let mutationArgumentsStrings = [];
@@ -2037,5 +2112,5 @@ class EventMessage {
  * Generated bundle index. Do not edit.
  */
 
-export { AddDishToCartDirective, AmountCartDirective, Cart, CartDish, CheckPhoneResponse, CheckResponse, CheckoutDirective, DeleteFromCartDirective, Dish, DishCalcDirective, EventMessage, EventerService, Group, GroupModifier, Modifier, NgCartService, NgGqlModule, NgGqlService, OrderCartUserDirective, PaymentMethod, Phone, SetAmountDirective, SetDishCommentDirective, StateService };
+export { AddDishToCartDirective, AmountCartDirective, Cart, CartDish, CheckPhoneResponse, CheckResponse, CheckoutDirective, DeleteFromCartDirective, Dish, DishCalcDirective, EventMessage, EventerService, Group, GroupModifier, Modifier, NgCartService, NgGqlModule, NgGqlService, Order, OrderCartUserDirective, PaymentMethod, Phone, SetAmountDirective, SetDishCommentDirective, StateService };
 //# sourceMappingURL=webresto-ng-gql.js.map

@@ -7,8 +7,8 @@ export class GroupModifier {
 	required: boolean;
 	childModifiers: Modifier[];
 	group: { 
-		id: string, 
-		name: string
+		id: string;
+		name: string;
 	}
 	totalAmount: number = 0;
 }

@@ -42,9 +42,11 @@ export declare type CheckPhoneCodeInput = {
 };
 export declare const CartFragments: {
     cart: import("graphql").DocumentNode;
+    cartOrderData: import("graphql").DocumentNode;
 };
 export declare const CartGql: {
     queries: {
+        getOrder: (orderId: string) => import("graphql").DocumentNode;
         getCart: (cartId?: string) => import("graphql").DocumentNode;
         getPhone: (phone: string) => import("graphql").DocumentNode;
         checkPhone: (phone: string) => import("graphql").DocumentNode;

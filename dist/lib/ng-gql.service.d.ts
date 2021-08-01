@@ -5,6 +5,7 @@ import { Cart } from './cart/cart';
 import { AddToCartInput, RemoveFromCartInput, OrderCartInput, CheckPhoneCodeInput } from './cart/cart.gql';
 import { CheckPhoneResponse } from './cart/check-phone-response';
 import { CheckResponse } from './cart/check-response';
+import { Order } from './cart/order';
 import { Phone } from './cart/phone';
 import { Dish } from './dish/dish';
 import { Group } from './group/group';
@@ -36,6 +37,7 @@ export declare class NgGqlService {
     getNavigation$(): BehaviorSubject<NavigationData>;
     getMenu$(slug?: string): BehaviorSubject<Group[]>;
     getDishes$(): BehaviorSubject<Dish[]>;
+    getOrder$(orderId?: string): Observable<Order>;
     getCart$(cartId?: string): BehaviorSubject<Cart>;
     getPhone$(phone: string): Observable<Phone>;
     checkPhone$(phone: string): Observable<CheckPhoneResponse>;
@@ -45,6 +47,6 @@ export declare class NgGqlService {
     checkCart$(data: OrderCartInput): Observable<CheckResponse>;
     checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse>;
     removeDishFromCart$(data: RemoveFromCartInput): Observable<Cart>;
-    customQuery$<T = any>(name: string, queryObject: any, data?: any): Observable<T>;
+    customQuery$<T = any>(name: string, queryObject: any, variables?: any): Observable<T>;
     customMutation$<T = any>(name: string, queryObject: any, data?: {}): Observable<FetchResult<T>>;
 }

@@ -1,4 +1,5 @@
 import { gql } from 'apollo-angular';
+import { PaymentMethodFragments } from '../payment-method/payment-method.gql';
 import { CartDishFragments } from '../cart-dish/cart-dish.gql';
 import { DishFragments } from '../dish/dish.gql';
 
@@ -65,11 +66,47 @@ export const CartFragments = {
 			discountTotal
 			state
 		}
-	`
+	`,
+	cartOrderData: gql`
+		fragment CartOrderDataFragment on Cart {
+			rmsDelivered
+			rmsId
+			rmsOrderNumber
+			rmsOrderData
+			rmsDeliveryDate
+			rmsErrorMessage
+			rmsErrorCode
+			rmsStatusCode
+			customer
+			address
+			paid
+			isPaymentPromise
+		}
+	`,
 };
 
 export const CartGql = {
 	queries: {
+		getOrder: (orderId: string) => {
+			const queryArguments = orderId ? `(orderNumber: "${orderId}")` : '';
+			return gql`
+				query getOrder {
+					getOrder${queryArguments} {
+						cart {
+							...CartFragment
+							...CartOrderDataFragment
+							paymentMethod {
+								...PaymentMethodFragment
+							}
+						}
+						customData
+					}
+				}
+				${CartFragments.cart}
+				${CartFragments.cartOrderData}
+				${PaymentMethodFragments.paymentMethod}
+			`;
+		},
 		getCart: (cartId: string = null) => {
 			if(cartId == 'null') cartId = null;
 			const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
@@ -77,17 +114,9 @@ export const CartGql = {
 				query GetCart {
 					cart${queryArguments} {
 						...CartFragment
-						dishes {
-							...CartDishFragment
-						}
-						deliveryItem {
-							...DishFragment
-						}
 					}
 				}
 				${CartFragments.cart}
-				${CartDishFragments.cartDish}
-				${DishFragments.dish}
 			`;
 		},
 		getPhone: (phone: string) => {
@@ -200,6 +229,12 @@ export const CartGql = {
 					) {
 						cart {
 							...CartFragment
+							dishes {
+								...CartDishFragment
+							}
+							deliveryItem {
+								...DishFragment
+							}
 						}
 						message {
 							title
@@ -213,6 +248,8 @@ export const CartGql = {
 					}
 				}
 				${CartFragments.cart}
+				${CartDishFragments.cartDish}
+				${DishFragments.dish}
 			`;
 		},
 		checkCart: () => {
@@ -233,6 +270,12 @@ export const CartGql = {
 					) {
 						cart {
 							...CartFragment
+							dishes {
+								...CartDishFragment
+							}
+							deliveryItem {
+								...DishFragment
+							}
 						}
 						message {
 							title
@@ -246,6 +289,8 @@ export const CartGql = {
 					}
 				}
 				${CartFragments.cart}
+				${CartDishFragments.cartDish}
+				${DishFragments.dish}
 			`;
 		},
 		checkPhoneCode: () => {
@@ -254,7 +299,7 @@ export const CartGql = {
 					$phone: String!,
 					$code: String!
 				) {
-					checkPhoneCode(
+					setPhoneCode(
 						phone: $phone,
 						code: $code
 					) {

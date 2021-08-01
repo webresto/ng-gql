@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { FetchResult } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap, filter, take, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { tap, filter, take, map, catchError, switchMap } from 'rxjs/operators';
 import { Cart } from './cart/cart';
 import { CartGql, AddToCartInput, RemoveFromCartInput, OrderCartInput, CheckPhoneCodeInput } from './cart/cart.gql';
 import { CheckPhoneResponse } from './cart/check-phone-response';
 import { CheckResponse } from './cart/check-response';
+import { Order } from './cart/order';
 import { Phone } from './cart/phone';
 import { Dish } from './dish/dish';
 import { DishGql } from './dish/dish.gql';
@@ -47,7 +48,7 @@ export class NgGqlService {
 
   constructor(private apollo: Apollo) {
     this.cart$.subscribe(res => console.log('control cart res', res));
-  }
+  } 
 
   getNavigation$(): BehaviorSubject<NavigationData> {
     if (!this.navigationData$.getValue() && !this.navigationDataLoading) {
@@ -145,6 +146,17 @@ export class NgGqlService {
         .subscribe();
     }
     return this.dishes$;
+  }
+
+  getOrder$(orderId: string = null): Observable<Order> {
+    return this.apollo.watchQuery<any>({
+      query: CartGql.queries.getOrder(orderId)
+    })
+      .valueChanges
+      .pipe(
+        take(1),
+        map(({ data }) => data.getOrder)
+      )
   }
 
   getCart$(cartId: string = null): BehaviorSubject<Cart> {
@@ -253,7 +265,7 @@ export class NgGqlService {
     })
       .pipe(
         map(({ data }) => {
-          const checkPhoneResponse: CheckPhoneResponse = data['checkPhoneCode'];
+          const checkPhoneResponse: CheckPhoneResponse = data['setPhoneCode'];
           return checkPhoneResponse;
         })
       )
@@ -273,10 +285,10 @@ export class NgGqlService {
       )
   }
 
-  customQuery$<T = any>(name: string, queryObject: any, data: any = {}): Observable<T> {
+  customQuery$<T = any>(name: string, queryObject: any, variables: any = {}): Observable<T> {
     let queryArgumentsStrings: string[] = [];
-    for (let key in data) {
-      let valueString = data[key];
+    for (let key in variables) {
+      let valueString = variables[key];
       if (typeof valueString !== 'number' && typeof valueString !== 'boolean') {
         valueString = `"${valueString}"`;
       }
@@ -285,27 +297,51 @@ export class NgGqlService {
     let queryArgumentsString = queryArgumentsStrings.length
       ? `(${queryArgumentsStrings.join(', ')})`
       : ``;
-
-    const query = JSON.stringify(queryObject)
+    const queryKey = (name + queryArgumentsString).replace(/[^a-z0-9]/gi, '');
+    let query = JSON.stringify(queryObject)
       .replace(/"/g, '')
       .replace(/\:[a-z0-9]+/gi, '')
       .replace(/\:/g, '');
-    if (!this.customQueryiesDataByName[name]) {
-      this.customQueryiesDataByName[name] = new BehaviorSubject(null);
-      this.customQueriesDataLoadingByName[name] = false;
+    if(queryArgumentsString) {
+      const queriesKeys = Object.keys(queryObject);
+      const countOfQueries = queriesKeys.length;
+      if (countOfQueries == 1) {
+        query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + queryArgumentsString);
+      }
     }
-    if (!this.customQueryiesDataByName[name].getValue() && !this.customQueriesDataLoadingByName[name]) {
-      this.apollo.watchQuery<T, boolean>({ query: gql`query ${name}${queryArgumentsString}${query}` })
+
+    if (!this.customQueryiesDataByName[queryKey]) {
+      this.customQueryiesDataByName[queryKey] = new BehaviorSubject(null);
+      this.customQueriesDataLoadingByName[queryKey] = false;
+    }
+    if (!this.customQueryiesDataByName[queryKey].getValue() && !this.customQueriesDataLoadingByName[queryKey]) {
+      this.apollo.watchQuery<T, boolean>({ 
+        query: gql`query ${name}${query}`,
+        fetchPolicy: 'no-cache'
+       })
         .valueChanges
         .pipe(
           tap(({ data, loading }) => {
-            this.customQueriesDataLoadingByName[name] = loading;
-            this.customQueryiesDataByName[name].next(data);
+            this.customQueriesDataLoadingByName[queryKey] = loading;
+            this.customQueryiesDataByName[queryKey].next(data);
+          }),
+          catchError(error => {
+            
+            this.customQueryiesDataByName[queryKey].next({
+              error: error
+            });
+            return of(null);
           })
         )
         .subscribe();
     }
-    return this.customQueryiesDataByName[name].pipe(
+    return this.customQueryiesDataByName[queryKey].pipe(
+      switchMap((data) => {
+        if(data && data.error) {
+          return throwError(data.error);
+        }
+        return of(data);
+      }),
       filter(data => !!data)
     );
   }

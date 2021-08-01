@@ -16,6 +16,12 @@
         return Cart;
     }());
 
+    var Order = /** @class */ (function () {
+        function Order() {
+        }
+        return Order;
+    }());
+
     var CheckPhoneResponse = /** @class */ (function () {
         function CheckPhoneResponse() {
         }
@@ -383,113 +389,118 @@
         return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
     }
 
-    var ImageFragments = {
-        image: i1.gql(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n\t\tfragment ImageFragment on Image {\n\t\t\tid\n\t\t\tuploadDate\n\t\t\timages\n\t\t}\n\t"], ["\n\t\tfragment ImageFragment on Image {\n\t\t\tid\n\t\t\tuploadDate\n\t\t\timages\n\t\t}\n\t"])))
-    };
-    var templateObject_1;
-
-    var ModifierFragments = {
-        modifier: i1.gql(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n\t\tfragment ModifierFragment on Modifier {\n\t\t\tmodifierId\n\t\t\tmaxAmount\n\t\t\tminAmount\n\t\t\tdefaultAmount\n\t\t\thideIfDefaultAmount\n\t\t\tdish {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tdescription\n\t\t\t\tgroupId\n\t\t\t\tprice\n\t\t\t\tweight\n\t\t\t\tbalance\n\t\t\t\ttags\n\t\t\t\timages {\n\t\t\t\t\t...ImageFragment\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t", "\n\t"], ["\n\t\tfragment ModifierFragment on Modifier {\n\t\t\tmodifierId\n\t\t\tmaxAmount\n\t\t\tminAmount\n\t\t\tdefaultAmount\n\t\t\thideIfDefaultAmount\n\t\t\tdish {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tdescription\n\t\t\t\tgroupId\n\t\t\t\tprice\n\t\t\t\tweight\n\t\t\t\tbalance\n\t\t\t\ttags\n\t\t\t\timages {\n\t\t\t\t\t...ImageFragment\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t", "\n\t"])), ImageFragments.image)
-    };
-    var templateObject_1$1;
-
-    var GroupModifierFragments = {
-        groupModifier: i1.gql(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n\t\tfragment GroupModifierFragment on GroupModifier {\n\t\t\tmodifierId\n\t\t\tmaxAmount\n\t\t\tminAmount\n\t\t\trequired\n\t\t\tchildModifiers {\n\t\t\t\t...ModifierFragment\n\t\t\t}\n\t\t\tgroup {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t}\n\t\t}\n\t\t", "\n\t"], ["\n\t\tfragment GroupModifierFragment on GroupModifier {\n\t\t\tmodifierId\n\t\t\tmaxAmount\n\t\t\tminAmount\n\t\t\trequired\n\t\t\tchildModifiers {\n\t\t\t\t...ModifierFragment\n\t\t\t}\n\t\t\tgroup {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t}\n\t\t}\n\t\t", "\n\t"])), ModifierFragments.modifier)
-    };
-    var templateObject_1$2;
-
-    var DishFragments = {
-        dish: i1.gql(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n\t\tfragment DishFragment on Dish {\n\t\t\tid\n\t\t\tname\n\t\t\tdescription\n\t\t\tgroupId\n\t\t\tprice\n\t\t\tweight\n\t\t\tbalance\n\t\t\ttags\n\t\t\tadditionalInfo\n\t\t\timages {\n\t\t\t\t...ImageFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\t...GroupModifierFragment\n\t\t\t}\n\t\t\tparentGroup {\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t\t", "\n\t\t", "\n\t"], ["\n\t\tfragment DishFragment on Dish {\n\t\t\tid\n\t\t\tname\n\t\t\tdescription\n\t\t\tgroupId\n\t\t\tprice\n\t\t\tweight\n\t\t\tbalance\n\t\t\ttags\n\t\t\tadditionalInfo\n\t\t\timages {\n\t\t\t\t...ImageFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\t...GroupModifierFragment\n\t\t\t}\n\t\t\tparentGroup {\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t\t", "\n\t\t", "\n\t"])), ImageFragments.image, GroupModifierFragments.groupModifier)
-    };
-    var ɵ0 = function () { return i1.gql(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n\t\t\tquery GetDishes {\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetDishes {\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t"])), DishFragments.dish); };
-    var DishGql = {
-        queries: {
-            getDishes: ɵ0
-        }
-    };
-    var templateObject_1$3, templateObject_2;
-
-    var CartDishFragments = {
-        cartDish: i1.gql(templateObject_1$4 || (templateObject_1$4 = __makeTemplateObject(["\n\t\tfragment CartDishFragment on CartDish {\n\t\t\tid\n\t\t\tamount\n\t\t\tdish {\n\t\t\t\t...DishFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\tid\n\t\t\t\tdish {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t\tamount\n\t\t\t\tgroupId\n\t\t\t}\n\t\t\tdiscountTotal\n\t\t\tcomment\n\t\t\tweight\n\t\t\ttotalWeight\n\t\t}\n\t\t", "\n\t"], ["\n\t\tfragment CartDishFragment on CartDish {\n\t\t\tid\n\t\t\tamount\n\t\t\tdish {\n\t\t\t\t...DishFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\tid\n\t\t\t\tdish {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t\tamount\n\t\t\t\tgroupId\n\t\t\t}\n\t\t\tdiscountTotal\n\t\t\tcomment\n\t\t\tweight\n\t\t\ttotalWeight\n\t\t}\n\t\t", "\n\t"])), DishFragments.dish)
-    };
-    var templateObject_1$4;
-
-    var CartFragments = {
-        cart: i1.gql(templateObject_1$5 || (templateObject_1$5 = __makeTemplateObject(["\n\t\tfragment CartFragment on Cart {\n\t\t\tid\n\t\t\tdishesCount\n\t\t\tcomment\n\t\t\tpersonsCount\n\t\t\tdeliveryDescription\n\t\t\tmessage\n\t\t\tdeliveryCost\n\t\t\ttotalWeight\n\t\t\ttotal\n\t\t\torderTotal\n\t\t\tcartTotal\n\t\t\tdiscountTotal\n\t\t\tstate\n\t\t}\n\t"], ["\n\t\tfragment CartFragment on Cart {\n\t\t\tid\n\t\t\tdishesCount\n\t\t\tcomment\n\t\t\tpersonsCount\n\t\t\tdeliveryDescription\n\t\t\tmessage\n\t\t\tdeliveryCost\n\t\t\ttotalWeight\n\t\t\ttotal\n\t\t\torderTotal\n\t\t\tcartTotal\n\t\t\tdiscountTotal\n\t\t\tstate\n\t\t}\n\t"])))
-    };
-    var ɵ0$1 = function (cartId) {
-        if (cartId === void 0) { cartId = null; }
-        if (cartId == 'null')
-            cartId = null;
-        var queryArguments = cartId ? "(cartId: \"" + cartId + "\")" : '';
-        return i1.gql(templateObject_2$1 || (templateObject_2$1 = __makeTemplateObject(["\n\t\t\t\tquery GetCart {\n\t\t\t\t\tcart", " {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tquery GetCart {\n\t\t\t\t\tcart", " {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"])), queryArguments, CartFragments.cart, CartDishFragments.cartDish, DishFragments.dish);
-    }, ɵ1 = function (phone) {
-        return i1.gql(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n\t\t\t\tquery phone {\n\t\t\t\t\tphone(phone: \"", "\") {\n\t\t\t\t\t\tid\n\t\t\t\t\t\tphone\n\t\t\t\t\t\tisFirst\n\t\t\t\t\t\tisConfirm\n\t\t\t\t\t\tcodeTime\n\t\t\t\t\t\tconfirmCode\n\t\t\t\t\t\tcustomData\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"], ["\n\t\t\t\tquery phone {\n\t\t\t\t\tphone(phone: \"", "\") {\n\t\t\t\t\t\tid\n\t\t\t\t\t\tphone\n\t\t\t\t\t\tisFirst\n\t\t\t\t\t\tisConfirm\n\t\t\t\t\t\tcodeTime\n\t\t\t\t\t\tconfirmCode\n\t\t\t\t\t\tcustomData\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"])), phone);
-    }, ɵ2 = function (phone) {
-        return i1.gql(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n\t\t\t\tquery checkPhone {\n\t\t\t\t\tcheckPhone(phone: \"", "\") {\n\t\t\t\t\t\ttype\n\t\t\t\t\t\ttitle\n\t\t\t\t\t\tmessage\n\t\t\t\t\t\tconfirmed\n\t\t\t\t\t\tfirstbuy\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"], ["\n\t\t\t\tquery checkPhone {\n\t\t\t\t\tcheckPhone(phone: \"", "\") {\n\t\t\t\t\t\ttype\n\t\t\t\t\t\ttitle\n\t\t\t\t\t\tmessage\n\t\t\t\t\t\tconfirmed\n\t\t\t\t\t\tfirstbuy\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"])), phone);
-    }, ɵ3 = function () {
-        return i1.gql(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n\t\t\t\tmutation AddDishToCart(\n\t\t\t\t\t$cartId: String, \n\t\t\t\t\t$dishId: String, \n\t\t\t\t\t$amount: Int, \n\t\t\t\t\t$modifiers: Json, \n\t\t\t\t\t$comment: String,\n\t\t\t\t\t$from: String,\n\t\t\t\t\t$replace: Boolean,\n\t\t\t\t\t$cartDishId: String\n\t\t\t\t) {\n\t\t\t\t\tcartAddDish(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tdishId: $dishId,\n\t\t\t\t\t\tamount: $amount,\n\t\t\t\t\t\tmodifiers: $modifiers,\n\t\t\t\t\t\tcomment: $comment,\n\t\t\t\t\t\tfrom: $from,\n\t\t\t\t\t\treplace: $replace,\n\t\t\t\t\t\tcartDishId: $cartDishId\n\t\t\t\t\t) {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tmutation AddDishToCart(\n\t\t\t\t\t$cartId: String, \n\t\t\t\t\t$dishId: String, \n\t\t\t\t\t$amount: Int, \n\t\t\t\t\t$modifiers: Json, \n\t\t\t\t\t$comment: String,\n\t\t\t\t\t$from: String,\n\t\t\t\t\t$replace: Boolean,\n\t\t\t\t\t$cartDishId: String\n\t\t\t\t) {\n\t\t\t\t\tcartAddDish(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tdishId: $dishId,\n\t\t\t\t\t\tamount: $amount,\n\t\t\t\t\t\tmodifiers: $modifiers,\n\t\t\t\t\t\tcomment: $comment,\n\t\t\t\t\t\tfrom: $from,\n\t\t\t\t\t\treplace: $replace,\n\t\t\t\t\t\tcartDishId: $cartDishId\n\t\t\t\t\t) {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"])), CartFragments.cart, CartDishFragments.cartDish, DishFragments.dish);
-    }, ɵ4 = function () {
-        return i1.gql(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n\t\t\t\tmutation cartRemoveDish(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$cartDishId: Int!, \n\t\t\t\t\t$amount: Int!, \n\t\t\t\t) {\n\t\t\t\t\tcartRemoveDish(\n\t\t\t\t\t\tid: $cartId,\n\t\t\t\t\t\tcartDishId: $cartDishId,\n\t\t\t\t\t\tamount: $amount,\n\t\t\t\t\t) {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tmutation cartRemoveDish(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$cartDishId: Int!, \n\t\t\t\t\t$amount: Int!, \n\t\t\t\t) {\n\t\t\t\t\tcartRemoveDish(\n\t\t\t\t\t\tid: $cartId,\n\t\t\t\t\t\tcartDishId: $cartDishId,\n\t\t\t\t\t\tamount: $amount,\n\t\t\t\t\t) {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"])), CartFragments.cart, CartDishFragments.cartDish, DishFragments.dish);
-    }, ɵ5 = function () {
-        return i1.gql(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n\t\t\t\tmutation orderCart(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$paymentMethodId: String!,\n\t\t\t\t\t$selfService: Boolean,\n\t\t\t\t\t$address: Address,\n\t\t\t\t\t$customer: Customer!\n\t\t\t\t) {\n\t\t\t\t\torderCart(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tpaymentMethodId: $paymentMethodId,\n\t\t\t\t\t\tselfService: $selfService,\n\t\t\t\t\t\taddress: $address,\n\t\t\t\t\t\tcustomer: $customer\n\t\t\t\t\t) {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmessage {\n\t\t\t\t\t\t\ttitle\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tmessage\n\t\t\t\t\t\t}\n\t\t\t\t\t\taction {\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tdata\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tmutation orderCart(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$paymentMethodId: String!,\n\t\t\t\t\t$selfService: Boolean,\n\t\t\t\t\t$address: Address,\n\t\t\t\t\t$customer: Customer!\n\t\t\t\t) {\n\t\t\t\t\torderCart(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tpaymentMethodId: $paymentMethodId,\n\t\t\t\t\t\tselfService: $selfService,\n\t\t\t\t\t\taddress: $address,\n\t\t\t\t\t\tcustomer: $customer\n\t\t\t\t\t) {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmessage {\n\t\t\t\t\t\t\ttitle\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tmessage\n\t\t\t\t\t\t}\n\t\t\t\t\t\taction {\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tdata\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"])), CartFragments.cart);
-    }, ɵ6 = function () {
-        return i1.gql(templateObject_8 || (templateObject_8 = __makeTemplateObject(["\n\t\t\t\tmutation checkCart(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$paymentMethodId: String!,\n\t\t\t\t\t$selfService: Boolean,\n\t\t\t\t\t$address: Address,\n\t\t\t\t\t$customer: Customer!\n\t\t\t\t) {\n\t\t\t\t\tcheckCart(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tpaymentMethodId: $paymentMethodId,\n\t\t\t\t\t\tselfService: $selfService,\n\t\t\t\t\t\taddress: $address,\n\t\t\t\t\t\tcustomer: $customer\n\t\t\t\t\t) {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmessage {\n\t\t\t\t\t\t\ttitle\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tmessage\n\t\t\t\t\t\t}\n\t\t\t\t\t\taction {\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tdata\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tmutation checkCart(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$paymentMethodId: String!,\n\t\t\t\t\t$selfService: Boolean,\n\t\t\t\t\t$address: Address,\n\t\t\t\t\t$customer: Customer!\n\t\t\t\t) {\n\t\t\t\t\tcheckCart(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tpaymentMethodId: $paymentMethodId,\n\t\t\t\t\t\tselfService: $selfService,\n\t\t\t\t\t\taddress: $address,\n\t\t\t\t\t\tcustomer: $customer\n\t\t\t\t\t) {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmessage {\n\t\t\t\t\t\t\ttitle\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tmessage\n\t\t\t\t\t\t}\n\t\t\t\t\t\taction {\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tdata\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"])), CartFragments.cart);
-    }, ɵ7 = function () {
-        return i1.gql(templateObject_9 || (templateObject_9 = __makeTemplateObject(["\n\t\t\t\tmutation checkPhoneCode(\n\t\t\t\t\t$phone: String!,\n\t\t\t\t\t$code: String!\n\t\t\t\t) {\n\t\t\t\t\tcheckPhoneCode(\n\t\t\t\t\t\tphone: $phone,\n\t\t\t\t\t\tcode: $code\n\t\t\t\t\t) {\n\t\t\t\t\t\ttype\n\t\t\t\t\t\ttitle\n\t\t\t\t\t\tmessage\n\t\t\t\t\t\tconfirmed\n\t\t\t\t\t\tfirstbuy\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"], ["\n\t\t\t\tmutation checkPhoneCode(\n\t\t\t\t\t$phone: String!,\n\t\t\t\t\t$code: String!\n\t\t\t\t) {\n\t\t\t\t\tcheckPhoneCode(\n\t\t\t\t\t\tphone: $phone,\n\t\t\t\t\t\tcode: $code\n\t\t\t\t\t) {\n\t\t\t\t\t\ttype\n\t\t\t\t\t\ttitle\n\t\t\t\t\t\tmessage\n\t\t\t\t\t\tconfirmed\n\t\t\t\t\t\tfirstbuy\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"])));
-    };
-    var CartGql = {
-        queries: {
-            getCart: ɵ0$1,
-            getPhone: ɵ1,
-            checkPhone: ɵ2
-        },
-        mutations: {
-            addDishToCart: ɵ3,
-            removeDishFromCart: ɵ4,
-            orderCart: ɵ5,
-            checkCart: ɵ6,
-            checkPhoneCode: ɵ7,
-        }
-    };
-    var templateObject_1$5, templateObject_2$1, templateObject_3, templateObject_4, templateObject_5, templateObject_6, templateObject_7, templateObject_8, templateObject_9;
-
-    var GroupFragments = {
-        group: i1.gql(templateObject_1$6 || (templateObject_1$6 = __makeTemplateObject(["\n\t\tfragment GroupFragment on Group {\n\t\t\tid\n\t\t\tdescription\n\t\t\tname\n\t\t\torder\n\t\t\tvisible\n\t\t\tslug\n\t\t}\n\t"], ["\n\t\tfragment GroupFragment on Group {\n\t\t\tid\n\t\t\tdescription\n\t\t\tname\n\t\t\torder\n\t\t\tvisible\n\t\t\tslug\n\t\t}\n\t"])))
-    };
-    var ɵ0$2 = function () { return i1.gql(templateObject_2$2 || (templateObject_2$2 = __makeTemplateObject(["\n\t\t\tquery GetMenu {\n\t\t\t\tgroups {\n\t\t\t\t\t...GroupFragment\n\t\t\t\t\tdishes {\n\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetMenu {\n\t\t\t\tgroups {\n\t\t\t\t\t...GroupFragment\n\t\t\t\t\tdishes {\n\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"])), GroupFragments.group, DishFragments.dish); }, ɵ1$1 = function () { return i1.gql(templateObject_3$1 || (templateObject_3$1 = __makeTemplateObject(["\n\t\t\tquery GetGroupsAndDishes {\n\t\t\t\tgroups {\n\t\t\t\t\tparentGroup {\n\t\t\t\t\t\tid\n\t\t\t\t\t}\n\t\t\t\t\t...GroupFragment\n\t\t\t\t}\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetGroupsAndDishes {\n\t\t\t\tgroups {\n\t\t\t\t\tparentGroup {\n\t\t\t\t\t\tid\n\t\t\t\t\t}\n\t\t\t\t\t...GroupFragment\n\t\t\t\t}\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"])), GroupFragments.group, DishFragments.dish); };
-    var GroupGql = {
-        queries: {
-            getGroups: ɵ0$2,
-            getGroupsAndDishes: ɵ1$1
-        }
-    };
-    var templateObject_1$6, templateObject_2$2, templateObject_3$1;
-
-    var NavigationFragments = {
-        navigation: i1.gql(templateObject_1$7 || (templateObject_1$7 = __makeTemplateObject(["\n\t\tfragment NavigationFragment on Navigation {\n\t\t\tid \n\t\t\tname\n\t\t\tdescription\n\t\t\tdata {\n\t\t\t\tlabel\n\t\t\t\tlink\n\t\t\t\ttimeWork\n\t\t\t\tphone\n\t\t\t\ticon\n\t\t\t\tactive\n\t\t\t\tslug\n\t\t\t\tchild {\n\t\t\t\t\ttags\n\t\t\t\t\tslug\n\t\t\t\t\tvisible\n\t\t\t\t\tname\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"], ["\n\t\tfragment NavigationFragment on Navigation {\n\t\t\tid \n\t\t\tname\n\t\t\tdescription\n\t\t\tdata {\n\t\t\t\tlabel\n\t\t\t\tlink\n\t\t\t\ttimeWork\n\t\t\t\tphone\n\t\t\t\ticon\n\t\t\t\tactive\n\t\t\t\tslug\n\t\t\t\tchild {\n\t\t\t\t\ttags\n\t\t\t\t\tslug\n\t\t\t\t\tvisible\n\t\t\t\t\tname\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"])))
-    };
-    var ɵ0$3 = function () { return i1.gql(templateObject_2$3 || (templateObject_2$3 = __makeTemplateObject(["\n\t\t\tquery GetNavigation {\n\t\t\t\tnavigation {\n\t\t\t\t\t...NavigationFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetNavigation {\n\t\t\t\tnavigation {\n\t\t\t\t\t...NavigationFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t"])), NavigationFragments.navigation); };
-    var NavigationGql = {
-        queries: {
-            getNavigationes: ɵ0$3
-        }
-    };
-    var templateObject_1$7, templateObject_2$3;
-
     var PaymentMethodFragments = {
-        paymentMethod: i1.gql(templateObject_1$8 || (templateObject_1$8 = __makeTemplateObject(["\n\t\tfragment PaymentMethodFragment on PaymentMethod {\n\t\t\tid\n\t\t\ttype\n\t\t\ttitle\n\t\t\tdescription\n\t\t\tadapter\n\t\t\torder\n\t\t\tenable\n\t\t\tcustomData\n\t\t}\n\t"], ["\n\t\tfragment PaymentMethodFragment on PaymentMethod {\n\t\t\tid\n\t\t\ttype\n\t\t\ttitle\n\t\t\tdescription\n\t\t\tadapter\n\t\t\torder\n\t\t\tenable\n\t\t\tcustomData\n\t\t}\n\t"])))
+        paymentMethod: i1.gql(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n\t\tfragment PaymentMethodFragment on PaymentMethod {\n\t\t\tid\n\t\t\ttype\n\t\t\ttitle\n\t\t\tdescription\n\t\t\tadapter\n\t\t\torder\n\t\t\tenable\n\t\t\tcustomData\n\t\t}\n\t"], ["\n\t\tfragment PaymentMethodFragment on PaymentMethod {\n\t\t\tid\n\t\t\ttype\n\t\t\ttitle\n\t\t\tdescription\n\t\t\tadapter\n\t\t\torder\n\t\t\tenable\n\t\t\tcustomData\n\t\t}\n\t"])))
     };
-    var ɵ0$4 = function (cartId) {
+    var ɵ0 = function (cartId) {
         if (cartId === void 0) { cartId = null; }
         if (cartId == 'null')
             cartId = null;
         var queryArguments = cartId ? "(cartId: \"" + cartId + "\")" : '';
-        return i1.gql(templateObject_2$4 || (templateObject_2$4 = __makeTemplateObject(["\n\t\t\t\tquery GetPaymentMethods {\n\t\t\t\t\tpaymentMethods:paymentMethod", " {\n\t\t\t\t\t\t...PaymentMethodFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tquery GetPaymentMethods {\n\t\t\t\t\tpaymentMethods:paymentMethod", " {\n\t\t\t\t\t\t...PaymentMethodFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"])), queryArguments, PaymentMethodFragments.paymentMethod);
+        return i1.gql(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n\t\t\t\tquery GetPaymentMethods {\n\t\t\t\t\tpaymentMethods:paymentMethod", " {\n\t\t\t\t\t\t...PaymentMethodFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tquery GetPaymentMethods {\n\t\t\t\t\tpaymentMethods:paymentMethod", " {\n\t\t\t\t\t\t...PaymentMethodFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"])), queryArguments, PaymentMethodFragments.paymentMethod);
     };
     var PaymentMethodGql = {
         queries: {
-            getPaymentMethod: ɵ0$4
+            getPaymentMethod: ɵ0
+        }
+    };
+    var templateObject_1, templateObject_2;
+
+    var ImageFragments = {
+        image: i1.gql(templateObject_1$1 || (templateObject_1$1 = __makeTemplateObject(["\n\t\tfragment ImageFragment on Image {\n\t\t\tid\n\t\t\tuploadDate\n\t\t\timages\n\t\t}\n\t"], ["\n\t\tfragment ImageFragment on Image {\n\t\t\tid\n\t\t\tuploadDate\n\t\t\timages\n\t\t}\n\t"])))
+    };
+    var templateObject_1$1;
+
+    var ModifierFragments = {
+        modifier: i1.gql(templateObject_1$2 || (templateObject_1$2 = __makeTemplateObject(["\n\t\tfragment ModifierFragment on Modifier {\n\t\t\tmodifierId\n\t\t\tmaxAmount\n\t\t\tminAmount\n\t\t\tdefaultAmount\n\t\t\thideIfDefaultAmount\n\t\t\tdish {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tdescription\n\t\t\t\tgroupId\n\t\t\t\tprice\n\t\t\t\tweight\n\t\t\t\tbalance\n\t\t\t\ttags\n\t\t\t\timages {\n\t\t\t\t\t...ImageFragment\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t", "\n\t"], ["\n\t\tfragment ModifierFragment on Modifier {\n\t\t\tmodifierId\n\t\t\tmaxAmount\n\t\t\tminAmount\n\t\t\tdefaultAmount\n\t\t\thideIfDefaultAmount\n\t\t\tdish {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t\tdescription\n\t\t\t\tgroupId\n\t\t\t\tprice\n\t\t\t\tweight\n\t\t\t\tbalance\n\t\t\t\ttags\n\t\t\t\timages {\n\t\t\t\t\t...ImageFragment\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\t", "\n\t"])), ImageFragments.image)
+    };
+    var templateObject_1$2;
+
+    var GroupModifierFragments = {
+        groupModifier: i1.gql(templateObject_1$3 || (templateObject_1$3 = __makeTemplateObject(["\n\t\tfragment GroupModifierFragment on GroupModifier {\n\t\t\tmodifierId\n\t\t\tmaxAmount\n\t\t\tminAmount\n\t\t\trequired\n\t\t\tchildModifiers {\n\t\t\t\t...ModifierFragment\n\t\t\t}\n\t\t\tgroup {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t}\n\t\t}\n\t\t", "\n\t"], ["\n\t\tfragment GroupModifierFragment on GroupModifier {\n\t\t\tmodifierId\n\t\t\tmaxAmount\n\t\t\tminAmount\n\t\t\trequired\n\t\t\tchildModifiers {\n\t\t\t\t...ModifierFragment\n\t\t\t}\n\t\t\tgroup {\n\t\t\t\tid\n\t\t\t\tname\n\t\t\t}\n\t\t}\n\t\t", "\n\t"])), ModifierFragments.modifier)
+    };
+    var templateObject_1$3;
+
+    var DishFragments = {
+        dish: i1.gql(templateObject_1$4 || (templateObject_1$4 = __makeTemplateObject(["\n\t\tfragment DishFragment on Dish {\n\t\t\tid\n\t\t\tname\n\t\t\tdescription\n\t\t\tgroupId\n\t\t\tprice\n\t\t\tweight\n\t\t\tbalance\n\t\t\ttags\n\t\t\tadditionalInfo\n\t\t\timages {\n\t\t\t\t...ImageFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\t...GroupModifierFragment\n\t\t\t}\n\t\t\tparentGroup {\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t\t", "\n\t\t", "\n\t"], ["\n\t\tfragment DishFragment on Dish {\n\t\t\tid\n\t\t\tname\n\t\t\tdescription\n\t\t\tgroupId\n\t\t\tprice\n\t\t\tweight\n\t\t\tbalance\n\t\t\ttags\n\t\t\tadditionalInfo\n\t\t\timages {\n\t\t\t\t...ImageFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\t...GroupModifierFragment\n\t\t\t}\n\t\t\tparentGroup {\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t\t", "\n\t\t", "\n\t"])), ImageFragments.image, GroupModifierFragments.groupModifier)
+    };
+    var ɵ0$1 = function () { return i1.gql(templateObject_2$1 || (templateObject_2$1 = __makeTemplateObject(["\n\t\t\tquery GetDishes {\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetDishes {\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t"])), DishFragments.dish); };
+    var DishGql = {
+        queries: {
+            getDishes: ɵ0$1
+        }
+    };
+    var templateObject_1$4, templateObject_2$1;
+
+    var CartDishFragments = {
+        cartDish: i1.gql(templateObject_1$5 || (templateObject_1$5 = __makeTemplateObject(["\n\t\tfragment CartDishFragment on CartDish {\n\t\t\tid\n\t\t\tamount\n\t\t\tdish {\n\t\t\t\t...DishFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\tid\n\t\t\t\tdish {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t\tamount\n\t\t\t\tgroupId\n\t\t\t}\n\t\t\tdiscountTotal\n\t\t\tcomment\n\t\t\tweight\n\t\t\ttotalWeight\n\t\t}\n\t\t", "\n\t"], ["\n\t\tfragment CartDishFragment on CartDish {\n\t\t\tid\n\t\t\tamount\n\t\t\tdish {\n\t\t\t\t...DishFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\tid\n\t\t\t\tdish {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t\tamount\n\t\t\t\tgroupId\n\t\t\t}\n\t\t\tdiscountTotal\n\t\t\tcomment\n\t\t\tweight\n\t\t\ttotalWeight\n\t\t}\n\t\t", "\n\t"])), DishFragments.dish)
+    };
+    var templateObject_1$5;
+
+    var CartFragments = {
+        cart: i1.gql(templateObject_1$6 || (templateObject_1$6 = __makeTemplateObject(["\n\t\tfragment CartFragment on Cart {\n\t\t\tid\n\t\t\tdishesCount\n\t\t\tcomment\n\t\t\tpersonsCount\n\t\t\tdeliveryDescription\n\t\t\tmessage\n\t\t\tdeliveryCost\n\t\t\ttotalWeight\n\t\t\ttotal\n\t\t\torderTotal\n\t\t\tcartTotal\n\t\t\tdiscountTotal\n\t\t\tstate\n\t\t}\n\t"], ["\n\t\tfragment CartFragment on Cart {\n\t\t\tid\n\t\t\tdishesCount\n\t\t\tcomment\n\t\t\tpersonsCount\n\t\t\tdeliveryDescription\n\t\t\tmessage\n\t\t\tdeliveryCost\n\t\t\ttotalWeight\n\t\t\ttotal\n\t\t\torderTotal\n\t\t\tcartTotal\n\t\t\tdiscountTotal\n\t\t\tstate\n\t\t}\n\t"]))),
+        cartOrderData: i1.gql(templateObject_2$2 || (templateObject_2$2 = __makeTemplateObject(["\n\t\tfragment CartOrderDataFragment on Cart {\n\t\t\trmsDelivered\n\t\t\trmsId\n\t\t\trmsOrderNumber\n\t\t\trmsOrderData\n\t\t\trmsDeliveryDate\n\t\t\trmsErrorMessage\n\t\t\trmsErrorCode\n\t\t\trmsStatusCode\n\t\t\tcustomer\n\t\t\taddress\n\t\t\tpaid\n\t\t\tisPaymentPromise\n\t\t}\n\t"], ["\n\t\tfragment CartOrderDataFragment on Cart {\n\t\t\trmsDelivered\n\t\t\trmsId\n\t\t\trmsOrderNumber\n\t\t\trmsOrderData\n\t\t\trmsDeliveryDate\n\t\t\trmsErrorMessage\n\t\t\trmsErrorCode\n\t\t\trmsStatusCode\n\t\t\tcustomer\n\t\t\taddress\n\t\t\tpaid\n\t\t\tisPaymentPromise\n\t\t}\n\t"]))),
+    };
+    var ɵ0$2 = function (orderId) {
+        var queryArguments = orderId ? "(orderNumber: \"" + orderId + "\")" : '';
+        return i1.gql(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n\t\t\t\tquery getOrder {\n\t\t\t\t\tgetOrder", " {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t\t...CartOrderDataFragment\n\t\t\t\t\t\t\tpaymentMethod {\n\t\t\t\t\t\t\t\t...PaymentMethodFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t\tcustomData\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tquery getOrder {\n\t\t\t\t\tgetOrder", " {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t\t...CartOrderDataFragment\n\t\t\t\t\t\t\tpaymentMethod {\n\t\t\t\t\t\t\t\t...PaymentMethodFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t\tcustomData\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"])), queryArguments, CartFragments.cart, CartFragments.cartOrderData, PaymentMethodFragments.paymentMethod);
+    }, ɵ1 = function (cartId) {
+        if (cartId === void 0) { cartId = null; }
+        if (cartId == 'null')
+            cartId = null;
+        var queryArguments = cartId ? "(cartId: \"" + cartId + "\")" : '';
+        return i1.gql(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n\t\t\t\tquery GetCart {\n\t\t\t\t\tcart", " {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tquery GetCart {\n\t\t\t\t\tcart", " {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t"])), queryArguments, CartFragments.cart);
+    }, ɵ2 = function (phone) {
+        return i1.gql(templateObject_5 || (templateObject_5 = __makeTemplateObject(["\n\t\t\t\tquery phone {\n\t\t\t\t\tphone(phone: \"", "\") {\n\t\t\t\t\t\tid\n\t\t\t\t\t\tphone\n\t\t\t\t\t\tisFirst\n\t\t\t\t\t\tisConfirm\n\t\t\t\t\t\tcodeTime\n\t\t\t\t\t\tconfirmCode\n\t\t\t\t\t\tcustomData\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"], ["\n\t\t\t\tquery phone {\n\t\t\t\t\tphone(phone: \"", "\") {\n\t\t\t\t\t\tid\n\t\t\t\t\t\tphone\n\t\t\t\t\t\tisFirst\n\t\t\t\t\t\tisConfirm\n\t\t\t\t\t\tcodeTime\n\t\t\t\t\t\tconfirmCode\n\t\t\t\t\t\tcustomData\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"])), phone);
+    }, ɵ3 = function (phone) {
+        return i1.gql(templateObject_6 || (templateObject_6 = __makeTemplateObject(["\n\t\t\t\tquery checkPhone {\n\t\t\t\t\tcheckPhone(phone: \"", "\") {\n\t\t\t\t\t\ttype\n\t\t\t\t\t\ttitle\n\t\t\t\t\t\tmessage\n\t\t\t\t\t\tconfirmed\n\t\t\t\t\t\tfirstbuy\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"], ["\n\t\t\t\tquery checkPhone {\n\t\t\t\t\tcheckPhone(phone: \"", "\") {\n\t\t\t\t\t\ttype\n\t\t\t\t\t\ttitle\n\t\t\t\t\t\tmessage\n\t\t\t\t\t\tconfirmed\n\t\t\t\t\t\tfirstbuy\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"])), phone);
+    }, ɵ4 = function () {
+        return i1.gql(templateObject_7 || (templateObject_7 = __makeTemplateObject(["\n\t\t\t\tmutation AddDishToCart(\n\t\t\t\t\t$cartId: String, \n\t\t\t\t\t$dishId: String, \n\t\t\t\t\t$amount: Int, \n\t\t\t\t\t$modifiers: Json, \n\t\t\t\t\t$comment: String,\n\t\t\t\t\t$from: String,\n\t\t\t\t\t$replace: Boolean,\n\t\t\t\t\t$cartDishId: String\n\t\t\t\t) {\n\t\t\t\t\tcartAddDish(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tdishId: $dishId,\n\t\t\t\t\t\tamount: $amount,\n\t\t\t\t\t\tmodifiers: $modifiers,\n\t\t\t\t\t\tcomment: $comment,\n\t\t\t\t\t\tfrom: $from,\n\t\t\t\t\t\treplace: $replace,\n\t\t\t\t\t\tcartDishId: $cartDishId\n\t\t\t\t\t) {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tmutation AddDishToCart(\n\t\t\t\t\t$cartId: String, \n\t\t\t\t\t$dishId: String, \n\t\t\t\t\t$amount: Int, \n\t\t\t\t\t$modifiers: Json, \n\t\t\t\t\t$comment: String,\n\t\t\t\t\t$from: String,\n\t\t\t\t\t$replace: Boolean,\n\t\t\t\t\t$cartDishId: String\n\t\t\t\t) {\n\t\t\t\t\tcartAddDish(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tdishId: $dishId,\n\t\t\t\t\t\tamount: $amount,\n\t\t\t\t\t\tmodifiers: $modifiers,\n\t\t\t\t\t\tcomment: $comment,\n\t\t\t\t\t\tfrom: $from,\n\t\t\t\t\t\treplace: $replace,\n\t\t\t\t\t\tcartDishId: $cartDishId\n\t\t\t\t\t) {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"])), CartFragments.cart, CartDishFragments.cartDish, DishFragments.dish);
+    }, ɵ5 = function () {
+        return i1.gql(templateObject_8 || (templateObject_8 = __makeTemplateObject(["\n\t\t\t\tmutation cartRemoveDish(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$cartDishId: Int!, \n\t\t\t\t\t$amount: Int!, \n\t\t\t\t) {\n\t\t\t\t\tcartRemoveDish(\n\t\t\t\t\t\tid: $cartId,\n\t\t\t\t\t\tcartDishId: $cartDishId,\n\t\t\t\t\t\tamount: $amount,\n\t\t\t\t\t) {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tmutation cartRemoveDish(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$cartDishId: Int!, \n\t\t\t\t\t$amount: Int!, \n\t\t\t\t) {\n\t\t\t\t\tcartRemoveDish(\n\t\t\t\t\t\tid: $cartId,\n\t\t\t\t\t\tcartDishId: $cartDishId,\n\t\t\t\t\t\tamount: $amount,\n\t\t\t\t\t) {\n\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"])), CartFragments.cart, CartDishFragments.cartDish, DishFragments.dish);
+    }, ɵ6 = function () {
+        return i1.gql(templateObject_9 || (templateObject_9 = __makeTemplateObject(["\n\t\t\t\tmutation orderCart(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$paymentMethodId: String!,\n\t\t\t\t\t$selfService: Boolean,\n\t\t\t\t\t$address: Address,\n\t\t\t\t\t$customer: Customer!\n\t\t\t\t) {\n\t\t\t\t\torderCart(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tpaymentMethodId: $paymentMethodId,\n\t\t\t\t\t\tselfService: $selfService,\n\t\t\t\t\t\taddress: $address,\n\t\t\t\t\t\tcustomer: $customer\n\t\t\t\t\t) {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmessage {\n\t\t\t\t\t\t\ttitle\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tmessage\n\t\t\t\t\t\t}\n\t\t\t\t\t\taction {\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tdata\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tmutation orderCart(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$paymentMethodId: String!,\n\t\t\t\t\t$selfService: Boolean,\n\t\t\t\t\t$address: Address,\n\t\t\t\t\t$customer: Customer!\n\t\t\t\t) {\n\t\t\t\t\torderCart(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tpaymentMethodId: $paymentMethodId,\n\t\t\t\t\t\tselfService: $selfService,\n\t\t\t\t\t\taddress: $address,\n\t\t\t\t\t\tcustomer: $customer\n\t\t\t\t\t) {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmessage {\n\t\t\t\t\t\t\ttitle\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tmessage\n\t\t\t\t\t\t}\n\t\t\t\t\t\taction {\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tdata\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"])), CartFragments.cart, CartDishFragments.cartDish, DishFragments.dish);
+    }, ɵ7 = function () {
+        return i1.gql(templateObject_10 || (templateObject_10 = __makeTemplateObject(["\n\t\t\t\tmutation checkCart(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$paymentMethodId: String!,\n\t\t\t\t\t$selfService: Boolean,\n\t\t\t\t\t$address: Address,\n\t\t\t\t\t$customer: Customer!\n\t\t\t\t) {\n\t\t\t\t\tcheckCart(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tpaymentMethodId: $paymentMethodId,\n\t\t\t\t\t\tselfService: $selfService,\n\t\t\t\t\t\taddress: $address,\n\t\t\t\t\t\tcustomer: $customer\n\t\t\t\t\t) {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmessage {\n\t\t\t\t\t\t\ttitle\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tmessage\n\t\t\t\t\t\t}\n\t\t\t\t\t\taction {\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tdata\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"], ["\n\t\t\t\tmutation checkCart(\n\t\t\t\t\t$cartId: String!, \n\t\t\t\t\t$paymentMethodId: String!,\n\t\t\t\t\t$selfService: Boolean,\n\t\t\t\t\t$address: Address,\n\t\t\t\t\t$customer: Customer!\n\t\t\t\t) {\n\t\t\t\t\tcheckCart(\n\t\t\t\t\t\tcartId: $cartId,\n\t\t\t\t\t\tpaymentMethodId: $paymentMethodId,\n\t\t\t\t\t\tselfService: $selfService,\n\t\t\t\t\t\taddress: $address,\n\t\t\t\t\t\tcustomer: $customer\n\t\t\t\t\t) {\n\t\t\t\t\t\tcart {\n\t\t\t\t\t\t\t...CartFragment\n\t\t\t\t\t\t\tdishes {\n\t\t\t\t\t\t\t\t...CartDishFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\tdeliveryItem {\n\t\t\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t\tmessage {\n\t\t\t\t\t\t\ttitle\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tmessage\n\t\t\t\t\t\t}\n\t\t\t\t\t\taction {\n\t\t\t\t\t\t\ttype\n\t\t\t\t\t\t\tdata\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t"])), CartFragments.cart, CartDishFragments.cartDish, DishFragments.dish);
+    }, ɵ8 = function () {
+        return i1.gql(templateObject_11 || (templateObject_11 = __makeTemplateObject(["\n\t\t\t\tmutation checkPhoneCode(\n\t\t\t\t\t$phone: String!,\n\t\t\t\t\t$code: String!\n\t\t\t\t) {\n\t\t\t\t\tsetPhoneCode(\n\t\t\t\t\t\tphone: $phone,\n\t\t\t\t\t\tcode: $code\n\t\t\t\t\t) {\n\t\t\t\t\t\ttype\n\t\t\t\t\t\ttitle\n\t\t\t\t\t\tmessage\n\t\t\t\t\t\tconfirmed\n\t\t\t\t\t\tfirstbuy\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"], ["\n\t\t\t\tmutation checkPhoneCode(\n\t\t\t\t\t$phone: String!,\n\t\t\t\t\t$code: String!\n\t\t\t\t) {\n\t\t\t\t\tsetPhoneCode(\n\t\t\t\t\t\tphone: $phone,\n\t\t\t\t\t\tcode: $code\n\t\t\t\t\t) {\n\t\t\t\t\t\ttype\n\t\t\t\t\t\ttitle\n\t\t\t\t\t\tmessage\n\t\t\t\t\t\tconfirmed\n\t\t\t\t\t\tfirstbuy\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"])));
+    };
+    var CartGql = {
+        queries: {
+            getOrder: ɵ0$2,
+            getCart: ɵ1,
+            getPhone: ɵ2,
+            checkPhone: ɵ3
+        },
+        mutations: {
+            addDishToCart: ɵ4,
+            removeDishFromCart: ɵ5,
+            orderCart: ɵ6,
+            checkCart: ɵ7,
+            checkPhoneCode: ɵ8,
+        }
+    };
+    var templateObject_1$6, templateObject_2$2, templateObject_3, templateObject_4, templateObject_5, templateObject_6, templateObject_7, templateObject_8, templateObject_9, templateObject_10, templateObject_11;
+
+    var GroupFragments = {
+        group: i1.gql(templateObject_1$7 || (templateObject_1$7 = __makeTemplateObject(["\n\t\tfragment GroupFragment on Group {\n\t\t\tid\n\t\t\tdescription\n\t\t\tname\n\t\t\torder\n\t\t\tvisible\n\t\t\tslug\n\t\t}\n\t"], ["\n\t\tfragment GroupFragment on Group {\n\t\t\tid\n\t\t\tdescription\n\t\t\tname\n\t\t\torder\n\t\t\tvisible\n\t\t\tslug\n\t\t}\n\t"])))
+    };
+    var ɵ0$3 = function () { return i1.gql(templateObject_2$3 || (templateObject_2$3 = __makeTemplateObject(["\n\t\t\tquery GetMenu {\n\t\t\t\tgroups {\n\t\t\t\t\t...GroupFragment\n\t\t\t\t\tdishes {\n\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetMenu {\n\t\t\t\tgroups {\n\t\t\t\t\t...GroupFragment\n\t\t\t\t\tdishes {\n\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"])), GroupFragments.group, DishFragments.dish); }, ɵ1$1 = function () { return i1.gql(templateObject_3$1 || (templateObject_3$1 = __makeTemplateObject(["\n\t\t\tquery GetGroupsAndDishes {\n\t\t\t\tgroups {\n\t\t\t\t\tparentGroup {\n\t\t\t\t\t\tid\n\t\t\t\t\t}\n\t\t\t\t\t...GroupFragment\n\t\t\t\t}\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetGroupsAndDishes {\n\t\t\t\tgroups {\n\t\t\t\t\tparentGroup {\n\t\t\t\t\t\tid\n\t\t\t\t\t}\n\t\t\t\t\t...GroupFragment\n\t\t\t\t}\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"])), GroupFragments.group, DishFragments.dish); };
+    var GroupGql = {
+        queries: {
+            getGroups: ɵ0$3,
+            getGroupsAndDishes: ɵ1$1
+        }
+    };
+    var templateObject_1$7, templateObject_2$3, templateObject_3$1;
+
+    var NavigationFragments = {
+        navigation: i1.gql(templateObject_1$8 || (templateObject_1$8 = __makeTemplateObject(["\n\t\tfragment NavigationFragment on Navigation {\n\t\t\tid \n\t\t\tname\n\t\t\tdescription\n\t\t\tdata {\n\t\t\t\tlabel\n\t\t\t\tlink\n\t\t\t\ttimeWork\n\t\t\t\tphone\n\t\t\t\ticon\n\t\t\t\tactive\n\t\t\t\tslug\n\t\t\t\tchild {\n\t\t\t\t\ttags\n\t\t\t\t\tslug\n\t\t\t\t\tvisible\n\t\t\t\t\tname\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"], ["\n\t\tfragment NavigationFragment on Navigation {\n\t\t\tid \n\t\t\tname\n\t\t\tdescription\n\t\t\tdata {\n\t\t\t\tlabel\n\t\t\t\tlink\n\t\t\t\ttimeWork\n\t\t\t\tphone\n\t\t\t\ticon\n\t\t\t\tactive\n\t\t\t\tslug\n\t\t\t\tchild {\n\t\t\t\t\ttags\n\t\t\t\t\tslug\n\t\t\t\t\tvisible\n\t\t\t\t\tname\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"])))
+    };
+    var ɵ0$4 = function () { return i1.gql(templateObject_2$4 || (templateObject_2$4 = __makeTemplateObject(["\n\t\t\tquery GetNavigation {\n\t\t\t\tnavigation {\n\t\t\t\t\t...NavigationFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetNavigation {\n\t\t\t\tnavigation {\n\t\t\t\t\t...NavigationFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t"])), NavigationFragments.navigation); };
+    var NavigationGql = {
+        queries: {
+            getNavigationes: ɵ0$4
         }
     };
     var templateObject_1$8, templateObject_2$4;
@@ -632,6 +643,17 @@
             }
             return this.dishes$;
         };
+        NgGqlService.prototype.getOrder$ = function (orderId) {
+            if (orderId === void 0) { orderId = null; }
+            return this.apollo.watchQuery({
+                query: CartGql.queries.getOrder(orderId)
+            })
+                .valueChanges
+                .pipe(operators.take(1), operators.map(function (_c) {
+                var data = _c.data;
+                return data.getOrder;
+            }));
+        };
         NgGqlService.prototype.getCart$ = function (cartId) {
             var _this = this;
             if (cartId === void 0) { cartId = null; }
@@ -731,7 +753,7 @@
             })
                 .pipe(operators.map(function (_c) {
                 var data = _c.data;
-                var checkPhoneResponse = data['checkPhoneCode'];
+                var checkPhoneResponse = data['setPhoneCode'];
                 return checkPhoneResponse;
             }));
         };
@@ -748,12 +770,12 @@
                 return cart;
             }));
         };
-        NgGqlService.prototype.customQuery$ = function (name, queryObject, data) {
+        NgGqlService.prototype.customQuery$ = function (name, queryObject, variables) {
             var _this = this;
-            if (data === void 0) { data = {}; }
+            if (variables === void 0) { variables = {}; }
             var queryArgumentsStrings = [];
-            for (var key in data) {
-                var valueString = data[key];
+            for (var key in variables) {
+                var valueString = variables[key];
                 if (typeof valueString !== 'number' && typeof valueString !== 'boolean') {
                     valueString = "\"" + valueString + "\"";
                 }
@@ -762,25 +784,46 @@
             var queryArgumentsString = queryArgumentsStrings.length
                 ? "(" + queryArgumentsStrings.join(', ') + ")"
                 : "";
+            var queryKey = (name + queryArgumentsString).replace(/[^a-z0-9]/gi, '');
             var query = JSON.stringify(queryObject)
                 .replace(/"/g, '')
                 .replace(/\:[a-z0-9]+/gi, '')
                 .replace(/\:/g, '');
-            if (!this.customQueryiesDataByName[name]) {
-                this.customQueryiesDataByName[name] = new rxjs.BehaviorSubject(null);
-                this.customQueriesDataLoadingByName[name] = false;
+            if (queryArgumentsString) {
+                var queriesKeys = Object.keys(queryObject);
+                var countOfQueries = queriesKeys.length;
+                if (countOfQueries == 1) {
+                    query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + queryArgumentsString);
+                }
             }
-            if (!this.customQueryiesDataByName[name].getValue() && !this.customQueriesDataLoadingByName[name]) {
-                this.apollo.watchQuery({ query: i1.gql(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["query ", "", "", ""], ["query ", "", "", ""])), name, queryArgumentsString, query) })
+            if (!this.customQueryiesDataByName[queryKey]) {
+                this.customQueryiesDataByName[queryKey] = new rxjs.BehaviorSubject(null);
+                this.customQueriesDataLoadingByName[queryKey] = false;
+            }
+            if (!this.customQueryiesDataByName[queryKey].getValue() && !this.customQueriesDataLoadingByName[queryKey]) {
+                this.apollo.watchQuery({
+                    query: i1.gql(templateObject_1$9 || (templateObject_1$9 = __makeTemplateObject(["query ", "", ""], ["query ", "", ""])), name, query),
+                    fetchPolicy: 'no-cache'
+                })
                     .valueChanges
                     .pipe(operators.tap(function (_c) {
                     var data = _c.data, loading = _c.loading;
-                    _this.customQueriesDataLoadingByName[name] = loading;
-                    _this.customQueryiesDataByName[name].next(data);
+                    _this.customQueriesDataLoadingByName[queryKey] = loading;
+                    _this.customQueryiesDataByName[queryKey].next(data);
+                }), operators.catchError(function (error) {
+                    _this.customQueryiesDataByName[queryKey].next({
+                        error: error
+                    });
+                    return rxjs.of(null);
                 }))
                     .subscribe();
             }
-            return this.customQueryiesDataByName[name].pipe(operators.filter(function (data) { return !!data; }));
+            return this.customQueryiesDataByName[queryKey].pipe(operators.switchMap(function (data) {
+                if (data && data.error) {
+                    return rxjs.throwError(data.error);
+                }
+                return rxjs.of(data);
+            }), operators.filter(function (data) { return !!data; }));
         };
         NgGqlService.prototype.customMutation$ = function (name, queryObject, data) {
             if (data === void 0) { data = {}; }
@@ -2152,6 +2195,7 @@
     exports.NgCartService = NgCartService;
     exports.NgGqlModule = NgGqlModule;
     exports.NgGqlService = NgGqlService;
+    exports.Order = Order;
     exports.OrderCartUserDirective = OrderCartUserDirective;
     exports.PaymentMethod = PaymentMethod;
     exports.Phone = Phone;
