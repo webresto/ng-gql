@@ -754,8 +754,13 @@ class NgGqlService {
         let queryArgumentsStrings = [];
         for (let key in variables) {
             let valueString = variables[key];
-            if (typeof valueString !== 'number' && typeof valueString !== 'boolean') {
-                valueString = `"${valueString}"`;
+            switch (typeof valueString) {
+                case 'object':
+                    valueString = JSON.stringify(valueString).replace(/\{"([^"]+)"\:/gi, '{$1:');
+                    break;
+                case 'string':
+                    valueString = `"${valueString}"`;
+                    break;
             }
             queryArgumentsStrings.push(`${key}: ${valueString}`);
         }
@@ -802,24 +807,36 @@ class NgGqlService {
             return of(data);
         }), filter(data => !!data));
     }
-    customMutation$(name, queryObject, data = {}) {
+    customMutation$(name, queryObject, variables = {}) {
         let mutationArgumentsStrings = [];
-        for (let key in data) {
-            let valueString = data[key];
-            if (typeof valueString !== 'number' && typeof valueString !== 'boolean') {
-                valueString = `"${valueString}"`;
+        for (let key in variables) {
+            let valueString = variables[key];
+            switch (typeof valueString) {
+                case 'object':
+                    valueString = JSON.stringify(valueString).replace(/\{"([^"]+)"\:/gi, '{$1:');
+                    break;
+                case 'string':
+                    valueString = `"${valueString}"`;
+                    break;
             }
             mutationArgumentsStrings.push(`${key}: ${valueString}`);
         }
         let mutationArgumentsString = mutationArgumentsStrings.length
             ? `(${mutationArgumentsStrings.join(', ')})`
             : ``;
-        const query = JSON.stringify(queryObject)
+        let query = JSON.stringify(queryObject)
             .replace(/"/g, '')
             .replace(/\:[a-z0-9]+/gi, '')
             .replace(/\:/g, '');
+        if (mutationArgumentsString) {
+            const queriesKeys = Object.keys(queryObject);
+            const countOfQueries = queriesKeys.length;
+            if (countOfQueries == 1) {
+                query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + mutationArgumentsString);
+            }
+        }
         return this.apollo.mutate({
-            mutation: gql `mutation ${name}${mutationArgumentsString}${query}`
+            mutation: gql `mutation ${name}${query}`
         });
     }
 }
@@ -922,7 +939,12 @@ class NgCartService {
         });
     }
     orderCart$(data) {
-        return this.ngGqlService.orderCart$(data);
+        return this.ngGqlService.orderCart$(data)
+            .pipe(tap(({ action }) => {
+            if (action.data && action.data.redirectLink) {
+                window.location.href = action.data.redirectLink;
+            }
+        }));
     }
     checkCart$(data) {
         console.log('Check cart$', data);

@@ -776,8 +776,13 @@
             var queryArgumentsStrings = [];
             for (var key in variables) {
                 var valueString = variables[key];
-                if (typeof valueString !== 'number' && typeof valueString !== 'boolean') {
-                    valueString = "\"" + valueString + "\"";
+                switch (typeof valueString) {
+                    case 'object':
+                        valueString = JSON.stringify(valueString).replace(/\{"([^"]+)"\:/gi, '{$1:');
+                        break;
+                    case 'string':
+                        valueString = "\"" + valueString + "\"";
+                        break;
                 }
                 queryArgumentsStrings.push(key + ": " + valueString);
             }
@@ -825,13 +830,18 @@
                 return rxjs.of(data);
             }), operators.filter(function (data) { return !!data; }));
         };
-        NgGqlService.prototype.customMutation$ = function (name, queryObject, data) {
-            if (data === void 0) { data = {}; }
+        NgGqlService.prototype.customMutation$ = function (name, queryObject, variables) {
+            if (variables === void 0) { variables = {}; }
             var mutationArgumentsStrings = [];
-            for (var key in data) {
-                var valueString = data[key];
-                if (typeof valueString !== 'number' && typeof valueString !== 'boolean') {
-                    valueString = "\"" + valueString + "\"";
+            for (var key in variables) {
+                var valueString = variables[key];
+                switch (typeof valueString) {
+                    case 'object':
+                        valueString = JSON.stringify(valueString).replace(/\{"([^"]+)"\:/gi, '{$1:');
+                        break;
+                    case 'string':
+                        valueString = "\"" + valueString + "\"";
+                        break;
                 }
                 mutationArgumentsStrings.push(key + ": " + valueString);
             }
@@ -842,8 +852,15 @@
                 .replace(/"/g, '')
                 .replace(/\:[a-z0-9]+/gi, '')
                 .replace(/\:/g, '');
+            if (mutationArgumentsString) {
+                var queriesKeys = Object.keys(queryObject);
+                var countOfQueries = queriesKeys.length;
+                if (countOfQueries == 1) {
+                    query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + mutationArgumentsString);
+                }
+            }
             return this.apollo.mutate({
-                mutation: i1.gql(templateObject_2$5 || (templateObject_2$5 = __makeTemplateObject(["mutation ", "", "", ""], ["mutation ", "", "", ""])), name, mutationArgumentsString, query)
+                mutation: i1.gql(templateObject_2$5 || (templateObject_2$5 = __makeTemplateObject(["mutation ", "", ""], ["mutation ", "", ""])), name, query)
             });
         };
         return NgGqlService;
@@ -952,7 +969,13 @@
             });
         };
         NgCartService.prototype.orderCart$ = function (data) {
-            return this.ngGqlService.orderCart$(data);
+            return this.ngGqlService.orderCart$(data)
+                .pipe(operators.tap(function (_a) {
+                var action = _a.action;
+                if (action.data && action.data.redirectLink) {
+                    window.location.href = action.data.redirectLink;
+                }
+            }));
         };
         NgCartService.prototype.checkCart$ = function (data) {
             console.log('Check cart$', data);

@@ -48,5 +48,5 @@ export declare class NgGqlService {
     checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse>;
     removeDishFromCart$(data: RemoveFromCartInput): Observable<Cart>;
     customQuery$<T = any>(name: string, queryObject: any, variables?: any): Observable<T>;
-    customMutation$<T = any>(name: string, queryObject: any, data?: {}): Observable<FetchResult<T>>;
+    customMutation$<T = any>(name: string, queryObject: any, variables?: {}): Observable<FetchResult<T>>;
 }
