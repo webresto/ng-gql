@@ -95,6 +95,9 @@ export const CartGql = {
 						cart {
 							...CartFragment
 							...CartOrderDataFragment
+							dishes {
+								...CartDishFragment
+							}
 							paymentMethod {
 								...PaymentMethodFragment
 							}
@@ -103,6 +106,7 @@ export const CartGql = {
 					}
 				}
 				${CartFragments.cart}
+				${CartDishFragments.cartDish}
 				${CartFragments.cartOrderData}
 				${PaymentMethodFragments.paymentMethod}
 			`;
@@ -114,9 +118,13 @@ export const CartGql = {
 				query GetCart {
 					cart${queryArguments} {
 						...CartFragment
+						dishes {
+							...CartDishFragment
+						}
 					}
 				}
 				${CartFragments.cart}
+				${CartDishFragments.cartDish}
 			`;
 		},
 		getPhone: (phone: string) => {

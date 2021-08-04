@@ -13,6 +13,7 @@ export const NavigationFragments = {
 				phone
 				icon
 				active
+				controller
 				slug
 				child {
 					tags

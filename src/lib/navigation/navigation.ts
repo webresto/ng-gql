@@ -9,6 +9,7 @@ export class Navigation {
       	phone: string,
       	icon: string,
       	active: string,
+		controller: string,
 		slug: string
 	}
 }

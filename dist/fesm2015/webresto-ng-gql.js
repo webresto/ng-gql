@@ -239,6 +239,9 @@ const ɵ0$2 = (orderId) => {
 						cart {
 							...CartFragment
 							...CartOrderDataFragment
+							dishes {
+								...CartDishFragment
+							}
 							paymentMethod {
 								...PaymentMethodFragment
 							}
@@ -247,6 +250,7 @@ const ɵ0$2 = (orderId) => {
 					}
 				}
 				${CartFragments.cart}
+				${CartDishFragments.cartDish}
 				${CartFragments.cartOrderData}
 				${PaymentMethodFragments.paymentMethod}
 			`;
@@ -258,9 +262,13 @@ const ɵ0$2 = (orderId) => {
 				query GetCart {
 					cart${queryArguments} {
 						...CartFragment
+						dishes {
+							...CartDishFragment
+						}
 					}
 				}
 				${CartFragments.cart}
+				${CartDishFragments.cartDish}
 			`;
 }, ɵ2 = (phone) => {
     return gql `
@@ -521,6 +529,7 @@ const NavigationFragments = {
 				phone
 				icon
 				active
+				controller
 				slug
 				child {
 					tags
