@@ -118,7 +118,7 @@ export class NgGqlService {
                 this.menu$.next([]);
                 return;
               }
-              this.menu$.next(groupsById[bySlugGroupId].childGroups);
+              this.menu$.next(groupsById[bySlugGroupId].childGroups.sort((g1: Group, g2: Group) => g1.order - g2.order));
               return;
             }
 

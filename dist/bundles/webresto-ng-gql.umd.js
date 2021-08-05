@@ -617,7 +617,7 @@
                             _this.menu$.next([]);
                             return;
                         }
-                        _this.menu$.next(groupsById[bySlugGroupId].childGroups);
+                        _this.menu$.next(groupsById[bySlugGroupId].childGroups.sort(function (g1, g2) { return g1.order - g2.order; }));
                         return;
                     }
                     var groupsAndDishes = Object.values(groupsById).sort(function (g1, g2) { return g1.order - g2.order; });

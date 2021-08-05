@@ -630,7 +630,7 @@ class NgGqlService {
                         this.menu$.next([]);
                         return;
                     }
-                    this.menu$.next(groupsById[bySlugGroupId].childGroups);
+                    this.menu$.next(groupsById[bySlugGroupId].childGroups.sort((g1, g2) => g1.order - g2.order));
                     return;
                 }
                 const groupsAndDishes = Object.values(groupsById).sort((g1, g2) => g1.order - g2.order);
