@@ -112,12 +112,19 @@ export class NgCartService {
     return this.ngGqlService.checkCart$(data);
   }
 
-  setDishCountToCart(dishId, amount) {
-    console.log('setDishCountToCart');
+  setDishCountToCart$(dishId, amount) {
+    return this.ngGqlService.setDishAmount$({
+      cartDishId: dishId,
+      cartId: this.cartId,
+      amount
+    });
   }
 
-  setDishComment(dishId, comment) {
-    console.log('setDishComment');
-    return of(null);
+  setDishComment$(dishId, comment) {
+    return this.ngGqlService.setDishComment$({
+      cartDishId: dishId,
+      cartId: this.cartId,
+      comment
+    });
   }
 }

@@ -4,7 +4,7 @@ import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { tap, filter, take, map, catchError, switchMap } from 'rxjs/operators';
 import { Cart } from './cart/cart';
-import { CartGql, AddToCartInput, RemoveFromCartInput, OrderCartInput, CheckPhoneCodeInput } from './cart/cart.gql';
+import { CartGql, AddToCartInput, RemoveFromCartInput, OrderCartInput, CheckPhoneCodeInput, SetDishAmountInput, SetDishCommentInput } from './cart/cart.gql';
 import { CheckPhoneResponse } from './cart/check-phone-response';
 import { CheckResponse } from './cart/check-response';
 import { Order } from './cart/order';
@@ -72,7 +72,7 @@ export class NgGqlService {
   }
 
   getMenu$(slug: string = null): BehaviorSubject<Group[]> {
-    if (!this.menu$.getValue() && !this.menuLoading) {
+    if (!this.menuLoading) {
       this.apollo.watchQuery<any>({
         query: GroupGql.queries.getGroupsAndDishes()
       })
@@ -278,7 +278,35 @@ export class NgGqlService {
     })
       .pipe(
         map(({ data }) => {
-          const cart: Cart = data['cartAddDish'];
+          const cart: Cart = data['cartRemoveDish'];
+          this.cart$.next(cart);
+          return cart;
+        })
+      )
+  }
+
+  setDishAmount$(data: SetDishAmountInput): Observable<Cart> {
+    return this.apollo.mutate({
+      mutation: CartGql.mutations.setDishAmount(),
+      variables: data
+    })
+      .pipe(
+        map(({ data }) => {
+          const cart: Cart = data['cartSetDishAmount'];
+          this.cart$.next(cart);
+          return cart;
+        })
+      )
+  }
+
+  setDishComment$(data: SetDishCommentInput): Observable<Cart> {
+    return this.apollo.mutate({
+      mutation: CartGql.mutations.setDishComment(),
+      variables: data
+    })
+      .pipe(
+        map(({ data }) => {
+          const cart: Cart = data['cartSetDishComment'];
           this.cart$.next(cart);
           return cart;
         })

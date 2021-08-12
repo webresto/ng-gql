@@ -24,16 +24,16 @@ export class SetAmountDirective {
 
     switch (action) {
       case '+':
-        this.cartService.setDishCountToCart(
+        this.cartService.setDishCountToCart$(
           this.dish.id,
           this.dish.amount + 1
-        );
+        ).subscribe();
         break;
       case '-':
-        this.cartService.setDishCountToCart(
+        this.cartService.setDishCountToCart$(
           this.dish.id,
           this.dish.amount - 1
-        );
+        ).subscribe();
         break;
       default:
         console.log("Директива SetDishAmount получила ложное значение action");

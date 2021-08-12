@@ -15,6 +15,7 @@ export const NavigationFragments = {
 				active
 				controller
 				slug
+				warning
 				child {
 					tags
 					slug

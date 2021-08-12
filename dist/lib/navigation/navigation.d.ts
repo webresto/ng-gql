@@ -11,5 +11,7 @@ export declare class Navigation {
         active: string;
         controller: string;
         slug: string;
+        warning: string;
+        child?: any;
     };
 }

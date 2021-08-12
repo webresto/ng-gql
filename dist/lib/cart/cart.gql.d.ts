@@ -13,6 +13,16 @@ export declare type RemoveFromCartInput = {
     cartDishId?: number;
     amount?: number;
 };
+export declare type SetDishAmountInput = {
+    cartId?: string;
+    cartDishId?: number;
+    amount?: number;
+};
+export declare type SetDishCommentInput = {
+    cartId?: string;
+    cartDishId?: number;
+    comment?: string;
+};
 export declare type OrderCartInput = {
     cartId: string;
     paymentMethodId?: string;
@@ -54,6 +64,8 @@ export declare const CartGql: {
     mutations: {
         addDishToCart: () => import("graphql").DocumentNode;
         removeDishFromCart: () => import("graphql").DocumentNode;
+        setDishAmount: () => import("graphql").DocumentNode;
+        setDishComment: () => import("graphql").DocumentNode;
         orderCart: () => import("graphql").DocumentNode;
         checkCart: () => import("graphql").DocumentNode;
         checkPhoneCode: () => import("graphql").DocumentNode;

@@ -25,6 +25,6 @@ export declare class NgCartService {
     removeDishFromCart$(dishId: any, amount: any): Observable<import("../cart/cart").Cart>;
     orderCart$(data: OrderCartInput): Observable<CheckResponse>;
     checkCart$(data: OrderCartInput): Observable<CheckResponse>;
-    setDishCountToCart(dishId: any, amount: any): void;
-    setDishComment(dishId: any, comment: any): Observable<any>;
+    setDishCountToCart$(dishId: any, amount: any): Observable<import("../cart/cart").Cart>;
+    setDishComment$(dishId: any, comment: any): Observable<import("../cart/cart").Cart>;
 }

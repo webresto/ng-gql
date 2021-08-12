@@ -10,6 +10,8 @@ export class Navigation {
       	icon: string,
       	active: string,
 		controller: string,
-		slug: string
+		slug: string,
+		warning: string,
+		child?: any
 	}
 }

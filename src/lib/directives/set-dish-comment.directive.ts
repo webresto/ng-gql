@@ -18,7 +18,7 @@ export class SetDishCommentDirective {
   constructor(private cartService:NgCartService) { }
 
   setComment(){
-    this.cartService.setDishComment(this.dish.id,this.comment).subscribe(
+    this.cartService.setDishComment$(this.dish.id,this.comment).subscribe(
       res=>this.success.emit(true),
       err=>this.error.emit(err)
     )

@@ -20,6 +20,18 @@ export type RemoveFromCartInput = {
 	amount?: number
 };
 
+export type SetDishAmountInput = {
+	cartId?: string,
+	cartDishId?: number,
+	amount?: number
+};
+
+export type SetDishCommentInput = {
+	cartId?: string,
+	cartDishId?: number,
+	comment?: string
+};
+
 export type OrderCartInput = {
 	cartId: string,
 	paymentMethodId?: string,
@@ -204,6 +216,58 @@ export const CartGql = {
 						id: $cartId,
 						cartDishId: $cartDishId,
 						amount: $amount,
+					) {
+						...CartFragment
+						dishes {
+							...CartDishFragment
+						}
+						deliveryItem {
+							...DishFragment
+						}
+					}
+				}
+				${CartFragments.cart}
+				${CartDishFragments.cartDish}
+				${DishFragments.dish}
+			`;
+		},
+		setDishAmount: () => {
+			return gql`
+				mutation cartSetDishAmount(
+					$cartId: String,
+					$cartDishId: Int,
+					$amount: Int
+				) {
+					cartSetDishAmount(
+						id: $cartId,
+						cartDishId: $cartDishId,
+						amount: $amount
+					) {
+						...CartFragment
+						dishes {
+							...CartDishFragment
+						}
+						deliveryItem {
+							...DishFragment
+						}
+					}
+				}
+				${CartFragments.cart}
+				${CartDishFragments.cartDish}
+				${DishFragments.dish}
+			`;
+		},
+		setDishComment: () => {
+			return gql`
+				mutation cartSetDishComment(
+					$cartId: String,
+					$cartDishId: Int,
+					$comment: Int
+				) {
+					cartSetDishComment(
+						id: $cartId,
+						cartDishId: $cartDishId,
+						comment: $comment
 					) {
 						...CartFragment
 						dishes {

@@ -358,6 +358,56 @@ const ɵ0$2 = (orderId) => {
 			`;
 }, ɵ6 = () => {
     return gql `
+				mutation cartSetDishAmount(
+					$cartId: String,
+					$cartDishId: Int,
+					$amount: Int
+				) {
+					cartSetDishAmount(
+						id: $cartId,
+						cartDishId: $cartDishId,
+						amount: $amount
+					) {
+						...CartFragment
+						dishes {
+							...CartDishFragment
+						}
+						deliveryItem {
+							...DishFragment
+						}
+					}
+				}
+				${CartFragments.cart}
+				${CartDishFragments.cartDish}
+				${DishFragments.dish}
+			`;
+}, ɵ7 = () => {
+    return gql `
+				mutation cartSetDishComment(
+					$cartId: String,
+					$cartDishId: Int,
+					$comment: Int
+				) {
+					cartSetDishComment(
+						id: $cartId,
+						cartDishId: $cartDishId,
+						comment: $comment
+					) {
+						...CartFragment
+						dishes {
+							...CartDishFragment
+						}
+						deliveryItem {
+							...DishFragment
+						}
+					}
+				}
+				${CartFragments.cart}
+				${CartDishFragments.cartDish}
+				${DishFragments.dish}
+			`;
+}, ɵ8 = () => {
+    return gql `
 				mutation orderCart(
 					$cartId: String!, 
 					$paymentMethodId: String!,
@@ -396,7 +446,7 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ7 = () => {
+}, ɵ9 = () => {
     return gql `
 				mutation checkCart(
 					$cartId: String!, 
@@ -436,7 +486,7 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ8 = () => {
+}, ɵ10 = () => {
     return gql `
 				mutation checkPhoneCode(
 					$phone: String!,
@@ -465,9 +515,11 @@ const CartGql = {
     mutations: {
         addDishToCart: ɵ4,
         removeDishFromCart: ɵ5,
-        orderCart: ɵ6,
-        checkCart: ɵ7,
-        checkPhoneCode: ɵ8,
+        setDishAmount: ɵ6,
+        setDishComment: ɵ7,
+        orderCart: ɵ8,
+        checkCart: ɵ9,
+        checkPhoneCode: ɵ10,
     }
 };
 
@@ -531,6 +583,7 @@ const NavigationFragments = {
 				active
 				controller
 				slug
+				warning
 				child {
 					tags
 					slug
@@ -585,7 +638,7 @@ class NgGqlService {
         return this.navigationData$;
     }
     getMenu$(slug = null) {
-        if (!this.menu$.getValue() && !this.menuLoading) {
+        if (!this.menuLoading) {
             this.apollo.watchQuery({
                 query: GroupGql.queries.getGroupsAndDishes()
             })
@@ -754,7 +807,29 @@ class NgGqlService {
             variables: data
         })
             .pipe(map(({ data }) => {
-            const cart = data['cartAddDish'];
+            const cart = data['cartRemoveDish'];
+            this.cart$.next(cart);
+            return cart;
+        }));
+    }
+    setDishAmount$(data) {
+        return this.apollo.mutate({
+            mutation: CartGql.mutations.setDishAmount(),
+            variables: data
+        })
+            .pipe(map(({ data }) => {
+            const cart = data['cartSetDishAmount'];
+            this.cart$.next(cart);
+            return cart;
+        }));
+    }
+    setDishComment$(data) {
+        return this.apollo.mutate({
+            mutation: CartGql.mutations.setDishComment(),
+            variables: data
+        })
+            .pipe(map(({ data }) => {
+            const cart = data['cartSetDishComment'];
             this.cart$.next(cart);
             return cart;
         }));
@@ -959,12 +1034,19 @@ class NgCartService {
         console.log('Check cart$', data);
         return this.ngGqlService.checkCart$(data);
     }
-    setDishCountToCart(dishId, amount) {
-        console.log('setDishCountToCart');
+    setDishCountToCart$(dishId, amount) {
+        return this.ngGqlService.setDishAmount$({
+            cartDishId: dishId,
+            cartId: this.cartId,
+            amount
+        });
     }
-    setDishComment(dishId, comment) {
-        console.log('setDishComment');
-        return of(null);
+    setDishComment$(dishId, comment) {
+        return this.ngGqlService.setDishComment$({
+            cartDishId: dishId,
+            cartId: this.cartId,
+            comment
+        });
     }
 }
 NgCartService.ɵprov = ɵɵdefineInjectable({ factory: function NgCartService_Factory() { return new NgCartService(ɵɵinject(NgGqlService), ɵɵinject(EventerService)); }, token: NgCartService, providedIn: "root" });
@@ -1004,6 +1086,7 @@ class AddDishToCartDirective {
             "replace": this.replaceCartDishId ? true : undefined,
             "cartDishId": this.replaceCartDishId
         };
+        console.log('data', data);
         console.log('this.cart', this.cart);
         console.log('this.modifiers', this.modifiers);
         if (this.cart.id)
@@ -1270,10 +1353,10 @@ class SetAmountDirective {
     changeAmount(action) {
         switch (action) {
             case '+':
-                this.cartService.setDishCountToCart(this.dish.id, this.dish.amount + 1);
+                this.cartService.setDishCountToCart$(this.dish.id, this.dish.amount + 1).subscribe();
                 break;
             case '-':
-                this.cartService.setDishCountToCart(this.dish.id, this.dish.amount - 1);
+                this.cartService.setDishCountToCart$(this.dish.id, this.dish.amount - 1).subscribe();
                 break;
             default:
                 console.log("Директива SetDishAmount получила ложное значение action");
@@ -2030,7 +2113,7 @@ class SetDishCommentDirective {
         this.setComment();
     }
     setComment() {
-        this.cartService.setDishComment(this.dish.id, this.comment).subscribe(res => this.success.emit(true), err => this.error.emit(err));
+        this.cartService.setDishComment$(this.dish.id, this.comment).subscribe(res => this.success.emit(true), err => this.error.emit(err));
     }
 }
 SetDishCommentDirective.decorators = [
