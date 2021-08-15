@@ -665,7 +665,8 @@
             if (cartId === void 0) { cartId = null; }
             if (!this.cart$.getValue() && !this.cartLoading) {
                 this.apollo.watchQuery({
-                    query: CartGql.queries.getCart(cartId)
+                    query: CartGql.queries.getCart(cartId),
+                    fetchPolicy: 'no-cache'
                 })
                     .valueChanges
                     .pipe(operators.take(1), operators.tap(function (_c) {
@@ -680,7 +681,8 @@
         NgGqlService.prototype.getPhone$ = function (phone) {
             var _this = this;
             return this.apollo.watchQuery({
-                query: CartGql.queries.getPhone(phone)
+                query: CartGql.queries.getPhone(phone),
+                fetchPolicy: 'no-cache'
             })
                 .valueChanges
                 .pipe(operators.map(function (_c) {
@@ -692,7 +694,8 @@
         NgGqlService.prototype.checkPhone$ = function (phone) {
             var _this = this;
             return this.apollo.watchQuery({
-                query: CartGql.queries.checkPhone(phone)
+                query: CartGql.queries.checkPhone(phone),
+                fetchPolicy: 'no-cache'
             })
                 .valueChanges
                 .pipe(operators.map(function (_c) {
@@ -1973,6 +1976,9 @@
             if (this.paymentMethodId) {
                 data["paymentMethodId"] = this.paymentMethodId;
             }
+            if (this.callback) {
+                data["customData"] = { callback: true };
+            }
             //if(this.date) {
             //  data["date"] = this.date;
             //}
@@ -2058,6 +2064,9 @@
                     "apartment": this.apartment || ''
                 };
             }
+            if (this.callback) {
+                data["customData"] = { callback: true };
+            }
             this.isChecking.emit(true);
             this.cartService
                 .checkCart$(data)
@@ -2103,6 +2112,7 @@
         paymentMethodId: [{ type: i0.Input }],
         personsCount: [{ type: i0.Input }],
         comment: [{ type: i0.Input }],
+        callback: [{ type: i0.Input }],
         date: [{ type: i0.Input }],
         notifyMethodId: [{ type: i0.Input }],
         success: [{ type: i0.Output }],

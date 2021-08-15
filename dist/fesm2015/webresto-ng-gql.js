@@ -717,7 +717,8 @@ class NgGqlService {
     getCart$(cartId = null) {
         if (!this.cart$.getValue() && !this.cartLoading) {
             this.apollo.watchQuery({
-                query: CartGql.queries.getCart(cartId)
+                query: CartGql.queries.getCart(cartId),
+                fetchPolicy: 'no-cache'
             })
                 .valueChanges
                 .pipe(take(1), tap(({ data, loading }) => {
@@ -730,7 +731,8 @@ class NgGqlService {
     }
     getPhone$(phone) {
         return this.apollo.watchQuery({
-            query: CartGql.queries.getPhone(phone)
+            query: CartGql.queries.getPhone(phone),
+            fetchPolicy: 'no-cache'
         })
             .valueChanges
             .pipe(map(({ data, loading }) => {
@@ -740,7 +742,8 @@ class NgGqlService {
     }
     checkPhone$(phone) {
         return this.apollo.watchQuery({
-            query: CartGql.queries.checkPhone(phone)
+            query: CartGql.queries.checkPhone(phone),
+            fetchPolicy: 'no-cache'
         })
             .valueChanges
             .pipe(map(({ data, loading }) => {
@@ -1967,6 +1970,9 @@ class CheckoutDirective {
         if (this.paymentMethodId) {
             data["paymentMethodId"] = this.paymentMethodId;
         }
+        if (this.callback) {
+            data["customData"] = { callback: true };
+        }
         //if(this.date) {
         //  data["date"] = this.date;
         //}
@@ -2051,6 +2057,9 @@ class CheckoutDirective {
                 "apartment": this.apartment || ''
             };
         }
+        if (this.callback) {
+            data["customData"] = { callback: true };
+        }
         this.isChecking.emit(true);
         this.cartService
             .checkCart$(data)
@@ -2095,6 +2104,7 @@ CheckoutDirective.propDecorators = {
     paymentMethodId: [{ type: Input }],
     personsCount: [{ type: Input }],
     comment: [{ type: Input }],
+    callback: [{ type: Input }],
     date: [{ type: Input }],
     notifyMethodId: [{ type: Input }],
     success: [{ type: Output }],

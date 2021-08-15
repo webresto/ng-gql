@@ -162,7 +162,8 @@ export class NgGqlService {
   getCart$(cartId: string = null): BehaviorSubject<Cart> {
     if (!this.cart$.getValue() && !this.cartLoading) {
       this.apollo.watchQuery<any>({
-        query: CartGql.queries.getCart(cartId)
+        query: CartGql.queries.getCart(cartId),
+        fetchPolicy: 'no-cache'
       })
         .valueChanges
         .pipe(
@@ -179,7 +180,8 @@ export class NgGqlService {
 
   getPhone$(phone: string): Observable<Phone> {
     return this.apollo.watchQuery<any>({
-      query: CartGql.queries.getPhone(phone)
+      query: CartGql.queries.getPhone(phone),
+      fetchPolicy: 'no-cache'
     })
       .valueChanges
       .pipe(
@@ -192,7 +194,8 @@ export class NgGqlService {
 
   checkPhone$(phone: string): Observable<CheckPhoneResponse> {
     return this.apollo.watchQuery<any>({
-      query: CartGql.queries.checkPhone(phone)
+      query: CartGql.queries.checkPhone(phone),
+      fetchPolicy: 'no-cache'
     })
       .valueChanges
       .pipe(

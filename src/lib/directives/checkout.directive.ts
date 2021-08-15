@@ -32,6 +32,7 @@ export class CheckoutDirective {
   @Input() paymentMethodId: string;
   @Input() personsCount: number;
   @Input() comment: string;
+  @Input() callback: string;
 
   @Input() date: string;
   @Input() notifyMethodId: string;
@@ -105,6 +106,10 @@ export class CheckoutDirective {
 
     if(this.paymentMethodId) {
       data["paymentMethodId"] = this.paymentMethodId;
+    }
+
+    if(this.callback) {
+      data["customData"] = { callback: true };
     }
 
     //if(this.date) {
@@ -208,6 +213,11 @@ export class CheckoutDirective {
         "apartment": this.apartment || ''
       }
     }
+
+    if (this.callback) {
+      data["customData"] = { callback: true };
+    }
+    
 
     this.isChecking.emit(true);
     this.cartService
