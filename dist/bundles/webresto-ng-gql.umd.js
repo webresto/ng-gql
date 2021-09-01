@@ -607,15 +607,15 @@
                     for (var groupId in groupsById) {
                         var group = groupsById[groupId];
                         var parentGroupId = (_b = group.parentGroup) === null || _b === void 0 ? void 0 : _b.id;
+                        if (slug && group.slug == slug) {
+                            bySlugGroupId = groupId;
+                            continue;
+                        }
                         if (!parentGroupId)
                             continue;
                         if (!groupsById[parentGroupId])
                             continue;
                         groupsById[parentGroupId].childGroups.push(group);
-                        if (slug && group.slug == slug) {
-                            bySlugGroupId = groupId;
-                            continue;
-                        }
                         delete groupsById[groupId];
                     }
                     if (slug) {
@@ -1071,9 +1071,6 @@
                 "replace": this.replaceCartDishId ? true : undefined,
                 "cartDishId": this.replaceCartDishId
             };
-            console.log('data', data);
-            console.log('this.cart', this.cart);
-            console.log('this.modifiers', this.modifiers);
             if (this.cart.id)
                 data.cartId = this.cart.id;
             this.loading.emit(true);

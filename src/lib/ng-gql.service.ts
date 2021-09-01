@@ -103,13 +103,13 @@ export class NgGqlService {
             for (let groupId in groupsById) {
               const group = groupsById[groupId];
               const parentGroupId = group.parentGroup?.id;
-              if (!parentGroupId) continue;
-              if (!groupsById[parentGroupId]) continue;
-              groupsById[parentGroupId].childGroups.push(group);
               if (slug && group.slug == slug) {
                 bySlugGroupId = groupId;
                 continue;
               }
+              if (!parentGroupId) continue;
+              if (!groupsById[parentGroupId]) continue;
+              groupsById[parentGroupId].childGroups.push(group);
               delete groupsById[groupId];
             }
 

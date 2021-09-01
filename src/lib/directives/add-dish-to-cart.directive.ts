@@ -45,10 +45,6 @@ export class AddDishToCartDirective {
       "cartDishId": this.replaceCartDishId
     };
 
-    console.log('data', data);
-    console.log('this.cart', this.cart);
-    console.log('this.modifiers', this.modifiers);
-
     if (this.cart.id) data.cartId = this.cart.id;
 
     this.loading.emit(true);
