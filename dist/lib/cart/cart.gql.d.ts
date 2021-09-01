@@ -71,4 +71,3 @@ export declare const CartGql: {
         checkPhoneCode: () => import("graphql").DocumentNode;
     };
 };
-//# sourceMappingURL=cart.gql.d.ts.map

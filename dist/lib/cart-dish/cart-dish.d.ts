@@ -10,4 +10,3 @@ export declare class CartDish {
     totalWeight: number;
     modifiers: [CartModifier];
 }
-//# sourceMappingURL=cart-dish.d.ts.map

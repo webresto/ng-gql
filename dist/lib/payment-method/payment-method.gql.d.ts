@@ -6,4 +6,3 @@ export declare const PaymentMethodGql: {
         getPaymentMethod: (cartId?: string) => import("graphql").DocumentNode;
     };
 };
-//# sourceMappingURL=payment-method.gql.d.ts.map

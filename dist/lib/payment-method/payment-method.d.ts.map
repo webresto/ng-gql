@@ -1,1 +1,0 @@
-{"version":3,"file":"payment-method.d.ts","sourceRoot":"","sources":["../../../src/lib/payment-method/payment-method.ts"],"names":[],"mappings":"AAAA,qBAAa,aAAa;IACzB,EAAE,EAAE,MAAM,CAAC;IACX,IAAI,EAAE,MAAM,CAAC;IACb,KAAK,EAAE,MAAM,CAAC;IACd,WAAW,EAAE,MAAM,CAAC;IACpB,OAAO,EAAE,MAAM,CAAC;IAChB,KAAK,EAAE,MAAM,CAAC;IACd,MAAM,EAAE,OAAO,CAAC;IAChB,UAAU,EAAE,GAAG,CAAC;CAChB"}

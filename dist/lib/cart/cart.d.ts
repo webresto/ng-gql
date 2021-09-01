@@ -31,4 +31,3 @@ export declare class Cart {
     isPaymentPromise?: boolean;
     paymentMethod?: PaymentMethod;
 }
-//# sourceMappingURL=cart.d.ts.map

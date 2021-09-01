@@ -16,4 +16,3 @@ export declare class Dish {
     };
     modifiers: [GroupModifier];
 }
-//# sourceMappingURL=dish.d.ts.map
