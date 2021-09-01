@@ -26,6 +26,7 @@ export declare class CheckoutDirective {
     date: string;
     notifyMethodId: string;
     success: EventEmitter<boolean>;
+    paymentRedirect: EventEmitter<string>;
     error: EventEmitter<string>;
     isChecking: EventEmitter<boolean>;
     cart: any;

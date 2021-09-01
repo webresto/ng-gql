@@ -1029,12 +1029,7 @@ class NgCartService {
         });
     }
     orderCart$(data) {
-        return this.ngGqlService.orderCart$(data)
-            .pipe(tap(({ action }) => {
-            if (action.data && action.data.redirectLink) {
-                window.location.href = action.data.redirectLink;
-            }
-        }));
+        return this.ngGqlService.orderCart$(data);
     }
     checkCart$(data) {
         console.log('Check cart$', data);
@@ -1919,6 +1914,7 @@ class CheckoutDirective {
     constructor(cartService) {
         this.cartService = cartService;
         this.success = new EventEmitter();
+        this.paymentRedirect = new EventEmitter();
         this.error = new EventEmitter();
         this.isChecking = new EventEmitter();
         this.cartService
@@ -2008,7 +2004,8 @@ class CheckoutDirective {
             .orderCart$(data)
             .subscribe(result => {
             if (result.action && result.action['paymentRedirect']) {
-                window.location.href = result.action['paymentRedirect'];
+                //window.location.href = result.action['paymentRedirect'];
+                this.paymentRedirect.emit(result.action['paymentRedirect']);
             }
             else {
                 this.success.emit(cartId);
@@ -2108,6 +2105,7 @@ CheckoutDirective.propDecorators = {
     date: [{ type: Input }],
     notifyMethodId: [{ type: Input }],
     success: [{ type: Output }],
+    paymentRedirect: [{ type: Output }],
     error: [{ type: Output }],
     isChecking: [{ type: Output }],
     onClick: [{ type: HostListener, args: ['click',] }]

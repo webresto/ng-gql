@@ -100,14 +100,7 @@ export class NgCartService {
 
 
   orderCart$(data: OrderCartInput): Observable<CheckResponse> {
-    return this.ngGqlService.orderCart$(data)
-      .pipe(
-        tap(({action}) => {
-          if(action.data && action.data.redirectLink) {
-            window.location.href = action.data.redirectLink
-          }
-        })
-      )
+    return this.ngGqlService.orderCart$(data);
   }
 
   checkCart$(data: OrderCartInput): Observable<CheckResponse> {

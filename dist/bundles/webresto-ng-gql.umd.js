@@ -1007,13 +1007,7 @@
             });
         };
         NgCartService.prototype.orderCart$ = function (data) {
-            return this.ngGqlService.orderCart$(data)
-                .pipe(operators.tap(function (_b) {
-                var action = _b.action;
-                if (action.data && action.data.redirectLink) {
-                    window.location.href = action.data.redirectLink;
-                }
-            }));
+            return this.ngGqlService.orderCart$(data);
         };
         NgCartService.prototype.checkCart$ = function (data) {
             console.log('Check cart$', data);
@@ -1924,6 +1918,7 @@
             var _this = this;
             this.cartService = cartService;
             this.success = new i0.EventEmitter();
+            this.paymentRedirect = new i0.EventEmitter();
             this.error = new i0.EventEmitter();
             this.isChecking = new i0.EventEmitter();
             this.cartService
@@ -2014,7 +2009,8 @@
                 .orderCart$(data)
                 .subscribe(function (result) {
                 if (result.action && result.action['paymentRedirect']) {
-                    window.location.href = result.action['paymentRedirect'];
+                    //window.location.href = result.action['paymentRedirect'];
+                    _this.paymentRedirect.emit(result.action['paymentRedirect']);
                 }
                 else {
                     _this.success.emit(cartId);
@@ -2116,6 +2112,7 @@
         date: [{ type: i0.Input }],
         notifyMethodId: [{ type: i0.Input }],
         success: [{ type: i0.Output }],
+        paymentRedirect: [{ type: i0.Output }],
         error: [{ type: i0.Output }],
         isChecking: [{ type: i0.Output }],
         onClick: [{ type: i0.HostListener, args: ['click',] }]

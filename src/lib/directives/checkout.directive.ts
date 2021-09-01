@@ -38,6 +38,7 @@ export class CheckoutDirective {
   @Input() notifyMethodId: string;
   
   @Output() success = new EventEmitter<boolean>();
+  @Output() paymentRedirect = new EventEmitter<string>();
   @Output() error = new EventEmitter<string>();
   @Output() isChecking = new EventEmitter<boolean>();
 
@@ -154,9 +155,10 @@ export class CheckoutDirective {
       .subscribe(
         result => {
           if(result.action && result.action['paymentRedirect']) {
-            window.location.href = result.action['paymentRedirect'];
+            //window.location.href = result.action['paymentRedirect'];
+            this.paymentRedirect.emit(result.action['paymentRedirect']);
           } else {
-            this.success.emit(cartId)
+            this.success.emit(cartId);
           }
         },
         error => this.error.emit(error)
