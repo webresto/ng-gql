@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, throwError, of } from 'rxjs';
+import { Observable, BehaviorSubject, throwError, of, Subscription } from 'rxjs';
 import { tap, catchError, filter } from 'rxjs/operators';
 import { OrderCartInput } from '../cart/cart.gql';
 import { CheckResponse } from '../cart/check-response';
@@ -21,6 +21,8 @@ export class NgCartService {
   messages:EventMessage[];
 
   OrderFormChange = new BehaviorSubject(null);
+
+  cartSubscription: Subscription;
 
   constructor(
     private ngGqlService: NgGqlService,
@@ -61,7 +63,8 @@ export class NgCartService {
 
   initialStorage() {
     this.cartId = this.getCartId();
-    this.ngGqlService
+    this.cartSubscription?.unsubscribe();
+    this.cartSubscription = this.ngGqlService
       .getCart$(this.cartId)
       .pipe(
         tap(cart => {

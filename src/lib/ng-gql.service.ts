@@ -160,7 +160,8 @@ export class NgGqlService {
   }
 
   getCart$(cartId: string = null): BehaviorSubject<Cart> {
-    if (!this.cart$.getValue() && !this.cartLoading) {
+    const lastCart = this.cart$.getValue();
+    if (!(lastCart && lastCart.id == cartId) && !this.cartLoading) {
       this.apollo.watchQuery<any>({
         query: CartGql.queries.getCart(cartId),
         fetchPolicy: 'no-cache'

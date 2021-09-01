@@ -8,3 +8,4 @@ export declare class Group {
     dishes?: Dish[];
     parentGroup?: Group;
 }
+//# sourceMappingURL=group.d.ts.map

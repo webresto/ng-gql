@@ -7,3 +7,4 @@ export declare const GroupGql: {
         getGroupsAndDishes: () => import("graphql").DocumentNode;
     };
 };
+//# sourceMappingURL=group.gql.d.ts.map

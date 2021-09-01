@@ -179,7 +179,7 @@ export const CartGql = {
 					$comment: String,
 					$from: String,
 					$replace: Boolean,
-					$cartDishId: String
+					$cartDishId: Int
 				) {
 					cartAddDish(
 						cartId: $cartId,

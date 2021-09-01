@@ -6,3 +6,4 @@ export declare const NavigationGql: {
         getNavigationes: () => import("graphql").DocumentNode;
     };
 };
+//# sourceMappingURL=navigation.gql.d.ts.map
