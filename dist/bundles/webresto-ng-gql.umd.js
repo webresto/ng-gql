@@ -2008,9 +2008,9 @@
             this.cartService
                 .orderCart$(data)
                 .subscribe(function (result) {
-                if (result.action && result.action['paymentRedirect']) {
+                if (result.action.data['redirectLink']) {
                     //window.location.href = result.action['paymentRedirect'];
-                    _this.paymentRedirect.emit(result.action['paymentRedirect']);
+                    _this.paymentRedirect.emit(result.action.data['redirectLink']);
                 }
                 else {
                     _this.success.emit(cartId);

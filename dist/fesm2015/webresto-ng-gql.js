@@ -2003,9 +2003,9 @@ class CheckoutDirective {
         this.cartService
             .orderCart$(data)
             .subscribe(result => {
-            if (result.action && result.action['paymentRedirect']) {
+            if (result.action.data['redirectLink']) {
                 //window.location.href = result.action['paymentRedirect'];
-                this.paymentRedirect.emit(result.action['paymentRedirect']);
+                this.paymentRedirect.emit(result.action.data['redirectLink']);
             }
             else {
                 this.success.emit(cartId);
