@@ -568,7 +568,7 @@
                     _this.menuLoading = loading;
                     var groups = data.groups, dishes = data.dishes;
                     var groupsById = {};
-                    var bySlugGroupId = null;
+                    var groupIdsBySlug = {};
                     try {
                         // Groups indexing
                         for (var groups_1 = __values(groups), groups_1_1 = groups_1.next(); !groups_1_1.done; groups_1_1 = groups_1.next()) {
@@ -607,23 +607,31 @@
                     for (var groupId in groupsById) {
                         var group = groupsById[groupId];
                         var parentGroupId = (_b = group.parentGroup) === null || _b === void 0 ? void 0 : _b.id;
-                        if (slug && group.slug == slug) {
-                            bySlugGroupId = groupId;
-                            continue;
-                        }
+                        groupIdsBySlug[group.slug] = groupId;
                         if (!parentGroupId)
                             continue;
                         if (!groupsById[parentGroupId])
                             continue;
                         groupsById[parentGroupId].childGroups.push(group);
-                        delete groupsById[groupId];
+                        //delete groupsById[groupId];
                     }
                     if (slug) {
-                        if (!bySlugGroupId) {
-                            _this.menu$.next([]);
-                            return;
+                        switch (typeof slug) {
+                            case 'string':
+                                if (!groupIdsBySlug[slug]) {
+                                    _this.menu$.next([]);
+                                    return;
+                                }
+                                _this.menu$.next(groupsById[groupIdsBySlug[slug]].childGroups.sort(function (g1, g2) { return g1.order - g2.order; }));
+                                break;
+                            case 'object':
+                                if (!slug.length) {
+                                    _this.menu$.next([]);
+                                    return;
+                                }
+                                _this.menu$.next(slug.map(function (s) { return groupsById[groupIdsBySlug[s]]; }));
+                                break;
                         }
-                        _this.menu$.next(groupsById[bySlugGroupId].childGroups.sort(function (g1, g2) { return g1.order - g2.order; }));
                         return;
                     }
                     var groupsAndDishes = Object.values(groupsById).sort(function (g1, g2) { return g1.order - g2.order; });

@@ -71,7 +71,7 @@ export class NgGqlService {
     return this.navigationData$;
   }
 
-  getMenu$(slug: string = null): BehaviorSubject<Group[]> {
+  getMenu$(slug: string | string[] = null): BehaviorSubject<Group[]> {
     if (!this.menuLoading) {
       this.apollo.watchQuery<any>({
         query: GroupGql.queries.getGroupsAndDishes()
@@ -82,7 +82,7 @@ export class NgGqlService {
             this.menuLoading = loading;
             const { groups, dishes } = data;
             const groupsById = {};
-            let bySlugGroupId = null;
+            const groupIdsBySlug = {};
             // Groups indexing
             for (let group of groups) {
               groupsById[group.id] = {
@@ -103,22 +103,30 @@ export class NgGqlService {
             for (let groupId in groupsById) {
               const group = groupsById[groupId];
               const parentGroupId = group.parentGroup?.id;
-              if (slug && group.slug == slug) {
-                bySlugGroupId = groupId;
-                continue;
-              }
+              groupIdsBySlug[group.slug] = groupId;
               if (!parentGroupId) continue;
               if (!groupsById[parentGroupId]) continue;
               groupsById[parentGroupId].childGroups.push(group);
-              delete groupsById[groupId];
+              //delete groupsById[groupId];
             }
 
             if (slug) {
-              if (!bySlugGroupId) {
-                this.menu$.next([]);
-                return;
-              }
-              this.menu$.next(groupsById[bySlugGroupId].childGroups.sort((g1: Group, g2: Group) => g1.order - g2.order));
+              switch (typeof slug) {
+                case 'string':
+                  if (!groupIdsBySlug[slug]) {
+                    this.menu$.next([]);
+                    return;
+                  }
+                  this.menu$.next(groupsById[groupIdsBySlug[slug]].childGroups.sort((g1: Group, g2: Group) => g1.order - g2.order));
+                  break;
+                case 'object':
+                  if(!slug.length) {
+                    this.menu$.next([]);
+                    return;
+                  }
+                  this.menu$.next(slug.map(s => groupsById[groupIdsBySlug[s]]))
+                  break;
+              }              
               return;
             }
 

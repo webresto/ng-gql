@@ -648,7 +648,7 @@ class NgGqlService {
                 this.menuLoading = loading;
                 const { groups, dishes } = data;
                 const groupsById = {};
-                let bySlugGroupId = null;
+                const groupIdsBySlug = {};
                 // Groups indexing
                 for (let group of groups) {
                     groupsById[group.id] = Object.assign(Object.assign({}, group), { dishes: [], childGroups: [] });
@@ -667,23 +667,31 @@ class NgGqlService {
                 for (let groupId in groupsById) {
                     const group = groupsById[groupId];
                     const parentGroupId = (_b = group.parentGroup) === null || _b === void 0 ? void 0 : _b.id;
-                    if (slug && group.slug == slug) {
-                        bySlugGroupId = groupId;
-                        continue;
-                    }
+                    groupIdsBySlug[group.slug] = groupId;
                     if (!parentGroupId)
                         continue;
                     if (!groupsById[parentGroupId])
                         continue;
                     groupsById[parentGroupId].childGroups.push(group);
-                    delete groupsById[groupId];
+                    //delete groupsById[groupId];
                 }
                 if (slug) {
-                    if (!bySlugGroupId) {
-                        this.menu$.next([]);
-                        return;
+                    switch (typeof slug) {
+                        case 'string':
+                            if (!groupIdsBySlug[slug]) {
+                                this.menu$.next([]);
+                                return;
+                            }
+                            this.menu$.next(groupsById[groupIdsBySlug[slug]].childGroups.sort((g1, g2) => g1.order - g2.order));
+                            break;
+                        case 'object':
+                            if (!slug.length) {
+                                this.menu$.next([]);
+                                return;
+                            }
+                            this.menu$.next(slug.map(s => groupsById[groupIdsBySlug[s]]));
+                            break;
                     }
-                    this.menu$.next(groupsById[bySlugGroupId].childGroups.sort((g1, g2) => g1.order - g2.order));
                     return;
                 }
                 const groupsAndDishes = Object.values(groupsById).sort((g1, g2) => g1.order - g2.order);

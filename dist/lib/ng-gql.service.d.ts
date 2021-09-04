@@ -35,7 +35,7 @@ export declare class NgGqlService {
     };
     constructor(apollo: Apollo);
     getNavigation$(): BehaviorSubject<NavigationData>;
-    getMenu$(slug?: string): BehaviorSubject<Group[]>;
+    getMenu$(slug?: string | string[]): BehaviorSubject<Group[]>;
     getDishes$(): BehaviorSubject<Dish[]>;
     getOrder$(orderId?: string): Observable<Order>;
     getCart$(cartId?: string): BehaviorSubject<Cart>;
