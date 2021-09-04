@@ -2011,7 +2011,8 @@ class CheckoutDirective {
         this.cartService
             .orderCart$(data)
             .subscribe(result => {
-            if (result.action.data['redirectLink']) {
+            var _a;
+            if ((_a = result.action) === null || _a === void 0 ? void 0 : _a.data['redirectLink']) {
                 //window.location.href = result.action['paymentRedirect'];
                 this.paymentRedirect.emit(result.action.data['redirectLink']);
             }

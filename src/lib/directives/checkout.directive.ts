@@ -154,7 +154,7 @@ export class CheckoutDirective {
       .orderCart$(data)
       .subscribe(
         result => {
-          if (result.action.data['redirectLink']) {
+          if (result.action?.data['redirectLink']) {
             //window.location.href = result.action['paymentRedirect'];
             this.paymentRedirect.emit(result.action.data['redirectLink']);
           } else {
