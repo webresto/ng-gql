@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, throwError, of, Subscription } from 'rxjs';
-import { tap, catchError, filter } from 'rxjs/operators';
+import { tap, catchError, filter, map } from 'rxjs/operators';
 import { OrderCartInput } from '../cart/cart.gql';
 import { CheckResponse } from '../cart/check-response';
 import { EventMessage } from '../event-message/event-message';
@@ -101,6 +101,30 @@ export class NgCartService {
 
   orderCart$(data: OrderCartInput): Observable<CheckResponse> {
     return this.ngGqlService.orderCart$(data);
+  }
+  
+  paymentLink$(phone: string, fromPhone: string): Observable<any> {
+    console.log('paymentLink', this.cartId, phone, fromPhone);
+    //return of(null);
+    return this.ngGqlService
+      .customMutation$('paymentLink', {
+        paymentLink: 1
+      }, {
+        cartId: this.cartId,
+        phone,
+        fromPhone
+      })
+      .pipe(
+        map(data => data['paymentLink']),
+        tap(() => {}, error => {
+          console.log('error', error);
+          this.eventer.emitMessageEvent({
+            type: 'info',
+            title: 'Не удалось отправить ссылку для оплаты.',
+            body: error.message
+          });
+        })
+      )
   }
 
   checkCart$(data: OrderCartInput): Observable<CheckResponse> {

@@ -1039,6 +1039,26 @@ class NgCartService {
     orderCart$(data) {
         return this.ngGqlService.orderCart$(data);
     }
+    paymentLink$(phone, fromPhone) {
+        console.log('paymentLink', this.cartId, phone, fromPhone);
+        //return of(null);
+        return this.ngGqlService
+            .customMutation$('paymentLink', {
+            paymentLink: 1
+        }, {
+            cartId: this.cartId,
+            phone,
+            fromPhone
+        })
+            .pipe(map(data => data['paymentLink']), tap(() => { }, error => {
+            console.log('error', error);
+            this.eventer.emitMessageEvent({
+                type: 'info',
+                title: 'Не удалось отправить ссылку для оплаты.',
+                body: error.message
+            });
+        }));
+    }
     checkCart$(data) {
         console.log('Check cart$', data);
         return this.ngGqlService.checkCart$(data);
@@ -1960,11 +1980,11 @@ class CheckoutDirective {
             this.error.emit('Нужно указать адрес');
             return;
         }
-        let comment = this.comment || "Не указан";
+        let comment = this.comment || "";
         let paymentMethod = this.paymentMethod || "Не указано";
         let data = {
             "cartId": this.cart.id,
-            //"comment": comment,
+            "comment": comment,
             "customer": {
                 "phone": this.preparePhone(this.phone),
                 "mail": this.email,
@@ -1976,6 +1996,7 @@ class CheckoutDirective {
         }
         if (this.callback) {
             data["customData"] = { callback: true };
+            data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
         }
         //if(this.date) {
         //  data["date"] = this.date;
@@ -2008,18 +2029,26 @@ class CheckoutDirective {
             };
         }
         const cartId = this.cart.id;
-        this.cartService
-            .orderCart$(data)
-            .subscribe(result => {
-            var _a;
-            if ((_a = result.action) === null || _a === void 0 ? void 0 : _a.data['redirectLink']) {
-                //window.location.href = result.action['paymentRedirect'];
+        const onSuccess = result => {
+            var _a, _b;
+            if ((_b = (_a = result === null || result === void 0 ? void 0 : result.action) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.redirectLink) {
                 this.paymentRedirect.emit(result.action.data['redirectLink']);
             }
             else {
+                console.log('Emit cartId', cartId);
                 this.success.emit(cartId);
             }
-        }, error => this.error.emit(error));
+        };
+        if (this.phonePaymentSmsCode) {
+            this.cartService
+                .paymentLink$(this.phonePaymentSmsCode, this.phone)
+                .subscribe(onSuccess, error => this.error.emit(error));
+        }
+        else {
+            this.cartService
+                .orderCart$(data)
+                .subscribe(onSuccess, error => this.error.emit(error));
+        }
     }
     ngOnChanges(changes) {
         this.cartService.OrderFormChange.next(changes);
@@ -2041,6 +2070,9 @@ class CheckoutDirective {
         data["selfService"] = this.selfService;
         if (this.paymentMethodId) {
             data["paymentMethodId"] = this.paymentMethodId;
+        }
+        if (this.callback) {
+            data["customData"] = { callback: true };
         }
         if (this.date) {
             data["date"] = this.date;
@@ -2095,6 +2127,7 @@ CheckoutDirective.propDecorators = {
     name: [{ type: Input }],
     email: [{ type: Input }],
     phone: [{ type: Input }],
+    phonePaymentSmsCode: [{ type: Input }],
     delivery: [{ type: Input }],
     selfService: [{ type: Input }],
     locationId: [{ type: Input }],

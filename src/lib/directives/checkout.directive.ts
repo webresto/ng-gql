@@ -1,6 +1,6 @@
 import { Directive, Input, Output, HostListener, EventEmitter, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, debounceTime, tap } from 'rxjs/operators'
+import { filter, debounceTime, tap, switchMap } from 'rxjs/operators'
 import { NgCartService } from '../services/ng-cart.service';
 
 @Directive({
@@ -15,6 +15,7 @@ export class CheckoutDirective {
   @Input() name: string;
   @Input() email: string;
   @Input() phone: string;
+  @Input() phonePaymentSmsCode: string;
   @Input() delivery: any;
   @Input() selfService: any;
   @Input() locationId: string;
@@ -91,12 +92,13 @@ export class CheckoutDirective {
       return;
     }
 
-    let comment = this.comment || "Не указан";
+    let comment = this.comment || "";
     let paymentMethod = this.paymentMethod || "Не указано";
+    
 
     let data = {
       "cartId": this.cart.id,
-      //"comment": comment,
+      "comment": comment,
       "customer": {
         "phone": this.preparePhone(this.phone),
         "mail": this.email,
@@ -111,6 +113,7 @@ export class CheckoutDirective {
 
     if(this.callback) {
       data["customData"] = { callback: true };
+      data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
     }
 
     //if(this.date) {
@@ -150,19 +153,31 @@ export class CheckoutDirective {
     }
 
     const cartId = this.cart.id;
-    this.cartService
-      .orderCart$(data)
-      .subscribe(
-        result => {
-          if (result.action?.data['redirectLink']) {
-            //window.location.href = result.action['paymentRedirect'];
-            this.paymentRedirect.emit(result.action.data['redirectLink']);
-          } else {
-            this.success.emit(cartId);
-          }
-        },
-        error => this.error.emit(error)
-      );
+
+    const onSuccess = result => {
+      if (result?.action?.data?.redirectLink) {
+        this.paymentRedirect.emit(result.action.data['redirectLink']);
+      } else {
+        console.log('Emit cartId', cartId);
+        this.success.emit(cartId);
+      }
+    };
+    if (this.phonePaymentSmsCode) {
+      this.cartService
+        .paymentLink$(this.phonePaymentSmsCode, this.phone)
+        .subscribe(
+          onSuccess,
+          error => this.error.emit(error)
+        );
+    } else {
+      this.cartService
+        .orderCart$(data)
+        .subscribe(
+          onSuccess,
+          error => this.error.emit(error)
+        );
+    }
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -191,6 +206,10 @@ export class CheckoutDirective {
 
     if(this.paymentMethodId) {
       data["paymentMethodId"] = this.paymentMethodId;
+    }
+
+    if (this.callback) {
+      data["customData"] = { callback: true };
     }
 
     if(this.date) {
@@ -222,6 +241,7 @@ export class CheckoutDirective {
     
 
     this.isChecking.emit(true);
+
     this.cartService
       .checkCart$(data)
       .subscribe(
@@ -231,7 +251,6 @@ export class CheckoutDirective {
         error => this.isChecking.emit(false)
       );
   }
-
 
   preparePhone(phone) {
     if(!phone) return '';

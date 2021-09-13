@@ -1017,6 +1017,27 @@
         NgCartService.prototype.orderCart$ = function (data) {
             return this.ngGqlService.orderCart$(data);
         };
+        NgCartService.prototype.paymentLink$ = function (phone, fromPhone) {
+            var _this = this;
+            console.log('paymentLink', this.cartId, phone, fromPhone);
+            //return of(null);
+            return this.ngGqlService
+                .customMutation$('paymentLink', {
+                paymentLink: 1
+            }, {
+                cartId: this.cartId,
+                phone: phone,
+                fromPhone: fromPhone
+            })
+                .pipe(operators.map(function (data) { return data['paymentLink']; }), operators.tap(function () { }, function (error) {
+                console.log('error', error);
+                _this.eventer.emitMessageEvent({
+                    type: 'info',
+                    title: 'Не удалось отправить ссылку для оплаты.',
+                    body: error.message
+                });
+            }));
+        };
         NgCartService.prototype.checkCart$ = function (data) {
             console.log('Check cart$', data);
             return this.ngGqlService.checkCart$(data);
@@ -1965,11 +1986,11 @@
                 this.error.emit('Нужно указать адрес');
                 return;
             }
-            var comment = this.comment || "Не указан";
+            var comment = this.comment || "";
             var paymentMethod = this.paymentMethod || "Не указано";
             var data = {
                 "cartId": this.cart.id,
-                //"comment": comment,
+                "comment": comment,
                 "customer": {
                     "phone": this.preparePhone(this.phone),
                     "mail": this.email,
@@ -1981,6 +2002,7 @@
             }
             if (this.callback) {
                 data["customData"] = { callback: true };
+                data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
             }
             //if(this.date) {
             //  data["date"] = this.date;
@@ -2013,18 +2035,26 @@
                 };
             }
             var cartId = this.cart.id;
-            this.cartService
-                .orderCart$(data)
-                .subscribe(function (result) {
-                var _a;
-                if ((_a = result.action) === null || _a === void 0 ? void 0 : _a.data['redirectLink']) {
-                    //window.location.href = result.action['paymentRedirect'];
+            var onSuccess = function (result) {
+                var _a, _b;
+                if ((_b = (_a = result === null || result === void 0 ? void 0 : result.action) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.redirectLink) {
                     _this.paymentRedirect.emit(result.action.data['redirectLink']);
                 }
                 else {
+                    console.log('Emit cartId', cartId);
                     _this.success.emit(cartId);
                 }
-            }, function (error) { return _this.error.emit(error); });
+            };
+            if (this.phonePaymentSmsCode) {
+                this.cartService
+                    .paymentLink$(this.phonePaymentSmsCode, this.phone)
+                    .subscribe(onSuccess, function (error) { return _this.error.emit(error); });
+            }
+            else {
+                this.cartService
+                    .orderCart$(data)
+                    .subscribe(onSuccess, function (error) { return _this.error.emit(error); });
+            }
         };
         CheckoutDirective.prototype.ngOnChanges = function (changes) {
             this.cartService.OrderFormChange.next(changes);
@@ -2047,6 +2077,9 @@
             data["selfService"] = this.selfService;
             if (this.paymentMethodId) {
                 data["paymentMethodId"] = this.paymentMethodId;
+            }
+            if (this.callback) {
+                data["customData"] = { callback: true };
             }
             if (this.date) {
                 data["date"] = this.date;
@@ -2102,6 +2135,7 @@
         name: [{ type: i0.Input }],
         email: [{ type: i0.Input }],
         phone: [{ type: i0.Input }],
+        phonePaymentSmsCode: [{ type: i0.Input }],
         delivery: [{ type: i0.Input }],
         selfService: [{ type: i0.Input }],
         locationId: [{ type: i0.Input }],
