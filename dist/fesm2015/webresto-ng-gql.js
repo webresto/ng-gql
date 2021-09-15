@@ -212,6 +212,7 @@ const CartFragments = {
 			cartTotal
 			discountTotal
 			state
+			customData
 		}
 	`,
     cartOrderData: gql `
@@ -2055,7 +2056,7 @@ class CheckoutDirective {
     }
     checkStreet() {
         //if(this.streetId == '0') return;
-        let comment = this.comment || "Не указан";
+        let comment = this.comment || "";
         let paymentMethod = this.paymentMethod || "Не указано";
         let data = {
             "cartId": this.cart.id,
@@ -2073,6 +2074,7 @@ class CheckoutDirective {
         }
         if (this.callback) {
             data["customData"] = { callback: true };
+            data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
         }
         if (this.date) {
             data["date"] = this.date;

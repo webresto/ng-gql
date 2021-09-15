@@ -30,4 +30,5 @@ export declare class Cart {
     paid?: boolean;
     isPaymentPromise?: boolean;
     paymentMethod?: PaymentMethod;
+    customData?: any;
 }

@@ -188,7 +188,7 @@ export class CheckoutDirective {
 
     //if(this.streetId == '0') return;
 
-    let comment = this.comment || "Не указан";
+    let comment = this.comment || "";
     let paymentMethod = this.paymentMethod || "Не указано";
 
     let data = {
@@ -210,6 +210,7 @@ export class CheckoutDirective {
 
     if (this.callback) {
       data["customData"] = { callback: true };
+      data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
     }
 
     if(this.date) {

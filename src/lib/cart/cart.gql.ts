@@ -77,6 +77,7 @@ export const CartFragments = {
 			cartTotal
 			discountTotal
 			state
+			customData
 		}
 	`,
 	cartOrderData: gql`

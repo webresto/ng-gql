@@ -438,7 +438,7 @@
     var templateObject_1$5;
 
     var CartFragments = {
-        cart: i1.gql(templateObject_1$6 || (templateObject_1$6 = __makeTemplateObject(["\n\t\tfragment CartFragment on Cart {\n\t\t\tid\n\t\t\tdishesCount\n\t\t\tcomment\n\t\t\tpersonsCount\n\t\t\tdeliveryDescription\n\t\t\tmessage\n\t\t\tdeliveryCost\n\t\t\ttotalWeight\n\t\t\ttotal\n\t\t\torderTotal\n\t\t\tcartTotal\n\t\t\tdiscountTotal\n\t\t\tstate\n\t\t}\n\t"], ["\n\t\tfragment CartFragment on Cart {\n\t\t\tid\n\t\t\tdishesCount\n\t\t\tcomment\n\t\t\tpersonsCount\n\t\t\tdeliveryDescription\n\t\t\tmessage\n\t\t\tdeliveryCost\n\t\t\ttotalWeight\n\t\t\ttotal\n\t\t\torderTotal\n\t\t\tcartTotal\n\t\t\tdiscountTotal\n\t\t\tstate\n\t\t}\n\t"]))),
+        cart: i1.gql(templateObject_1$6 || (templateObject_1$6 = __makeTemplateObject(["\n\t\tfragment CartFragment on Cart {\n\t\t\tid\n\t\t\tdishesCount\n\t\t\tcomment\n\t\t\tpersonsCount\n\t\t\tdeliveryDescription\n\t\t\tmessage\n\t\t\tdeliveryCost\n\t\t\ttotalWeight\n\t\t\ttotal\n\t\t\torderTotal\n\t\t\tcartTotal\n\t\t\tdiscountTotal\n\t\t\tstate\n\t\t\tcustomData\n\t\t}\n\t"], ["\n\t\tfragment CartFragment on Cart {\n\t\t\tid\n\t\t\tdishesCount\n\t\t\tcomment\n\t\t\tpersonsCount\n\t\t\tdeliveryDescription\n\t\t\tmessage\n\t\t\tdeliveryCost\n\t\t\ttotalWeight\n\t\t\ttotal\n\t\t\torderTotal\n\t\t\tcartTotal\n\t\t\tdiscountTotal\n\t\t\tstate\n\t\t\tcustomData\n\t\t}\n\t"]))),
         cartOrderData: i1.gql(templateObject_2$2 || (templateObject_2$2 = __makeTemplateObject(["\n\t\tfragment CartOrderDataFragment on Cart {\n\t\t\trmsDelivered\n\t\t\trmsId\n\t\t\trmsOrderNumber\n\t\t\trmsOrderData\n\t\t\trmsDeliveryDate\n\t\t\trmsErrorMessage\n\t\t\trmsErrorCode\n\t\t\trmsStatusCode\n\t\t\tcustomer\n\t\t\taddress\n\t\t\tpaid\n\t\t\tisPaymentPromise\n\t\t}\n\t"], ["\n\t\tfragment CartOrderDataFragment on Cart {\n\t\t\trmsDelivered\n\t\t\trmsId\n\t\t\trmsOrderNumber\n\t\t\trmsOrderData\n\t\t\trmsDeliveryDate\n\t\t\trmsErrorMessage\n\t\t\trmsErrorCode\n\t\t\trmsStatusCode\n\t\t\tcustomer\n\t\t\taddress\n\t\t\tpaid\n\t\t\tisPaymentPromise\n\t\t}\n\t"]))),
     };
     var ɵ0$2 = function (orderId) {
@@ -2062,7 +2062,7 @@
         CheckoutDirective.prototype.checkStreet = function () {
             var _this = this;
             //if(this.streetId == '0') return;
-            var comment = this.comment || "Не указан";
+            var comment = this.comment || "";
             var paymentMethod = this.paymentMethod || "Не указано";
             var data = {
                 "cartId": this.cart.id,
@@ -2080,6 +2080,7 @@
             }
             if (this.callback) {
                 data["customData"] = { callback: true };
+                data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
             }
             if (this.date) {
                 data["date"] = this.date;
