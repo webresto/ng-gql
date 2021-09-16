@@ -98,7 +98,7 @@ export class CheckoutDirective {
 
     let data = {
       "cartId": this.cart.id,
-      "comment": comment,
+      //"comment": comment,
       "customer": {
         "phone": this.preparePhone(this.phone),
         "mail": this.email,
@@ -111,10 +111,10 @@ export class CheckoutDirective {
       data["paymentMethodId"] = this.paymentMethodId;
     }
 
-    if(this.callback) {
-      data["customData"] = { callback: true };
-      data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
-    }
+    //if(this.callback) {
+    //  data["customData"] = { callback: true };
+    //  data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
+    //}
 
     //if(this.date) {
     //  data["date"] = this.date;

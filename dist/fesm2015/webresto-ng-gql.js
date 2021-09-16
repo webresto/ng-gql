@@ -454,14 +454,18 @@ const ɵ0$2 = (orderId) => {
 					$paymentMethodId: String!,
 					$selfService: Boolean,
 					$address: Address,
-					$customer: Customer!
+					$customer: Customer!,
+					$comment: String,
+					$customData: Json
 				) {
 					checkCart(
 						cartId: $cartId,
 						paymentMethodId: $paymentMethodId,
 						selfService: $selfService,
 						address: $address,
-						customer: $customer
+						customer: $customer,
+						comment: $comment,
+						customData: $customData
 					) {
 						cart {
 							...CartFragment
@@ -1985,7 +1989,7 @@ class CheckoutDirective {
         let paymentMethod = this.paymentMethod || "Не указано";
         let data = {
             "cartId": this.cart.id,
-            "comment": comment,
+            //"comment": comment,
             "customer": {
                 "phone": this.preparePhone(this.phone),
                 "mail": this.email,
@@ -1995,10 +1999,10 @@ class CheckoutDirective {
         if (this.paymentMethodId) {
             data["paymentMethodId"] = this.paymentMethodId;
         }
-        if (this.callback) {
-            data["customData"] = { callback: true };
-            data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
-        }
+        //if(this.callback) {
+        //  data["customData"] = { callback: true };
+        //  data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
+        //}
         //if(this.date) {
         //  data["date"] = this.date;
         //}

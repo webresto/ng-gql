@@ -53,7 +53,9 @@ export type OrderCartInput = {
 		phone: string,
 		mail?: string,
 		name: string
-	}
+	},
+	comment?: string,
+	customData?: any
 };
 
 export type CheckPhoneCodeInput = {
@@ -332,14 +334,18 @@ export const CartGql = {
 					$paymentMethodId: String!,
 					$selfService: Boolean,
 					$address: Address,
-					$customer: Customer!
+					$customer: Customer!,
+					$comment: String,
+					$customData: Json
 				) {
 					checkCart(
 						cartId: $cartId,
 						paymentMethodId: $paymentMethodId,
 						selfService: $selfService,
 						address: $address,
-						customer: $customer
+						customer: $customer,
+						comment: $comment,
+						customData: $customData
 					) {
 						cart {
 							...CartFragment

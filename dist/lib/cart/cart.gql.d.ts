@@ -45,6 +45,8 @@ export declare type OrderCartInput = {
         mail?: string;
         name: string;
     };
+    comment?: string;
+    customData?: any;
 };
 export declare type CheckPhoneCodeInput = {
     phone: string;
