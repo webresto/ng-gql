@@ -13,7 +13,6 @@ export * from './lib/ng-gql.service';
 export * from './lib/ng-gql.module';
 export * from './lib/services/ng-cart.service';
 export * from './lib/services/eventer.service';
-export * from './lib/services/state.service';
 export * from './lib/event-message/event-message';
 export * from './lib/directives/add-dish-to-cart.directive';
 export * from './lib/directives/amount-cart.directive';

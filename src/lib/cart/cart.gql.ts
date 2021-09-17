@@ -336,6 +336,7 @@ export const CartGql = {
 					$address: Address,
 					$customer: Customer!,
 					$comment: String,
+					$date: String,
 					$customData: Json
 				) {
 					checkCart(
@@ -345,6 +346,7 @@ export const CartGql = {
 						address: $address,
 						customer: $customer,
 						comment: $comment,
+						date: $date,
 						customData: $customData
 					) {
 						cart {

@@ -456,6 +456,7 @@ const ɵ0$2 = (orderId) => {
 					$address: Address,
 					$customer: Customer!,
 					$comment: String,
+					$date: String,
 					$customData: Json
 				) {
 					checkCart(
@@ -465,6 +466,7 @@ const ɵ0$2 = (orderId) => {
 						address: $address,
 						customer: $customer,
 						comment: $comment,
+						date: $date,
 						customData: $customData
 					) {
 						cart {
@@ -2253,19 +2255,6 @@ NgGqlModule.ctorParameters = () => [
     { type: undefined, decorators: [{ type: Inject, args: ['config',] }] }
 ];
 
-class StateService {
-    constructor() {
-        this.maintenance$ = new BehaviorSubject(null);
-    }
-}
-StateService.ɵprov = ɵɵdefineInjectable({ factory: function StateService_Factory() { return new StateService(); }, token: StateService, providedIn: "root" });
-StateService.decorators = [
-    { type: Injectable, args: [{
-                providedIn: 'root'
-            },] }
-];
-StateService.ctorParameters = () => [];
-
 class EventMessage {
     constructor(type, title, body) {
         this.type = type;
@@ -2282,5 +2271,5 @@ class EventMessage {
  * Generated bundle index. Do not edit.
  */
 
-export { AddDishToCartDirective, AmountCartDirective, Cart, CartDish, CheckPhoneResponse, CheckResponse, CheckoutDirective, DeleteFromCartDirective, Dish, DishCalcDirective, EventMessage, EventerService, Group, GroupModifier, Modifier, NgCartService, NgGqlModule, NgGqlService, Order, OrderCartUserDirective, PaymentMethod, Phone, SetAmountDirective, SetDishCommentDirective, StateService };
+export { AddDishToCartDirective, AmountCartDirective, Cart, CartDish, CheckPhoneResponse, CheckResponse, CheckoutDirective, DeleteFromCartDirective, Dish, DishCalcDirective, EventMessage, EventerService, Group, GroupModifier, Modifier, NgCartService, NgGqlModule, NgGqlService, Order, OrderCartUserDirective, PaymentMethod, Phone, SetAmountDirective, SetDishCommentDirective };
 //# sourceMappingURL=webresto-ng-gql.js.map
