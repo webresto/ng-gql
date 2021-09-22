@@ -7,3 +7,4 @@ export declare class Phone {
     confirmCode: string;
     customData: any;
 }
+//# sourceMappingURL=phone.d.ts.map

@@ -10,7 +10,6 @@ export const GroupFragments = {
 			order
 			visible
 			slug
-			childGroups
 		}
 	`
 };

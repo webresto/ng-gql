@@ -1,4 +1,4 @@
-import { ɵɵdefineInjectable, ɵɵinject, Injectable, EventEmitter, Directive, Input, Output, HostListener, Renderer2, ElementRef, NgModule, Inject } from '@angular/core';
+import { ɵɵinject, ɵɵdefineInjectable, ɵsetClassMetadata, Injectable, EventEmitter, ɵɵdirectiveInject, ɵɵdefineDirective, ɵɵlistener, Directive, Input, Output, HostListener, Renderer2, ElementRef, ɵɵNgOnChangesFeature, ɵɵdefineNgModule, ɵɵdefineInjector, ɵɵsetNgModuleScope, NgModule, Inject } from '@angular/core';
 import { gql, Apollo } from 'apollo-angular';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { tap, take, map, catchError, switchMap, filter, debounceTime } from 'rxjs/operators';
@@ -63,11 +63,13 @@ const PaymentMethodFragments = {
 		}
 	`
 };
-const ɵ0 = (cartId = null) => {
-    if (cartId == 'null')
-        cartId = null;
-    const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
-    return gql `
+const PaymentMethodGql = {
+    queries: {
+        getPaymentMethod: (cartId = null) => {
+            if (cartId == 'null')
+                cartId = null;
+            const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
+            return gql `
 				query GetPaymentMethods {
 					paymentMethods:paymentMethod${queryArguments} {
 						...PaymentMethodFragment
@@ -75,10 +77,7 @@ const ɵ0 = (cartId = null) => {
 				}
 				${PaymentMethodFragments.paymentMethod}
 			`;
-};
-const PaymentMethodGql = {
-    queries: {
-        getPaymentMethod: ɵ0
+        }
     }
 };
 
@@ -163,17 +162,16 @@ const DishFragments = {
 		${GroupModifierFragments.groupModifier}
 	`
 };
-const ɵ0$1 = () => gql `
+const DishGql = {
+    queries: {
+        getDishes: () => gql `
 			query GetDishes {
 				dishes {
 					...DishFragment
 				}
 			}
 			${DishFragments.dish}
-		`;
-const DishGql = {
-    queries: {
-        getDishes: ɵ0$1
+		`
     }
 };
 
@@ -240,9 +238,11 @@ const CartFragments = {
 		}
 	`,
 };
-const ɵ0$2 = (orderId) => {
-    const queryArguments = orderId ? `(orderNumber: "${orderId}")` : '';
-    return gql `
+const CartGql = {
+    queries: {
+        getOrder: (orderId) => {
+            const queryArguments = orderId ? `(orderNumber: "${orderId}")` : '';
+            return gql `
 				query getOrder {
 					getOrder${queryArguments} {
 						cart {
@@ -263,11 +263,12 @@ const ɵ0$2 = (orderId) => {
 				${CartFragments.cartOrderData}
 				${PaymentMethodFragments.paymentMethod}
 			`;
-}, ɵ1 = (cartId = null) => {
-    if (cartId == 'null')
-        cartId = null;
-    const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
-    return gql `
+        },
+        getCart: (cartId = null) => {
+            if (cartId == 'null')
+                cartId = null;
+            const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
+            return gql `
 				query GetCart {
 					cart${queryArguments} {
 						...CartFragment
@@ -279,8 +280,9 @@ const ɵ0$2 = (orderId) => {
 				${CartFragments.cart}
 				${CartDishFragments.cartDish}
 			`;
-}, ɵ2 = (phone) => {
-    return gql `
+        },
+        getPhone: (phone) => {
+            return gql `
 				query phone {
 					phone(phone: "${phone}") {
 						id
@@ -293,8 +295,9 @@ const ɵ0$2 = (orderId) => {
 					}
 				}
 			`;
-}, ɵ3 = (phone) => {
-    return gql `
+        },
+        checkPhone: (phone) => {
+            return gql `
 				query checkPhone {
 					checkPhone(phone: "${phone}") {
 						type
@@ -305,8 +308,11 @@ const ɵ0$2 = (orderId) => {
 					}
 				}
 			`;
-}, ɵ4 = () => {
-    return gql `
+        }
+    },
+    mutations: {
+        addDishToCart: () => {
+            return gql `
 				mutation AddDishToCart(
 					$cartId: String, 
 					$dishId: String, 
@@ -340,8 +346,9 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ5 = () => {
-    return gql `
+        },
+        removeDishFromCart: () => {
+            return gql `
 				mutation cartRemoveDish(
 					$cartId: String!, 
 					$cartDishId: Int!, 
@@ -365,8 +372,9 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ6 = () => {
-    return gql `
+        },
+        setDishAmount: () => {
+            return gql `
 				mutation cartSetDishAmount(
 					$cartId: String,
 					$cartDishId: Int,
@@ -390,8 +398,9 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ7 = () => {
-    return gql `
+        },
+        setDishComment: () => {
+            return gql `
 				mutation cartSetDishComment(
 					$cartId: String,
 					$cartDishId: Int,
@@ -415,8 +424,9 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ8 = () => {
-    return gql `
+        },
+        orderCart: () => {
+            return gql `
 				mutation orderCart(
 					$cartId: String!, 
 					$paymentMethodId: String!,
@@ -455,8 +465,9 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ9 = () => {
-    return gql `
+        },
+        checkCart: () => {
+            return gql `
 				mutation checkCart(
 					$cartId: String!, 
 					$paymentMethodId: String!,
@@ -501,8 +512,9 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ10 = () => {
-    return gql `
+        },
+        checkPhoneCode: () => {
+            return gql `
 				mutation checkPhoneCode(
 					$phone: String!,
 					$code: String!
@@ -519,22 +531,7 @@ const ɵ0$2 = (orderId) => {
 					}
 				}
 			`;
-};
-const CartGql = {
-    queries: {
-        getOrder: ɵ0$2,
-        getCart: ɵ1,
-        getPhone: ɵ2,
-        checkPhone: ɵ3
-    },
-    mutations: {
-        addDishToCart: ɵ4,
-        removeDishFromCart: ɵ5,
-        setDishAmount: ɵ6,
-        setDishComment: ɵ7,
-        orderCart: ɵ8,
-        checkCart: ɵ9,
-        checkPhoneCode: ɵ10,
+        },
     }
 };
 
@@ -547,11 +544,12 @@ const GroupFragments = {
 			order
 			visible
 			slug
-			childGroups
 		}
 	`
 };
-const ɵ0$3 = () => gql `
+const GroupGql = {
+    queries: {
+        getGroups: () => gql `
 			query GetMenu {
 				groups {
 					...GroupFragment
@@ -562,7 +560,8 @@ const ɵ0$3 = () => gql `
 			}
 			${GroupFragments.group}
 			${DishFragments.dish}
-		`, ɵ1$1 = () => gql `
+		`,
+        getGroupsAndDishes: () => gql `
 			query GetGroupsAndDishes {
 				groups {
 					parentGroup {
@@ -576,11 +575,7 @@ const ɵ0$3 = () => gql `
 			}
 			${GroupFragments.group}
 			${DishFragments.dish}
-		`;
-const GroupGql = {
-    queries: {
-        getGroups: ɵ0$3,
-        getGroupsAndDishes: ɵ1$1
+		`
     }
 };
 
@@ -610,17 +605,16 @@ const NavigationFragments = {
 		}
 	`
 };
-const ɵ0$4 = () => gql `
+const NavigationGql = {
+    queries: {
+        getNavigationes: () => gql `
 			query GetNavigation {
 				navigation {
 					...NavigationFragment
 				}
 			}
 			${NavigationFragments.navigation}
-		`;
-const NavigationGql = {
-    queries: {
-        getNavigationes: ɵ0$4
+		`
     }
 };
 
@@ -952,15 +946,14 @@ class NgGqlService {
         });
     }
 }
-NgGqlService.ɵprov = ɵɵdefineInjectable({ factory: function NgGqlService_Factory() { return new NgGqlService(ɵɵinject(Apollo)); }, token: NgGqlService, providedIn: "root" });
-NgGqlService.decorators = [
-    { type: Injectable, args: [{
+NgGqlService.ɵfac = function NgGqlService_Factory(t) { return new (t || NgGqlService)(ɵɵinject(Apollo)); };
+NgGqlService.ɵprov = ɵɵdefineInjectable({ token: NgGqlService, factory: NgGqlService.ɵfac, providedIn: 'root' });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(NgGqlService, [{
+        type: Injectable,
+        args: [{
                 providedIn: 'root'
-            },] }
-];
-NgGqlService.ctorParameters = () => [
-    { type: Apollo }
-];
+            }]
+    }], function () { return [{ type: Apollo }]; }, null); })();
 
 class EventerService {
     constructor() {
@@ -980,13 +973,14 @@ class EventerService {
         return this.eventAction;
     }
 }
-EventerService.ɵprov = ɵɵdefineInjectable({ factory: function EventerService_Factory() { return new EventerService(); }, token: EventerService, providedIn: "root" });
-EventerService.decorators = [
-    { type: Injectable, args: [{
+EventerService.ɵfac = function EventerService_Factory(t) { return new (t || EventerService)(); };
+EventerService.ɵprov = ɵɵdefineInjectable({ token: EventerService, factory: EventerService.ɵfac, providedIn: 'root' });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(EventerService, [{
+        type: Injectable,
+        args: [{
                 providedIn: 'root'
-            },] }
-];
-EventerService.ctorParameters = () => [];
+            }]
+    }], function () { return []; }, null); })();
 
 const LS_NAME = 'cartId';
 class NgCartService {
@@ -1094,16 +1088,14 @@ class NgCartService {
         });
     }
 }
-NgCartService.ɵprov = ɵɵdefineInjectable({ factory: function NgCartService_Factory() { return new NgCartService(ɵɵinject(NgGqlService), ɵɵinject(EventerService)); }, token: NgCartService, providedIn: "root" });
-NgCartService.decorators = [
-    { type: Injectable, args: [{
+NgCartService.ɵfac = function NgCartService_Factory(t) { return new (t || NgCartService)(ɵɵinject(NgGqlService), ɵɵinject(EventerService)); };
+NgCartService.ɵprov = ɵɵdefineInjectable({ token: NgCartService, factory: NgCartService.ɵfac, providedIn: 'root' });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(NgCartService, [{
+        type: Injectable,
+        args: [{
                 providedIn: 'root'
-            },] }
-];
-NgCartService.ctorParameters = () => [
-    { type: NgGqlService },
-    { type: EventerService }
-];
+            }]
+    }], function () { return [{ type: NgGqlService }, { type: EventerService }]; }, null); })();
 
 class AddDishToCartDirective {
     constructor(cartService) {
@@ -1141,24 +1133,33 @@ class AddDishToCartDirective {
         });
     }
 }
-AddDishToCartDirective.decorators = [
-    { type: Directive, args: [{
+AddDishToCartDirective.ɵfac = function AddDishToCartDirective_Factory(t) { return new (t || AddDishToCartDirective)(ɵɵdirectiveInject(NgCartService)); };
+AddDishToCartDirective.ɵdir = ɵɵdefineDirective({ type: AddDishToCartDirective, selectors: [["", "addToCart", ""]], hostBindings: function AddDishToCartDirective_HostBindings(rf, ctx) { if (rf & 1) {
+        ɵɵlistener("click", function AddDishToCartDirective_click_HostBindingHandler() { return ctx.onClick(); });
+    } }, inputs: { dish: "dish", amountDish: "amountDish", comment: "comment", replaceCartDishId: "replaceCartDishId" }, outputs: { loading: "loading", success: "success", error: "error" } });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(AddDishToCartDirective, [{
+        type: Directive,
+        args: [{
                 selector: '[addToCart]'
-            },] }
-];
-AddDishToCartDirective.ctorParameters = () => [
-    { type: NgCartService }
-];
-AddDishToCartDirective.propDecorators = {
-    dish: [{ type: Input }],
-    amountDish: [{ type: Input }],
-    comment: [{ type: Input }],
-    replaceCartDishId: [{ type: Input }],
-    loading: [{ type: Output }],
-    success: [{ type: Output }],
-    error: [{ type: Output }],
-    onClick: [{ type: HostListener, args: ['click',] }]
-};
+            }]
+    }], function () { return [{ type: NgCartService }]; }, { dish: [{
+            type: Input
+        }], amountDish: [{
+            type: Input
+        }], comment: [{
+            type: Input
+        }], replaceCartDishId: [{
+            type: Input
+        }], loading: [{
+            type: Output
+        }], success: [{
+            type: Output
+        }], error: [{
+            type: Output
+        }], onClick: [{
+            type: HostListener,
+            args: ['click']
+        }] }); })();
 
 class AmountCartDirective {
     constructor(cartService, renderer, el) {
@@ -1176,16 +1177,14 @@ class AmountCartDirective {
         });
     }
 }
-AmountCartDirective.decorators = [
-    { type: Directive, args: [{
+AmountCartDirective.ɵfac = function AmountCartDirective_Factory(t) { return new (t || AmountCartDirective)(ɵɵdirectiveInject(NgCartService), ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(ElementRef)); };
+AmountCartDirective.ɵdir = ɵɵdefineDirective({ type: AmountCartDirective, selectors: [["", "amountCart", ""]] });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(AmountCartDirective, [{
+        type: Directive,
+        args: [{
                 selector: '[amountCart]'
-            },] }
-];
-AmountCartDirective.ctorParameters = () => [
-    { type: NgCartService },
-    { type: Renderer2 },
-    { type: ElementRef }
-];
+            }]
+    }], function () { return [{ type: NgCartService }, { type: Renderer2 }, { type: ElementRef }]; }, null); })();
 
 class DeleteFromCartDirective {
     constructor(cartService) {
@@ -1198,19 +1197,23 @@ class DeleteFromCartDirective {
         this.cartService.removeDishFromCart$(this.dish.id, this.amountDish).subscribe();
     }
 }
-DeleteFromCartDirective.decorators = [
-    { type: Directive, args: [{
+DeleteFromCartDirective.ɵfac = function DeleteFromCartDirective_Factory(t) { return new (t || DeleteFromCartDirective)(ɵɵdirectiveInject(NgCartService)); };
+DeleteFromCartDirective.ɵdir = ɵɵdefineDirective({ type: DeleteFromCartDirective, selectors: [["", "deleteFromCart", ""]], hostBindings: function DeleteFromCartDirective_HostBindings(rf, ctx) { if (rf & 1) {
+        ɵɵlistener("click", function DeleteFromCartDirective_click_HostBindingHandler() { return ctx.onClick(); });
+    } }, inputs: { dish: "dish", amountDish: "amountDish" } });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(DeleteFromCartDirective, [{
+        type: Directive,
+        args: [{
                 selector: '[deleteFromCart]'
-            },] }
-];
-DeleteFromCartDirective.ctorParameters = () => [
-    { type: NgCartService }
-];
-DeleteFromCartDirective.propDecorators = {
-    dish: [{ type: Input }],
-    amountDish: [{ type: Input }],
-    onClick: [{ type: HostListener, args: ['click',] }]
-};
+            }]
+    }], function () { return [{ type: NgCartService }]; }, { dish: [{
+            type: Input
+        }], amountDish: [{
+            type: Input
+        }], onClick: [{
+            type: HostListener,
+            args: ['click']
+        }] }); })();
 
 class OrderCartUserDirective {
     constructor(cartService) {
@@ -1369,18 +1372,21 @@ class OrderCartUserDirective {
         }
     }
 }
-OrderCartUserDirective.decorators = [
-    { type: Directive, args: [{
+OrderCartUserDirective.ɵfac = function OrderCartUserDirective_Factory(t) { return new (t || OrderCartUserDirective)(ɵɵdirectiveInject(NgCartService)); };
+OrderCartUserDirective.ɵdir = ɵɵdefineDirective({ type: OrderCartUserDirective, selectors: [["", "orderCart", ""]], hostBindings: function OrderCartUserDirective_HostBindings(rf, ctx) { if (rf & 1) {
+        ɵɵlistener("click", function OrderCartUserDirective_click_HostBindingHandler() { return ctx.onClick(); });
+    } }, inputs: { orderCart: "orderCart" } });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(OrderCartUserDirective, [{
+        type: Directive,
+        args: [{
                 selector: '[orderCart]'
-            },] }
-];
-OrderCartUserDirective.ctorParameters = () => [
-    { type: NgCartService }
-];
-OrderCartUserDirective.propDecorators = {
-    orderCart: [{ type: Input }],
-    onClick: [{ type: HostListener, args: ['click',] }]
-};
+            }]
+    }], function () { return [{ type: NgCartService }]; }, { orderCart: [{
+            type: Input
+        }], onClick: [{
+            type: HostListener,
+            args: ['click']
+        }] }); })();
 
 class SetAmountDirective {
     constructor(cartService) {
@@ -1406,19 +1412,23 @@ class SetAmountDirective {
         }
     }
 }
-SetAmountDirective.decorators = [
-    { type: Directive, args: [{
+SetAmountDirective.ɵfac = function SetAmountDirective_Factory(t) { return new (t || SetAmountDirective)(ɵɵdirectiveInject(NgCartService)); };
+SetAmountDirective.ɵdir = ɵɵdefineDirective({ type: SetAmountDirective, selectors: [["", "setDishAmount", ""]], hostBindings: function SetAmountDirective_HostBindings(rf, ctx) { if (rf & 1) {
+        ɵɵlistener("click", function SetAmountDirective_click_HostBindingHandler() { return ctx.onClick(); });
+    } }, inputs: { action: "action", dish: "dish" } });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(SetAmountDirective, [{
+        type: Directive,
+        args: [{
                 selector: '[setDishAmount]'
-            },] }
-];
-SetAmountDirective.ctorParameters = () => [
-    { type: NgCartService }
-];
-SetAmountDirective.propDecorators = {
-    action: [{ type: Input }],
-    dish: [{ type: Input }],
-    onClick: [{ type: HostListener, args: ['click',] }]
-};
+            }]
+    }], function () { return [{ type: NgCartService }]; }, { action: [{
+            type: Input
+        }], dish: [{
+            type: Input
+        }], onClick: [{
+            type: HostListener,
+            args: ['click']
+        }] }); })();
 
 class DishCalcDirective {
     constructor(renderer, el, cartService) {
@@ -1936,23 +1946,24 @@ class DishCalcDirective {
         this.cartService.setModifiers([], []);
     }
 }
-DishCalcDirective.decorators = [
-    { type: Directive, args: [{
+DishCalcDirective.ɵfac = function DishCalcDirective_Factory(t) { return new (t || DishCalcDirective)(ɵɵdirectiveInject(Renderer2), ɵɵdirectiveInject(ElementRef), ɵɵdirectiveInject(NgCartService)); };
+DishCalcDirective.ɵdir = ɵɵdefineDirective({ type: DishCalcDirective, selectors: [["", "dishCalc", ""]], inputs: { dish: "dish", amount: "amount", selectedModifiers: "selectedModifiers" }, outputs: { validate: "validate", amountDishToAdd: "amountDishToAdd" } });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(DishCalcDirective, [{
+        type: Directive,
+        args: [{
                 selector: '[dishCalc]'
-            },] }
-];
-DishCalcDirective.ctorParameters = () => [
-    { type: Renderer2 },
-    { type: ElementRef },
-    { type: NgCartService }
-];
-DishCalcDirective.propDecorators = {
-    dish: [{ type: Input }],
-    amount: [{ type: Input }],
-    selectedModifiers: [{ type: Input }],
-    validate: [{ type: Output }],
-    amountDishToAdd: [{ type: Output }]
-};
+            }]
+    }], function () { return [{ type: Renderer2 }, { type: ElementRef }, { type: NgCartService }]; }, { dish: [{
+            type: Input
+        }], amount: [{
+            type: Input
+        }], selectedModifiers: [{
+            type: Input
+        }], validate: [{
+            type: Output
+        }], amountDishToAdd: [{
+            type: Output
+        }] }); })();
 
 class CheckoutDirective {
     constructor(cartService) {
@@ -2130,45 +2141,75 @@ class CheckoutDirective {
         return phone.replace('+8', '+7');
     }
 }
-CheckoutDirective.decorators = [
-    { type: Directive, args: [{
+CheckoutDirective.ɵfac = function CheckoutDirective_Factory(t) { return new (t || CheckoutDirective)(ɵɵdirectiveInject(NgCartService)); };
+CheckoutDirective.ɵdir = ɵɵdefineDirective({ type: CheckoutDirective, selectors: [["", "checkout", ""]], hostBindings: function CheckoutDirective_HostBindings(rf, ctx) { if (rf & 1) {
+        ɵɵlistener("click", function CheckoutDirective_click_HostBindingHandler() { return ctx.onClick(); });
+    } }, inputs: { cartTotal: "cartTotal", bonuses: "bonuses", name: "name", email: "email", phone: "phone", phonePaymentSmsCode: "phonePaymentSmsCode", delivery: "delivery", selfService: "selfService", locationId: "locationId", street: "street", streetId: "streetId", home: "home", housing: "housing", apartment: "apartment", entrance: "entrance", doorphone: "doorphone", floor: "floor", paymentMethod: "paymentMethod", paymentMethodId: "paymentMethodId", personsCount: "personsCount", comment: "comment", callback: "callback", date: "date", notifyMethodId: "notifyMethodId" }, outputs: { success: "success", paymentRedirect: "paymentRedirect", error: "error", isChecking: "isChecking" }, features: [ɵɵNgOnChangesFeature] });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(CheckoutDirective, [{
+        type: Directive,
+        args: [{
                 selector: '[checkout]'
-            },] }
-];
-CheckoutDirective.ctorParameters = () => [
-    { type: NgCartService }
-];
-CheckoutDirective.propDecorators = {
-    cartTotal: [{ type: Input }],
-    bonuses: [{ type: Input }],
-    name: [{ type: Input }],
-    email: [{ type: Input }],
-    phone: [{ type: Input }],
-    phonePaymentSmsCode: [{ type: Input }],
-    delivery: [{ type: Input }],
-    selfService: [{ type: Input }],
-    locationId: [{ type: Input }],
-    street: [{ type: Input }],
-    streetId: [{ type: Input }],
-    home: [{ type: Input }],
-    housing: [{ type: Input }],
-    apartment: [{ type: Input }],
-    entrance: [{ type: Input }],
-    doorphone: [{ type: Input }],
-    floor: [{ type: Input }],
-    paymentMethod: [{ type: Input }],
-    paymentMethodId: [{ type: Input }],
-    personsCount: [{ type: Input }],
-    comment: [{ type: Input }],
-    callback: [{ type: Input }],
-    date: [{ type: Input }],
-    notifyMethodId: [{ type: Input }],
-    success: [{ type: Output }],
-    paymentRedirect: [{ type: Output }],
-    error: [{ type: Output }],
-    isChecking: [{ type: Output }],
-    onClick: [{ type: HostListener, args: ['click',] }]
-};
+            }]
+    }], function () { return [{ type: NgCartService }]; }, { cartTotal: [{
+            type: Input
+        }], bonuses: [{
+            type: Input
+        }], name: [{
+            type: Input
+        }], email: [{
+            type: Input
+        }], phone: [{
+            type: Input
+        }], phonePaymentSmsCode: [{
+            type: Input
+        }], delivery: [{
+            type: Input
+        }], selfService: [{
+            type: Input
+        }], locationId: [{
+            type: Input
+        }], street: [{
+            type: Input
+        }], streetId: [{
+            type: Input
+        }], home: [{
+            type: Input
+        }], housing: [{
+            type: Input
+        }], apartment: [{
+            type: Input
+        }], entrance: [{
+            type: Input
+        }], doorphone: [{
+            type: Input
+        }], floor: [{
+            type: Input
+        }], paymentMethod: [{
+            type: Input
+        }], paymentMethodId: [{
+            type: Input
+        }], personsCount: [{
+            type: Input
+        }], comment: [{
+            type: Input
+        }], callback: [{
+            type: Input
+        }], date: [{
+            type: Input
+        }], notifyMethodId: [{
+            type: Input
+        }], success: [{
+            type: Output
+        }], paymentRedirect: [{
+            type: Output
+        }], error: [{
+            type: Output
+        }], isChecking: [{
+            type: Output
+        }], onClick: [{
+            type: HostListener,
+            args: ['click']
+        }] }); })();
 
 class SetDishCommentDirective {
     constructor(cartService) {
@@ -2183,21 +2224,27 @@ class SetDishCommentDirective {
         this.cartService.setDishComment$(this.dish.id, this.comment).subscribe(res => this.success.emit(true), err => this.error.emit(err));
     }
 }
-SetDishCommentDirective.decorators = [
-    { type: Directive, args: [{
+SetDishCommentDirective.ɵfac = function SetDishCommentDirective_Factory(t) { return new (t || SetDishCommentDirective)(ɵɵdirectiveInject(NgCartService)); };
+SetDishCommentDirective.ɵdir = ɵɵdefineDirective({ type: SetDishCommentDirective, selectors: [["", "setDishComment", ""]], hostBindings: function SetDishCommentDirective_HostBindings(rf, ctx) { if (rf & 1) {
+        ɵɵlistener("click", function SetDishCommentDirective_click_HostBindingHandler() { return ctx.onClick(); });
+    } }, inputs: { comment: "comment", dish: "dish" }, outputs: { success: "success", error: "error" } });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(SetDishCommentDirective, [{
+        type: Directive,
+        args: [{
                 selector: '[setDishComment]'
-            },] }
-];
-SetDishCommentDirective.ctorParameters = () => [
-    { type: NgCartService }
-];
-SetDishCommentDirective.propDecorators = {
-    comment: [{ type: Input }],
-    dish: [{ type: Input }],
-    success: [{ type: Output }],
-    error: [{ type: Output }],
-    onClick: [{ type: HostListener, args: ['click',] }]
-};
+            }]
+    }], function () { return [{ type: NgCartService }]; }, { comment: [{
+            type: Input
+        }], dish: [{
+            type: Input
+        }], success: [{
+            type: Output
+        }], error: [{
+            type: Output
+        }], onClick: [{
+            type: HostListener,
+            args: ['click']
+        }] }); })();
 
 const DIRECTIVES = [
     AddDishToCartDirective,
@@ -2251,18 +2298,37 @@ class NgGqlModule {
         };
     }
 }
-NgGqlModule.decorators = [
-    { type: NgModule, args: [{
+NgGqlModule.ɵfac = function NgGqlModule_Factory(t) { return new (t || NgGqlModule)(ɵɵinject(Apollo), ɵɵinject(HttpLink), ɵɵinject('config')); };
+NgGqlModule.ɵmod = ɵɵdefineNgModule({ type: NgGqlModule });
+NgGqlModule.ɵinj = ɵɵdefineInjector({ imports: [[]] });
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && ɵɵsetNgModuleScope(NgGqlModule, { declarations: [AddDishToCartDirective,
+        AmountCartDirective,
+        DeleteFromCartDirective,
+        OrderCartUserDirective,
+        //ModifiresDirective,
+        DishCalcDirective,
+        SetDishCommentDirective,
+        SetAmountDirective,
+        CheckoutDirective], exports: [AddDishToCartDirective,
+        AmountCartDirective,
+        DeleteFromCartDirective,
+        OrderCartUserDirective,
+        //ModifiresDirective,
+        DishCalcDirective,
+        SetDishCommentDirective,
+        SetAmountDirective,
+        CheckoutDirective] }); })();
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && ɵsetClassMetadata(NgGqlModule, [{
+        type: NgModule,
+        args: [{
                 imports: [],
                 exports: [DIRECTIVES],
                 declarations: [DIRECTIVES]
-            },] }
-];
-NgGqlModule.ctorParameters = () => [
-    { type: Apollo },
-    { type: HttpLink },
-    { type: undefined, decorators: [{ type: Inject, args: ['config',] }] }
-];
+            }]
+    }], function () { return [{ type: Apollo }, { type: HttpLink }, { type: undefined, decorators: [{
+                type: Inject,
+                args: ['config']
+            }] }]; }, null); })();
 
 class EventMessage {
     constructor(type, title, body) {

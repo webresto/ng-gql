@@ -17,3 +17,4 @@ export declare class Modifier {
         images: Image[];
     };
 }
+//# sourceMappingURL=modifier.d.ts.map

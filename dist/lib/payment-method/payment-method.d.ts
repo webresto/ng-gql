@@ -8,3 +8,4 @@ export declare class PaymentMethod {
     enable: boolean;
     customData: any;
 }
+//# sourceMappingURL=payment-method.d.ts.map

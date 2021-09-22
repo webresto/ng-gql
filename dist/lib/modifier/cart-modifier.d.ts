@@ -5,3 +5,4 @@ export declare class CartModifier {
     groupId: string;
     dish: Dish;
 }
+//# sourceMappingURL=cart-modifier.d.ts.map

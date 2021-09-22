@@ -8,6 +8,5 @@ export class Group {
 	order: number;
 	dishes?: Dish[];
 	parentGroup?: Group;
-  slug: string;
-  childGroups: Group[]
+  	slug?: string;
 }

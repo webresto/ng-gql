@@ -22,3 +22,4 @@ export * from './lib/directives/set-amount.directive';
 export * from './lib/directives/dish-calc.directive';
 export * from "./lib/directives/checkout.directive";
 export * from './lib/directives/set-dish-comment.directive';
+//# sourceMappingURL=public-api.d.ts.map

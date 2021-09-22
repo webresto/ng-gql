@@ -11,3 +11,4 @@ export declare class CheckResponse {
         data: any;
     };
 }
+//# sourceMappingURL=check-response.d.ts.map

@@ -6,3 +6,4 @@ export declare const DishGql: {
         getDishes: () => import("graphql").DocumentNode;
     };
 };
+//# sourceMappingURL=dish.gql.d.ts.map

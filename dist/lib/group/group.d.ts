@@ -7,6 +7,6 @@ export declare class Group {
     order: number;
     dishes?: Dish[];
     parentGroup?: Group;
-    slug: string;
-    childGroups: Group[];
+    slug?: string;
 }
+//# sourceMappingURL=group.d.ts.map
