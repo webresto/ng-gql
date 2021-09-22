@@ -12,4 +12,3 @@ export declare class CartDish {
     modifiers: CartModifier[];
     uniqueItems: number;
 }
-//# sourceMappingURL=cart-dish.d.ts.map

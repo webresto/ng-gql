@@ -3,4 +3,3 @@ export declare class Image {
     uploadDate: string;
     images: any;
 }
-//# sourceMappingURL=image.d.ts.map

@@ -5,4 +5,3 @@ export declare class CheckPhoneResponse {
     confirmed: boolean;
     firstbuy: boolean;
 }
-//# sourceMappingURL=check-phone-response.d.ts.map

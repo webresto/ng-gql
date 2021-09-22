@@ -52,4 +52,3 @@ export declare class Address {
     apartment?: string;
     doorphone?: string;
 }
-//# sourceMappingURL=cart.d.ts.map

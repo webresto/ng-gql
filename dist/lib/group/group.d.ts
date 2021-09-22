@@ -9,4 +9,3 @@ export declare class Group {
     parentGroup?: Group;
     slug?: string;
 }
-//# sourceMappingURL=group.d.ts.map

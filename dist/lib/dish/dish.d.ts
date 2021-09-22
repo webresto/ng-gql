@@ -21,4 +21,3 @@ export declare class Dish {
 export declare class DishTag {
     name: string;
 }
-//# sourceMappingURL=dish.d.ts.map

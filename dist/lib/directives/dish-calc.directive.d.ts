@@ -1,6 +1,5 @@
 import { Renderer2, ElementRef, OnDestroy, EventEmitter } from '@angular/core';
 import { NgCartService } from '../services/ng-cart.service';
-import * as i0 from "@angular/core";
 export declare class DishCalcDirective implements OnDestroy {
     private renderer;
     private el;
@@ -33,7 +32,4 @@ export declare class DishCalcDirective implements OnDestroy {
     idRadioBox(groupId: any): boolean;
     checkMinAmountModifiers(groupId: any, modifire: any): void;
     ngOnDestroy(): void;
-    static ɵfac: i0.ɵɵFactoryDef<DishCalcDirective, never>;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<DishCalcDirective, "[dishCalc]", never, { "dish": "dish"; "amount": "amount"; "selectedModifiers": "selectedModifiers"; }, { "validate": "validate"; "amountDishToAdd": "amountDishToAdd"; }, never>;
 }
-//# sourceMappingURL=dish-calc.directive.d.ts.map

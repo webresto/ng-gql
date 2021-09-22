@@ -3,4 +3,3 @@ export declare class Order {
     cart: Cart;
     customData: any;
 }
-//# sourceMappingURL=order.d.ts.map

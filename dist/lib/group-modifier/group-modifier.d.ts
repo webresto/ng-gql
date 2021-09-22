@@ -11,4 +11,3 @@ export declare class GroupModifier {
     };
     totalAmount: number;
 }
-//# sourceMappingURL=group-modifier.d.ts.map
