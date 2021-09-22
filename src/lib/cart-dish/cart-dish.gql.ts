@@ -21,6 +21,8 @@ export const CartDishFragments = {
 			comment
 			weight
 			totalWeight
+			itemTotal
+			uniqueItems
 		}
 		${DishFragments.dish}
 	`
