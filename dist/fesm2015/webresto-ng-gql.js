@@ -12,6 +12,10 @@ class CartDish {
 
 class Cart {
 }
+class Customer {
+}
+class Address {
+}
 
 class Order {
 }
@@ -26,6 +30,8 @@ class Phone {
 }
 
 class Dish {
+}
+class DishTag {
 }
 
 class Group {
@@ -191,6 +197,8 @@ const CartDishFragments = {
 			comment
 			weight
 			totalWeight
+			itemTotal
+			uniqueItems
 		}
 		${DishFragments.dish}
 	`
@@ -539,6 +547,7 @@ const GroupFragments = {
 			order
 			visible
 			slug
+			childGroups
 		}
 	`
 };
@@ -2271,5 +2280,5 @@ class EventMessage {
  * Generated bundle index. Do not edit.
  */
 
-export { AddDishToCartDirective, AmountCartDirective, Cart, CartDish, CheckPhoneResponse, CheckResponse, CheckoutDirective, DeleteFromCartDirective, Dish, DishCalcDirective, EventMessage, EventerService, Group, GroupModifier, Modifier, NgCartService, NgGqlModule, NgGqlService, Order, OrderCartUserDirective, PaymentMethod, Phone, SetAmountDirective, SetDishCommentDirective };
+export { AddDishToCartDirective, Address, AmountCartDirective, Cart, CartDish, CheckPhoneResponse, CheckResponse, CheckoutDirective, Customer, DeleteFromCartDirective, Dish, DishCalcDirective, DishTag, EventMessage, EventerService, Group, GroupModifier, Modifier, NgCartService, NgGqlModule, NgGqlService, Order, OrderCartUserDirective, PaymentMethod, Phone, SetAmountDirective, SetDishCommentDirective };
 //# sourceMappingURL=webresto-ng-gql.js.map

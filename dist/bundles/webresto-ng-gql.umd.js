@@ -15,6 +15,16 @@
         }
         return Cart;
     }());
+    var Customer = /** @class */ (function () {
+        function Customer() {
+        }
+        return Customer;
+    }());
+    var Address = /** @class */ (function () {
+        function Address() {
+        }
+        return Address;
+    }());
 
     var Order = /** @class */ (function () {
         function Order() {
@@ -44,6 +54,11 @@
         function Dish() {
         }
         return Dish;
+    }());
+    var DishTag = /** @class */ (function () {
+        function DishTag() {
+        }
+        return DishTag;
     }());
 
     var Group = /** @class */ (function () {
@@ -433,7 +448,7 @@
     var templateObject_1$4, templateObject_2$1;
 
     var CartDishFragments = {
-        cartDish: i1.gql(templateObject_1$5 || (templateObject_1$5 = __makeTemplateObject(["\n\t\tfragment CartDishFragment on CartDish {\n\t\t\tid\n\t\t\tamount\n\t\t\tdish {\n\t\t\t\t...DishFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\tid\n\t\t\t\tdish {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t\tamount\n\t\t\t\tgroupId\n\t\t\t}\n\t\t\tdiscountTotal\n\t\t\tcomment\n\t\t\tweight\n\t\t\ttotalWeight\n\t\t}\n\t\t", "\n\t"], ["\n\t\tfragment CartDishFragment on CartDish {\n\t\t\tid\n\t\t\tamount\n\t\t\tdish {\n\t\t\t\t...DishFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\tid\n\t\t\t\tdish {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t\tamount\n\t\t\t\tgroupId\n\t\t\t}\n\t\t\tdiscountTotal\n\t\t\tcomment\n\t\t\tweight\n\t\t\ttotalWeight\n\t\t}\n\t\t", "\n\t"])), DishFragments.dish)
+        cartDish: i1.gql(templateObject_1$5 || (templateObject_1$5 = __makeTemplateObject(["\n\t\tfragment CartDishFragment on CartDish {\n\t\t\tid\n\t\t\tamount\n\t\t\tdish {\n\t\t\t\t...DishFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\tid\n\t\t\t\tdish {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t\tamount\n\t\t\t\tgroupId\n\t\t\t}\n\t\t\tdiscountTotal\n\t\t\tcomment\n\t\t\tweight\n\t\t\ttotalWeight\n\t\t\titemTotal\n\t\t\tuniqueItems\n\t\t}\n\t\t", "\n\t"], ["\n\t\tfragment CartDishFragment on CartDish {\n\t\t\tid\n\t\t\tamount\n\t\t\tdish {\n\t\t\t\t...DishFragment\n\t\t\t}\n\t\t\tmodifiers {\n\t\t\t\tid\n\t\t\t\tdish {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t\tamount\n\t\t\t\tgroupId\n\t\t\t}\n\t\t\tdiscountTotal\n\t\t\tcomment\n\t\t\tweight\n\t\t\ttotalWeight\n\t\t\titemTotal\n\t\t\tuniqueItems\n\t\t}\n\t\t", "\n\t"])), DishFragments.dish)
     };
     var templateObject_1$5;
 
@@ -489,7 +504,7 @@
     var templateObject_1$6, templateObject_2$2, templateObject_3, templateObject_4, templateObject_5, templateObject_6, templateObject_7, templateObject_8, templateObject_9, templateObject_10, templateObject_11, templateObject_12, templateObject_13;
 
     var GroupFragments = {
-        group: i1.gql(templateObject_1$7 || (templateObject_1$7 = __makeTemplateObject(["\n\t\tfragment GroupFragment on Group {\n\t\t\tid\n\t\t\tdescription\n\t\t\tname\n\t\t\torder\n\t\t\tvisible\n\t\t\tslug\n\t\t}\n\t"], ["\n\t\tfragment GroupFragment on Group {\n\t\t\tid\n\t\t\tdescription\n\t\t\tname\n\t\t\torder\n\t\t\tvisible\n\t\t\tslug\n\t\t}\n\t"])))
+        group: i1.gql(templateObject_1$7 || (templateObject_1$7 = __makeTemplateObject(["\n\t\tfragment GroupFragment on Group {\n\t\t\tid\n\t\t\tdescription\n\t\t\tname\n\t\t\torder\n\t\t\tvisible\n\t\t\tslug\n\t\t\tchildGroups\n\t\t}\n\t"], ["\n\t\tfragment GroupFragment on Group {\n\t\t\tid\n\t\t\tdescription\n\t\t\tname\n\t\t\torder\n\t\t\tvisible\n\t\t\tslug\n\t\t\tchildGroups\n\t\t}\n\t"])))
     };
     var ɵ0$3 = function () { return i1.gql(templateObject_2$3 || (templateObject_2$3 = __makeTemplateObject(["\n\t\t\tquery GetMenu {\n\t\t\t\tgroups {\n\t\t\t\t\t...GroupFragment\n\t\t\t\t\tdishes {\n\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetMenu {\n\t\t\t\tgroups {\n\t\t\t\t\t...GroupFragment\n\t\t\t\t\tdishes {\n\t\t\t\t\t\t...DishFragment\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"])), GroupFragments.group, DishFragments.dish); }, ɵ1$1 = function () { return i1.gql(templateObject_3$1 || (templateObject_3$1 = __makeTemplateObject(["\n\t\t\tquery GetGroupsAndDishes {\n\t\t\t\tgroups {\n\t\t\t\t\tparentGroup {\n\t\t\t\t\t\tid\n\t\t\t\t\t}\n\t\t\t\t\t...GroupFragment\n\t\t\t\t}\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"], ["\n\t\t\tquery GetGroupsAndDishes {\n\t\t\t\tgroups {\n\t\t\t\t\tparentGroup {\n\t\t\t\t\t\tid\n\t\t\t\t\t}\n\t\t\t\t\t...GroupFragment\n\t\t\t\t}\n\t\t\t\tdishes {\n\t\t\t\t\t...DishFragment\n\t\t\t\t}\n\t\t\t}\n\t\t\t", "\n\t\t\t", "\n\t\t"])), GroupFragments.group, DishFragments.dish); };
     var GroupGql = {
@@ -2278,15 +2293,18 @@
      */
 
     exports.AddDishToCartDirective = AddDishToCartDirective;
+    exports.Address = Address;
     exports.AmountCartDirective = AmountCartDirective;
     exports.Cart = Cart;
     exports.CartDish = CartDish;
     exports.CheckPhoneResponse = CheckPhoneResponse;
     exports.CheckResponse = CheckResponse;
     exports.CheckoutDirective = CheckoutDirective;
+    exports.Customer = Customer;
     exports.DeleteFromCartDirective = DeleteFromCartDirective;
     exports.Dish = Dish;
     exports.DishCalcDirective = DishCalcDirective;
+    exports.DishTag = DishTag;
     exports.EventMessage = EventMessage;
     exports.EventerService = EventerService;
     exports.Group = Group;
