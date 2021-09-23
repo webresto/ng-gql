@@ -9,4 +9,5 @@ export class Group {
 	dishes?: Dish[];
 	parentGroup?: Group;
   	slug?: string;
+	childGroups: Group[]
 }
