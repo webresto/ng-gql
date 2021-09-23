@@ -1,4 +1,6 @@
-import { ɵɵdefineInjectable, ɵɵinject, Injectable, EventEmitter, Directive, Input, Output, HostListener, Renderer2, ElementRef, NgModule, Inject } from '@angular/core';
+import * as i0 from '@angular/core';
+import { Injectable, EventEmitter, Directive, Input, Output, HostListener, Renderer2, ElementRef, NgModule, Inject } from '@angular/core';
+import * as i1 from 'apollo-angular';
 import { gql, Apollo } from 'apollo-angular';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { tap, take, map, catchError, switchMap, filter, debounceTime } from 'rxjs/operators';
@@ -63,7 +65,7 @@ const PaymentMethodFragments = {
 		}
 	`
 };
-const ɵ0 = (cartId = null) => {
+const ɵ0$4 = (cartId = null) => {
     if (cartId == 'null')
         cartId = null;
     const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
@@ -78,7 +80,7 @@ const ɵ0 = (cartId = null) => {
 };
 const PaymentMethodGql = {
     queries: {
-        getPaymentMethod: ɵ0
+        getPaymentMethod: ɵ0$4
     }
 };
 
@@ -163,7 +165,7 @@ const DishFragments = {
 		${GroupModifierFragments.groupModifier}
 	`
 };
-const ɵ0$1 = () => gql `
+const ɵ0$3 = () => gql `
 			query GetDishes {
 				dishes {
 					...DishFragment
@@ -173,7 +175,7 @@ const ɵ0$1 = () => gql `
 		`;
 const DishGql = {
     queries: {
-        getDishes: ɵ0$1
+        getDishes: ɵ0$3
     }
 };
 
@@ -263,7 +265,7 @@ const ɵ0$2 = (orderId) => {
 				${CartFragments.cartOrderData}
 				${PaymentMethodFragments.paymentMethod}
 			`;
-}, ɵ1 = (cartId = null) => {
+}, ɵ1$1 = (cartId = null) => {
     if (cartId == 'null')
         cartId = null;
     const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
@@ -523,7 +525,7 @@ const ɵ0$2 = (orderId) => {
 const CartGql = {
     queries: {
         getOrder: ɵ0$2,
-        getCart: ɵ1,
+        getCart: ɵ1$1,
         getPhone: ɵ2,
         checkPhone: ɵ3
     },
@@ -550,7 +552,7 @@ const GroupFragments = {
 		}
 	`
 };
-const ɵ0$3 = () => gql `
+const ɵ0$1 = () => gql `
 			query GetMenu {
 				groups {
 					...GroupFragment
@@ -561,7 +563,7 @@ const ɵ0$3 = () => gql `
 			}
 			${GroupFragments.group}
 			${DishFragments.dish}
-		`, ɵ1$1 = () => gql `
+		`, ɵ1 = () => gql `
 			query GetGroupsAndDishes {
 				groups {
 					parentGroup {
@@ -578,8 +580,8 @@ const ɵ0$3 = () => gql `
 		`;
 const GroupGql = {
     queries: {
-        getGroups: ɵ0$3,
-        getGroupsAndDishes: ɵ1$1
+        getGroups: ɵ0$1,
+        getGroupsAndDishes: ɵ1
     }
 };
 
@@ -609,7 +611,7 @@ const NavigationFragments = {
 		}
 	`
 };
-const ɵ0$4 = () => gql `
+const ɵ0 = () => gql `
 			query GetNavigation {
 				navigation {
 					...NavigationFragment
@@ -619,7 +621,7 @@ const ɵ0$4 = () => gql `
 		`;
 const NavigationGql = {
     queries: {
-        getNavigationes: ɵ0$4
+        getNavigationes: ɵ0
     }
 };
 
@@ -951,7 +953,7 @@ class NgGqlService {
         });
     }
 }
-NgGqlService.ɵprov = ɵɵdefineInjectable({ factory: function NgGqlService_Factory() { return new NgGqlService(ɵɵinject(Apollo)); }, token: NgGqlService, providedIn: "root" });
+NgGqlService.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgGqlService_Factory() { return new NgGqlService(i0.ɵɵinject(i1.Apollo)); }, token: NgGqlService, providedIn: "root" });
 NgGqlService.decorators = [
     { type: Injectable, args: [{
                 providedIn: 'root'
@@ -979,7 +981,7 @@ class EventerService {
         return this.eventAction;
     }
 }
-EventerService.ɵprov = ɵɵdefineInjectable({ factory: function EventerService_Factory() { return new EventerService(); }, token: EventerService, providedIn: "root" });
+EventerService.ɵprov = i0.ɵɵdefineInjectable({ factory: function EventerService_Factory() { return new EventerService(); }, token: EventerService, providedIn: "root" });
 EventerService.decorators = [
     { type: Injectable, args: [{
                 providedIn: 'root'
@@ -1093,7 +1095,7 @@ class NgCartService {
         });
     }
 }
-NgCartService.ɵprov = ɵɵdefineInjectable({ factory: function NgCartService_Factory() { return new NgCartService(ɵɵinject(NgGqlService), ɵɵinject(EventerService)); }, token: NgCartService, providedIn: "root" });
+NgCartService.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgCartService_Factory() { return new NgCartService(i0.ɵɵinject(NgGqlService), i0.ɵɵinject(EventerService)); }, token: NgCartService, providedIn: "root" });
 NgCartService.decorators = [
     { type: Injectable, args: [{
                 providedIn: 'root'
