@@ -1,4 +1,5 @@
 import { Image } from '../image/image';
+import { Dish } from '../dish/dish';
 
 export class Modifier {
 	modifierId: string;
@@ -7,14 +8,5 @@ export class Modifier {
 	amount?: number;
 	defaultAmount: number;
 	hideIfDefaultAmount: boolean;
-	dish: {
-		id: string;
-		name: string;
-		description: string;
-		price: number;
-		weight: number;
-		balance: number;
-		tags: any[];
-		images: Image[];
-	}
+	dish: Dish;
 }

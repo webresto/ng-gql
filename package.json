@@ -1,6 +1,6 @@
 {
   "name": "@webresto/ng-gql",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "scripts": {
     "build": "npx ng-packagr -p ng-package.json"
   },
