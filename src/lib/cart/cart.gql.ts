@@ -2,12 +2,13 @@ import { gql } from 'apollo-angular';
 import { PaymentMethodFragments } from '../payment-method/payment-method.gql';
 import { CartDishFragments } from '../cart-dish/cart-dish.gql';
 import { DishFragments } from '../dish/dish.gql';
+import { CartModifier } from '../modifier/cart-modifier';
 
 export type AddToCartInput = {
 	cartId?: string,
 	dishId?: string,
 	amount?: number,
-	modifiers?: any,
+	modifiers?: CartModifier[],
 	comment?: string,
 	from?: string,
 	replace?: boolean,

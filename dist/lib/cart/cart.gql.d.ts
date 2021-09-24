@@ -1,8 +1,10 @@
+import { CartModifier } from '../modifier/cart-modifier';
+
 export declare type AddToCartInput = {
     cartId?: string;
     dishId?: string;
     amount?: number;
-    modifiers?: any;
+    modifiers?: CartModifier[];
     comment?: string;
     from?: string;
     replace?: boolean;
