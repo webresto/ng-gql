@@ -19,6 +19,29 @@ export class Dish {
     id: string;
   };
   modifiers: GroupModifier[];
+  
+  //
+  seoDescription?: string;
+  seoKeywords?: string;
+  seoText?: string;
+  seoTitle?: string;
+  carbohydrateAmount?: number;
+  carbohydrateFullAmount?: number;
+  energyAmount?: number;
+  energyFullAmount?: number;
+  fatAmount?: number;
+  fatFullAmount?: number;
+  fiberAmount?: number;
+  fiberFullAmount?: number;
+  measureUnit?: string;
+  type?: string;
+  order?: number;
+  isDeleted?: boolean;
+  isModificable?: boolean;
+  composition?: string;
+  visible?: boolean;
+  modifier?: boolean;
+  promo?: boolean;
 }
 
 export class DishTag {

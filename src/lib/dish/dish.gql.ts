@@ -17,6 +17,27 @@ export const DishFragments = {
 			additionalInfo
 			discountAmount
 			discountType
+			seoDescription
+			seoKeywords
+			seoText
+			seoTitle
+			carbohydrateAmount
+			carbohydrateFullAmount
+			energyAmount
+			energyFullAmount
+			fatAmount
+			fatFullAmount
+			fiberAmount
+			fiberFullAmount
+			measureUnit
+			type
+			order
+			isDeleted
+			isModificable
+			composition
+			visible
+			modifier
+			promo
 			images {
 				...ImageFragment
 			}

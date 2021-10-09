@@ -1,4 +1,4 @@
-import { Image } from '../image/image';
+import { Dish } from '../dish/dish';
 export declare class Modifier {
     modifierId: string;
     maxAmount: number;
@@ -6,14 +6,5 @@ export declare class Modifier {
     amount?: number;
     defaultAmount: number;
     hideIfDefaultAmount: boolean;
-    dish: {
-        id: string;
-        name: string;
-        description: string;
-        price: number;
-        weight: number;
-        balance: number;
-        tags: any[];
-        images: Image[];
-    };
+    dish: Dish;
 }

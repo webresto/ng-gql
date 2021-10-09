@@ -10,4 +10,5 @@ export class Group {
 	discount?: number;
 	parentGroup?: Group;
   	slug?: string;
+	childGroups: Group[]
 }
