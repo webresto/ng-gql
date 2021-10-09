@@ -6,6 +6,7 @@ export declare class Group {
     visible: string;
     order: number;
     dishes?: Dish[];
+    discount?: number;
     parentGroup?: Group;
     slug?: string;
 }

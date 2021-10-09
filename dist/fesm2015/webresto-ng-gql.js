@@ -145,10 +145,13 @@ const DishFragments = {
 			description
 			groupId
 			price
+			oldPrice
 			weight
 			balance
 			tags
 			additionalInfo
+			discountAmount
+			discountType
 			images {
 				...ImageFragment
 			}
@@ -194,10 +197,12 @@ const CartDishFragments = {
 				groupId
 			}
 			discountTotal
+			discountType
 			comment
 			weight
 			totalWeight
 			itemTotal
+			oldItemTotal
 			uniqueItems
 		}
 		${DishFragments.dish}
@@ -543,6 +548,7 @@ const GroupFragments = {
 		fragment GroupFragment on Group {
 			id
 			description
+			discount
 			name
 			order
 			visible

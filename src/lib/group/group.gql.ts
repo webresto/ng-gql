@@ -6,6 +6,7 @@ export const GroupFragments = {
 		fragment GroupFragment on Group {
 			id
 			description
+			discount
 			name
 			order
 			visible

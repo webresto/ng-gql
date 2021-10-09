@@ -18,10 +18,12 @@ export const CartDishFragments = {
 				groupId
 			}
 			discountTotal
+			discountType
 			comment
 			weight
 			totalWeight
 			itemTotal
+			oldItemTotal
 			uniqueItems
 		}
 		${DishFragments.dish}

@@ -10,10 +10,13 @@ export const DishFragments = {
 			description
 			groupId
 			price
+			oldPrice
 			weight
 			balance
 			tags
 			additionalInfo
+			discountAmount
+			discountType
 			images {
 				...ImageFragment
 			}
