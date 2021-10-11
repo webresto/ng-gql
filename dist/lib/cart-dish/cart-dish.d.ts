@@ -10,7 +10,7 @@ export declare class CartDish {
     weight: number;
     totalWeight: number;
     total: number;
-    oldItemTotal: number;
+    itemTotalBeforeDiscount: number;
     modifiers: CartModifier[];
     uniqueItems: number;
 }

@@ -223,7 +223,7 @@ const CartDishFragments = {
 			weight
 			totalWeight
 			itemTotal
-			oldItemTotal
+			itemTotalBeforeDiscount
 			uniqueItems
 		}
 		${DishFragments.dish}
