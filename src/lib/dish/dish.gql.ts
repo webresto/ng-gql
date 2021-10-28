@@ -10,13 +10,10 @@ export const DishFragments = {
 			description
 			groupId
 			price
-			oldPrice
 			weight
 			balance
 			tags
 			additionalInfo
-			discountAmount
-			discountType
 			seoDescription
 			seoKeywords
 			seoText
@@ -55,10 +52,11 @@ export const DishFragments = {
 
 export const DishGql = {
 	queries: {
-		getDishes: () => gql`
+		getDishes: (customFields) => gql`
 			query GetDishes {
 				dishes {
 					...DishFragment
+					${(customFields['Dish'] || []).join('\n')}
 				}
 			}
 			${DishFragments.dish}

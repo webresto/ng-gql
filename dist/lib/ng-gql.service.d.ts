@@ -33,7 +33,11 @@ export declare class NgGqlService {
     customQueriesDataLoadingByName: {
         [key: string]: boolean;
     };
+    customFields: {
+        [key: string]: string[];
+    };
     constructor(apollo: Apollo);
+    addCustomField(modelName: string, field: string): void;
     getNavigation$(): BehaviorSubject<NavigationData>;
     getMenu$(slug?: string | string[]): BehaviorSubject<Group[]>;
     getDishes$(): BehaviorSubject<Dish[]>;

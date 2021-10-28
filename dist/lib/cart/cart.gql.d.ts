@@ -59,18 +59,18 @@ export declare const CartFragments: {
 };
 export declare const CartGql: {
     queries: {
-        getOrder: (orderId: string) => import("graphql").DocumentNode;
-        getCart: (cartId?: string) => import("graphql").DocumentNode;
-        getPhone: (phone: string) => import("graphql").DocumentNode;
-        checkPhone: (phone: string) => import("graphql").DocumentNode;
+        getOrder: (orderId: string, customFields: any) => import("graphql").DocumentNode;
+        getCart: (cartId: string, customFields: any) => import("graphql").DocumentNode;
+        getPhone: (phone: string, customFields: any) => import("graphql").DocumentNode;
+        checkPhone: (phone: string, customFields: any) => import("graphql").DocumentNode;
     };
     mutations: {
-        addDishToCart: () => import("graphql").DocumentNode;
-        removeDishFromCart: () => import("graphql").DocumentNode;
-        setDishAmount: () => import("graphql").DocumentNode;
-        setDishComment: () => import("graphql").DocumentNode;
-        orderCart: () => import("graphql").DocumentNode;
-        checkCart: () => import("graphql").DocumentNode;
-        checkPhoneCode: () => import("graphql").DocumentNode;
+        addDishToCart: (customFields: any) => import("graphql").DocumentNode;
+        removeDishFromCart: (customFields: any) => import("graphql").DocumentNode;
+        setDishAmount: (customFields: any) => import("graphql").DocumentNode;
+        setDishComment: (customFields: any) => import("graphql").DocumentNode;
+        orderCart: (customFields: any) => import("graphql").DocumentNode;
+        checkCart: (customFields: any) => import("graphql").DocumentNode;
+        checkPhoneCode: (customFields: any) => import("graphql").DocumentNode;
     };
 };

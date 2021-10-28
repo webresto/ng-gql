@@ -17,13 +17,14 @@ export const PaymentMethodFragments = {
 
 export const PaymentMethodGql = {
 	queries: {
-		getPaymentMethod: (cartId: string = null) => {
+		getPaymentMethod: (cartId: string = null, customFields) => {
 			if(cartId == 'null') cartId = null;
 			const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
 			return gql`
 				query GetPaymentMethods {
 					paymentMethods:paymentMethod${queryArguments} {
 						...PaymentMethodFragment
+						${(customFields['PaymentMethod'] || []).join('\n')}
 					}
 				}
 				${PaymentMethodFragments.paymentMethod}

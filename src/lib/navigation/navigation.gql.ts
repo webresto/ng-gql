@@ -21,6 +21,7 @@ export const NavigationFragments = {
 					slug
 					visible
 					name
+					discount
 				}
 			}
 		}
@@ -29,10 +30,11 @@ export const NavigationFragments = {
 
 export const NavigationGql = {
 	queries: {
-		getNavigationes: () => gql`
+		getNavigationes: (customFields) => gql`
 			query GetNavigation {
 				navigation {
 					...NavigationFragment
+					${(customFields['Navigation'] || []).join('\n')}
 				}
 			}
 			${NavigationFragments.navigation}

@@ -3,6 +3,6 @@ export declare const NavigationFragments: {
 };
 export declare const NavigationGql: {
     queries: {
-        getNavigationes: () => import("graphql").DocumentNode;
+        getNavigationes: (customFields: any) => import("graphql").DocumentNode;
     };
 };

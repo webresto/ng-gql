@@ -103,7 +103,7 @@ export const CartFragments = {
 
 export const CartGql = {
 	queries: {
-		getOrder: (orderId: string) => {
+		getOrder: (orderId: string, customFields) => {
 			const queryArguments = orderId ? `(orderNumber: "${orderId}")` : '';
 			return gql`
 				query getOrder {
@@ -113,9 +113,11 @@ export const CartGql = {
 							...CartOrderDataFragment
 							dishes {
 								...CartDishFragment
+								${(customFields['CartDish'] || []).join('\n')}
 							}
 							paymentMethod {
 								...PaymentMethodFragment
+								${(customFields['PaymentMethod'] || []).join('\n')}
 							}
 						}
 						customData
@@ -127,15 +129,17 @@ export const CartGql = {
 				${PaymentMethodFragments.paymentMethod}
 			`;
 		},
-		getCart: (cartId: string = null) => {
+		getCart: (cartId: string = null, customFields) => {
 			if(cartId == 'null') cartId = null;
 			const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
 			return gql`
 				query GetCart {
 					cart${queryArguments} {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 					}
 				}
@@ -143,7 +147,7 @@ export const CartGql = {
 				${CartDishFragments.cartDish}
 			`;
 		},
-		getPhone: (phone: string) => {
+		getPhone: (phone: string, customFields) => {
 			return gql`
 				query phone {
 					phone(phone: "${phone}") {
@@ -154,11 +158,12 @@ export const CartGql = {
 						codeTime
 						confirmCode
 						customData
+						${(customFields['Phone'] || []).join('\n')}
 					}
 				}
 			`;
 		},
-		checkPhone: (phone: string) => {
+		checkPhone: (phone: string, customFields) => {
 			return gql`
 				query checkPhone {
 					checkPhone(phone: "${phone}") {
@@ -167,13 +172,14 @@ export const CartGql = {
 						message
 						confirmed
 						firstbuy
+						${(customFields['Phone'] || []).join('\n')}
 					}
 				}
 			`;
 		}
 	},
 	mutations: {
-		addDishToCart: () => {
+		addDishToCart: (customFields) => {
 			return gql`
 				mutation AddDishToCart(
 					$cartId: String, 
@@ -196,11 +202,14 @@ export const CartGql = {
 						cartDishId: $cartDishId
 					) {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDisg'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
+							${(customFields['Dish'] || []).join('\n')}
 						}
 					}
 				}
@@ -209,7 +218,7 @@ export const CartGql = {
 				${DishFragments.dish}
 			`;
 		},
-		removeDishFromCart: () => {
+		removeDishFromCart: (customFields) => {
 			return gql`
 				mutation cartRemoveDish(
 					$cartId: String!, 
@@ -222,11 +231,14 @@ export const CartGql = {
 						amount: $amount,
 					) {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
+							${(customFields['Dish'] || []).join('\n')}
 						}
 					}
 				}
@@ -235,7 +247,7 @@ export const CartGql = {
 				${DishFragments.dish}
 			`;
 		},
-		setDishAmount: () => {
+		setDishAmount: (customFields) => {
 			return gql`
 				mutation cartSetDishAmount(
 					$cartId: String,
@@ -248,11 +260,14 @@ export const CartGql = {
 						amount: $amount
 					) {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
+							${(customFields['Dish'] || []).join('\n')}
 						}
 					}
 				}
@@ -261,7 +276,7 @@ export const CartGql = {
 				${DishFragments.dish}
 			`;
 		},
-		setDishComment: () => {
+		setDishComment: (customFields) => {
 			return gql`
 				mutation cartSetDishComment(
 					$cartId: String,
@@ -274,11 +289,14 @@ export const CartGql = {
 						comment: $comment
 					) {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
+							${(customFields['Dish'] || []).join('\n')}
 						}
 					}
 				}
@@ -287,7 +305,7 @@ export const CartGql = {
 				${DishFragments.dish}
 			`;
 		},
-		orderCart: () => {
+		orderCart: (customFields) => {
 			return gql`
 				mutation orderCart(
 					$cartId: String!, 
@@ -305,11 +323,14 @@ export const CartGql = {
 					) {
 						cart {
 							...CartFragment
+							${(customFields['Cart'] || []).join('\n')}
 							dishes {
 								...CartDishFragment
+								${(customFields['CartDish'] || []).join('\n')}
 							}
 							deliveryItem {
 								...DishFragment
+								${(customFields['Dish'] || []).join('\n')}
 							}
 						}
 						message {
@@ -328,7 +349,7 @@ export const CartGql = {
 				${DishFragments.dish}
 			`;
 		},
-		checkCart: () => {
+		checkCart: (customFields) => {
 			return gql`
 				mutation checkCart(
 					$cartId: String!, 
@@ -352,11 +373,14 @@ export const CartGql = {
 					) {
 						cart {
 							...CartFragment
+							${(customFields['Cart'] || []).join('\n')}
 							dishes {
 								...CartDishFragment
+								${(customFields['CartDish'] || []).join('\n')}
 							}
 							deliveryItem {
 								...DishFragment
+								${(customFields['Dish'] || []).join('\n')}
 							}
 						}
 						message {
@@ -375,7 +399,7 @@ export const CartGql = {
 				${DishFragments.dish}
 			`;
 		},
-		checkPhoneCode: () => {
+		checkPhoneCode: (customFields) => {
 			return gql`
 				mutation checkPhoneCode(
 					$phone: String!,
@@ -390,6 +414,7 @@ export const CartGql = {
 						message
 						confirmed
 						firstbuy
+						${(customFields['PhoneCode'] || []).join('\n')}
 					}
 				}
 			`;

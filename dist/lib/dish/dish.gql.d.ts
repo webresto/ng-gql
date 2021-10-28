@@ -3,6 +3,6 @@ export declare const DishFragments: {
 };
 export declare const DishGql: {
     queries: {
-        getDishes: () => import("graphql").DocumentNode;
+        getDishes: (customFields: any) => import("graphql").DocumentNode;
     };
 };

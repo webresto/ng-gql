@@ -46,14 +46,25 @@ export class NgGqlService {
   customQueryiesDataByName: { [key: string]: BehaviorSubject<any> } = {};
   customQueriesDataLoadingByName: { [key: string]: boolean } = {};
 
+  customFields: {[key: string]: string[]} = {};
+
   constructor(private apollo: Apollo) {
     this.cart$.subscribe(res => console.log('control cart res', res));
   } 
 
+  addCustomField(modelName: string, field: string) {
+    if(!this.customFields[modelName]) {
+      this.customFields[modelName] = [];
+    }
+    if (this.customFields[modelName].indexOf(field) == -1) {
+      this.customFields[modelName].push(field);
+    }
+  }
+
   getNavigation$(): BehaviorSubject<NavigationData> {
     if (!this.navigationData$.getValue() && !this.navigationDataLoading) {
       this.apollo.watchQuery<any>({
-        query: NavigationGql.queries.getNavigationes()
+        query: NavigationGql.queries.getNavigationes(this.customFields)
       })
         .valueChanges
         .pipe(
@@ -74,7 +85,7 @@ export class NgGqlService {
   getMenu$(slug: string | string[] = null): BehaviorSubject<Group[]> {
     if (!this.menuLoading) {
       this.apollo.watchQuery<any>({
-        query: GroupGql.queries.getGroupsAndDishes()
+        query: GroupGql.queries.getGroupsAndDishes(this.customFields)
       })
         .valueChanges
         .pipe(
@@ -102,6 +113,13 @@ export class NgGqlService {
             // Create groups hierarchy
             for (let groupId in groupsById) {
               const group = groupsById[groupId];
+              
+              try {
+                group.dishes.sort((a, b) => a.order - b.order);
+              }catch(e) {
+                console.warn(`Group ${groupId} sort error`, e);
+              }
+              
               const parentGroupId = group.parentGroup?.id;
               groupIdsBySlug[group.slug] = groupId;
               if (!parentGroupId) continue;
@@ -142,7 +160,7 @@ export class NgGqlService {
   getDishes$(): BehaviorSubject<Dish[]> {
     if (!this.dishes$.getValue() && !this.dishesLoading) {
       this.apollo.watchQuery<any>({
-        query: DishGql.queries.getDishes()
+        query: DishGql.queries.getDishes(this.customFields)
       })
         .valueChanges
         .pipe(
@@ -158,7 +176,7 @@ export class NgGqlService {
 
   getOrder$(orderId: string = null): Observable<Order> {
     return this.apollo.watchQuery<any>({
-      query: CartGql.queries.getOrder(orderId)
+      query: CartGql.queries.getOrder(orderId, this.customFields)
     })
       .valueChanges
       .pipe(
@@ -171,7 +189,7 @@ export class NgGqlService {
     const lastCart = this.cart$.getValue();
     if (!(lastCart && lastCart.id == cartId) && !this.cartLoading) {
       this.apollo.watchQuery<any>({
-        query: CartGql.queries.getCart(cartId),
+        query: CartGql.queries.getCart(cartId, this.customFields),
         fetchPolicy: 'no-cache'
       })
         .valueChanges
@@ -189,7 +207,7 @@ export class NgGqlService {
 
   getPhone$(phone: string): Observable<Phone> {
     return this.apollo.watchQuery<any>({
-      query: CartGql.queries.getPhone(phone),
+      query: CartGql.queries.getPhone(phone, this.customFields),
       fetchPolicy: 'no-cache'
     })
       .valueChanges
@@ -203,7 +221,7 @@ export class NgGqlService {
 
   checkPhone$(phone: string): Observable<CheckPhoneResponse> {
     return this.apollo.watchQuery<any>({
-      query: CartGql.queries.checkPhone(phone),
+      query: CartGql.queries.checkPhone(phone, this.customFields),
       fetchPolicy: 'no-cache'
     })
       .valueChanges
@@ -217,7 +235,7 @@ export class NgGqlService {
 
   getPaymentMethods$(cartId: string): Observable<PaymentMethod[]> {
     return this.apollo.watchQuery<any>({
-      query: PaymentMethodGql.queries.getPaymentMethod(cartId)
+      query: PaymentMethodGql.queries.getPaymentMethod(cartId, this.customFields)
     })
       .valueChanges
       .pipe(
@@ -230,7 +248,7 @@ export class NgGqlService {
 
   addDishToCart$(data: AddToCartInput): Observable<Cart> {
     return this.apollo.mutate({
-      mutation: CartGql.mutations.addDishToCart(),
+      mutation: CartGql.mutations.addDishToCart(this.customFields),
       variables: data
     })
       .pipe(
@@ -244,7 +262,7 @@ export class NgGqlService {
 
   orderCart$(data: OrderCartInput): Observable<CheckResponse> {
     return this.apollo.mutate({
-      mutation: CartGql.mutations.orderCart(),
+      mutation: CartGql.mutations.orderCart(this.customFields),
       variables: data
     })
       .pipe(
@@ -258,7 +276,7 @@ export class NgGqlService {
 
   checkCart$(data: OrderCartInput): Observable<CheckResponse> {
     return this.apollo.mutate({
-      mutation: CartGql.mutations.checkCart(),
+      mutation: CartGql.mutations.checkCart(this.customFields),
       variables: data
     })
       .pipe(
@@ -272,7 +290,7 @@ export class NgGqlService {
 
   checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
     return this.apollo.mutate({
-      mutation: CartGql.mutations.checkPhoneCode(),
+      mutation: CartGql.mutations.checkPhoneCode(this.customFields),
       variables: data
     })
       .pipe(
@@ -285,7 +303,7 @@ export class NgGqlService {
 
   removeDishFromCart$(data: RemoveFromCartInput): Observable<Cart> {
     return this.apollo.mutate({
-      mutation: CartGql.mutations.removeDishFromCart(),
+      mutation: CartGql.mutations.removeDishFromCart(this.customFields),
       variables: data
     })
       .pipe(
@@ -299,7 +317,7 @@ export class NgGqlService {
 
   setDishAmount$(data: SetDishAmountInput): Observable<Cart> {
     return this.apollo.mutate({
-      mutation: CartGql.mutations.setDishAmount(),
+      mutation: CartGql.mutations.setDishAmount(this.customFields),
       variables: data
     })
       .pipe(
@@ -313,7 +331,7 @@ export class NgGqlService {
 
   setDishComment$(data: SetDishCommentInput): Observable<Cart> {
     return this.apollo.mutate({
-      mutation: CartGql.mutations.setDishComment(),
+      mutation: CartGql.mutations.setDishComment(this.customFields),
       variables: data
     })
       .pipe(

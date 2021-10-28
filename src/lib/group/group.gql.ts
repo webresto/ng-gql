@@ -6,7 +6,6 @@ export const GroupFragments = {
 		fragment GroupFragment on Group {
 			id
 			description
-			discount
 			name
 			order
 			visible
@@ -29,16 +28,18 @@ export const GroupGql = {
 			${GroupFragments.group}
 			${DishFragments.dish}
 		`,
-		getGroupsAndDishes: () => gql`
+		getGroupsAndDishes: (customFields) => gql`
 			query GetGroupsAndDishes {
 				groups {
 					parentGroup {
 						id
 					}
 					...GroupFragment
+					${(customFields['Group'] || []).join('\n')}
 				}
 				dishes {
 					...DishFragment
+					${(customFields['Dish'] || []).join('\n')}
 				}
 			}
 			${GroupFragments.group}

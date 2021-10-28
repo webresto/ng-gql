@@ -63,7 +63,7 @@ const PaymentMethodFragments = {
 		}
 	`
 };
-const ɵ0 = (cartId = null) => {
+const ɵ0 = (cartId = null, customFields) => {
     if (cartId == 'null')
         cartId = null;
     const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
@@ -71,6 +71,7 @@ const ɵ0 = (cartId = null) => {
 				query GetPaymentMethods {
 					paymentMethods:paymentMethod${queryArguments} {
 						...PaymentMethodFragment
+						${(customFields['PaymentMethod'] || []).join('\n')}
 					}
 				}
 				${PaymentMethodFragments.paymentMethod}
@@ -145,13 +146,10 @@ const DishFragments = {
 			description
 			groupId
 			price
-			oldPrice
 			weight
 			balance
 			tags
 			additionalInfo
-			discountAmount
-			discountType
 			seoDescription
 			seoKeywords
 			seoText
@@ -187,10 +185,11 @@ const DishFragments = {
 		${GroupModifierFragments.groupModifier}
 	`
 };
-const ɵ0$1 = () => gql `
+const ɵ0$1 = (customFields) => gql `
 			query GetDishes {
 				dishes {
 					...DishFragment
+					${(customFields['Dish'] || []).join('\n')}
 				}
 			}
 			${DishFragments.dish}
@@ -266,7 +265,7 @@ const CartFragments = {
 		}
 	`,
 };
-const ɵ0$2 = (orderId) => {
+const ɵ0$2 = (orderId, customFields) => {
     const queryArguments = orderId ? `(orderNumber: "${orderId}")` : '';
     return gql `
 				query getOrder {
@@ -276,9 +275,11 @@ const ɵ0$2 = (orderId) => {
 							...CartOrderDataFragment
 							dishes {
 								...CartDishFragment
+								${(customFields['CartDish'] || []).join('\n')}
 							}
 							paymentMethod {
 								...PaymentMethodFragment
+								${(customFields['PaymentMethod'] || []).join('\n')}
 							}
 						}
 						customData
@@ -289,7 +290,7 @@ const ɵ0$2 = (orderId) => {
 				${CartFragments.cartOrderData}
 				${PaymentMethodFragments.paymentMethod}
 			`;
-}, ɵ1 = (cartId = null) => {
+}, ɵ1 = (cartId = null, customFields) => {
     if (cartId == 'null')
         cartId = null;
     const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
@@ -297,15 +298,17 @@ const ɵ0$2 = (orderId) => {
 				query GetCart {
 					cart${queryArguments} {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 					}
 				}
 				${CartFragments.cart}
 				${CartDishFragments.cartDish}
 			`;
-}, ɵ2 = (phone) => {
+}, ɵ2 = (phone, customFields) => {
     return gql `
 				query phone {
 					phone(phone: "${phone}") {
@@ -316,10 +319,11 @@ const ɵ0$2 = (orderId) => {
 						codeTime
 						confirmCode
 						customData
+						${(customFields['Phone'] || []).join('\n')}
 					}
 				}
 			`;
-}, ɵ3 = (phone) => {
+}, ɵ3 = (phone, customFields) => {
     return gql `
 				query checkPhone {
 					checkPhone(phone: "${phone}") {
@@ -328,10 +332,11 @@ const ɵ0$2 = (orderId) => {
 						message
 						confirmed
 						firstbuy
+						${(customFields['Phone'] || []).join('\n')}
 					}
 				}
 			`;
-}, ɵ4 = () => {
+}, ɵ4 = (customFields) => {
     return gql `
 				mutation AddDishToCart(
 					$cartId: String, 
@@ -354,11 +359,14 @@ const ɵ0$2 = (orderId) => {
 						cartDishId: $cartDishId
 					) {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDisg'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
+							${(customFields['Dish'] || []).join('\n')}
 						}
 					}
 				}
@@ -366,7 +374,7 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ5 = () => {
+}, ɵ5 = (customFields) => {
     return gql `
 				mutation cartRemoveDish(
 					$cartId: String!, 
@@ -379,11 +387,14 @@ const ɵ0$2 = (orderId) => {
 						amount: $amount,
 					) {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
+							${(customFields['Dish'] || []).join('\n')}
 						}
 					}
 				}
@@ -391,7 +402,7 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ6 = () => {
+}, ɵ6 = (customFields) => {
     return gql `
 				mutation cartSetDishAmount(
 					$cartId: String,
@@ -404,11 +415,14 @@ const ɵ0$2 = (orderId) => {
 						amount: $amount
 					) {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
+							${(customFields['Dish'] || []).join('\n')}
 						}
 					}
 				}
@@ -416,7 +430,7 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ7 = () => {
+}, ɵ7 = (customFields) => {
     return gql `
 				mutation cartSetDishComment(
 					$cartId: String,
@@ -429,11 +443,14 @@ const ɵ0$2 = (orderId) => {
 						comment: $comment
 					) {
 						...CartFragment
+						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
+							${(customFields['Dish'] || []).join('\n')}
 						}
 					}
 				}
@@ -441,7 +458,7 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ8 = () => {
+}, ɵ8 = (customFields) => {
     return gql `
 				mutation orderCart(
 					$cartId: String!, 
@@ -459,11 +476,14 @@ const ɵ0$2 = (orderId) => {
 					) {
 						cart {
 							...CartFragment
+							${(customFields['Cart'] || []).join('\n')}
 							dishes {
 								...CartDishFragment
+								${(customFields['CartDish'] || []).join('\n')}
 							}
 							deliveryItem {
 								...DishFragment
+								${(customFields['Dish'] || []).join('\n')}
 							}
 						}
 						message {
@@ -481,7 +501,7 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ9 = () => {
+}, ɵ9 = (customFields) => {
     return gql `
 				mutation checkCart(
 					$cartId: String!, 
@@ -505,11 +525,14 @@ const ɵ0$2 = (orderId) => {
 					) {
 						cart {
 							...CartFragment
+							${(customFields['Cart'] || []).join('\n')}
 							dishes {
 								...CartDishFragment
+								${(customFields['CartDish'] || []).join('\n')}
 							}
 							deliveryItem {
 								...DishFragment
+								${(customFields['Dish'] || []).join('\n')}
 							}
 						}
 						message {
@@ -527,7 +550,7 @@ const ɵ0$2 = (orderId) => {
 				${CartDishFragments.cartDish}
 				${DishFragments.dish}
 			`;
-}, ɵ10 = () => {
+}, ɵ10 = (customFields) => {
     return gql `
 				mutation checkPhoneCode(
 					$phone: String!,
@@ -542,6 +565,7 @@ const ɵ0$2 = (orderId) => {
 						message
 						confirmed
 						firstbuy
+						${(customFields['PhoneCode'] || []).join('\n')}
 					}
 				}
 			`;
@@ -569,7 +593,6 @@ const GroupFragments = {
 		fragment GroupFragment on Group {
 			id
 			description
-			discount
 			name
 			order
 			visible
@@ -588,16 +611,18 @@ const ɵ0$3 = () => gql `
 			}
 			${GroupFragments.group}
 			${DishFragments.dish}
-		`, ɵ1$1 = () => gql `
+		`, ɵ1$1 = (customFields) => gql `
 			query GetGroupsAndDishes {
 				groups {
 					parentGroup {
 						id
 					}
 					...GroupFragment
+					${(customFields['Group'] || []).join('\n')}
 				}
 				dishes {
 					...DishFragment
+					${(customFields['Dish'] || []).join('\n')}
 				}
 			}
 			${GroupFragments.group}
@@ -631,15 +656,17 @@ const NavigationFragments = {
 					slug
 					visible
 					name
+					discount
 				}
 			}
 		}
 	`
 };
-const ɵ0$4 = () => gql `
+const ɵ0$4 = (customFields) => gql `
 			query GetNavigation {
 				navigation {
 					...NavigationFragment
+					${(customFields['Navigation'] || []).join('\n')}
 				}
 			}
 			${NavigationFragments.navigation}
@@ -659,12 +686,21 @@ class NgGqlService {
         this.navigationData$ = new BehaviorSubject(null);
         this.customQueryiesDataByName = {};
         this.customQueriesDataLoadingByName = {};
+        this.customFields = {};
         this.cart$.subscribe(res => console.log('control cart res', res));
+    }
+    addCustomField(modelName, field) {
+        if (!this.customFields[modelName]) {
+            this.customFields[modelName] = [];
+        }
+        if (this.customFields[modelName].indexOf(field) == -1) {
+            this.customFields[modelName].push(field);
+        }
     }
     getNavigation$() {
         if (!this.navigationData$.getValue() && !this.navigationDataLoading) {
             this.apollo.watchQuery({
-                query: NavigationGql.queries.getNavigationes()
+                query: NavigationGql.queries.getNavigationes(this.customFields)
             })
                 .valueChanges
                 .pipe(tap(({ data, loading }) => {
@@ -682,7 +718,7 @@ class NgGqlService {
     getMenu$(slug = null) {
         if (!this.menuLoading) {
             this.apollo.watchQuery({
-                query: GroupGql.queries.getGroupsAndDishes()
+                query: GroupGql.queries.getGroupsAndDishes(this.customFields)
             })
                 .valueChanges
                 .pipe(tap(({ data, loading }) => {
@@ -708,6 +744,12 @@ class NgGqlService {
                 // Create groups hierarchy
                 for (let groupId in groupsById) {
                     const group = groupsById[groupId];
+                    try {
+                        group.dishes.sort((a, b) => a.order - b.order);
+                    }
+                    catch (e) {
+                        console.warn(`Group ${groupId} sort error`, e);
+                    }
                     const parentGroupId = (_b = group.parentGroup) === null || _b === void 0 ? void 0 : _b.id;
                     groupIdsBySlug[group.slug] = groupId;
                     if (!parentGroupId)
@@ -746,7 +788,7 @@ class NgGqlService {
     getDishes$() {
         if (!this.dishes$.getValue() && !this.dishesLoading) {
             this.apollo.watchQuery({
-                query: DishGql.queries.getDishes()
+                query: DishGql.queries.getDishes(this.customFields)
             })
                 .valueChanges
                 .pipe(tap(({ data, loading }) => {
@@ -759,7 +801,7 @@ class NgGqlService {
     }
     getOrder$(orderId = null) {
         return this.apollo.watchQuery({
-            query: CartGql.queries.getOrder(orderId)
+            query: CartGql.queries.getOrder(orderId, this.customFields)
         })
             .valueChanges
             .pipe(take(1), map(({ data }) => data.getOrder));
@@ -768,7 +810,7 @@ class NgGqlService {
         const lastCart = this.cart$.getValue();
         if (!(lastCart && lastCart.id == cartId) && !this.cartLoading) {
             this.apollo.watchQuery({
-                query: CartGql.queries.getCart(cartId),
+                query: CartGql.queries.getCart(cartId, this.customFields),
                 fetchPolicy: 'no-cache'
             })
                 .valueChanges
@@ -782,7 +824,7 @@ class NgGqlService {
     }
     getPhone$(phone) {
         return this.apollo.watchQuery({
-            query: CartGql.queries.getPhone(phone),
+            query: CartGql.queries.getPhone(phone, this.customFields),
             fetchPolicy: 'no-cache'
         })
             .valueChanges
@@ -793,7 +835,7 @@ class NgGqlService {
     }
     checkPhone$(phone) {
         return this.apollo.watchQuery({
-            query: CartGql.queries.checkPhone(phone),
+            query: CartGql.queries.checkPhone(phone, this.customFields),
             fetchPolicy: 'no-cache'
         })
             .valueChanges
@@ -804,7 +846,7 @@ class NgGqlService {
     }
     getPaymentMethods$(cartId) {
         return this.apollo.watchQuery({
-            query: PaymentMethodGql.queries.getPaymentMethod(cartId)
+            query: PaymentMethodGql.queries.getPaymentMethod(cartId, this.customFields)
         })
             .valueChanges
             .pipe(map(({ data, loading }) => {
@@ -814,7 +856,7 @@ class NgGqlService {
     }
     addDishToCart$(data) {
         return this.apollo.mutate({
-            mutation: CartGql.mutations.addDishToCart(),
+            mutation: CartGql.mutations.addDishToCart(this.customFields),
             variables: data
         })
             .pipe(map(({ data }) => {
@@ -825,7 +867,7 @@ class NgGqlService {
     }
     orderCart$(data) {
         return this.apollo.mutate({
-            mutation: CartGql.mutations.orderCart(),
+            mutation: CartGql.mutations.orderCart(this.customFields),
             variables: data
         })
             .pipe(map(({ data }) => {
@@ -836,7 +878,7 @@ class NgGqlService {
     }
     checkCart$(data) {
         return this.apollo.mutate({
-            mutation: CartGql.mutations.checkCart(),
+            mutation: CartGql.mutations.checkCart(this.customFields),
             variables: data
         })
             .pipe(map(({ data }) => {
@@ -847,7 +889,7 @@ class NgGqlService {
     }
     checkPhoneCode$(data) {
         return this.apollo.mutate({
-            mutation: CartGql.mutations.checkPhoneCode(),
+            mutation: CartGql.mutations.checkPhoneCode(this.customFields),
             variables: data
         })
             .pipe(map(({ data }) => {
@@ -857,7 +899,7 @@ class NgGqlService {
     }
     removeDishFromCart$(data) {
         return this.apollo.mutate({
-            mutation: CartGql.mutations.removeDishFromCart(),
+            mutation: CartGql.mutations.removeDishFromCart(this.customFields),
             variables: data
         })
             .pipe(map(({ data }) => {
@@ -868,7 +910,7 @@ class NgGqlService {
     }
     setDishAmount$(data) {
         return this.apollo.mutate({
-            mutation: CartGql.mutations.setDishAmount(),
+            mutation: CartGql.mutations.setDishAmount(this.customFields),
             variables: data
         })
             .pipe(map(({ data }) => {
@@ -879,7 +921,7 @@ class NgGqlService {
     }
     setDishComment$(data) {
         return this.apollo.mutate({
-            mutation: CartGql.mutations.setDishComment(),
+            mutation: CartGql.mutations.setDishComment(this.customFields),
             variables: data
         })
             .pipe(map(({ data }) => {

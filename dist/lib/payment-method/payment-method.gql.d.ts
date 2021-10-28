@@ -3,6 +3,6 @@ export declare const PaymentMethodFragments: {
 };
 export declare const PaymentMethodGql: {
     queries: {
-        getPaymentMethod: (cartId?: string) => import("graphql").DocumentNode;
+        getPaymentMethod: (cartId: string, customFields: any) => import("graphql").DocumentNode;
     };
 };
