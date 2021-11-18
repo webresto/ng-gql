@@ -23,7 +23,6 @@ export const CartDishFragments = {
 			weight
 			totalWeight
 			itemTotal
-			itemTotalBeforeDiscount
 			uniqueItems
 		}
 		${DishFragments.dish}
