@@ -10,15 +10,15 @@ export class Dish {
   oldPrice: number;
   weight: number;
   balance: number;
-  tags: DishTag[];
-  additionalInfo: string | number | { [key: string]: string | any } | null;
+  tags?: DishTag[];
+  additionalInfo?: string | number | { [key: string]: string | any } | null;
   images: Image[];
   discountAmount: number;
   discountType: string;
   parentGroup: {
     id: string;
   };
-  modifiers: GroupModifier[];
+  modifiers?: GroupModifier[];
   
   //
   seoDescription?: string;
