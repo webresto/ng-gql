@@ -5,8 +5,10 @@ export class CartDish {
 	id: number;
 	amount: number;
 	dish: Dish;
-	discountType: string;
+	itemTotal: number;
+	itemTotalBeforeDiscount: number;
 	discountTotal: number;
+	discountType: string;
 	comment: string;
 	weight: number;
 	totalWeight: number;
