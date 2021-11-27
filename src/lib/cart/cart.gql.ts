@@ -205,7 +205,7 @@ export const CartGql = {
 						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
-							${(customFields['CartDisg'] || []).join('\n')}
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment

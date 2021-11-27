@@ -361,7 +361,7 @@ const ɵ0$2 = (orderId, customFields) => {
 						${(customFields['Cart'] || []).join('\n')}
 						dishes {
 							...CartDishFragment
-							${(customFields['CartDisg'] || []).join('\n')}
+							${(customFields['CartDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
