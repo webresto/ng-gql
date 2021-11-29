@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FetchResult } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { tap, filter, take, map, catchError, switchMap } from 'rxjs/operators';
+import { tap, filter, take, map, catchError, switchMap, first } from 'rxjs/operators';
 import { Cart } from './cart/cart';
 import { CartGql, AddToCartInput, RemoveFromCartInput, OrderCartInput, CheckPhoneCodeInput, SetDishAmountInput, SetDishCommentInput } from './cart/cart.gql';
 import { CheckPhoneResponse } from './cart/check-phone-response';
@@ -83,12 +83,14 @@ export class NgGqlService {
   }
 
   getMenu$(slug: string | string[] = null): BehaviorSubject<Group[]> {
-    if (!this.menuLoading) {
+    if (!this.menu$.getValue() && !this.menuLoading) {
       this.apollo.watchQuery<any>({
-        query: GroupGql.queries.getGroupsAndDishes(this.customFields)
+        query: GroupGql.queries.getGroupsAndDishes(this.customFields),
+        fetchPolicy: "no-cache"
       })
         .valueChanges
         .pipe(
+          first(),
           tap(({ data, loading }) => {
             this.menuLoading = loading;
             const { groups, dishes } = data;

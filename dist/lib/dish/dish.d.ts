@@ -9,8 +9,8 @@ export declare class Dish {
     oldPrice: number;
     weight: number;
     balance: number;
-    tags: DishTag[];
-    additionalInfo: string | number | {
+    tags?: DishTag[];
+    additionalInfo?: string | number | {
         [key: string]: string | any;
     } | null;
     images: Image[];
@@ -19,7 +19,7 @@ export declare class Dish {
     parentGroup: {
         id: string;
     };
-    modifiers: GroupModifier[];
+    modifiers?: GroupModifier[];
     seoDescription?: string;
     seoKeywords?: string;
     seoText?: string;

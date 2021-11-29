@@ -1,7 +1,7 @@
 import { ɵɵdefineInjectable, ɵɵinject, Injectable, EventEmitter, Directive, Input, Output, HostListener, Renderer2, ElementRef, NgModule, Inject } from '@angular/core';
 import { gql, Apollo } from 'apollo-angular';
 import { BehaviorSubject, of, throwError } from 'rxjs';
-import { tap, take, map, catchError, switchMap, filter, debounceTime } from 'rxjs/operators';
+import { tap, first, take, map, catchError, switchMap, filter, debounceTime } from 'rxjs/operators';
 import { HttpLink } from 'apollo-angular/http';
 import { split, InMemoryCache } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
@@ -715,12 +715,13 @@ class NgGqlService {
         return this.navigationData$;
     }
     getMenu$(slug = null) {
-        if (!this.menuLoading) {
+        if (!this.menu$.getValue() && !this.menuLoading) {
             this.apollo.watchQuery({
-                query: GroupGql.queries.getGroupsAndDishes(this.customFields)
+                query: GroupGql.queries.getGroupsAndDishes(this.customFields),
+                fetchPolicy: "no-cache"
             })
                 .valueChanges
-                .pipe(tap(({ data, loading }) => {
+                .pipe(first(), tap(({ data, loading }) => {
                 var _a, _b;
                 this.menuLoading = loading;
                 const { groups, dishes } = data;

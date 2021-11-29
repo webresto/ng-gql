@@ -580,12 +580,13 @@
         NgGqlService.prototype.getMenu$ = function (slug) {
             var _this = this;
             if (slug === void 0) { slug = null; }
-            if (!this.menuLoading) {
+            if (!this.menu$.getValue() && !this.menuLoading) {
                 this.apollo.watchQuery({
-                    query: GroupGql.queries.getGroupsAndDishes(this.customFields)
+                    query: GroupGql.queries.getGroupsAndDishes(this.customFields),
+                    fetchPolicy: "no-cache"
                 })
                     .valueChanges
-                    .pipe(operators.tap(function (_c) {
+                    .pipe(operators.first(), operators.tap(function (_c) {
                     var e_2, _d, e_3, _e;
                     var data = _c.data, loading = _c.loading;
                     var _a, _b;
