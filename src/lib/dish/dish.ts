@@ -1,4 +1,6 @@
 import { Image } from "../image/image";
+import { Group } from "../group/group";
+
 import { GroupModifier } from "../group-modifier/group-modifier";
 
 export class Dish {
@@ -15,7 +17,7 @@ export class Dish {
   images: Image[];
   discountAmount: number;
   discountType: string;
-  parentGroup: {
+  parentGroup: Partial<Group> & {
     id: string;
   };
   modifiers?: GroupModifier[];

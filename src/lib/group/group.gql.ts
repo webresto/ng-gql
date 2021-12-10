@@ -1,5 +1,6 @@
 import { gql } from 'apollo-angular';
 import { DishFragments } from '../dish/dish.gql';
+import { ImageFragments } from '../image/image.gql';
 
 export const GroupFragments = {
 	group: gql`
@@ -10,6 +11,9 @@ export const GroupFragments = {
 			order
 			visible
 			slug
+			dishPlaceholder {
+				...ImageFragment
+			}
 		}
 	`
 };
@@ -27,6 +31,7 @@ export const GroupGql = {
 			}
 			${GroupFragments.group}
 			${DishFragments.dish}
+			${ImageFragments.image}
 		`,
 		getGroupsAndDishes: (customFields) => gql`
 			query GetGroupsAndDishes {
@@ -44,6 +49,7 @@ export const GroupGql = {
 			}
 			${GroupFragments.group}
 			${DishFragments.dish}
+			${ImageFragments.image}
 		`
 	}
 }

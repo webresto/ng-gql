@@ -1,4 +1,5 @@
 import { Dish } from '../dish/dish';
+import { Image } from "../image/image";
 
 export class Group {
 	id: string;
@@ -11,4 +12,5 @@ export class Group {
 	parentGroup?: Group;
   	slug?: string;
 	childGroups: Group[]
-}
+	dishPlaceholder: Image
+}	
