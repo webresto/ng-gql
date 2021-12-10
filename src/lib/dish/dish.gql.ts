@@ -43,6 +43,9 @@ export const DishFragments = {
 			}
 			parentGroup {
 				id
+				dishPlaceholder {
+					...ImageFragment
+				}
 			}
 		}
 		${ImageFragments.image}

@@ -17,8 +17,9 @@ export class Dish {
   images: Image[];
   discountAmount: number;
   discountType: string;
-  parentGroup: Partial<Group> & {
+  parentGroup: {
     id: string;
+    dishPlaceholder: Image
   };
   modifiers?: GroupModifier[];
   
