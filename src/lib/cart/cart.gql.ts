@@ -37,6 +37,7 @@ export type OrderCartInput = {
 	cartId: string,
 	paymentMethodId?: string,
 	selfService?: boolean,
+	pickupAddressId?: string, 
 	address?: {
 		streetId?: string,
 		home?: string,
@@ -50,7 +51,7 @@ export type OrderCartInput = {
 		apartment?: string,
 		doorphone?: string
 	},
-	custumer?: {
+	customer?: {
 		phone: string,
 		mail?: string,
 		name: string

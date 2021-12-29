@@ -41,7 +41,7 @@ export declare type OrderCartInput = {
         apartment?: string;
         doorphone?: string;
     };
-    custumer?: {
+    customer?: {
         phone: string;
         mail?: string;
         name: string;
