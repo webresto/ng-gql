@@ -28,6 +28,7 @@ export declare type OrderCartInput = {
     cartId: string;
     paymentMethodId?: string;
     selfService?: boolean;
+    pickupAddressId?: string;
     address?: {
         streetId?: string;
         home?: string;

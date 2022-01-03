@@ -18,6 +18,7 @@ export declare class Dish {
     discountType: string;
     parentGroup: {
         id: string;
+        dishPlaceholder: Image;
     };
     modifiers?: GroupModifier[];
     seoDescription?: string;

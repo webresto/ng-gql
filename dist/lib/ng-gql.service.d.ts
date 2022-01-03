@@ -11,6 +11,7 @@ import { Dish } from './dish/dish';
 import { Group } from './group/group';
 import { Navigation } from './navigation/navigation';
 import { PaymentMethod } from './payment-method/payment-method';
+import * as i0 from "@angular/core";
 export declare type NavigationData = {
     [key: string]: Navigation;
 };
@@ -55,4 +56,6 @@ export declare class NgGqlService {
     setDishComment$(data: SetDishCommentInput): Observable<Cart>;
     customQuery$<T = any>(name: string, queryObject: any, variables?: any): Observable<T>;
     customMutation$<T = any>(name: string, queryObject: any, variables?: {}): Observable<FetchResult<T>>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<NgGqlService, never>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<NgGqlService>;
 }
