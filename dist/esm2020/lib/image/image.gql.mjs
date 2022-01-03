@@ -1,0 +1,11 @@
+import { gql } from 'apollo-angular';
+export const ImageFragments = {
+    image: gql `
+		fragment ImageFragment on Image {
+			id
+			uploadDate
+			images
+		}
+	`
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW1hZ2UuZ3FsLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vc3JjL2xpYi9pbWFnZS9pbWFnZS5ncWwudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxFQUFFLEdBQUcsRUFBRSxNQUFNLGdCQUFnQixDQUFDO0FBRXJDLE1BQU0sQ0FBQyxNQUFNLGNBQWMsR0FBRztJQUM3QixLQUFLLEVBQUUsR0FBRyxDQUFBOzs7Ozs7RUFNVDtDQUNELENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBncWwgfSBmcm9tICdhcG9sbG8tYW5ndWxhcic7XG5cbmV4cG9ydCBjb25zdCBJbWFnZUZyYWdtZW50cyA9IHtcblx0aW1hZ2U6IGdxbGBcblx0XHRmcmFnbWVudCBJbWFnZUZyYWdtZW50IG9uIEltYWdlIHtcblx0XHRcdGlkXG5cdFx0XHR1cGxvYWREYXRlXG5cdFx0XHRpbWFnZXNcblx0XHR9XG5cdGBcbn07XG4iXX0=

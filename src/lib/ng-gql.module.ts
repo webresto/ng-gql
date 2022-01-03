@@ -1,8 +1,8 @@
 import { Inject, ModuleWithProviders, NgModule } from '@angular/core';
 
-import { Apollo, APOLLO_OPTIONS } from 'apollo-angular';
+import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { split, ApolloClientOptions } from '@apollo/client/core';
+import { split } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { InMemoryCache } from '@apollo/client/core';
@@ -34,8 +34,6 @@ const DIRECTIVES = [
 export interface NgGqlConfig {
   url: string;
 }
-
-const defaultUrl = 'https://stage4.api.lifenadym.webresto.dev/graphql';
 
 @NgModule({
   imports: [],
