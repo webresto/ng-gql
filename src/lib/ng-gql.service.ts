@@ -85,8 +85,7 @@ export class NgGqlService {
   getMenu$(slug: string | string[] | undefined): BehaviorSubject<Group[] | null> {
     if (!this.menu$.getValue() && !this.menuLoading) {
       this.apollo.watchQuery<any>({
-        query: GroupGql.queries.getGroupsAndDishes(this.customFields),
-        fetchPolicy: "no-cache"
+        query: GroupGql.queries.getGroupsAndDishes(this.customFields)
       })
         .valueChanges
         .pipe(
@@ -403,8 +402,7 @@ export class NgGqlService {
     if (!this.customQueryiesDataByName[queryKey].getValue() && !this.customQueriesDataLoadingByName[queryKey]) {
       this.apollo.watchQuery<T | T[], boolean>({
         query: gql`query ${name}${query}`,
-        canonizeResults: true,
-        fetchPolicy: 'no-cache'
+        canonizeResults: true
       })
         .valueChanges
         .pipe(
@@ -431,7 +429,6 @@ export class NgGqlService {
       filter(data => !!data)
     );
   }
-
 
   customMutation$<T, N extends string = `${string}`>(name: N, queryObject: Record<N, Record<Extract<T, keyof T>, boolean>>, variables: T): Observable<FetchResult<T>>
   customMutation$<T extends any>(name: string, queryObject: any, variables: any | undefined): Observable<FetchResult<T>>

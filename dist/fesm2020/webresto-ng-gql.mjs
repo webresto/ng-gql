@@ -717,8 +717,7 @@ class NgGqlService {
     getMenu$(slug) {
         if (!this.menu$.getValue() && !this.menuLoading) {
             this.apollo.watchQuery({
-                query: GroupGql.queries.getGroupsAndDishes(this.customFields),
-                fetchPolicy: "no-cache"
+                query: GroupGql.queries.getGroupsAndDishes(this.customFields)
             })
                 .valueChanges
                 .pipe(first(), tap(({ data, loading }) => {
@@ -973,8 +972,7 @@ class NgGqlService {
         if (!this.customQueryiesDataByName[queryKey].getValue() && !this.customQueriesDataLoadingByName[queryKey]) {
             this.apollo.watchQuery({
                 query: gql `query ${name}${query}`,
-                canonizeResults: true,
-                fetchPolicy: 'no-cache'
+                canonizeResults: true
             })
                 .valueChanges
                 .pipe(tap(({ data, loading }) => {

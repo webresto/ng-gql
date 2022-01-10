@@ -1,6 +1,6 @@
 {
   "name": "@webresto/ng-gql",
-  "version": "1.0.27",
+  "version": "1.0.29",
   "peerDependencies": {
     "rxjs": "~7.5.1",
     "zone.js": "~0.11.4"
