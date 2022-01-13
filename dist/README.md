@@ -1,60 +1,24 @@
 # NgGql
 
-## Install
+This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.0.
 
-`npm install apollo-angular @apollo/client graphql subscriptions-transport-ws @webresto/ng-gql`
+## Code scaffolding
 
-```
-import { NgGqlModule } from '@webresto/ng-gql';
+Run `ng generate component component-name --project ng-gql` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ng-gql`.
+> Note: Don't forget to add `--project ng-gql` or else it will be added to the default project in your `angular.json` file. 
 
-@NgModule({
-  imports: [
-    // ...
-    NgGqlModule.forRoot({ url: 'https://stage4.api.lifenadym.webresto.dev/graphql' }),
-    // ...
-  ]
-})
-export class AppModule { }
-```
+## Build
 
-## Fetching
+Run `ng build ng-gql` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-Query
+## Publishing
 
-```
-import { Component } from '@angular/core';
-import { NgGqlService } from '@webresto/ng-gql';
+After building your library with `ng build ng-gql`, go to the dist folder `cd dist/ng-gql` and run `npm publish`.
 
-@Component({
-  selector: 'app-root',
-  template:  `<router-outlet></router-outlet>`
-})
-export class AppComponent {
-  constructor(public ngGql: NgGqlService) { 
+## Running unit tests
 
-	this.ngGql
-		.customQuery$('restrictions', { 
-			restrictions: {
-				workTime: true,
-				periodPossibleForOrder: true,
-				timezone: true,
-				deliveryDescription: true,
-				minDeliveryTime: true
-			} 
-		})
-		.subscribe(data => console.log(data));
+Run `ng test ng-gql` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-  }
-}
+## Further help
 
-```
-
-## Methods
-
-Query
-
-`customQuery$(name: string, queryObject: any, data: any = {})`
-
-Mutation
-
-`customMutation$(name: string, queryObject: any, data: any = {})`
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.

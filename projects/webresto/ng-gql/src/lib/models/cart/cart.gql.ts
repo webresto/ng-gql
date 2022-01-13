@@ -39,6 +39,8 @@ export type OrderCartInput = {
 	paymentMethodId?: string,
 	selfService?: boolean,
 	pickupAddressId?: string,
+	locationId?:string,
+	date?:string,
 	address?: {
 		streetId?: string,
 		home?: string,
@@ -53,11 +55,12 @@ export type OrderCartInput = {
 		doorphone?: string
 	},
 	customer?: {
-		phone: string,
+		phone?: string,
 		mail?: string,
-		name: string
+		name?: string
 	},
 	comment?: string,
+	notifyMethodId?:string,
 	customData?: any
 };
 

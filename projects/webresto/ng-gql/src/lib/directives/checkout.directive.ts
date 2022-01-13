@@ -1,6 +1,7 @@
-import { Directive, Input, Output, HostListener, EventEmitter, SimpleChanges } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, debounceTime, tap, switchMap } from 'rxjs/operators'
+import { Directive, Input, Output, HostListener, EventEmitter } from '@angular/core';
+import type { SimpleChanges } from '@angular/core';
+import { filter, debounceTime } from 'rxjs/operators'
+import type { OrderCartInput, PaymentMethod } from '../models';
 import { NgCartService } from '../services/ng-cart.service';
 
 @Directive({
@@ -8,36 +9,34 @@ import { NgCartService } from '../services/ng-cart.service';
 })
 export class CheckoutDirective {
 
-  @Input() cartTotal:any;
-
+  @Input() cartTotal: any;
   @Input() bonuses: any;
-
-  @Input() name: string;
-  @Input() email: string;
-  @Input() phone: string;
-  @Input() phonePaymentSmsCode: string;
+  @Input() name: string | undefined;
+  @Input() email: string | undefined;
+  @Input() phone: string | undefined;
+  @Input() phonePaymentSmsCode: string | undefined;
   @Input() delivery: any;
   @Input() selfService: any;
-  @Input() locationId: string;
+  @Input() locationId: string | undefined;
 
-  @Input() street: string;
-  @Input() streetId: string;
-  @Input() home: string;
-  @Input() housing: string;
-  @Input() apartment: string;
-  @Input() entrance: string;
-  @Input() doorphone: string;
-  @Input() floor: string;
+  @Input() street: string | undefined;
+  @Input() streetId: string | undefined;
+  @Input() home: string | undefined;
+  @Input() housing: string | undefined;
+  @Input() apartment: string | undefined;
+  @Input() entrance: string | undefined;
+  @Input() doorphone: string | undefined;
+  @Input() floor: string | undefined;
 
-  @Input() paymentMethod: string;
-  @Input() paymentMethodId: string;
-  @Input() personsCount: number;
-  @Input() comment: string;
-  @Input() callback: string;
+  @Input() paymentMethod: PaymentMethod | undefined;
+  @Input() paymentMethodId: string | undefined;
+  @Input() personsCount: number = 0;
+  @Input() comment: string | undefined;
+  @Input() callback: string | undefined;
 
-  @Input() date: string;
-  @Input() notifyMethodId: string;
-  
+  @Input() date: string | undefined;
+  @Input() notifyMethodId: string | undefined;
+
   @Output() success = new EventEmitter<boolean>();
   @Output() paymentRedirect = new EventEmitter<string>();
   @Output() error = new EventEmitter<string>();
@@ -45,7 +44,7 @@ export class CheckoutDirective {
 
 
   cart: any;
-  lastFormChangeKey: string;
+  lastFormChangeKey: string | undefined;
 
   constructor(
     private cartService: NgCartService
@@ -57,10 +56,12 @@ export class CheckoutDirective {
 
     this.cartService.OrderFormChange
       .pipe(
-        filter(() => {
+        filter(value => {
           //if((this.locationId || this.streetId) && this.home && this.phone && this.preparePhone(this.phone).length > 11) {
-          if(this.locationId || (this.streetId || this.street) && this.home || this.selfService) {
+          if (this.locationId || (this.streetId || this.street) && this.home || this.selfService) {
             return true;
+          } else {
+            return false;
           }
         }),
         /*filter(() => {
@@ -87,16 +88,12 @@ export class CheckoutDirective {
 
   @HostListener('click')
   onClick() {
-    if(!this.locationId && !((this.streetId || this.street) && this.home) && !this.selfService) {
+    if (!this.locationId && !((this.streetId || this.street) && this.home) && !this.selfService) {
       this.error.emit('Нужно указать адрес');
       return;
     }
 
-    let comment = this.comment || "";
-    let paymentMethod = this.paymentMethod || "Не указано";
-    
-
-    let data = {
+    let data: OrderCartInput = {
       "cartId": this.cart.id,
       //"comment": comment,
       "customer": {
@@ -107,7 +104,7 @@ export class CheckoutDirective {
       //"personsCount": +this.personsCount
     };
 
-    if(this.paymentMethodId) {
+    if (this.paymentMethodId) {
       data["paymentMethodId"] = this.paymentMethodId;
     }
 
@@ -137,8 +134,8 @@ export class CheckoutDirective {
     //}
 
 
-    if(this.locationId) {
-    //  data["locationId"] = this.locationId;
+    if (this.locationId) {
+      //  data["locationId"] = this.locationId;
     } else {
       data["address"] = {
         "streetId": this.streetId,
@@ -154,7 +151,7 @@ export class CheckoutDirective {
 
     const cartId = this.cart.id;
 
-    const onSuccess = result => {
+    const onSuccess = (result: { action: { data: { [x: string]: string | undefined; redirectLink: any; }; }; }) => {
       if (result?.action?.data?.redirectLink) {
         this.paymentRedirect.emit(result.action.data['redirectLink']);
       } else {
@@ -162,7 +159,7 @@ export class CheckoutDirective {
         this.success.emit(cartId);
       }
     };
-    if (this.phonePaymentSmsCode) {
+    if (this.phonePaymentSmsCode && this.phone) {
       this.cartService
         .paymentLink$(this.phonePaymentSmsCode, this.phone)
         .subscribe(
@@ -177,7 +174,7 @@ export class CheckoutDirective {
           error => this.error.emit(error)
         );
     }
-    
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -191,20 +188,22 @@ export class CheckoutDirective {
     let comment = this.comment || "";
     let paymentMethod = this.paymentMethod || "Не указано";
 
-    let data = {
+    let data: OrderCartInput & {
+      personsCount: number
+    } = {
       "cartId": this.cart.id,
       "comment": comment,
       "customer": {
-        "phone": this.phone ? this.preparePhone(this.phone) : null,
+        "phone": this.phone ? this.preparePhone(this.phone) : '',
         "mail": this.email,
-        "name": this.name || null
+        "name": this.name || ''
       },
       "personsCount": +this.personsCount
     };
 
     data["selfService"] = this.selfService;
 
-    if(this.paymentMethodId) {
+    if (this.paymentMethodId) {
       data["paymentMethodId"] = this.paymentMethodId;
     }
 
@@ -213,15 +212,15 @@ export class CheckoutDirective {
       data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
     }
 
-    if(this.date) {
+    if (this.date) {
       data["date"] = this.date;
     }
 
-    if(this.notifyMethodId) {
+    if (this.notifyMethodId) {
       data["notifyMethodId"] = this.notifyMethodId;
     }
 
-    if(this.locationId) {
+    if (this.locationId) {
       data["locationId"] = this.locationId;
     } else {
       data["address"] = {
@@ -239,7 +238,7 @@ export class CheckoutDirective {
     if (this.callback) {
       data["customData"] = { callback: true };
     }
-    
+
 
     this.isChecking.emit(true);
 
@@ -248,14 +247,14 @@ export class CheckoutDirective {
       .subscribe(
         //() => this.success.emit(true),
         //error => this.error.emit(error)
-        result => this.isChecking.emit(false),
-        error => this.isChecking.emit(false)
+        () => this.isChecking.emit(false),
+        () => this.isChecking.emit(false)
       );
   }
 
-  preparePhone(phone) {
-    if(!phone) return '';
-    phone = '+' + phone.replace(/[^0-9]/gim,'');
+  preparePhone(phone: string | undefined) {
+    if (!phone) return '';
+    phone = '+' + phone.replace(/[^0-9]/gim, '');
     return phone.replace('+8', '+7');
   }
 }

@@ -6,10 +6,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { InMemoryCache } from '@apollo/client/core';
 import { OperationDefinitionNode } from 'graphql';
-import {
-  AddDishToCartDirective,
-  CheckoutDirective
-} from './directives';
+import { AddDishToCartDirective, CheckoutDirective } from './directives';
 
 //import { ModifiresDirective } from './directives/modifires.directive';
 

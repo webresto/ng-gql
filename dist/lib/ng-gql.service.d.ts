@@ -1,16 +1,9 @@
-import { FetchResult } from '@apollo/client/core';
+import type { FetchResult } from '@apollo/client/core';
 import { Apollo } from 'apollo-angular';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Cart } from './cart/cart';
-import { AddToCartInput, RemoveFromCartInput, OrderCartInput, CheckPhoneCodeInput, SetDishAmountInput, SetDishCommentInput } from './cart/cart.gql';
-import { CheckPhoneResponse } from './cart/check-phone-response';
-import { CheckResponse } from './cart/check-response';
-import { Order } from './cart/order';
-import { Phone } from './cart/phone';
-import { Dish } from './dish/dish';
-import { Group } from './group/group';
-import { Navigation } from './navigation/navigation';
-import { PaymentMethod } from './payment-method/payment-method';
+import { BehaviorSubject } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation } from './models';
+import { AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
 import * as i0 from "@angular/core";
 export declare type NavigationData = {
     [key: string]: Navigation;
@@ -28,12 +21,6 @@ export declare class NgGqlService {
     paymentMethodLoading: boolean | undefined;
     getPhoneLoading: boolean | undefined;
     checkPhoneLoading: boolean | undefined;
-    customQueryiesDataByName: {
-        [key: string]: BehaviorSubject<any>;
-    };
-    customQueriesDataLoadingByName: {
-        [key: string]: boolean;
-    };
     customFields: {
         [key: string]: string[];
     };
@@ -43,7 +30,7 @@ export declare class NgGqlService {
     getMenu$(slug: string | string[] | undefined): BehaviorSubject<Group[] | null>;
     getDishes$(): BehaviorSubject<Dish[] | null>;
     getOrder$(orderId: string): Observable<Order>;
-    getCart$(cartId: string | undefined): BehaviorSubject<Cart | null>;
+    getCart$(cartId: string | undefined): Observable<Cart>;
     getPhone$(phone: string): Observable<Phone>;
     checkPhone$(phone: string): Observable<CheckPhoneResponse>;
     getPaymentMethods$(cartId: string): Observable<PaymentMethod[]>;

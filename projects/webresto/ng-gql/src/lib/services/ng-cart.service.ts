@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
+import { Injectable, SimpleChanges } from '@angular/core';
+import { BehaviorSubject, of } from 'rxjs';
+import type { Observable, Subscription } from 'rxjs';
 import { tap, filter, map, catchError } from 'rxjs/operators';
 import type { EventMessage, OrderCartInput, CheckResponse, Cart, AddToCartInput, Modifier } from '../models';
 import { NgGqlService } from '../ng-gql.service';
@@ -17,7 +18,7 @@ export class NgCartService {
   modifiers$ = new BehaviorSubject<Partial<Modifier[]>>([]);
   modifiersMessage$: BehaviorSubject<EventMessage[]> = new BehaviorSubject<EventMessage[]>([]);
   messages: EventMessage[] = [];
-  OrderFormChange = new BehaviorSubject(null);
+  OrderFormChange = new BehaviorSubject<SimpleChanges |null>(null);
   cartSubscription: Subscription | undefined;
 
   constructor(

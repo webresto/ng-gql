@@ -1,14 +1,15 @@
 import { EventEmitter } from '@angular/core';
+import type { Cart, Dish, CartModifier } from '../models';
 import { NgCartService } from '../services/ng-cart.service';
 import * as i0 from "@angular/core";
 export declare class AddDishToCartDirective {
     private cartService;
-    cart: any;
-    modifiers: any;
+    cart: Cart | undefined;
+    modifiers: CartModifier[];
     constructor(cartService: NgCartService);
-    dish: any;
-    amountDish: any;
-    comment: string;
+    dish: Dish | undefined;
+    amountDish: number;
+    comment: string | undefined;
     replaceCartDishId: boolean;
     loading: EventEmitter<boolean>;
     success: EventEmitter<boolean>;

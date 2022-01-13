@@ -1,55 +1,13 @@
 import * as i0 from '@angular/core';
 import { Injectable, EventEmitter, Directive, Input, Output, HostListener, NgModule, Inject } from '@angular/core';
+import { BehaviorSubject, of } from 'rxjs';
+import { tap, first, take, map, filter, catchError, debounceTime } from 'rxjs/operators';
 import * as i1 from 'apollo-angular';
 import { gql } from 'apollo-angular';
-import { BehaviorSubject, of, throwError } from 'rxjs';
-import { tap, first, take, map, catchError, switchMap, filter, debounceTime } from 'rxjs/operators';
 import { split, InMemoryCache } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import * as i2 from 'apollo-angular/http';
-
-class Cart {
-}
-class Customer {
-}
-class Address {
-}
-
-class Order {
-}
-
-class CheckPhoneResponse {
-}
-
-class CheckResponse {
-}
-
-class Phone {
-}
-
-class CartDish {
-}
-
-class Dish {
-}
-class DishTag {
-}
-
-class Group {
-}
-
-class Modifier {
-}
-
-class GroupModifier {
-    constructor() {
-        this.totalAmount = 0;
-    }
-}
-
-class PaymentMethod {
-}
 
 const PaymentMethodFragments = {
     paymentMethod: gql `
@@ -68,8 +26,10 @@ const PaymentMethodFragments = {
 const PaymentMethodGql = {
     queries: {
         getPaymentMethod: (cartId = null, customFields) => {
-            if (cartId == 'null')
+            if (cartId == 'null') {
                 cartId = null;
+            }
+            ;
             const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
             return gql `
 				query GetPaymentMethods {
@@ -635,6 +595,14 @@ const GroupGql = {
     }
 };
 
+class EventMessage {
+    constructor(type, title, body) {
+        this.type = type;
+        this.title = title;
+        this.body = body;
+    }
+}
+
 const NavigationFragments = {
     navigation: gql `
 		fragment NavigationFragment on Navigation {
@@ -676,6 +644,8 @@ const NavigationGql = {
     }
 };
 
+;
+
 class NgGqlService {
     constructor(apollo) {
         this.apollo = apollo;
@@ -683,8 +653,6 @@ class NgGqlService {
         this.dishes$ = new BehaviorSubject(null);
         this.cart$ = new BehaviorSubject(null);
         this.navigationData$ = new BehaviorSubject(null);
-        this.customQueryiesDataByName = {};
-        this.customQueriesDataLoadingByName = {};
         this.customFields = {};
         this.cart$.subscribe(res => console.log('control cart res', res));
     }
@@ -823,7 +791,7 @@ class NgGqlService {
             }))
                 .subscribe();
         }
-        return this.cart$;
+        return this.cart$.asObservable().pipe(filter((cart) => !!cart));
     }
     getPhone$(phone) {
         return this.apollo.watchQuery({
@@ -948,12 +916,13 @@ class NgGqlService {
                     valueString = `"${valueString}"`;
                     break;
             }
+            ;
             queryArgumentsStrings.push(`${key}: ${valueString}`);
         }
+        ;
         let queryArgumentsString = queryArgumentsStrings.length
             ? `(${queryArgumentsStrings.join(', ')})`
             : ``;
-        const queryKey = (name + queryArgumentsString).replace(/[^a-z0-9]/gi, '');
         let query = JSON.stringify(queryObject)
             .replace(/"/g, '')
             .replace(/\:[a-z0-9]+/gi, '')
@@ -965,33 +934,12 @@ class NgGqlService {
                 query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + queryArgumentsString);
             }
         }
-        if (!this.customQueryiesDataByName[queryKey]) {
-            this.customQueryiesDataByName[queryKey] = new BehaviorSubject(null);
-            this.customQueriesDataLoadingByName[queryKey] = false;
-        }
-        if (!this.customQueryiesDataByName[queryKey].getValue() && !this.customQueriesDataLoadingByName[queryKey]) {
-            this.apollo.watchQuery({
-                query: gql `query ${name}${query}`,
-                canonizeResults: true
-            })
-                .valueChanges
-                .pipe(tap(({ data, loading }) => {
-                this.customQueriesDataLoadingByName[queryKey] = loading;
-                this.customQueryiesDataByName[queryKey].next(data);
-            }), catchError(error => {
-                this.customQueryiesDataByName[queryKey].next({
-                    error: error
-                });
-                return of(null);
-            }))
-                .subscribe();
-        }
-        return this.customQueryiesDataByName[queryKey].pipe(switchMap((data) => {
-            if (data && data.error) {
-                return throwError(data.error);
-            }
-            return of(data);
-        }), filter(data => !!data));
+        ;
+        return this.apollo.watchQuery({
+            query: gql `query ${name}${query}`,
+            canonizeResults: true
+        }).valueChanges
+            .pipe(map(res => res.error || res.errors ? res.data : null), filter((data) => !!data));
     }
     customMutation$(name, queryObject, variables = {}) {
         let mutationArgumentsStrings = [];
@@ -1021,9 +969,9 @@ class NgGqlService {
         });
     }
 }
-NgGqlService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgGqlService, deps: [{ token: i1.Apollo }], target: i0.ɵɵFactoryTarget.Injectable });
-NgGqlService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgGqlService, providedIn: 'root' });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgGqlService, decorators: [{
+NgGqlService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgGqlService, deps: [{ token: i1.Apollo }], target: i0.ɵɵFactoryTarget.Injectable });
+NgGqlService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgGqlService, providedIn: 'root' });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgGqlService, decorators: [{
             type: Injectable,
             args: [{
                     providedIn: 'root'
@@ -1048,9 +996,9 @@ class EventerService {
         return this.eventAction;
     }
 }
-EventerService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: EventerService, deps: [], target: i0.ɵɵFactoryTarget.Injectable });
-EventerService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: EventerService, providedIn: 'root' });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: EventerService, decorators: [{
+EventerService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: EventerService, deps: [], target: i0.ɵɵFactoryTarget.Injectable });
+EventerService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: EventerService, providedIn: 'root' });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: EventerService, decorators: [{
             type: Injectable,
             args: [{
                     providedIn: 'root'
@@ -1062,20 +1010,22 @@ class NgCartService {
     constructor(ngGqlService, eventer) {
         this.ngGqlService = ngGqlService;
         this.eventer = eventer;
-        this.OrderFormChange = new BehaviorSubject(null);
-        this.cart = new BehaviorSubject({});
-        this.initialStorage();
+        this.cart = new BehaviorSubject(null);
         this.modifiers$ = new BehaviorSubject([]);
         this.modifiersMessage$ = new BehaviorSubject([]);
+        this.messages = [];
+        this.OrderFormChange = new BehaviorSubject(null);
+        this.initialStorage();
         this.modifiersMessage$.subscribe(messages => this.messages = messages);
     }
+    ;
     getCartId() {
-        return localStorage.getItem(LS_NAME);
+        return localStorage.getItem(LS_NAME) ?? undefined;
     }
     setCartId(cartId) {
-        if (!cartId)
-            return null;
-        localStorage.setItem(LS_NAME, cartId);
+        if (cartId) {
+            localStorage.setItem(LS_NAME, cartId);
+        }
     }
     removeCartId() {
         localStorage.removeItem(LS_NAME);
@@ -1099,9 +1049,9 @@ class NgCartService {
             .pipe(tap(cart => {
             console.log('cart tap', cart);
             if (cart?.state == 'ORDER') {
-                throwError(new Error('Cart in order state'));
+                throw new Error('Cart in order state');
             }
-            this.setCartId(cart?.id);
+            this.setCartId(cart.id);
         }))
             .subscribe(cart => this.cart.next(cart), error => this.removeCartId());
     }
@@ -1126,21 +1076,21 @@ class NgCartService {
     paymentLink$(phone, fromPhone) {
         console.log('paymentLink', this.cartId, phone, fromPhone);
         //return of(null);
-        return this.ngGqlService
-            .customMutation$('paymentLink', {
+        return this.ngGqlService.customMutation$('paymentLink', {
             paymentLink: 1
         }, {
             cartId: this.cartId,
             phone,
             fromPhone
         })
-            .pipe(map(data => data['paymentLink']), tap(() => { }, error => {
+            .pipe(map(data => data.data), catchError(error => {
             console.log('error', error);
             this.eventer.emitMessageEvent({
                 type: 'info',
                 title: 'Не удалось отправить ссылку для оплаты.',
                 body: error.message
             });
+            return of(null);
         }));
     }
     checkCart$(data) {
@@ -1162,9 +1112,9 @@ class NgCartService {
         });
     }
 }
-NgCartService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgCartService, deps: [{ token: NgGqlService }, { token: EventerService }], target: i0.ɵɵFactoryTarget.Injectable });
-NgCartService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgCartService, providedIn: 'root' });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgCartService, decorators: [{
+NgCartService.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgCartService, deps: [{ token: NgGqlService }, { token: EventerService }], target: i0.ɵɵFactoryTarget.Injectable });
+NgCartService.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgCartService, providedIn: 'root' });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgCartService, decorators: [{
             type: Injectable,
             args: [{
                     providedIn: 'root'
@@ -1174,6 +1124,9 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImpor
 class AddDishToCartDirective {
     constructor(cartService) {
         this.cartService = cartService;
+        this.modifiers = [];
+        this.amountDish = 0;
+        this.replaceCartDishId = false;
         this.loading = new EventEmitter();
         this.success = new EventEmitter();
         this.error = new EventEmitter();
@@ -1195,10 +1148,8 @@ class AddDishToCartDirective {
             "modifiers": this.modifiers,
             "comment": this.comment,
             "replace": this.replaceCartDishId ? true : undefined,
-            "cartDishId": this.replaceCartDishId
+            "cartDishId": this.cart?.id
         };
-        if (this.cart.id)
-            data.cartId = this.cart.id;
         this.loading.emit(true);
         this.cartService
             .addDishToCart$(data)
@@ -1207,9 +1158,9 @@ class AddDishToCartDirective {
         });
     }
 }
-AddDishToCartDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: AddDishToCartDirective, deps: [{ token: NgCartService }], target: i0.ɵɵFactoryTarget.Directive });
-AddDishToCartDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.1", type: AddDishToCartDirective, selector: "[addToCart]", inputs: { dish: "dish", amountDish: "amountDish", comment: "comment", replaceCartDishId: "replaceCartDishId" }, outputs: { loading: "loading", success: "success", error: "error" }, host: { listeners: { "click": "onClick()" } }, ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: AddDishToCartDirective, decorators: [{
+AddDishToCartDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: AddDishToCartDirective, deps: [{ token: NgCartService }], target: i0.ɵɵFactoryTarget.Directive });
+AddDishToCartDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.2", type: AddDishToCartDirective, selector: "[addToCart]", inputs: { dish: "dish", amountDish: "amountDish", comment: "comment", replaceCartDishId: "replaceCartDishId" }, outputs: { loading: "loading", success: "success", error: "error" }, host: { listeners: { "click": "onClick()" } }, ngImport: i0 });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: AddDishToCartDirective, decorators: [{
             type: Directive,
             args: [{
                     selector: '[addToCart]'
@@ -1233,807 +1184,10 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImpor
                 args: ['click']
             }] } });
 
-class AmountCartDirective {
-    constructor(cartService, renderer, el) {
-        this.cartService = cartService;
-        this.renderer = renderer;
-        this.el = el;
-        this.amount = '0';
-        this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.amount);
-        this.cartService
-            .userCart$()
-            .subscribe(res => {
-            this.cart = res;
-            this.amount = res.dishesCount || 0;
-            this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.amount);
-        });
-    }
-}
-AmountCartDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: AmountCartDirective, deps: [{ token: NgCartService }, { token: i0.Renderer2 }, { token: i0.ElementRef }], target: i0.ɵɵFactoryTarget.Directive });
-AmountCartDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.1", type: AmountCartDirective, selector: "[amountCart]", ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: AmountCartDirective, decorators: [{
-            type: Directive,
-            args: [{
-                    selector: '[amountCart]'
-                }]
-        }], ctorParameters: function () { return [{ type: NgCartService }, { type: i0.Renderer2 }, { type: i0.ElementRef }]; } });
-
-class DeleteFromCartDirective {
-    constructor(cartService) {
-        this.cartService = cartService;
-        this.cartService
-            .userCart$()
-            .subscribe(res => this.cart = res);
-    }
-    onClick() {
-        this.cartService.removeDishFromCart$(this.dish.id, this.amountDish).subscribe();
-    }
-}
-DeleteFromCartDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: DeleteFromCartDirective, deps: [{ token: NgCartService }], target: i0.ɵɵFactoryTarget.Directive });
-DeleteFromCartDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.1", type: DeleteFromCartDirective, selector: "[deleteFromCart]", inputs: { dish: "dish", amountDish: "amountDish" }, host: { listeners: { "click": "onClick()" } }, ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: DeleteFromCartDirective, decorators: [{
-            type: Directive,
-            args: [{
-                    selector: '[deleteFromCart]'
-                }]
-        }], ctorParameters: function () { return [{ type: NgCartService }]; }, propDecorators: { dish: [{
-                type: Input
-            }], amountDish: [{
-                type: Input
-            }], onClick: [{
-                type: HostListener,
-                args: ['click']
-            }] } });
-
-class OrderCartUserDirective {
-    constructor(cartService) {
-        this.cartService = cartService;
-        this.requiredFields = ["name", "phone", "street", "house"];
-        this.checkerFields = new BehaviorSubject(undefined);
-    }
-    onClick() {
-        this.order(this.orderCart.value);
-        console.log(this.orderCart.value);
-    }
-    ngAfterViewInit() {
-        setTimeout(() => {
-            this.cartService
-                .userCart$()
-                .subscribe(cart => {
-                if (this.cart && this.orderCart.valid && this.cart.cartTotal != cart.cartTotal && cart.cartTotal > 0) {
-                    this.checkStreet(this.orderCart.value);
-                }
-                this.cart = cart;
-            });
-        }, 100);
-        setTimeout(() => {
-            this.checkerFields.next(this.checkForFields(this.orderCart._directives, this.requiredFields));
-        }, 100);
-        this.checkerFields.subscribe(state => {
-            if (state) {
-                this.orderCart.controls['street'].valueChanges.subscribe(val => {
-                    if (typeof val === 'object') {
-                        setTimeout(() => {
-                            if (this.orderCart.controls['house'].valid) {
-                                this.orderCart.value.name = this.orderCart.value.name || "Неуказано";
-                                this.orderCart.value.phone = this.orderCart.value.phone || "78888888888";
-                                this.checkStreet(this.orderCart.value);
-                            }
-                        }, 100);
-                    }
-                });
-                this.orderCart.controls['house'].valueChanges.subscribe(val => {
-                    setTimeout(() => {
-                        if (this.orderCart.controls['street'].valid) {
-                            this.orderCart.value.name = this.orderCart.value.name || "Неуказано";
-                            this.orderCart.value.phone = this.orderCart.value.phone || "78888888888";
-                            this.checkStreet(this.orderCart.value);
-                        }
-                    }, 100);
-                });
-            }
-        });
-    }
-    checkForFields(formDirectives, requiredFields) {
-        let fieldsAreAvailable = {};
-        let noFields = [];
-        formDirectives.forEach(element => {
-            fieldsAreAvailable[element.name] = true;
-        });
-        requiredFields.forEach(element => {
-            if (!fieldsAreAvailable.hasOwnProperty(element)) {
-                noFields.push(element);
-            }
-        });
-        if (noFields.length <= 0) {
-            return true;
-        }
-        else {
-            console.error("У формы отсутсвуют следующие обязательные для корректной работы модуля поля:", noFields);
-            return false;
-        }
-    }
-    order(dataToSend) {
-        if (this.checkForFields(this.orderCart._directives, this.requiredFields)) {
-            let payment;
-            let comment = dataToSend.comment || "Не указан";
-            if (dataToSend.cash) {
-                payment = "Наличными курьеру";
-            }
-            else if (dataToSend.bankcard) {
-                payment = "Банковской картой курьеру";
-            }
-            else {
-                payment = "Не указан";
-            }
-            console.log(dataToSend);
-            let data = {
-                "cartId": this.cart.id,
-                // TODO: тип оплаты надо вынести в отдельный модуль.
-                "comment": "\n Тип оплаты:" + payment + "\nКоментарий:" + comment,
-                // "delivery": {
-                //   "type": "string (self or nothing)"
-                // },
-                "address": {
-                    // "city": "string",
-                    "streetId": dataToSend.street.id,
-                    "home": dataToSend.house,
-                    "housing": dataToSend.housing,
-                    // "index": "string",
-                    "doorphone": dataToSend.doorphone,
-                    "entrance": dataToSend.entrance,
-                    "floor": dataToSend.floor,
-                    "apartment": dataToSend.apartment
-                },
-                "customer": {
-                    "phone": '+' + dataToSend.phone,
-                    "mail": dataToSend.email,
-                    "name": dataToSend.name
-                },
-                "personsCount": dataToSend.personsCount
-            };
-            this.cartService.orderCart$(data).subscribe();
-        }
-        else {
-        }
-    }
-    checkStreet(dataToSend) {
-        console.log(">>>>", dataToSend);
-        if (this.checkForFields(this.orderCart._directives, this.requiredFields)) {
-            let data = {
-                "cartId": this.cart.id,
-                "comment": dataToSend.comment,
-                // "delivery": {
-                //   "type": "string (self or nothing)"
-                // },
-                "address": {
-                    // "city": "string",
-                    "streetId": dataToSend.street.id,
-                    "home": dataToSend.house,
-                    "housing": dataToSend.housing,
-                    // "index": "string",
-                    "doorphone": dataToSend.doorphone,
-                    "entrance": dataToSend.entrance,
-                    "floor": dataToSend.floor,
-                    "apartment": dataToSend.apartment
-                },
-                "customer": {
-                    "phone": '+' + dataToSend.phone,
-                    "mail": dataToSend.email,
-                    "name": dataToSend.name
-                },
-                "personsCount": dataToSend.personsCount
-            };
-            //this.cartService.checkStreet(data);
-        }
-        else {
-        }
-    }
-    stringToNumber(str) {
-        console.log(typeof str);
-        if (typeof str === 'string') {
-            return +str;
-        }
-        else if (typeof str === "number") {
-            return str;
-        }
-        else {
-            console.error("Параметр home должен быть или string или number");
-        }
-    }
-}
-OrderCartUserDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: OrderCartUserDirective, deps: [{ token: NgCartService }], target: i0.ɵɵFactoryTarget.Directive });
-OrderCartUserDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.1", type: OrderCartUserDirective, selector: "[orderCart]", inputs: { orderCart: "orderCart" }, host: { listeners: { "click": "onClick()" } }, ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: OrderCartUserDirective, decorators: [{
-            type: Directive,
-            args: [{
-                    selector: '[orderCart]'
-                }]
-        }], ctorParameters: function () { return [{ type: NgCartService }]; }, propDecorators: { orderCart: [{
-                type: Input
-            }], onClick: [{
-                type: HostListener,
-                args: ['click']
-            }] } });
-
-class SetAmountDirective {
-    constructor(cartService) {
-        this.cartService = cartService;
-        this.cartService
-            .userCart$()
-            .subscribe(res => this.cart = res);
-    }
-    onClick() {
-        this.changeAmount(this.action);
-    }
-    changeAmount(action) {
-        switch (action) {
-            case '+':
-                this.cartService.setDishCountToCart$(this.dish.id, this.dish.amount + 1).subscribe();
-                break;
-            case '-':
-                this.cartService.setDishCountToCart$(this.dish.id, this.dish.amount - 1).subscribe();
-                break;
-            default:
-                console.log("Директива SetDishAmount получила ложное значение action");
-                break;
-        }
-    }
-}
-SetAmountDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: SetAmountDirective, deps: [{ token: NgCartService }], target: i0.ɵɵFactoryTarget.Directive });
-SetAmountDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.1", type: SetAmountDirective, selector: "[setDishAmount]", inputs: { action: "action", dish: "dish" }, host: { listeners: { "click": "onClick()" } }, ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: SetAmountDirective, decorators: [{
-            type: Directive,
-            args: [{
-                    selector: '[setDishAmount]'
-                }]
-        }], ctorParameters: function () { return [{ type: NgCartService }]; }, propDecorators: { action: [{
-                type: Input
-            }], dish: [{
-                type: Input
-            }], onClick: [{
-                type: HostListener,
-                args: ['click']
-            }] } });
-
-class DishCalcDirective {
-    constructor(renderer, el, cartService) {
-        this.renderer = renderer;
-        this.el = el;
-        this.cartService = cartService;
-        this.validate = new EventEmitter();
-        this.amountDishToAdd = new EventEmitter();
-        this.amountModifiers = {};
-        this.stateModifiers = {};
-    }
-    ngOnInit() {
-        this.renderer.addClass(this.el.nativeElement, "dish-calculator");
-        this.amountDish = this.amount;
-        this.amountDishToAdd.emit(this.amountDish);
-        this.price = this.renderer.createElement("div");
-        this.renderer.addClass(this.price, "dish-price");
-        setTimeout(() => {
-            this.renderDish(this.dish);
-            this.render(this.dish.modifiers);
-        }, 100);
-    }
-    renderDish(dish) {
-        /*
-         <div class="main-item">
-         <div class="item-name">
-         <div class="title">{{dish.name}}</div>
-         </div>
-         <div class="item-quantity">
-         <!-- increase button-->
-         <a class="item-quantity__button" (click)="changeAmountdish(-1)">&#8722;</a>
-         <span class="item-quantity__counter" >{{amountDish}}</span>
-         <!-- decrease button-->
-         <a class="item-quantity__button" (click)="changeAmountdish(1)">&#x2b;</a>
-         </div>
-         <div class="weight-price">
-         {{dish.price*amountDish}}&nbsp;&#x20bd;
-         </div>
-         </div>
-    
-    
-         */
-        let mainItem = this.renderer.createElement("div");
-        this.renderer.addClass(mainItem, "dish-wraper");
-        this.renderer.appendChild(this.el.nativeElement, mainItem);
-        let itemName = this.renderer.createElement("div");
-        this.renderer.addClass(itemName, "name");
-        this.renderer.appendChild(mainItem, itemName);
-        let title = this.renderer.createElement("div");
-        this.renderer.addClass(title, "title");
-        this.renderer.setProperty(title, "innerHTML", this.dish.name);
-        this.renderer.appendChild(itemName, title);
-        let weightDishWrapper = this.renderer.createElement("div");
-        this.renderer.addClass(itemName, "weight");
-        this.renderer.addClass(itemName, "dish");
-        this.renderer.appendChild(mainItem, weightDishWrapper);
-        let weightDishValue = this.renderer.createElement("div");
-        this.renderer.addClass(weightDishValue, "value");
-        this.renderer.setProperty(weightDishValue, "innerHTML", (this.dish.weight * 1000).toFixed(0) + " г.");
-        if (this.dish.weight === 0 || !this.dish.weight) {
-            this.renderer.addClass(weightDishValue, "zero");
-        }
-        this.renderer.appendChild(weightDishWrapper, weightDishValue);
-        this.renderer.setProperty(this.price, "innerHTML", this.dish.price);
-        let priceDishWrapper = this.renderer.createElement("div");
-        this.renderer.addClass(priceDishWrapper, "price");
-        this.renderer.addClass(priceDishWrapper, "total");
-        this.renderer.appendChild(priceDishWrapper, this.price);
-        this.renderer.appendChild(mainItem, priceDishWrapper);
-        let itemQuant = this.renderer.createElement("div");
-        this.renderer.addClass(itemQuant, "quantity");
-        this.renderer.appendChild(mainItem, itemQuant);
-        let addButton = this.renderer.createElement("a");
-        this.renderer.addClass(addButton, "quantity__button");
-        this.renderer.addClass(addButton, "minus");
-        this.renderer.setProperty(addButton, "innerHTML", "&#8722;");
-        this.renderer.listen(addButton, "click", e => {
-            this.changeAmountdish(-1);
-            this.renderer.setProperty(counter, "innerHTML", this.amountDish);
-            this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
-            this.innerTotalWeight(weightTotal);
-        });
-        this.renderer.appendChild(itemQuant, addButton);
-        let counter = this.renderer.createElement("span");
-        this.renderer.addClass(counter, "quantity__counter");
-        this.renderer.setProperty(counter, "innerHTML", this.amountDish);
-        this.renderer.appendChild(itemQuant, counter);
-        let minusButton = this.renderer.createElement("a");
-        this.renderer.addClass(minusButton, "quantity__button");
-        this.renderer.addClass(addButton, "plus");
-        this.renderer.setProperty(minusButton, "innerHTML", "&#x2b;");
-        this.renderer.listen(minusButton, "click", e => {
-            this.changeAmountdish(1);
-            this.renderer.setProperty(counter, "innerHTML", this.amountDish);
-            this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
-            this.innerTotalWeight(weightTotal);
-        });
-        this.renderer.appendChild(itemQuant, minusButton);
-        let weightTotalWrapper = this.renderer.createElement("div");
-        this.renderer.addClass(itemName, "weight");
-        this.renderer.addClass(itemName, "total");
-        this.renderer.appendChild(mainItem, weightTotalWrapper);
-        let weightTotal = this.renderer.createElement("div");
-        if (this.dish.weight === 0 || !this.dish.weight) {
-            this.renderer.addClass(weightTotal, "zero");
-        }
-        this.renderer.addClass(weightTotal, "value");
-        this.innerTotalWeight(weightTotal); // TODO: total Weight
-        this.renderer.appendChild(weightTotalWrapper, weightTotal);
-        this.weightTotal = weightTotal;
-        this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(dish.price)); // TODO: правильно считать цену
-        let priceTotalWrapper = this.renderer.createElement("div");
-        this.renderer.addClass(priceTotalWrapper, "price");
-        this.renderer.addClass(priceTotalWrapper, "total");
-        this.renderer.appendChild(priceTotalWrapper, this.price);
-        this.renderer.appendChild(mainItem, priceTotalWrapper);
-    }
-    generatePrice(priceDish, amount, modifiersPrice) {
-        let selected = [];
-        if (this.selectedModifiers)
-            this.selectedModifiers.forEach(element => {
-                this.dish.modifiers.forEach(groups => {
-                    let mod = groups.childModifiers.filter(x => x.modifierId === element.id);
-                    if (mod.length > 0) {
-                        mod[0].groupId = groups.group.id;
-                        selected.push(mod[0]);
-                    }
-                });
-            });
-        let modSum = 0;
-        selected.forEach(element => {
-            modSum = modSum + element.dish.price * this.amountModifiers[element.groupId][element.modifierId];
-        });
-        modSum = modSum * this.amountDish;
-        return (priceDish * this.amountDish + modSum + '<div class="currency">&nbsp;&#x20bd;</div>');
-    }
-    generateTotalWeight() {
-        let selected = [];
-        if (this.selectedModifiers)
-            this.selectedModifiers.forEach(element => {
-                this.dish.modifiers.forEach(groups => {
-                    let mod = groups.childModifiers.filter(x => x.modifierId === element.id);
-                    if (mod.length > 0) {
-                        mod[0].groupId = groups.group.id;
-                        selected.push(mod[0]);
-                    }
-                });
-            });
-        let modSum = 0;
-        selected.forEach(element => {
-            modSum = modSum + element.dish.weight * this.amountModifiers[element.groupId][element.modifierId] * 1000;
-        });
-        modSum = parseFloat((modSum * this.amountDish).toFixed(2));
-        console.log(modSum, this.dish.weight * 1000 * this.amountDish);
-        console.log(this.dish.weight, this.amountDish);
-        let weight = (this.dish.weight * 1000 * this.amountDish) + modSum;
-        return (weight).toFixed(0) + " г. <div class='separator'></div>";
-    }
-    innerTotalWeight(totalWeigthDiv) {
-        this.renderer.setProperty(totalWeigthDiv, "innerHTML", this.generateTotalWeight());
-    }
-    changeAmountdish(value) {
-        this.amountDish = this.amountDish + value;
-        if (this.amountDish <= 0) {
-            this.amountDish = 1;
-        }
-        if (this.amountDish >= 199) {
-            this.amountDish = 199;
-        }
-        this.amountDishToAdd.emit(this.amountDish);
-    }
-    render(modifiers) {
-        this.setModifiers();
-        if (modifiers.length > 0) {
-            let h = this.renderer.createElement("h5");
-            this.renderer.setProperty(h, "innerHTML", "К этому блюду можно добавить:");
-            // this.renderer.appendChild(this.el.nativeElement, h);
-        }
-        modifiers.forEach(elementGroup => {
-            this.stateModifiers[elementGroup.modifierId] = {};
-            this.amountModifiers[elementGroup.modifierId] = {};
-            if (elementGroup.dish) {
-                let groupDiv = this.groupDiv("Одночные модификаторы не поддерживаются");
-                this.renderer.appendChild(this.el.nativeElement, groupDiv);
-                console.log("elementGroup", elementGroup);
-                //TODO: add single modificator logic
-            }
-            else if (elementGroup.childModifiers) {
-                let groupDiv = this.groupDiv(elementGroup.group ? elementGroup.group.name : "Ошибка");
-                this.renderer.appendChild(this.el.nativeElement, groupDiv);
-                let modArr = elementGroup.childModifiers;
-                modArr.forEach(element => {
-                    let modifireDiv = this.modifireDiv(element, elementGroup.modifierId);
-                    this.renderer.appendChild(groupDiv, modifireDiv);
-                    if (element.defaultAmount < 1) {
-                        this.stateModifiers[elementGroup.modifierId][element.modifierId] = false;
-                    }
-                    else {
-                        this.stateModifiers[elementGroup.modifierId][element.modifierId] = true;
-                    }
-                });
-            }
-        });
-        if (modifiers.length > 0) {
-            let h = this.renderer.createElement("div");
-            this.renderer.setProperty(h, "innerHTML", "<p>* — Количество добавленых опций блюда применяется для каждой порции</p>");
-            this.renderer.appendChild(this.el.nativeElement, h);
-        }
-    }
-    groupDiv(nameGorup) {
-        let div = this.renderer.createElement("div");
-        this.renderer.addClass(div, "group-modifiers-wraper");
-        this.renderer.appendChild(div, this.renderer.createText("" + nameGorup));
-        return div;
-    }
-    modifireDiv(element, groupId) {
-        let div = this.renderer.createElement("div");
-        this.renderer.addClass(div, "additional-item");
-        this.renderOneModifire(element, div, groupId);
-        return div;
-    }
-    renderOneModifire(element, modifireDiv, groupId) {
-        console.info('renderOneModifire', element);
-        console.info('renderOneModifire selectedModifiers', this.selectedModifiers);
-        // Рендер Названия модификатора
-        let itemNameDiv = this.renderer.createElement("div");
-        this.renderer.addClass(itemNameDiv, "item-name");
-        let label = this.renderer.createElement("label");
-        this.renderer.setAttribute(label, "for", element.modifierId);
-        this.renderer.appendChild(itemNameDiv, label);
-        this.renderer.setProperty(label, "innerHTML", element.dish.name);
-        this.renderer.appendChild(modifireDiv, itemNameDiv);
-        let weigthModifireWraper = this.renderer.createElement('div');
-        this.renderer.addClass(weigthModifireWraper, "left-weight-modifire-wraper");
-        let weightModifireLeft = this.renderer.createElement('div');
-        this.renderer.addClass(weightModifireLeft, 'weight');
-        if (element.dish.weight === 0 || element.dish.weight < 0) {
-            this.renderer.addClass(weightModifireLeft, 'zero');
-        }
-        this.renderer.setProperty(weightModifireLeft, 'innerHTML', (element.dish.weight * 1000).toFixed(0) + " г." + '');
-        this.renderer.appendChild(weigthModifireWraper, weightModifireLeft);
-        this.renderer.appendChild(modifireDiv, weigthModifireWraper);
-        // Рендер блока изминения количества модификатора
-        let itemQuantity = this.renderer.createElement("div");
-        /* TODO: нужно проверить:
-         да 0,0,[0] - только выключеный чекбокс
-         да 0,1 [0]- только чекбокс
-         да 0,1 [d===1]- только чекбокс, включеный
-    
-         да 0,n[d=0] - по умолчанию 0 кнопки +-
-         да 0,n[d>0<n] - по умолчанию d, кнопки +-
-    
-    
-    
-         k,n [k<n,d=0] - k по умолчанию!!! нужно чтобвы стояла цыфра k в амаунт, макс n(больше n не подниамалось) кнопки +- (частный случай когда d=0)
-         k,n [k<n,0<d=<n]- d по умолчанию!!! нужно чтобвы стояла цыфра 1 в амаунт, макс n(больше n не подниамалось) кнопки +-
-    
-    
-    
-         defaultAmount:0
-         hideIfDefaultAmount:false //Признак того, что не нужно отображать список модификаторов, если их количество равно количеству
-         maxAmount:0
-         minAmount:0
-    
-         */
-        let min = element.minAmount;
-        let max = element.maxAmount;
-        let def = element.defaultAmount;
-        console.info('min max def', min, max, def);
-        switch (true) {
-            case min === 0 && max === 0 && def === 0: // 0,0,[0] - только выключеный чекбокс
-                this.renderCheckbox(element, false, itemQuantity, modifireDiv, groupId);
-                break;
-            case min === 0 && max === 1 && def === 0: // 0,1 [0]- только чекбокс
-                this.renderCheckbox(element, false, itemQuantity, modifireDiv, groupId);
-                break;
-            case min === 0 && max === 1 && def === 1: // 0,1 [d!=0]- только чекбокс, включеный
-                this.renderCheckbox(element, true, itemQuantity, modifireDiv, groupId);
-                break;
-            case min === 1 && max === 1 && def === 1: // 0,1 [d!=0]- только чекбокс, включеный
-                console.error(element.dish.name, "Значение не поддается настройке:", min, max, def);
-                break;
-            case min <= max && def >= min && def <= max && max > 1: //d по умолчанию!!! нужно чтобвы стояла цыфра 1 в амаунт, макс n(больше n не подниамалось) кнопки +-
-                this.renderInputButton(element, groupId, itemQuantity, modifireDiv);
-                break;
-            default:
-                console.error(element.dish.name, "Ошибка рендера модификатора, для значений:", min, max, def);
-                break;
-        }
-        if (element.maxAmount > 0 && element.minAmount > 0) {
-        }
-        else {
-        }
-        // Рендер блока стоимости и веса модификатора
-        // let weightPriceDiv = this.renderer.createElement('div');
-        // this.renderer.addClass(weightPriceDiv, 'modal-price');
-        // let weight;
-        // if(element.dish.weight>0){
-        //   weight =  element.dish.weight + " г ";
-        // }
-        // let slash = "/ ";
-        // let price;
-        // if(element.dish.price>0){
-        //   price = element.dish.price + "&nbsp;&#x20bd;";
-        // }
-        // let weightAndPriceHTML = (weight||'')+(weight&&price? slash : '')+( price || '');
-        // this.renderer.setProperty(weightPriceDiv, 'innerHTML', weightAndPriceHTML);
-        // this.renderer.appendChild(modifireDiv, weightPriceDiv);
-        let rightweigthModifireWraper = this.renderer.createElement('div');
-        this.renderer.addClass(rightweigthModifireWraper, "right-weight-modifire-wraper");
-        let weightModifireRight = this.renderer.createElement('div');
-        this.renderer.addClass(weightModifireRight, 'weight');
-        if (element.dish.weight === 0 || element.dish.weight < 0) {
-            this.renderer.addClass(weightModifireRight, 'zero');
-        }
-        this.renderer.setProperty(weightModifireRight, 'innerHTML', (element.dish.weight * 1000).toFixed(0) + " г." + '<div class="separator"></div>');
-        this.renderer.appendChild(rightweigthModifireWraper, weightModifireRight);
-        this.renderer.appendChild(modifireDiv, rightweigthModifireWraper);
-        let price = this.renderer.createElement("div");
-        this.renderer.addClass(price, "item-price");
-        let priceValue;
-        if (element.dish.price > 0) {
-            priceValue = element.dish.price + "<div class = 'currency'>&nbsp;&#x20bd;</div>";
-            this.renderer.setProperty(price, "innerHTML", priceValue);
-            this.renderer.appendChild(modifireDiv, price);
-        }
-        else {
-            this.renderer.addClass(price, "zero-price");
-        }
-        this.setModifiers();
-        this.innerTotalWeight(this.weightTotal);
-        this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
-    }
-    renderCheckbox(element, isActive, itemQuantity, modifireDiv, groupId) {
-        let input = this.renderer.createElement("input");
-        this.renderer.setAttribute(input, "type", "checkbox");
-        this.renderer.setAttribute(input, "id", element.modifierId);
-        if (isActive) {
-            this.renderer.setProperty(input, 'checked', true);
-            element.checked = true;
-            this.stateModifiers[groupId][element.modifierId] = true;
-            this.amountModifiers[groupId][element.modifierId] = 1;
-        }
-        else {
-            element.checked = false;
-            this.stateModifiers[groupId][element.modifierId] = false;
-            this.amountModifiers[groupId][element.modifierId] = 0;
-        }
-        this.renderer.addClass(input, "modal-checkbox");
-        this.renderer.appendChild(itemQuantity, input);
-        this.renderer.listen(input, "change", e => {
-            if (this.idRadioBox(groupId)) {
-                for (const key in this.stateModifiers[groupId]) {
-                    if (this.stateModifiers[groupId].hasOwnProperty(key)) {
-                        this.stateModifiers[groupId][key] = false;
-                        // this.renderer.setProperty(input, 'checked',   true);
-                    }
-                }
-                let groupDivBlock = e.target.parentElement.parentElement.parentElement.querySelectorAll("input");
-                groupDivBlock.forEach(element => {
-                    if (element.id != e.target.id)
-                        element.checked = false;
-                });
-            }
-            this.stateModifiers[groupId][e.target.id] = e.target.checked;
-            if (e.target.checked) {
-                this.amountModifiers[groupId][e.target.id] = 1;
-            }
-            this.setModifiers();
-            this.innerTotalWeight(this.weightTotal);
-            this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
-        });
-        this.renderer.appendChild(modifireDiv, itemQuantity);
-    }
-    renderInputButton(element, groupId, itemQuantity, modifireDiv) {
-        let startAmount;
-        if (element.defaultAmount > 0) {
-            startAmount = element.defaultAmount;
-        }
-        else {
-            startAmount = element.minAmount;
-        }
-        if (startAmount > 0) {
-            this.stateModifiers[groupId][element.modifierId] = true;
-        }
-        let aMinusDiv = this.renderer.createElement("a");
-        this.renderer.addClass(aMinusDiv, "quantity__button");
-        this.renderer.setProperty(aMinusDiv, "innerHTML", "&#8722;");
-        this.renderer.appendChild(itemQuantity, aMinusDiv);
-        this.renderer.listen(aMinusDiv, "click", e => {
-            let value = +this.amountModifiers[groupId][element.modifierId];
-            this.amountModifiers[groupId][element.modifierId] = value - 1;
-            if (this.amountModifiers[groupId][element.modifierId] < element.minAmount)
-                this.amountModifiers[groupId][element.modifierId] = element.minAmount;
-            this.renderer.setProperty(span, "innerHTML", this.amountModifiers[groupId][element.modifierId]);
-            if (this.amountModifiers[groupId][element.modifierId] === 0) {
-                this.stateModifiers[groupId][element.modifierId] = false;
-            }
-            this.setModifiers();
-            this.innerTotalWeight(this.weightTotal);
-            this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
-        });
-        let span = this.renderer.createElement("span");
-        this.renderer.addClass(span, "item-quantity__counter");
-        this.amountModifiers[groupId][element.modifierId] = startAmount;
-        this.renderer.setProperty(span, "innerHTML", this.amountModifiers[groupId][element.modifierId]);
-        this.renderer.appendChild(itemQuantity, span);
-        let aPlusDiv = this.renderer.createElement("a");
-        this.renderer.addClass(aPlusDiv, "quantity__button");
-        this.renderer.setProperty(aPlusDiv, "innerHTML", "&#x2b;");
-        this.renderer.appendChild(itemQuantity, aPlusDiv);
-        this.renderer.appendChild(modifireDiv, itemQuantity);
-        this.renderer.listen(aPlusDiv, "click", e => {
-            let value = +this.amountModifiers[groupId][element.modifierId];
-            this.amountModifiers[groupId][element.modifierId] = value + 1;
-            if (this.amountModifiers[groupId][element.modifierId] >
-                element.maxAmount &&
-                element.maxAmount != 0)
-                this.amountModifiers[groupId][element.modifierId] = element.maxAmount;
-            this.renderer.setProperty(span, "innerHTML", this.amountModifiers[groupId][element.modifierId]);
-            if (this.amountModifiers[groupId][element.modifierId] > 0) {
-                this.stateModifiers[groupId][element.modifierId] = true;
-            }
-            this.setModifiers();
-            this.innerTotalWeight(this.weightTotal);
-            this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
-        });
-    }
-    setModifiers() {
-        let modifiersToSelect = [];
-        /*if(this.selectedModifiers.length && !(Object.values(this.stateModifiers)).length) {
-          modifiersToSelect = this.selectedModifiers;
-        }*/
-        let modifiers = [];
-        console.info('setModifiers modifiersToSelect', modifiersToSelect);
-        console.info('setModifiers stateModifiers before', this.stateModifiers);
-        console.info('setModifiers selectedModifiers before', this.selectedModifiers);
-        for (let groupId in this.stateModifiers) {
-            for (let modifireId in this.stateModifiers[groupId]) {
-                if (this.stateModifiers[groupId][modifireId] || modifiersToSelect.find(item => item.modifierId == modifireId)) {
-                    modifiers.push({
-                        id: modifireId,
-                        amount: this.amountModifiers[groupId][modifireId],
-                        groupId: groupId
-                    });
-                }
-            }
-        }
-        this.selectedModifiers = modifiers;
-        if (this.dish.modifiers.length > 0) {
-            let message = [];
-            this.dish.modifiers.forEach(group => {
-                if (group.required) {
-                    if (this.stateModifiers[group.modifierId]) {
-                        let selectedModif = [];
-                        let localModif = this.stateModifiers[group.modifierId]; //.filter(element=>element);
-                        for (const mod in localModif) {
-                            if (localModif.hasOwnProperty(mod)) {
-                                if (localModif[mod]) {
-                                    selectedModif.push(localModif[mod]);
-                                }
-                            }
-                        }
-                        if (selectedModif.length < group.minAmount) {
-                            message.push({
-                                type: "warning",
-                                title: "Внимание",
-                                body: " Обязательно выберите модификаторы из категории: " +
-                                    group.group.name
-                            });
-                            this.validate.emit(false);
-                            this.cartService.setModifiers(modifiers, message);
-                        }
-                        else {
-                            this.validate.emit(true);
-                            this.cartService.setModifiers(modifiers, []);
-                        }
-                    }
-                    else {
-                        message.push({
-                            type: "warning",
-                            title: "Внимание",
-                            body: " Обязательно выберите модификаторы из категории: " +
-                                group.group.name
-                        });
-                        this.validate.emit(false);
-                        this.cartService.setModifiers(modifiers, message);
-                    }
-                }
-                else {
-                    this.validate.emit(true);
-                    this.cartService.setModifiers(modifiers);
-                }
-            });
-        }
-        else {
-            this.validate.emit(true);
-            this.cartService.setModifiers(modifiers, []);
-        }
-        console.info('setModifiers stateModifiers after', this.stateModifiers);
-        console.info('setModifiers selectedModifiers after', this.selectedModifiers);
-    }
-    /* проверяет соотвествет ли максимальное количество модификаторовб если 1 то реализует поведение радиокнопки,
-     если максимальное количество больше 1 то генерирует делает выбор всех остальных модификаторов не возможным, генерирует предупреждение*/
-    idRadioBox(groupId) {
-        let currentGroup = this.dish.modifiers.find(x => x.modifierId === groupId);
-        return currentGroup.minAmount === 1 && currentGroup.maxAmount === 1;
-    }
-    // Проверяет минимальное количество модификаторовкоторые были выбраны
-    checkMinAmountModifiers(groupId, modifire) {
-    }
-    ngOnDestroy() {
-        //this.dish.modifiers =[];
-        this.validate.emit(true);
-        this.cartService.setModifiers([], []);
-    }
-}
-DishCalcDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: DishCalcDirective, deps: [{ token: i0.Renderer2 }, { token: i0.ElementRef }, { token: NgCartService }], target: i0.ɵɵFactoryTarget.Directive });
-DishCalcDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.1", type: DishCalcDirective, selector: "[dishCalc]", inputs: { dish: "dish", amount: "amount", selectedModifiers: "selectedModifiers" }, outputs: { validate: "validate", amountDishToAdd: "amountDishToAdd" }, ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: DishCalcDirective, decorators: [{
-            type: Directive,
-            args: [{
-                    selector: '[dishCalc]'
-                }]
-        }], ctorParameters: function () { return [{ type: i0.Renderer2 }, { type: i0.ElementRef }, { type: NgCartService }]; }, propDecorators: { dish: [{
-                type: Input
-            }], amount: [{
-                type: Input
-            }], selectedModifiers: [{
-                type: Input
-            }], validate: [{
-                type: Output
-            }], amountDishToAdd: [{
-                type: Output
-            }] } });
-
 class CheckoutDirective {
     constructor(cartService) {
         this.cartService = cartService;
+        this.personsCount = 0;
         this.success = new EventEmitter();
         this.paymentRedirect = new EventEmitter();
         this.error = new EventEmitter();
@@ -2042,10 +1196,13 @@ class CheckoutDirective {
             .userCart$()
             .subscribe(cart => this.cart = cart);
         this.cartService.OrderFormChange
-            .pipe(filter(() => {
+            .pipe(filter(value => {
             //if((this.locationId || this.streetId) && this.home && this.phone && this.preparePhone(this.phone).length > 11) {
             if (this.locationId || (this.streetId || this.street) && this.home || this.selfService) {
                 return true;
+            }
+            else {
+                return false;
             }
         }), 
         /*filter(() => {
@@ -2073,8 +1230,6 @@ class CheckoutDirective {
             this.error.emit('Нужно указать адрес');
             return;
         }
-        let comment = this.comment || "";
-        let paymentMethod = this.paymentMethod || "Не указано";
         let data = {
             "cartId": this.cart.id,
             //"comment": comment,
@@ -2123,7 +1278,7 @@ class CheckoutDirective {
             };
         }
         const cartId = this.cart.id;
-        const onSuccess = result => {
+        const onSuccess = (result) => {
             if (result?.action?.data?.redirectLink) {
                 this.paymentRedirect.emit(result.action.data['redirectLink']);
             }
@@ -2132,7 +1287,7 @@ class CheckoutDirective {
                 this.success.emit(cartId);
             }
         };
-        if (this.phonePaymentSmsCode) {
+        if (this.phonePaymentSmsCode && this.phone) {
             this.cartService
                 .paymentLink$(this.phonePaymentSmsCode, this.phone)
                 .subscribe(onSuccess, error => this.error.emit(error));
@@ -2154,9 +1309,9 @@ class CheckoutDirective {
             "cartId": this.cart.id,
             "comment": comment,
             "customer": {
-                "phone": this.phone ? this.preparePhone(this.phone) : null,
+                "phone": this.phone ? this.preparePhone(this.phone) : '',
                 "mail": this.email,
-                "name": this.name || null
+                "name": this.name || ''
             },
             "personsCount": +this.personsCount
         };
@@ -2198,7 +1353,7 @@ class CheckoutDirective {
             .subscribe(
         //() => this.success.emit(true),
         //error => this.error.emit(error)
-        result => this.isChecking.emit(false), error => this.isChecking.emit(false));
+        () => this.isChecking.emit(false), () => this.isChecking.emit(false));
     }
     preparePhone(phone) {
         if (!phone)
@@ -2207,9 +1362,9 @@ class CheckoutDirective {
         return phone.replace('+8', '+7');
     }
 }
-CheckoutDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: CheckoutDirective, deps: [{ token: NgCartService }], target: i0.ɵɵFactoryTarget.Directive });
-CheckoutDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.1", type: CheckoutDirective, selector: "[checkout]", inputs: { cartTotal: "cartTotal", bonuses: "bonuses", name: "name", email: "email", phone: "phone", phonePaymentSmsCode: "phonePaymentSmsCode", delivery: "delivery", selfService: "selfService", locationId: "locationId", street: "street", streetId: "streetId", home: "home", housing: "housing", apartment: "apartment", entrance: "entrance", doorphone: "doorphone", floor: "floor", paymentMethod: "paymentMethod", paymentMethodId: "paymentMethodId", personsCount: "personsCount", comment: "comment", callback: "callback", date: "date", notifyMethodId: "notifyMethodId" }, outputs: { success: "success", paymentRedirect: "paymentRedirect", error: "error", isChecking: "isChecking" }, host: { listeners: { "click": "onClick()" } }, usesOnChanges: true, ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: CheckoutDirective, decorators: [{
+CheckoutDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: CheckoutDirective, deps: [{ token: NgCartService }], target: i0.ɵɵFactoryTarget.Directive });
+CheckoutDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.2", type: CheckoutDirective, selector: "[checkout]", inputs: { cartTotal: "cartTotal", bonuses: "bonuses", name: "name", email: "email", phone: "phone", phonePaymentSmsCode: "phonePaymentSmsCode", delivery: "delivery", selfService: "selfService", locationId: "locationId", street: "street", streetId: "streetId", home: "home", housing: "housing", apartment: "apartment", entrance: "entrance", doorphone: "doorphone", floor: "floor", paymentMethod: "paymentMethod", paymentMethodId: "paymentMethodId", personsCount: "personsCount", comment: "comment", callback: "callback", date: "date", notifyMethodId: "notifyMethodId" }, outputs: { success: "success", paymentRedirect: "paymentRedirect", error: "error", isChecking: "isChecking" }, host: { listeners: { "click": "onClick()" } }, usesOnChanges: true, ngImport: i0 });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: CheckoutDirective, decorators: [{
             type: Directive,
             args: [{
                     selector: '[checkout]'
@@ -2275,48 +1430,9 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImpor
                 args: ['click']
             }] } });
 
-class SetDishCommentDirective {
-    constructor(cartService) {
-        this.cartService = cartService;
-        this.success = new EventEmitter();
-        this.error = new EventEmitter();
-    }
-    onClick() {
-        this.setComment();
-    }
-    setComment() {
-        this.cartService.setDishComment$(this.dish.id, this.comment).subscribe(res => this.success.emit(true), err => this.error.emit(err));
-    }
-}
-SetDishCommentDirective.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: SetDishCommentDirective, deps: [{ token: NgCartService }], target: i0.ɵɵFactoryTarget.Directive });
-SetDishCommentDirective.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "12.0.0", version: "13.1.1", type: SetDishCommentDirective, selector: "[setDishComment]", inputs: { comment: "comment", dish: "dish" }, outputs: { success: "success", error: "error" }, host: { listeners: { "click": "onClick()" } }, ngImport: i0 });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: SetDishCommentDirective, decorators: [{
-            type: Directive,
-            args: [{
-                    selector: '[setDishComment]'
-                }]
-        }], ctorParameters: function () { return [{ type: NgCartService }]; }, propDecorators: { comment: [{
-                type: Input
-            }], dish: [{
-                type: Input
-            }], success: [{
-                type: Output
-            }], error: [{
-                type: Output
-            }], onClick: [{
-                type: HostListener,
-                args: ['click']
-            }] } });
-
+//import { ModifiresDirective } from './directives/modifires.directive';
 const DIRECTIVES = [
     AddDishToCartDirective,
-    AmountCartDirective,
-    DeleteFromCartDirective,
-    OrderCartUserDirective,
-    //ModifiresDirective,
-    DishCalcDirective,
-    SetDishCommentDirective,
-    SetAmountDirective,
     CheckoutDirective,
 ];
 class NgGqlModule {
@@ -2359,26 +1475,12 @@ class NgGqlModule {
         };
     }
 }
-NgGqlModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgGqlModule, deps: [{ token: i1.Apollo }, { token: i2.HttpLink }, { token: 'config' }], target: i0.ɵɵFactoryTarget.NgModule });
-NgGqlModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgGqlModule, declarations: [AddDishToCartDirective,
-        AmountCartDirective,
-        DeleteFromCartDirective,
-        OrderCartUserDirective,
-        //ModifiresDirective,
-        DishCalcDirective,
-        SetDishCommentDirective,
-        SetAmountDirective,
+NgGqlModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgGqlModule, deps: [{ token: i1.Apollo }, { token: i2.HttpLink }, { token: 'config' }], target: i0.ɵɵFactoryTarget.NgModule });
+NgGqlModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgGqlModule, declarations: [AddDishToCartDirective,
         CheckoutDirective], exports: [AddDishToCartDirective,
-        AmountCartDirective,
-        DeleteFromCartDirective,
-        OrderCartUserDirective,
-        //ModifiresDirective,
-        DishCalcDirective,
-        SetDishCommentDirective,
-        SetAmountDirective,
         CheckoutDirective] });
-NgGqlModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgGqlModule, imports: [[]] });
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImport: i0, type: NgGqlModule, decorators: [{
+NgGqlModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgGqlModule, imports: [[]] });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.2", ngImport: i0, type: NgGqlModule, decorators: [{
             type: NgModule,
             args: [{
                     imports: [],
@@ -2390,22 +1492,13 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "13.1.1", ngImpor
                     args: ['config']
                 }] }]; } });
 
-class EventMessage {
-    constructor(type, title, body) {
-        this.type = type;
-        this.title = title;
-        this.body = body;
-    }
-}
-
 /*
  * Public API Surface of ng-gql
  */
-;
 
 /**
  * Generated bundle index. Do not edit.
  */
 
-export { AddDishToCartDirective, Address, AmountCartDirective, Cart, CartDish, CheckPhoneResponse, CheckResponse, CheckoutDirective, Customer, DeleteFromCartDirective, Dish, DishCalcDirective, DishTag, EventMessage, EventerService, Group, GroupModifier, Modifier, NgCartService, NgGqlModule, NgGqlService, Order, OrderCartUserDirective, PaymentMethod, Phone, SetAmountDirective, SetDishCommentDirective };
+export { AddDishToCartDirective, CartFragments, CartGql, CheckoutDirective, DishFragments, DishGql, EventMessage, EventerService, GroupFragments, GroupGql, NavigationFragments, NavigationGql, NgCartService, NgGqlModule, NgGqlService, PaymentMethodFragments, PaymentMethodGql };
 //# sourceMappingURL=webresto-ng-gql.mjs.map

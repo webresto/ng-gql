@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { EventMessage } from '../event-message/event-message';
+import type { EventMessage } from '../models';
 import * as i0 from "@angular/core";
 export declare class EventerService {
     eventMessage: EventEmitter<any>;
