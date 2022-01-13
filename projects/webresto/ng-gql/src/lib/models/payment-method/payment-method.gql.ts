@@ -1,4 +1,5 @@
 import { gql } from 'apollo-angular';
+import type { CustomfFields } from '../custom-fields/custom-fields';
 
 export const PaymentMethodFragments = {
 	paymentMethod: gql`
@@ -17,7 +18,7 @@ export const PaymentMethodFragments = {
 
 export const PaymentMethodGql = {
 	queries: {
-		getPaymentMethod: (cartId: string | null = null, customFields) => {
+		getPaymentMethod: (cartId: string | null = null, customFields:CustomfFields) => {
 			if (cartId == 'null') {
 				cartId = null;
 			};

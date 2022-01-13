@@ -1,5 +1,6 @@
 import { gql } from 'apollo-angular';
 import { DishFragments } from '../dish/dish.gql';
+import type { CustomfFields } from '../custom-fields/custom-fields';
 
 export const GroupFragments = {
 	group: gql`
@@ -28,7 +29,7 @@ export const GroupGql = {
 			${GroupFragments.group}
 			${DishFragments.dish}
 		`,
-		getGroupsAndDishes: (customFields) => gql`
+		getGroupsAndDishes: (customFields:CustomfFields) => gql`
 			query GetGroupsAndDishes {
 				groups {
 					parentGroup {

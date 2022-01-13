@@ -1,4 +1,5 @@
 import {gql} from 'apollo-angular';
+import type { CustomfFields } from '../custom-fields/custom-fields';
 
 export const NavigationFragments = {
 	navigation: gql`
@@ -30,7 +31,7 @@ export const NavigationFragments = {
 
 export const NavigationGql = {
 	queries: {
-		getNavigationes: (customFields) => gql`
+		getNavigationes: (customFields:CustomfFields) => gql`
 			query GetNavigation {
 				navigation {
 					...NavigationFragment

@@ -1,6 +1,7 @@
 import { gql } from 'apollo-angular';
 import { ImageFragments } from '../image/image.gql';
 import { GroupModifierFragments } from '../group-modifier/group-modifier.gql';
+import type { CustomfFields } from '../custom-fields/custom-fields';
 
 export const DishFragments = {
 	dish: gql`
@@ -55,7 +56,7 @@ export const DishFragments = {
 
 export const DishGql = {
 	queries: {
-		getDishes: (customFields) => gql`
+		getDishes: (customFields:CustomfFields) => gql`
 			query GetDishes {
 				dishes {
 					...DishFragment
