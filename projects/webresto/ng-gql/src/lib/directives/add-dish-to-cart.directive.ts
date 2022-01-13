@@ -1,7 +1,6 @@
 import { Directive , HostListener, Input, Output, EventEmitter} from '@angular/core';
-import type { Cart } from '../models';
+import type { AddToCartInput, Cart, Dish, CartModifier } from '../models';
 import { NgCartService } from '../services/ng-cart.service';
-
 
 @Directive({
   selector: '[addToCart]'
@@ -9,7 +8,7 @@ import { NgCartService } from '../services/ng-cart.service';
 export class AddDishToCartDirective {
 
   cart:Cart | undefined;
-  modifiers;
+  modifiers: CartModifier[] = [];
 
   constructor(private cartService:NgCartService) {
     this.cartService
@@ -20,10 +19,10 @@ export class AddDishToCartDirective {
       .subscribe(res => this.modifiers = res);
   }
 
-  @Input() dish:any;
-  @Input() amountDish:any;
-  @Input() comment:string;
-  @Input() replaceCartDishId:boolean;
+  @Input() dish:Dish | undefined;
+  @Input() amountDish:number = 0;
+  @Input() comment:string | undefined;
+  @Input() replaceCartDishId:boolean = false;
 
   @Output() loading = new EventEmitter<boolean>();
   @Output() success = new EventEmitter<boolean>();
@@ -31,22 +30,20 @@ export class AddDishToCartDirective {
 
   @HostListener('click')
   onClick() {
-    this.addDishToCart(this.dish.id, this.amountDish)
+    this.addDishToCart(this.dish!.id, this.amountDish)
   }
 
-  private addDishToCart(dishID, amount) {
+  private addDishToCart(dishID: string, amount: number) {
 
-    let data = {
+    let data:AddToCartInput = {
       "dishId": dishID,
       "amount": amount,
       "cartId": undefined,
       "modifiers": this.modifiers,
       "comment": this.comment,
       "replace": this.replaceCartDishId ? true : undefined,
-      "cartDishId": this.replaceCartDishId
+      "cartDishId": this.cart?.id
     };
-
-    if (this.cart.id) data.cartId = this.cart.id;
 
     this.loading.emit(true);
 

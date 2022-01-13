@@ -3,7 +3,7 @@ import {
   Input, Output, OnDestroy,
   EventEmitter
 } from '@angular/core';
-import { Dish, EventMessage, Modifier } from '..';
+import type { Dish, EventMessage, GroupModifier, Modifier } from '../models';
 import { NgCartService } from '../services/ng-cart.service';
 
 @Directive({
@@ -15,7 +15,7 @@ export class DishCalcDirective implements OnDestroy {
   @Input() amount: number = 0;
   @Input() selectedModifiers: Modifier[] | undefined;
   @Output() validate: EventEmitter<any> = new EventEmitter();
-  @Output() amountToAdd: EventEmitter<any> = new EventEmitter();
+  @Output() amountToAdd: EventEmitter<number> = new EventEmitter();
 
   weightTotal: number | undefined;
   price: number | undefined;
@@ -238,10 +238,10 @@ export class DishCalcDirective implements OnDestroy {
     this.amountToAdd.emit(this.amount)
   }
 
-  render(modifiers: any) {
+  render(modifiers: GroupModifier[] |undefined) {
     this.setModifiers();
 
-    if (modifiers.length > 0) {
+    if (modifiers && modifiers.length > 0) {
       let h = this.renderer.createElement("h5");
       this.renderer.setProperty(
         h,
@@ -249,47 +249,48 @@ export class DishCalcDirective implements OnDestroy {
         "К этому блюду можно добавить:"
       );
       // this.renderer.appendChild(this.el.nativeElement, h);
-    }
 
-
-
-    modifiers.forEach(elementGroup => {
-      this.stateModifiers[elementGroup.modifierId] = {};
-      this.amountModifiers[elementGroup.modifierId] = {};
-
-      if (elementGroup.dish) {
-        let groupDiv = this.groupDiv("Одночные модификаторы не поддерживаются");
-        this.renderer.appendChild(this.el.nativeElement, groupDiv);
-        console.log("elementGroup", elementGroup);
-        //TODO: add single modificator logic
-      } else if (elementGroup.childModifiers) {
-        let groupDiv = this.groupDiv(
-          elementGroup.group ? elementGroup.group.name : "Ошибка"
+      modifiers.forEach(elementGroup => {
+        this.stateModifiers[elementGroup.modifierId] = {};
+        this.amountModifiers[elementGroup.modifierId] = {};
+  
+        if (elementGroup.dish) {
+          let groupDiv = this.groupDiv("Одночные модификаторы не поддерживаются");
+          this.renderer.appendChild(this.el.nativeElement, groupDiv);
+          console.log("elementGroup", elementGroup);
+          //TODO: add single modificator logic
+        } else if (elementGroup.childModifiers) {
+          let groupDiv = this.groupDiv(
+            elementGroup.group ? elementGroup.group.name : "Ошибка"
+          );
+          this.renderer.appendChild(this.el.nativeElement, groupDiv);
+          let modArr = elementGroup.childModifiers;
+          modArr.forEach(element => {
+            let modifireDiv = this.modifireDiv(element, elementGroup.modifierId);
+            this.renderer.appendChild(groupDiv, modifireDiv);
+            if (element.defaultAmount < 1) {
+              this.stateModifiers[elementGroup.modifierId][element.modifierId] = false;
+            } else {
+              this.stateModifiers[elementGroup.modifierId][element.modifierId] = true;
+            }
+          });
+        }
+      });
+        let hDiv = this.renderer.createElement("div");
+  
+        this.renderer.setProperty(
+          hDiv,
+          "innerHTML",
+          "<p>* — Количество добавленых опций блюда применяется для каждой порции</p>"
         );
-        this.renderer.appendChild(this.el.nativeElement, groupDiv);
-        let modArr = elementGroup.childModifiers;
-        modArr.forEach(element => {
-          let modifireDiv = this.modifireDiv(element, elementGroup.modifierId);
-          this.renderer.appendChild(groupDiv, modifireDiv);
-          if (element.defaultAmount < 1) {
-            this.stateModifiers[elementGroup.modifierId][element.modifierId] = false;
-          } else {
-            this.stateModifiers[elementGroup.modifierId][element.modifierId] = true;
-          }
-        });
-      }
-    });
-
-    if (modifiers.length > 0) {
-      let h = this.renderer.createElement("div");
-
-      this.renderer.setProperty(
-        h,
-        "innerHTML",
-        "<p>* — Количество добавленых опций блюда применяется для каждой порции</p>"
-      );
-      this.renderer.appendChild(this.el.nativeElement, h);
+        this.renderer.appendChild(this.el.nativeElement, h);
     }
+
+
+
+    
+
+    
 
 
   }

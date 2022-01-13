@@ -1,4 +1,5 @@
 import { Directive, Renderer2, ElementRef } from '@angular/core';
+import type { Cart } from '../models';
 import { NgCartService } from '../services/ng-cart.service';
 
 @Directive({
@@ -6,8 +7,8 @@ import { NgCartService } from '../services/ng-cart.service';
 })
 export class AmountCartDirective {
 
-  cart:object;
-  amount:string;
+  cart:Cart |undefined;
+  amount:number;
 
   constructor(
     private cartService:NgCartService,
@@ -15,7 +16,7 @@ export class AmountCartDirective {
     private el: ElementRef
   ) {
 
-    this.amount = '0'; 
+    this.amount = 0; 
     this.renderer.setProperty(this.el.nativeElement, 'innerHTML', this.amount);
 
     this.cartService

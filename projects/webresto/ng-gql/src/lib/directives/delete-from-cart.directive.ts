@@ -1,4 +1,5 @@
 import { Directive , HostListener, Input} from '@angular/core';
+import type { Cart } from '../models';
 import { NgCartService } from '../services/ng-cart.service';
 
 @Directive({
@@ -6,7 +7,7 @@ import { NgCartService } from '../services/ng-cart.service';
 })
 export class DeleteFromCartDirective {
 
-  cart;
+  cart:Cart|undefined;
 
   constructor(private cartService:NgCartService) {
     this.cartService
