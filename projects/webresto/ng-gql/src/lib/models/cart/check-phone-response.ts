@@ -1,4 +1,4 @@
-export class CheckPhoneResponse {
+export interface CheckPhoneResponse {
 	type: string;
 	title: string;
 	message: string;

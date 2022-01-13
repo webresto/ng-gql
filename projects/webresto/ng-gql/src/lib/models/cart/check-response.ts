@@ -1,6 +1,6 @@
 import { Cart } from './cart';
 
-export class CheckResponse {
+export interface CheckResponse {
 	cart: Cart;
 	message: {
 		title: string,

@@ -74,14 +74,14 @@ export class ModifiersDirective {
     return div;
   }
 
-  modifireDiv(element, groupId){
+  modifireDiv(element, groupId:string){
     let div = this.renderer.createElement('div');
     this.renderer.addClass(div, 'additional-item');
     this.renderOneModifire(element, div,groupId);
    return div;
   }
 
-  renderOneModifire(element, modifireDiv, groupId){
+  renderOneModifire(element, modifireDiv, groupId:string){
 
     // Рендер Названия модификатора
     let itemNameDiv = this.renderer.createElement('div');

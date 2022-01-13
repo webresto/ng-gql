@@ -1,6 +1,6 @@
 import { Dish } from '../dish/dish';
 
-export class CartModifier {
+export interface CartModifier {
 	id: string;
 	amount?: number;
 	groupId: string;

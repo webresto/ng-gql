@@ -1,4 +1,4 @@
-export class Phone {
+export interface Phone {
 	id: number;
 	phone: string;
 	isFirst: boolean;

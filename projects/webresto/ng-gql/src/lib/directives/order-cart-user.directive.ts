@@ -1,5 +1,6 @@
 import { Directive, Input, HostListener } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import type { Cart } from '../models/cart';
 import { NgCartService } from '../services/ng-cart.service';
 
 @Directive({
@@ -7,8 +8,8 @@ import { NgCartService } from '../services/ng-cart.service';
 })
 export class OrderCartUserDirective {
 
-  @Input() orderCart:any;
-  cart:any;
+  @Input() orderCart: any;
+  cart: Cart;
 
   @HostListener('click')
   onClick() {
@@ -16,19 +17,18 @@ export class OrderCartUserDirective {
     console.log(this.orderCart.value)
   }
 
-  private requiredFields:Array<string> = ["name", "phone", "street", "house"];
-  private checkerFields:BehaviorSubject<boolean>;
+  private requiredFields: Array<string> = ["name", "phone", "street", "house"];
+  private checkerFields: BehaviorSubject<boolean>;
 
-  constructor(private cartService:NgCartService) {
+  constructor(private cartService: NgCartService) {
     this.checkerFields = new BehaviorSubject(undefined);
   }
 
-  ngAfterViewInit():void {
-
+  ngAfterViewInit(): void {
     setTimeout(() => {
       this.cartService
         .userCart$()
-        .subscribe(cart=> {
+        .subscribe(cart => {
           if (this.cart && this.orderCart.valid && this.cart.cartTotal != cart.cartTotal && cart.cartTotal > 0) {
             this.checkStreet(this.orderCart.value)
           }
@@ -42,7 +42,7 @@ export class OrderCartUserDirective {
 
     this.checkerFields.subscribe(state => {
       if (state) {
-        this.orderCart.controls['street'].valueChanges.subscribe(val => {
+        this.orderCart.controls['street'].valueChanges.subscribe((val: any) => {
           if (typeof val === 'object') {
             setTimeout(() => {
               if (this.orderCart.controls['house'].valid) {
@@ -53,7 +53,7 @@ export class OrderCartUserDirective {
             }, 100);
           }
         });
-        this.orderCart.controls['house'].valueChanges.subscribe(val => {
+        this.orderCart.controls['house'].valueChanges.subscribe((val: any) => {
           setTimeout(() => {
             if (this.orderCart.controls['street'].valid) {
               this.orderCart.value.name = this.orderCart.value.name || "Неуказано";
@@ -70,10 +70,10 @@ export class OrderCartUserDirective {
   }
 
 
-  checkForFields(formDirectives:Array<any>, requiredFields:Array<string>):boolean {
+  checkForFields(formDirectives: Array<any>, requiredFields: Array<string>): boolean {
 
-    let fieldsAreAvailable:object = {};
-    let noFields:Array<string> = [];
+    let fieldsAreAvailable: object = {};
+    let noFields: Array<string> = [];
 
 
     formDirectives.forEach(element => {
@@ -94,9 +94,9 @@ export class OrderCartUserDirective {
     }
   }
 
-  order(dataToSend) {
+  order(dataToSend: { comment: string; cash: any; bankcard: any; street: { id: any; }; house: any; housing: any; doorphone: any; entrance: any; floor: any; apartment: any; phone: string; email: any; name: any; personsCount: any; }) {
     if (this.checkForFields(this.orderCart._directives, this.requiredFields)) {
-      let payment;
+      let payment: string;
       let comment = dataToSend.comment || "Не указан"
 
       if (dataToSend.cash) {
@@ -140,8 +140,8 @@ export class OrderCartUserDirective {
 
   }
 
-  checkStreet(dataToSend) {
-    console.log(">>>>",dataToSend);
+  checkStreet(dataToSend: { comment: any; street: { id: any; }; house: any; housing: any; doorphone: any; entrance: any; floor: any; apartment: any; phone: string; email: any; name: any; personsCount: any; }) {
+    console.log(">>>>", dataToSend);
     if (this.checkForFields(this.orderCart._directives, this.requiredFields)) {
       let data = {
         "cartId": this.cart.id,
@@ -174,7 +174,7 @@ export class OrderCartUserDirective {
     }
   }
 
-  stringToNumber(str:number | any):number {
+  stringToNumber(str: unknown): number {
     console.log(typeof str);
     if (typeof str === 'string') {
       return +str;
@@ -182,7 +182,8 @@ export class OrderCartUserDirective {
       return str;
     } else {
       console.error("Параметр home должен быть или string или number");
-    }
+      throw new Error("Параметр home должен быть или string или number");
+    };
   }
 
 }

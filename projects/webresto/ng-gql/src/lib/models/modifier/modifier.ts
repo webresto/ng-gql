@@ -1,8 +1,8 @@
-import { Image } from '../image/image';
-import { Dish } from '../dish/dish';
+import type { Dish } from '../dish/dish';
 
-export class Modifier {
+export interface Modifier {
 	modifierId: string;
+	groupId?: string;
 	maxAmount: number;
 	minAmount: number;
 	amount?: number;

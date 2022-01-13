@@ -1,4 +1,5 @@
 import { Directive , HostListener, Input, Output, EventEmitter} from '@angular/core';
+import type { Cart } from '../models';
 import { NgCartService } from '../services/ng-cart.service';
 
 
@@ -7,7 +8,7 @@ import { NgCartService } from '../services/ng-cart.service';
 })
 export class AddDishToCartDirective {
 
-  cart;
+  cart:Cart | undefined;
   modifiers;
 
   constructor(private cartService:NgCartService) {

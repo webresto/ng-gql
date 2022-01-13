@@ -1,4 +1,4 @@
-export class Navigation {
+export interface Navigation {
 	id: string;
 	name: string;
 	description: string;

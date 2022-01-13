@@ -3,7 +3,7 @@ export class EventMessage {
   title:string;
   body:string;
 
-  constructor(type, title, body) {
+  constructor(type: string, title: string, body: string) {
     this.type = type;
     this.title = title;
     this.body = body;

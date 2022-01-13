@@ -1,7 +1,7 @@
 import { Dish } from '../dish/dish';
 import { CartModifier } from '../modifier/cart-modifier';
 
-export class CartDish {
+export interface CartDish {
 	id: number;
 	amount: number;
 	dish: Dish;

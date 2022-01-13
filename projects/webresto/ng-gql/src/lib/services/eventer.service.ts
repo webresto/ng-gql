@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { EventMessage } from '../event-message/event-message';
+import type { EventMessage } from '../models';
 
 @Injectable({
   providedIn: 'root'

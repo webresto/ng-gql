@@ -1,9 +1,7 @@
 import { Image } from "../image/image";
-import { Group } from "../group/group";
-
 import { GroupModifier } from "../group-modifier/group-modifier";
 
-export class Dish {
+export interface Dish {
   id: string;
   name: string;
   description: string;
@@ -22,7 +20,7 @@ export class Dish {
     dishPlaceholder: Image
   };
   modifiers?: GroupModifier[];
-  
+
   //
   seoDescription?: string;
   seoKeywords?: string;
@@ -47,6 +45,6 @@ export class Dish {
   promo?: boolean;
 }
 
-export class DishTag {
+export interface DishTag {
   name: string;
 }

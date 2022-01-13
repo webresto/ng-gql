@@ -1,8 +1,9 @@
 import {
   Directive, Renderer2, ElementRef,
-  HostListener, Input, Output, OnDestroy,
+  Input, Output, OnDestroy,
   EventEmitter
 } from '@angular/core';
+import { Dish, EventMessage, Modifier } from '..';
 import { NgCartService } from '../services/ng-cart.service';
 
 @Directive({
@@ -10,22 +11,24 @@ import { NgCartService } from '../services/ng-cart.service';
 })
 export class DishCalcDirective implements OnDestroy {
 
-  @Input()  dish:any;
-  @Input()  amount:any;
-  @Input()  selectedModifiers:any;
-  @Output()  validate:EventEmitter<any> = new EventEmitter();
-  @Output()  amountDishToAdd:EventEmitter<any> = new EventEmitter();
+  @Input() dish: Dish | undefined;
+  @Input() amount: number = 0;
+  @Input() selectedModifiers: Modifier[] | undefined;
+  @Output() validate: EventEmitter<any> = new EventEmitter();
+  @Output() amountToAdd: EventEmitter<any> = new EventEmitter();
 
-  weightTotal;
-  amountDish;
-  price;
-  amountModifiers:any = {};
-  stateModifiers:any = {};
-  testcountCall;
+  weightTotal: number | undefined;
+  price: number | undefined;
+  amountModifiers: any = {};
+  stateModifiers: {
+    [key: string]: {
+      [key: string]: Modifier
+    }
+  } = {};
 
-  constructor(private renderer:Renderer2,
-              private el:ElementRef,
-              private cartService:NgCartService) {
+  constructor(private renderer: Renderer2,
+    private el: ElementRef,
+    private cartService: NgCartService) {
 
   }
 
@@ -33,9 +36,8 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.addClass(this.el.nativeElement, "dish-calculator");
 
 
-    this.amountDish = this.amount;
 
-    this.amountDishToAdd.emit(this.amountDish);
+    this.amountToAdd.emit(this.amount);
     this.price = this.renderer.createElement("div");
     this.renderer.addClass(this.price, "dish-price");
 
@@ -45,7 +47,7 @@ export class DishCalcDirective implements OnDestroy {
     }, 100);
   }
 
-  renderDish(dish:any) {
+  renderDish(dish: any) {
     /*
      <div class="main-item">
      <div class="item-name">
@@ -112,7 +114,7 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.setProperty(addButton, "innerHTML", "&#8722;");
     this.renderer.listen(addButton, "click", e => {
       this.changeAmountdish(-1);
-      this.renderer.setProperty(counter, "innerHTML", this.amountDish);
+      this.renderer.setProperty(counter, "innerHTML", this.amount);
       this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
       this.innerTotalWeight(weightTotal)
     });
@@ -120,7 +122,7 @@ export class DishCalcDirective implements OnDestroy {
 
     let counter = this.renderer.createElement("span");
     this.renderer.addClass(counter, "quantity__counter");
-    this.renderer.setProperty(counter, "innerHTML", this.amountDish);
+    this.renderer.setProperty(counter, "innerHTML", this.amount);
     this.renderer.appendChild(itemQuant, counter);
 
     let minusButton = this.renderer.createElement("a");
@@ -129,7 +131,7 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.setProperty(minusButton, "innerHTML", "&#x2b;");
     this.renderer.listen(minusButton, "click", e => {
       this.changeAmountdish(1);
-      this.renderer.setProperty(counter, "innerHTML", this.amountDish);
+      this.renderer.setProperty(counter, "innerHTML", this.amount);
       this.renderer.setProperty(
         this.price,
         "innerHTML",
@@ -166,13 +168,13 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.appendChild(mainItem, priceTotalWrapper);
   }
 
-  generatePrice(priceDish, amount?, modifiersPrice?) {
-    let selected = [];
+  generatePrice(priceDish: number, amount?: number, modifiersPrice?: number) {
+    let selected: Modifier[] = [];
     if (this.selectedModifiers)
       this.selectedModifiers.forEach(element => {
 
         this.dish.modifiers.forEach(groups => {
-          let mod = groups.childModifiers.filter(x=>x.modifierId === element.id);
+          let mod = groups.childModifiers.filter(x => x.modifierId === element.id);
           if (mod.length > 0) {
             mod[0].groupId = groups.group.id;
             selected.push(mod[0]);
@@ -180,14 +182,14 @@ export class DishCalcDirective implements OnDestroy {
         });
 
       });
-    let modSum:number = 0;
+    let modSum: number = 0;
     selected.forEach(element => {
 
       modSum = modSum + element.dish.price * this.amountModifiers[element.groupId][element.modifierId]
     });
-    modSum = modSum * this.amountDish;
+    modSum = modSum * this.amount;
     return (
-      priceDish * this.amountDish + modSum + '<div class="currency">&nbsp;&#x20bd;</div>'
+      priceDish * this.amount + modSum + '<div class="currency">&nbsp;&#x20bd;</div>'
     );
   }
 
@@ -197,7 +199,7 @@ export class DishCalcDirective implements OnDestroy {
       this.selectedModifiers.forEach(element => {
 
         this.dish.modifiers.forEach(groups => {
-          let mod = groups.childModifiers.filter(x=>x.modifierId === element.id);
+          let mod = groups.childModifiers.filter(x => x.modifierId === element.id);
           if (mod.length > 0) {
             mod[0].groupId = groups.group.id;
             selected.push(mod[0]);
@@ -205,15 +207,15 @@ export class DishCalcDirective implements OnDestroy {
         });
 
       });
-    let modSum:number = 0;
+    let modSum: number = 0;
     selected.forEach(element => {
 
       modSum = modSum + element.dish.weight * this.amountModifiers[element.groupId][element.modifierId] * 1000
     });
-    modSum = parseFloat((modSum * this.amountDish).toFixed(2));
-    console.log(modSum, this.dish.weight * 1000 * this.amountDish)
-    console.log(this.dish.weight, this.amountDish)
-    let weight = (this.dish.weight * 1000 * this.amountDish) + modSum;
+    modSum = parseFloat((modSum * this.amount).toFixed(2));
+    console.log(modSum, this.dish.weight * 1000 * this.amount)
+    console.log(this.dish.weight, this.amount)
+    let weight = (this.dish.weight * 1000 * this.amount) + modSum;
 
     return (weight).toFixed(0) + " г. <div class='separator'></div>";
   }
@@ -223,20 +225,20 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.setProperty(totalWeigthDiv, "innerHTML", this.generateTotalWeight());
   }
 
-  changeAmountdish(value) {
-    this.amountDish = this.amountDish + value;
-    if (this.amountDish <= 0) {
-      this.amountDish = 1;
+  changeAmountdish(value: number) {
+    this.amount = this.amount + value;
+    if (this.amount <= 0) {
+      this.amount = 1;
 
     }
-    if (this.amountDish >= 199) {
-      this.amountDish = 199;
+    if (this.amount >= 199) {
+      this.amount = 199;
 
     }
-    this.amountDishToAdd.emit(this.amountDish)
+    this.amountToAdd.emit(this.amount)
   }
 
-  render(modifiers:any) {
+  render(modifiers: any) {
     this.setModifiers();
 
     if (modifiers.length > 0) {
@@ -258,7 +260,7 @@ export class DishCalcDirective implements OnDestroy {
       if (elementGroup.dish) {
         let groupDiv = this.groupDiv("Одночные модификаторы не поддерживаются");
         this.renderer.appendChild(this.el.nativeElement, groupDiv);
-        console.log("elementGroup",elementGroup);
+        console.log("elementGroup", elementGroup);
         //TODO: add single modificator logic
       } else if (elementGroup.childModifiers) {
         let groupDiv = this.groupDiv(
@@ -299,14 +301,14 @@ export class DishCalcDirective implements OnDestroy {
     return div;
   }
 
-  modifireDiv(element, groupId) {
+  modifireDiv(element, groupId: string) {
     let div = this.renderer.createElement("div");
     this.renderer.addClass(div, "additional-item");
     this.renderOneModifire(element, div, groupId);
     return div;
   }
 
-  renderOneModifire(element, modifireDiv, groupId) {
+  renderOneModifire(element, modifireDiv, groupId: string) {
 
     console.info('renderOneModifire', element);
     console.info('renderOneModifire selectedModifiers', this.selectedModifiers);
@@ -315,7 +317,7 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.addClass(itemNameDiv, "item-name");
 
     let label = this.renderer.createElement("label");
-    
+
     this.renderer.setAttribute(label, "for", element.modifierId);
     this.renderer.appendChild(itemNameDiv, label);
     this.renderer.setProperty(label, "innerHTML", element.dish.name);
@@ -454,7 +456,7 @@ export class DishCalcDirective implements OnDestroy {
 
   }
 
-  renderCheckbox(element, isActive, itemQuantity, modifireDiv, groupId) {
+  renderCheckbox(element, isActive, itemQuantity, modifireDiv, groupId: string) {
 
     let input = this.renderer.createElement("input");
     this.renderer.setAttribute(input, "type", "checkbox");
@@ -590,13 +592,13 @@ export class DishCalcDirective implements OnDestroy {
   }
 
   setModifiers() {
-    let modifiersToSelect = [];
+    let modifiersToSelect: Modifier[] = [];
 
     /*if(this.selectedModifiers.length && !(Object.values(this.stateModifiers)).length) {
       modifiersToSelect = this.selectedModifiers;
     }*/
 
-    let modifiers = [];
+    let modifiers: Modifier[] = [];
 
     console.info('setModifiers modifiersToSelect', modifiersToSelect);
     console.info('setModifiers stateModifiers before', this.stateModifiers);
@@ -605,18 +607,14 @@ export class DishCalcDirective implements OnDestroy {
     for (let groupId in this.stateModifiers) {
       for (let modifireId in this.stateModifiers[groupId]) {
         if (this.stateModifiers[groupId][modifireId] || modifiersToSelect.find(item => item.modifierId == modifireId)) {
-          modifiers.push({
-            id: modifireId,
-            amount: this.amountModifiers[groupId][modifireId],
-            groupId: groupId
-          });
+          modifiers.push(this.stateModifiers[groupId][modifireId]);
         }
       }
     }
     this.selectedModifiers = modifiers;
 
-    if (this.dish.modifiers.length > 0) {
-      let message = [];
+    if (this.dish?.modifiers?.length && this.dish?.modifiers?.length > 0) {
+      let message: EventMessage[] = [];
 
       this.dish.modifiers.forEach(group => {
         if (group.required) {
@@ -635,7 +633,7 @@ export class DishCalcDirective implements OnDestroy {
                 type: "warning",
                 title: "Внимание",
                 body: " Обязательно выберите модификаторы из категории: " +
-                group.group.name
+                  group.group.name
               });
               this.validate.emit(false);
               this.cartService.setModifiers(modifiers, message);
@@ -648,7 +646,7 @@ export class DishCalcDirective implements OnDestroy {
               type: "warning",
               title: "Внимание",
               body: " Обязательно выберите модификаторы из категории: " +
-              group.group.name
+                group.group.name
             });
             this.validate.emit(false);
             this.cartService.setModifiers(modifiers, message);
@@ -670,13 +668,9 @@ export class DishCalcDirective implements OnDestroy {
   /* проверяет соотвествет ли максимальное количество модификаторовб если 1 то реализует поведение радиокнопки,
    если максимальное количество больше 1 то генерирует делает выбор всех остальных модификаторов не возможным, генерирует предупреждение*/
 
-  idRadioBox(groupId):boolean {
-    let currentGroup = this.dish.modifiers.find(x => x.modifierId === groupId);
-    return currentGroup.minAmount === 1 && currentGroup.maxAmount === 1;
-  }
-
-  // Проверяет минимальное количество модификаторовкоторые были выбраны
-  checkMinAmountModifiers(groupId, modifire) {
+  idRadioBox(groupId: string): boolean {
+    let currentGroup = this.dish?.modifiers?.find(x => x.modifierId === groupId);
+    return currentGroup?.minAmount === 1 && currentGroup?.maxAmount === 1;
   }
 
 

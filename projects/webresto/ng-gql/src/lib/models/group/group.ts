@@ -1,6 +1,6 @@
 import { Dish } from '../dish/dish';
 
-export class Group {
+export interface Group {
 	id: string;
 	description: string;
 	name: string;

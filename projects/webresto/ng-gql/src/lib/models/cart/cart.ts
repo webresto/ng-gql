@@ -2,7 +2,7 @@ import { CartDish } from "../cart-dish/cart-dish";
 import { Dish } from "../dish/dish";
 import { PaymentMethod } from "../payment-method/payment-method";
 
-export class Cart {
+export interface Cart {
   id: string;
   dishes: CartDish[];
   dishesCount: number;
@@ -18,7 +18,6 @@ export class Cart {
   cartTotal: number;
   discountTotal: number;
   state: string;
-
   rmsDelivered?: boolean;
   rmsId?: string;
   rmsOrderNumber?: string;
@@ -38,13 +37,13 @@ export class Cart {
 }
 
 
-export class Customer {
+export interface Customer {
   phone: string;
   mail?: string;
   name: string;
 }
 
-export class Address {
+export interface Address {
   streetId?: string;
   home: string;
   comment?: string;

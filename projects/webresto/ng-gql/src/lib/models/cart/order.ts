@@ -1,6 +1,6 @@
 import { Cart } from './cart';
 
-export class Order {
+export interface Order {
 	cart: Cart;
 	customData: any;
 }

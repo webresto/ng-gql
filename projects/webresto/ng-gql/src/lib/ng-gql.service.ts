@@ -1,22 +1,11 @@
 import { Injectable } from '@angular/core';
-import { FetchResult } from '@apollo/client/core';
+import type { FetchResult } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { tap, filter, take, map, catchError, switchMap, first } from 'rxjs/operators';
-import { Cart } from './cart/cart';
-import { CartGql, AddToCartInput, RemoveFromCartInput, OrderCartInput, CheckPhoneCodeInput, SetDishAmountInput, SetDishCommentInput } from './cart/cart.gql';
-import { CheckPhoneResponse } from './cart/check-phone-response';
-import { CheckResponse } from './cart/check-response';
-import { Order } from './cart/order';
-import { Phone } from './cart/phone';
-import { Dish } from './dish/dish';
-import { DishGql } from './dish/dish.gql';
-import { Group } from './group/group';
-import { GroupGql } from './group/group.gql';
-import { Navigation } from './navigation/navigation';
-import { NavigationGql } from './navigation/navigation.gql';
-import { PaymentMethod } from './payment-method/payment-method';
-import { PaymentMethodGql } from './payment-method/payment-method.gql';
+import { BehaviorSubject } from 'rxjs';
+import { tap, filter, take, map, first } from 'rxjs/operators';
+import type { Observable } from 'rxjs';
+import { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, NavigationGql, DishGql, PaymentMethodGql } from './models';
+import { CartGql, GroupGql, AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
 
 export type NavigationData = {
   [key: string]: Navigation
@@ -42,9 +31,6 @@ export class NgGqlService {
   paymentMethodLoading: boolean | undefined;
   getPhoneLoading: boolean | undefined;
   checkPhoneLoading: boolean | undefined;
-
-  customQueryiesDataByName: { [key: string]: BehaviorSubject<any> } = {};
-  customQueriesDataLoadingByName: { [key: string]: boolean } = {};
 
   customFields: { [key: string]: string[] } = {};
 
@@ -190,7 +176,7 @@ export class NgGqlService {
       )
   }
 
-  getCart$(cartId: string | undefined): BehaviorSubject<Cart | null> {
+  getCart$(cartId: string | undefined): Observable<Cart> {
     const lastCart = this.cart$.getValue();
     if (!(lastCart && lastCart.id == cartId) && !this.cartLoading) {
       this.apollo.watchQuery<any>({
@@ -208,7 +194,11 @@ export class NgGqlService {
         )
         .subscribe();
     }
-    return this.cart$;
+    return this.cart$.asObservable().pipe(
+      filter(
+        (cart): cart is Cart => !!cart
+      )
+    );
   }
 
   getPhone$(phone: string): Observable<Phone> {
@@ -376,13 +366,12 @@ export class NgGqlService {
         case 'string':
           valueString = `"${valueString}"`;
           break;
-      }
+      };
       queryArgumentsStrings.push(`${key}: ${valueString}`);
-    }
+    };
     let queryArgumentsString = queryArgumentsStrings.length
       ? `(${queryArgumentsStrings.join(', ')})`
       : ``;
-    const queryKey = (name + queryArgumentsString).replace(/[^a-z0-9]/gi, '');
     let query = JSON.stringify(queryObject)
       .replace(/"/g, '')
       .replace(/\:[a-z0-9]+/gi, '')
@@ -393,41 +382,17 @@ export class NgGqlService {
       if (countOfQueries == 1) {
         query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + queryArgumentsString);
       }
-    }
+    };
 
-    if (!this.customQueryiesDataByName[queryKey]) {
-      this.customQueryiesDataByName[queryKey] = new BehaviorSubject(null);
-      this.customQueriesDataLoadingByName[queryKey] = false;
-    }
-    if (!this.customQueryiesDataByName[queryKey].getValue() && !this.customQueriesDataLoadingByName[queryKey]) {
-      this.apollo.watchQuery<T | T[], boolean>({
-        query: gql`query ${name}${query}`,
-        canonizeResults: true
-      })
-        .valueChanges
-        .pipe(
-          tap(({ data, loading }) => {
-            this.customQueriesDataLoadingByName[queryKey] = loading;
-            this.customQueryiesDataByName[queryKey].next(data);
-          }),
-          catchError(error => {
-            this.customQueryiesDataByName[queryKey].next({
-              error: error
-            });
-            return of(null);
-          })
-        )
-        .subscribe();
-    }
-    return this.customQueryiesDataByName[queryKey].pipe(
-      switchMap((data) => {
-        if (data && data.error) {
-          return throwError(data.error);
-        }
-        return of(data);
-      }),
-      filter(data => !!data)
-    );
+    return this.apollo.watchQuery<Record<N, T | T[]>, boolean>({
+      query: gql`query ${name}${query}`,
+      canonizeResults: true
+    }).valueChanges
+      .pipe(
+        map(
+          res => res.error || res.errors ? res.data : null),
+        filter((data): data is Record<N, T | T[]> => !!data)
+      );
   }
 
   customMutation$<T, N extends string = `${string}`>(name: N, queryObject: Record<N, Record<Extract<T, keyof T>, boolean>>, variables: T): Observable<FetchResult<T>>
