@@ -8,12 +8,6 @@ import { InMemoryCache } from '@apollo/client/core';
 import { OperationDefinitionNode } from 'graphql';
 import {
   AddDishToCartDirective,
-  AmountCartDirective,
-  DeleteFromCartDirective,
-  OrderCartUserDirective,
-  DishCalcDirective,
-  SetDishCommentDirective,
-  SetAmountDirective,
   CheckoutDirective
 } from './directives';
 
@@ -21,13 +15,6 @@ import {
 
 const DIRECTIVES = [
   AddDishToCartDirective,
-  AmountCartDirective,
-  DeleteFromCartDirective,
-  OrderCartUserDirective,
-  //ModifiresDirective,
-  DishCalcDirective,
-  SetDishCommentDirective,
-  SetAmountDirective,
   CheckoutDirective,
 ];
 
