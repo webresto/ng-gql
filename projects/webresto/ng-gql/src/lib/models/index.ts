@@ -5,6 +5,7 @@ export * from './dish/dish.gql';
 export * from './group/group';
 export * from './group/group.gql';
 export * from './modifier/modifier';
+export * from './modifier/cart-modifier';
 export * from './group-modifier/group-modifier';
 export * from './payment-method/payment-method';
 export * from './payment-method/payment-method.gql';
