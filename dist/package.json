@@ -1,6 +1,6 @@
 {
   "name": "@webresto/ng-gql",
-  "version": "0.0.1",
+  "version": "1.0.29",
   "peerDependencies": {
     "@angular/common": "^13.1.0",
     "@angular/core": "^13.1.0"
