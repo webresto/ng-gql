@@ -3,23 +3,23 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ng-graphql": {
+    "@webresto/ng-gql": {
       "projectType": "library",
-      "root": "./",
-      "sourceRoot": "./src",
+      "root": "projects/webresto/ng-gql",
+      "sourceRoot": "projects/webresto/ng-gql/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "./ng-package.json"
+            "project": "projects/webresto/ng-gql/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "./tsconfig.lib.prod.json"
+              "tsConfig": "projects/webresto/ng-gql/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "./tsconfig.json"
+              "tsConfig": "projects/webresto/ng-gql/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -27,13 +27,12 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "./src/test.ts",
-            "tsConfig": "./tsconfig.spec.json",
-            "karmaConfig": "./karma.conf.js"
+            "main": "projects/webresto/ng-gql/src/test.ts",
+            "tsConfig": "projects/webresto/ng-gql/tsconfig.spec.json",
+            "karmaConfig": "projects/webresto/ng-gql/karma.conf.js"
           }
         }
       }
-    }
-  },
-  "defaultProject": "ng-graphql"
+    }},
+  "defaultProject": "@webresto/ng-gql"
 }
