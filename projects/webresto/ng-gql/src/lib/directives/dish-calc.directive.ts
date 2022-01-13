@@ -17,9 +17,13 @@ export class DishCalcDirective implements OnDestroy {
   @Output() validate: EventEmitter<any> = new EventEmitter();
   @Output() amountToAdd: EventEmitter<number> = new EventEmitter();
 
-  weightTotal: number | undefined;
+  weightTotal: string | undefined;
   price: number | undefined;
-  amountModifiers: any = {};
+  amountModifiers: {
+    [key: string]: {
+      [key: string]: number
+    }
+  } = {};
   stateModifiers: {
     [key: string]: {
       [key: string]: Modifier
@@ -43,7 +47,7 @@ export class DishCalcDirective implements OnDestroy {
 
     setTimeout(() => {
       this.renderDish(this.dish);
-      this.render(this.dish.modifiers);
+      this.render(this.dish?.modifiers);
     }, 100);
   }
 
@@ -77,7 +81,7 @@ export class DishCalcDirective implements OnDestroy {
 
     let title = this.renderer.createElement("div");
     this.renderer.addClass(title, "title");
-    this.renderer.setProperty(title, "innerHTML", this.dish.name);
+    this.renderer.setProperty(title, "innerHTML", this.dish?.name);
     this.renderer.appendChild(itemName, title);
 
     let weightDishWrapper = this.renderer.createElement("div");
@@ -90,14 +94,14 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.setProperty(
       weightDishValue,
       "innerHTML",
-      (this.dish.weight * 1000).toFixed(0) + " г."
+      (this.dish!.weight * 1000).toFixed(0) + " г."
     );
-    if (this.dish.weight === 0 || !this.dish.weight) {
+    if (this.dish?.weight === 0 || !this.dish?.weight) {
       this.renderer.addClass(weightDishValue, "zero");
     }
     this.renderer.appendChild(weightDishWrapper, weightDishValue);
 
-    this.renderer.setProperty(this.price, "innerHTML", this.dish.price);
+    this.renderer.setProperty(this.price, "innerHTML", this.dish?.price);
     let priceDishWrapper = this.renderer.createElement("div");
     this.renderer.addClass(priceDishWrapper, "price");
     this.renderer.addClass(priceDishWrapper, "total");
@@ -115,7 +119,7 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.listen(addButton, "click", e => {
       this.changeAmountdish(-1);
       this.renderer.setProperty(counter, "innerHTML", this.amount);
-      this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
+      this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish?.price));
       this.innerTotalWeight(weightTotal)
     });
     this.renderer.appendChild(itemQuant, addButton);
@@ -135,7 +139,7 @@ export class DishCalcDirective implements OnDestroy {
       this.renderer.setProperty(
         this.price,
         "innerHTML",
-        this.generatePrice(this.dish.price)
+        this.generatePrice(this.dish?.price)
       );
       this.innerTotalWeight(weightTotal)
     });
@@ -147,7 +151,7 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.appendChild(mainItem, weightTotalWrapper);
 
     let weightTotal = this.renderer.createElement("div");
-    if (this.dish.weight === 0 || !this.dish.weight) {
+    if (this.dish?.weight === 0 || !this.dish?.weight) {
       this.renderer.addClass(weightTotal, "zero");
     }
     this.renderer.addClass(weightTotal, "value");
@@ -168,13 +172,13 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.appendChild(mainItem, priceTotalWrapper);
   }
 
-  generatePrice(priceDish: number, amount?: number, modifiersPrice?: number) {
+  generatePrice(priceDish?: number, amount?: number, modifiersPrice?: number) {
     let selected: Modifier[] = [];
     if (this.selectedModifiers)
       this.selectedModifiers.forEach(element => {
 
-        this.dish.modifiers.forEach(groups => {
-          let mod = groups.childModifiers.filter(x => x.modifierId === element.id);
+        this.dish?.modifiers?.forEach(groups => {
+          let mod = groups.childModifiers.filter(x => x.modifierId === element.modifierId);
           if (mod.length > 0) {
             mod[0].groupId = groups.group.id;
             selected.push(mod[0]);
@@ -185,21 +189,21 @@ export class DishCalcDirective implements OnDestroy {
     let modSum: number = 0;
     selected.forEach(element => {
 
-      modSum = modSum + element.dish.price * this.amountModifiers[element.groupId][element.modifierId]
+      modSum = modSum + element.dish.price * this.amountModifiers[element.groupId!][element.modifierId]
     });
     modSum = modSum * this.amount;
     return (
-      priceDish * this.amount + modSum + '<div class="currency">&nbsp;&#x20bd;</div>'
+      priceDish! * this.amount + modSum + '<div class="currency">&nbsp;&#x20bd;</div>'
     );
   }
 
   generateTotalWeight() {
-    let selected = [];
+    let selected:Modifier[] = [];
     if (this.selectedModifiers)
       this.selectedModifiers.forEach(element => {
 
-        this.dish.modifiers.forEach(groups => {
-          let mod = groups.childModifiers.filter(x => x.modifierId === element.id);
+        this.dish?.modifiers?.forEach(groups => {
+          let mod = groups.childModifiers.filter(x => x.modifierId === element.modifierId);
           if (mod.length > 0) {
             mod[0].groupId = groups.group.id;
             selected.push(mod[0]);
@@ -210,17 +214,17 @@ export class DishCalcDirective implements OnDestroy {
     let modSum: number = 0;
     selected.forEach(element => {
 
-      modSum = modSum + element.dish.weight * this.amountModifiers[element.groupId][element.modifierId] * 1000
+      modSum = modSum + element.dish.weight * this.amountModifiers[element.groupId!][element.modifierId] * 1000
     });
     modSum = parseFloat((modSum * this.amount).toFixed(2));
-    console.log(modSum, this.dish.weight * 1000 * this.amount)
-    console.log(this.dish.weight, this.amount)
-    let weight = (this.dish.weight * 1000 * this.amount) + modSum;
+    console.log(modSum, this.dish?.weight! * 1000 * this.amount)
+    console.log(this.dish?.weight, this.amount)
+    let weight = (this.dish?.weight! * 1000 * this.amount) + modSum;
 
     return (weight).toFixed(0) + " г. <div class='separator'></div>";
   }
 
-  innerTotalWeight(totalWeigthDiv) {
+  innerTotalWeight(totalWeigthDiv:string | undefined) {
 
     this.renderer.setProperty(totalWeigthDiv, "innerHTML", this.generateTotalWeight());
   }
@@ -295,21 +299,21 @@ export class DishCalcDirective implements OnDestroy {
 
   }
 
-  groupDiv(nameGorup) {
+  groupDiv(nameGorup:string) {
     let div = this.renderer.createElement("div");
     this.renderer.addClass(div, "group-modifiers-wraper");
     this.renderer.appendChild(div, this.renderer.createText("" + nameGorup));
     return div;
   }
 
-  modifireDiv(element, groupId: string) {
+  modifireDiv(element:any, groupId: string) {
     let div = this.renderer.createElement("div");
     this.renderer.addClass(div, "additional-item");
     this.renderOneModifire(element, div, groupId);
     return div;
   }
 
-  renderOneModifire(element, modifireDiv, groupId: string) {
+  renderOneModifire(element:any, modifireDiv:any, groupId: string) {
 
     console.info('renderOneModifire', element);
     console.info('renderOneModifire selectedModifiers', this.selectedModifiers);
@@ -453,11 +457,11 @@ export class DishCalcDirective implements OnDestroy {
 
     this.setModifiers();
     this.innerTotalWeight(this.weightTotal);
-    this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
+    this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish?.price));
 
   }
 
-  renderCheckbox(element, isActive, itemQuantity, modifireDiv, groupId: string) {
+  renderCheckbox(element:any, isActive:boolean, itemQuantity:number, modifireDiv:any, groupId: string) {
 
     let input = this.renderer.createElement("input");
     this.renderer.setAttribute(input, "type", "checkbox");
@@ -477,7 +481,7 @@ export class DishCalcDirective implements OnDestroy {
     this.renderer.addClass(input, "modal-checkbox");
     this.renderer.appendChild(itemQuantity, input);
 
-    this.renderer.listen(input, "change", e => {
+    this.renderer.listen(input, "change", (e:any) => {
       if (this.idRadioBox(groupId)) {
         for (const key in this.stateModifiers[groupId]) {
           if (this.stateModifiers[groupId].hasOwnProperty(key)) {
@@ -487,12 +491,12 @@ export class DishCalcDirective implements OnDestroy {
           }
         }
 
-        let groupDivBlock = e.target.parentElement.parentElement.parentElement.querySelectorAll(
+        let groupDivBlock:NodeListOf<HTMLInputElement> = e?.target?.parentElement?.parentElement.parentElement.querySelectorAll(
           "input"
         );
 
         groupDivBlock.forEach(element => {
-          if (element.id != e.target.id) element.checked = false;
+          if (element.id != e.target?.id) element.checked = false;
         });
       }
       this.stateModifiers[groupId][e.target.id] = e.target.checked;
@@ -504,7 +508,7 @@ export class DishCalcDirective implements OnDestroy {
 
       this.setModifiers();
       this.innerTotalWeight(this.weightTotal);
-      this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
+      this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish?.price));
     });
 
 
@@ -512,7 +516,7 @@ export class DishCalcDirective implements OnDestroy {
 
   }
 
-  renderInputButton(element, groupId, itemQuantity, modifireDiv) {
+  renderInputButton(element:any, groupId:string, itemQuantity:number, modifireDiv:any) {
 
     let startAmount;
     if (element.defaultAmount > 0) {
@@ -550,7 +554,7 @@ export class DishCalcDirective implements OnDestroy {
       }
       this.setModifiers();
       this.innerTotalWeight(this.weightTotal);
-      this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
+      this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish?.price));
     });
 
     let span = this.renderer.createElement("span");
@@ -587,7 +591,7 @@ export class DishCalcDirective implements OnDestroy {
       }
       this.setModifiers();
       this.innerTotalWeight(this.weightTotal);
-      this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish.price));
+      this.renderer.setProperty(this.price, "innerHTML", this.generatePrice(this.dish?.price));
     });
 
   }
