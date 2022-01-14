@@ -1,39 +1,23 @@
-import {gql} from 'apollo-angular';
+import { gql } from 'apollo-angular';
 import type { CustomfFields } from '../custom-fields/custom-fields';
 
 export const NavigationFragments = {
 	navigation: gql`
 		fragment NavigationFragment on Navigation {
-			id 
-			name
-			description
-			data {
-				label
-				link
-				timeWork
-				phone
-				icon
-				active
-				controller
-				slug
-				warning
-				child {
-					tags
-					slug
-					visible
-					name
-					discount
-				}
-			}
+			mnemonicId,
+			description,
+			options,
+			id,
+			navigation_menu
 		}
 	`
 };
 
 export const NavigationGql = {
 	queries: {
-		getNavigationes: (customFields:CustomfFields) => gql`
+		getNavigationes: (customFields: CustomfFields) => gql`
 			query GetNavigation {
-				navigation {
+				navigations {
 					...NavigationFragment
 					${(customFields['Navigation'] || []).join('\n')}
 				}

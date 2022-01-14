@@ -2,41 +2,30 @@ import { Injectable } from '@angular/core';
 import type { FetchResult } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
 import { BehaviorSubject } from 'rxjs';
-import { tap, filter, take, map, first } from 'rxjs/operators';
+import { filter, take, map, switchMap, shareReplay } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
 import { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, NavigationGql, DishGql, PaymentMethodGql } from './models';
 import { CartGql, GroupGql, AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
-
-export type NavigationData = {
-  [key: string]: Navigation
-};
 
 @Injectable({
   providedIn: 'root'
 })
 export class NgGqlService {
 
-  menu$: BehaviorSubject<Group[] | null> = new BehaviorSubject<Group[] | null>(null);
   menuLoading: boolean | undefined;
-
-  dishes$: BehaviorSubject<Dish[] | null> = new BehaviorSubject<Dish[] | null>(null);
   dishesLoading: boolean | undefined;
 
-  cart$: BehaviorSubject<Cart | null> = new BehaviorSubject<Cart | null>(null);
+  private cart$: BehaviorSubject<Cart | null> = new BehaviorSubject<Cart | null>(null);
   cartLoading: boolean | undefined;
 
-  navigationData$: BehaviorSubject<NavigationData | null> = new BehaviorSubject<NavigationData | null>(null);
   navigationDataLoading: boolean | undefined;
-
   paymentMethodLoading: boolean | undefined;
   getPhoneLoading: boolean | undefined;
   checkPhoneLoading: boolean | undefined;
 
   customFields: { [key: string]: string[] } = {};
 
-  constructor(private apollo: Apollo) {
-    this.cart$.subscribe(res => console.log('control cart res', res));
-  }
+  constructor(private apollo: Apollo) { }
 
   addCustomField(modelName: string, field: string) {
     if (!this.customFields[modelName]) {
@@ -47,157 +36,140 @@ export class NgGqlService {
     }
   }
 
-  getNavigation$(): BehaviorSubject<NavigationData | null> {
-    if (!this.navigationData$.getValue() && !this.navigationDataLoading) {
-      this.apollo.watchQuery<any>({
-        query: NavigationGql.queries.getNavigationes(this.customFields)
-      })
-        .valueChanges
-        .pipe(
-          tap(({ data, loading }) => {
-            this.menuLoading = loading;
-            const navigationData: NavigationData = {};
-            for (let navigation of data.navigation) {
-              navigationData[navigation.name] = navigation;
-            }
-            this.navigationData$.next(navigationData);
-          })
-        )
-        .subscribe();
-    }
-    return this.navigationData$;
+  getNavigation$(): Observable<Navigation[]> {
+    return this.apollo.watchQuery<{ navigations: Navigation[] }>({
+      query: NavigationGql.queries.getNavigationes(this.customFields)
+    }).valueChanges.pipe(
+      map(
+        ({ data, loading }) => {
+          this.menuLoading = loading;
+          return data.navigations;
+        }),
+      shareReplay(1)
+    );
   }
 
-  getMenu$(slug: string | string[] | undefined): BehaviorSubject<Group[] | null> {
-    if (!this.menu$.getValue() && !this.menuLoading) {
-      this.apollo.watchQuery<any>({
-        query: GroupGql.queries.getGroupsAndDishes(this.customFields)
-      })
-        .valueChanges
-        .pipe(
-          first(),
-          tap(({ data, loading }) => {
-            this.menuLoading = loading;
-            const { groups, dishes } = data;
-            const groupsById: {
-              [key: string]: Group
-            } = {};
-            const groupIdsBySlug: {
-              [key: string]: string
-            } = {};
-            // Groups indexing
-            for (let group of groups) {
-              groupsById[group.id] = {
-                ...group,
-                dishes: [],
-                childGroups: []
+  getMenu$(slug: string | string[] | undefined): Observable<Group[] | null> {
+    return this.apollo.watchQuery<{
+      groups: Group[],
+      dishes: Dish[]
+    }>({
+      query: GroupGql.queries.getGroupsAndDishes(this.customFields)
+    }).valueChanges.pipe(
+      map(({ data, loading }) => {
+        this.menuLoading = loading;
+        const { groups, dishes } = data;
+        // Groups indexing
+        const groupsById = groups.reduce<{
+          [key: string]: Group
+        }>(
+          (accumulator, current) => {
+            accumulator[current.id] = {
+              ...current,
+              dishes: [],
+              childGroups: []
+            }
+            return accumulator;
+          }, {}
+        );
+        const groupIdsBySlug: {
+          [key: string]: string
+        } = {};
+
+        // Inserting dishes by groups
+        for (let dish of dishes) {
+          //const { groupId } = dish;
+          const groupId = dish.parentGroup?.id;
+          if (!groupId) continue;
+          if (!groupsById[groupId]) continue;
+          if (groupsById[groupId].dishes) {
+            groupsById[groupId].dishes?.push(dish);
+          } else {
+            groupsById[groupId].dishes = [dish];
+          }
+        }
+        // Create groups hierarchy
+        for (let groupId in groupsById) {
+          const group = groupsById[groupId];
+          try {
+            group.dishes?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+          } catch (e) {
+            console.warn(`Group ${groupId} sort error`, e);
+          }
+
+          const parentGroupId = group.parentGroup?.id;
+          groupIdsBySlug[group.slug!] = groupId;
+          if (!parentGroupId) continue;
+          if (!groupsById[parentGroupId]) continue;
+          groupsById[parentGroupId].childGroups.push(group);
+          //delete groupsById[groupId];
+        }
+
+        if (slug) {
+          switch (typeof slug) {
+            case 'string':
+              if (!groupIdsBySlug[slug]) {
+                return [];
+              } else {
+                return groupsById[groupIdsBySlug[slug]].childGroups.sort(
+                  (g1: Group, g2: Group) => g1.order - g2.order
+                );
               };
-            }
-            // Inserting dishes by groups
-            for (let dish of dishes) {
-              //const { groupId } = dish;
-              const groupId = dish.parentGroup?.id;
-              if (!groupId) continue;
-              if (!groupsById[groupId]) continue;
-              groupsById[groupId].dishes?.push(dish);
-            }
-            // Create groups hierarchy
-            for (let groupId in groupsById) {
-              const group = groupsById[groupId];
-
-              try {
-                group.dishes?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-              } catch (e) {
-                console.warn(`Group ${groupId} sort error`, e);
-              }
-
-              const parentGroupId = group.parentGroup?.id;
-              groupIdsBySlug[group.slug!] = groupId;
-              if (!parentGroupId) continue;
-              if (!groupsById[parentGroupId]) continue;
-              groupsById[parentGroupId].childGroups.push(group);
-              //delete groupsById[groupId];
-            }
-
-            if (slug) {
-              switch (typeof slug) {
-                case 'string':
-                  if (!groupIdsBySlug[slug]) {
-                    this.menu$.next([]);
-                    return;
-                  }
-                  this.menu$.next(groupsById[groupIdsBySlug[slug]].childGroups.sort((g1: Group, g2: Group) => g1.order - g2.order));
-                  break;
-                case 'object':
-                  if (!slug.length) {
-                    this.menu$.next([]);
-                    return;
-                  }
-                  this.menu$.next(slug.map(s => groupsById[groupIdsBySlug[s]]))
-                  break;
-              }
-              return;
-            }
-
-            const groupsAndDishes: Group[] = Object.values(groupsById).sort((g1: Group, g2: Group) => g1.order - g2.order) as Group[];
-            this.menu$.next(groupsAndDishes);
-          })
-        )
-        .subscribe();
-    }
-    return this.menu$;
+            default:
+              if (!slug.length) {
+                return [];
+              } else {
+                return slug.map(s => groupsById[groupIdsBySlug[s]]);
+              };
+          }
+        } else {
+          return Object.values(groupsById).sort((g1: Group, g2: Group) => g1.order - g2.order) as Group[];
+        }
+      }),
+      shareReplay()
+    )
   }
 
-  getDishes$(): BehaviorSubject<Dish[] | null> {
-    if (!this.dishes$.getValue() && !this.dishesLoading) {
-      this.apollo.watchQuery<any>({
-        query: DishGql.queries.getDishes(this.customFields)
-      })
-        .valueChanges
-        .pipe(
-          tap(({ data, loading }) => {
-            this.dishesLoading = loading;
-            this.dishes$.next(data.dishes);
-          })
-        )
-        .subscribe();
-    }
-    return this.dishes$;
+  getDishes$(): Observable<Dish[]> {
+    return this.apollo.watchQuery<{
+      dishes: Dish[]
+    }>({
+      query: DishGql.queries.getDishes(this.customFields)
+    }).valueChanges.pipe(
+      map(({ data, loading }) => {
+        this.dishesLoading = loading;
+        return data.dishes;
+      }),
+      shareReplay(1)
+    );
   }
 
   getOrder$(orderId: string): Observable<Order> {
-    return this.apollo.watchQuery<any>({
+    return this.apollo.watchQuery<{ getOrder: Order }>({
       query: CartGql.queries.getOrder(orderId, this.customFields)
-    })
-      .valueChanges
-      .pipe(
-        take(1),
-        map(({ data }) => data.getOrder)
-      )
+    }).valueChanges.pipe(
+      take(1),
+      map(({ data }) => data.getOrder),
+      shareReplay(1)
+    )
   }
 
   getCart$(cartId: string | undefined): Observable<Cart> {
-    const lastCart = this.cart$.getValue();
-    if (!(lastCart && lastCart.id == cartId) && !this.cartLoading) {
-      this.apollo.watchQuery<any>({
-        query: CartGql.queries.getCart(cartId, this.customFields),
-        canonizeResults: true,
-        fetchPolicy: 'no-cache'
-      })
-        .valueChanges
-        .pipe(
-          take(1),
-          tap(({ data, loading }) => {
-            this.cartLoading = loading;
-            this.cart$.next(data.cart);
-          })
-        )
-        .subscribe();
-    }
-    return this.cart$.asObservable().pipe(
+
+    return this.apollo.watchQuery<{ cart: Cart }>({
+      query: CartGql.queries.getCart(cartId, this.customFields),
+      canonizeResults: true,
+      fetchPolicy: 'no-cache'
+    }).valueChanges.pipe(
+      switchMap(({ data, loading }) => {
+        this.cartLoading = loading;
+        this.cart$.next(data.cart);
+        return this.cart$.asObservable();
+      }),
       filter(
         (cart): cart is Cart => !!cart
-      )
+      ),
+      shareReplay(1)
     );
   }
 
@@ -219,27 +191,23 @@ export class NgGqlService {
     return this.apollo.watchQuery<any>({
       query: CartGql.queries.checkPhone(phone, this.customFields),
       fetchPolicy: 'no-cache'
-    })
-      .valueChanges
-      .pipe(
-        map(({ data, loading }) => {
-          this.checkPhoneLoading = loading;
-          return data.checkPhone
-        })
-      );
+    }).valueChanges.pipe(
+      map(({ data, loading }) => {
+        this.checkPhoneLoading = loading;
+        return data.checkPhone
+      })
+    );
   }
 
   getPaymentMethods$(cartId: string): Observable<PaymentMethod[]> {
     return this.apollo.watchQuery<any>({
       query: PaymentMethodGql.queries.getPaymentMethod(cartId, this.customFields)
-    })
-      .valueChanges
-      .pipe(
-        map(({ data, loading }) => {
-          this.paymentMethodLoading = loading;
-          return data.paymentMethods
-        })
-      );
+    }).valueChanges.pipe(
+      map(({ data, loading }) => {
+        this.paymentMethodLoading = loading;
+        return data.paymentMethods
+      })
+    );
   }
 
   addDishToCart$(data: AddToCartInput): Observable<Cart> {
@@ -390,14 +358,14 @@ export class NgGqlService {
     }).valueChanges
       .pipe(
         map(
-          res => res.error || res.errors ? res.data : null),
+          res => res.error || res.errors ? null : res.data),
         filter((data): data is Record<N, T | T[]> => !!data)
       );
   }
 
   customMutation$<T, N extends string = `${string}`>(name: N, queryObject: Record<N, Record<Extract<T, keyof T>, boolean>>, variables: T): Observable<FetchResult<T>>
   customMutation$<T extends any>(name: string, queryObject: any, variables: any | undefined): Observable<FetchResult<T>>
-  customMutation$(name: string, queryObject: any, variables: any = {}): Observable<FetchResult<any>> {
+  customMutation$<T extends any>(name: string, queryObject: any, variables: T): Observable<FetchResult<T>> {
     let mutationArgumentsStrings: string[] = [];
     for (let key in variables) {
       let valueString: string = typeof variables[key] == 'string' ?
@@ -419,7 +387,7 @@ export class NgGqlService {
         query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + mutationArgumentsString);
       }
     }
-    return this.apollo.mutate({
+    return this.apollo.mutate<T>({
       mutation: gql`mutation ${name}${query}`,
       awaitRefetchQueries: true
     });
