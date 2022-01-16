@@ -5,5 +5,5 @@ publish:
   stage: publish
   only: [master] 
   script:
-    - cp ./.ci/.npmrc ./.npmrc && npm i && node updatePackageVersion.js && npm run build && cd ./dist && npm publish && rm -rf .npmrc
+    - cp ./.ci/.npmrc ./.npmrc && npm i && node updatePackageVersion.js && npm run build && cd ./dist && npm publish && cd .. && rm -rf ./.npmrc
 
