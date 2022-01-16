@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "node updatePackageVersion.js && ng build",
     "axrl:build": "ng build && rm -rf ~/base_layouts/project/node_modules/@webresto/ng-gql/* && cp -fr dist/* ~/base_layouts/project/node_modules/@webresto/ng-gql/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
