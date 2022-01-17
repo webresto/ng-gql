@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import type { FetchResult } from '@apollo/client/core';
+import type { FetchResult, SubscriptionOptions } from '@apollo/client';
 import { Apollo, gql } from 'apollo-angular';
+import type { EmptyObject, ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject } from 'rxjs';
 import { filter, take, map, switchMap, shareReplay } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
@@ -392,4 +393,11 @@ export class NgGqlService {
       awaitRefetchQueries: true
     });
   }
+
+  customSubscribe$<T, V = EmptyObject>(options: SubscriptionOptions<V, T>, extra?: ExtraSubscriptionOptions): Observable<FetchResult<T>> {
+    return this.apollo.subscribe<T, V>(options, extra);
+  }
+
+
+
 }
