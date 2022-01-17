@@ -1,11 +1,11 @@
-import { Inject, ModuleWithProviders, NgModule } from '@angular/core';
+import { Inject, NgModule } from '@angular/core';
+import type { ModuleWithProviders } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { split } from '@apollo/client/core';
+import { split, InMemoryCache } from '@apollo/client';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { InMemoryCache } from '@apollo/client/core';
-import { OperationDefinitionNode } from 'graphql';
+import type { OperationDefinitionNode } from 'graphql';
 import { AddDishToCartDirective, CheckoutDirective } from './directives';
 
 //import { ModifiresDirective } from './directives/modifires.directive';
@@ -50,7 +50,7 @@ export class NgGqlModule {
     const link = split(
       // split based on operation type
       ({ query }) => {
-        const { kind, operation } = getMainDefinition(query) as OperationDefinitionNode;
+        const { kind, operation } = <OperationDefinitionNode>getMainDefinition(query);
         return (
           kind === 'OperationDefinition' && operation === 'subscription'
         );
@@ -59,12 +59,12 @@ export class NgGqlModule {
       http,
     );
 
-    if (apollo.client) return;
-
-    apollo.create({
-      link,
-      cache: new InMemoryCache()
-    });
+    if (!apollo.client) {
+      apollo.create({
+        link,
+        cache: new InMemoryCache()
+      });
+    };
   }
 
   static forRoot(config: NgGqlConfig): ModuleWithProviders<NgGqlModule> {
