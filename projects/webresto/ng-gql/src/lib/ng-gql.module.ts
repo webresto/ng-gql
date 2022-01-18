@@ -1,14 +1,12 @@
-import { Inject, NgModule } from '@angular/core';
-import type { ModuleWithProviders } from '@angular/core';
+import { Inject, ModuleWithProviders, NgModule } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { split, InMemoryCache } from '@apollo/client';
+import { split } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import type { OperationDefinitionNode } from 'graphql';
+import { InMemoryCache } from '@apollo/client/core';
+import { OperationDefinitionNode } from 'graphql';
 import { AddDishToCartDirective, CheckoutDirective } from './directives';
-
-//import { ModifiresDirective } from './directives/modifires.directive';
 
 const DIRECTIVES = [
   AddDishToCartDirective,
