@@ -1,7 +1,7 @@
 export interface Image {
 	id: string;
 	uploadDate: string;
-	images: ImageItem[];
+	images: ImageItem;
 }
 
 export interface ImageItem {
