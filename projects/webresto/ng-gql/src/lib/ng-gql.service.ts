@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import type { FetchResult, SubscriptionOptions } from '@apollo/client/core';
-import { Apollo, gql } from 'apollo-angular';
+import { gql } from 'apollo-angular';
 import type { EmptyObject, ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject } from 'rxjs';
 import { filter, take, map, switchMap, shareReplay } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
 import { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, NavigationGql, DishGql, PaymentMethodGql } from './models';
 import { CartGql, GroupGql, AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
+import { ApolloService } from './services/apollo.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,7 @@ export class NgGqlService {
 
   customFields: { [key: string]: string[] } = {};
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: ApolloService) { }
 
   addCustomField(modelName: string, field: string) {
     if (!this.customFields[modelName]) {
