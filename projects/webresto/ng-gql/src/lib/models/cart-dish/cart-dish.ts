@@ -1,5 +1,5 @@
-import { Dish } from '../dish/dish';
-import { CartModifier } from '../modifier/cart-modifier';
+import type { Dish } from '../dish/dish';
+import type { CartModifier } from '../modifier/cart-modifier';
 
 export interface CartDish {
 	id: number;
@@ -7,12 +7,10 @@ export interface CartDish {
 	dish: Dish;
 	itemTotal: number;
 	itemTotalBeforeDiscount: number;
-	discountTotal: number;
-	discountType: string;
-	comment: string;
-	weight: number;
+	discountTotal: number | null;
+	discountType: string | null;
+	comment: string | null;
 	totalWeight: number;
 	total: number;
 	modifiers: CartModifier[];
-	uniqueItems: number;
 }

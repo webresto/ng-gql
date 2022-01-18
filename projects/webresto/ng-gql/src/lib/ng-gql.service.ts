@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { FetchResult, SubscriptionOptions } from '@apollo/client';
+import type { FetchResult, SubscriptionOptions } from '@apollo/client/core';
 import { Apollo, gql } from 'apollo-angular';
 import type { EmptyObject, ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject } from 'rxjs';
@@ -18,7 +18,6 @@ export class NgGqlService {
 
   private cart$: BehaviorSubject<Cart | null> = new BehaviorSubject<Cart | null>(null);
   cartLoading: boolean | undefined;
-
   navigationDataLoading: boolean | undefined;
   paymentMethodLoading: boolean | undefined;
   getPhoneLoading: boolean | undefined;
@@ -397,7 +396,5 @@ export class NgGqlService {
   customSubscribe$<T, V = EmptyObject>(options: SubscriptionOptions<V, T>, extra?: ExtraSubscriptionOptions): Observable<FetchResult<T>> {
     return this.apollo.subscribe<T, V>(options, extra);
   }
-
-
 
 }

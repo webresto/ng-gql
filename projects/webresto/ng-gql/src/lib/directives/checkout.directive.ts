@@ -1,7 +1,7 @@
 import { Directive, Input, Output, HostListener, EventEmitter } from '@angular/core';
 import type { SimpleChanges } from '@angular/core';
 import { filter, debounceTime } from 'rxjs/operators'
-import type { OrderCartInput, PaymentMethod } from '../models';
+import type { Cart, OrderCartInput, PaymentMethod } from '../models';
 import { NgCartService } from '../services/ng-cart.service';
 
 @Directive({
@@ -9,16 +9,15 @@ import { NgCartService } from '../services/ng-cart.service';
 })
 export class CheckoutDirective {
 
-  @Input() cartTotal: any;
+  @Input() cartTotal: number | undefined;
   @Input() bonuses: any;
   @Input() name: string | undefined;
   @Input() email: string | undefined;
   @Input() phone: string | undefined;
   @Input() phonePaymentSmsCode: string | undefined;
   @Input() delivery: any;
-  @Input() selfService: any;
+  @Input() selfService: boolean | undefined;
   @Input() locationId: string | undefined;
-
   @Input() street: string | undefined;
   @Input() streetId: string | undefined;
   @Input() home: string | undefined;
@@ -27,23 +26,19 @@ export class CheckoutDirective {
   @Input() entrance: string | undefined;
   @Input() doorphone: string | undefined;
   @Input() floor: string | undefined;
-
   @Input() paymentMethod: PaymentMethod | undefined;
   @Input() paymentMethodId: string | undefined;
   @Input() personsCount: number = 0;
   @Input() comment: string | undefined;
   @Input() callback: string | undefined;
-
   @Input() date: string | undefined;
   @Input() notifyMethodId: string | undefined;
-
-  @Output() success = new EventEmitter<boolean>();
+  @Output() success = new EventEmitter<string>();
   @Output() paymentRedirect = new EventEmitter<string>();
   @Output() error = new EventEmitter<string>();
   @Output() isChecking = new EventEmitter<boolean>();
 
-
-  cart: any;
+  cart: Cart | undefined;
   lastFormChangeKey: string | undefined;
 
   constructor(
@@ -53,7 +48,6 @@ export class CheckoutDirective {
     this.cartService
       .userCart$()
       .subscribe(cart => this.cart = cart);
-
     this.cartService.OrderFormChange
       .pipe(
         filter(value => {
@@ -64,23 +58,6 @@ export class CheckoutDirective {
             return false;
           }
         }),
-        /*filter(() => {
-          const formChangeKey = JSON.stringify({
-            1: this.locationId,
-            2: this.streetId,
-            3: this.street,
-            4: this.home,
-            5: this.cartTotal,
-            6: this.bonuses,
-            7: this.delivery,
-            8: this.paymentMethodId
-          });
-
-          if(formChangeKey !== this.lastFormChangeKey) {
-            this.lastFormChangeKey = formChangeKey;
-            return true;
-          }
-        }),*/
         debounceTime(1000)
       )
       .subscribe(() => this.checkStreet());
@@ -92,88 +69,67 @@ export class CheckoutDirective {
       this.error.emit('Нужно указать адрес');
       return;
     }
-
-    let data: OrderCartInput = {
-      "cartId": this.cart.id,
-      //"comment": comment,
-      "customer": {
-        "phone": this.preparePhone(this.phone),
-        "mail": this.email,
-        "name": this.name
-      },
-      //"personsCount": +this.personsCount
-    };
-
-    if (this.paymentMethodId) {
-      data["paymentMethodId"] = this.paymentMethodId;
-    }
-
-    //if(this.callback) {
-    //  data["customData"] = { callback: true };
-    //  data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
-    //}
-
-    //if(this.date) {
-    //  data["date"] = this.date;
-    //}
-
-    //if(this.notifyMethodId) {
-    //  data["notifyMethodId"] = this.notifyMethodId;
-    //}
-
-    data["selfService"] = this.selfService;
-
-
-    //if(this.bonuses) {
-    //  data['bonuses'] = this.bonuses.map(b => {
-    //    return {
-    //      name: b.name,
-    //      amount: b.amount
-    //    }
-    //  });
-    //}
-
-
-    if (this.locationId) {
-      //  data["locationId"] = this.locationId;
+    if (!this.cart) {
+      return;
     } else {
-      data["address"] = {
-        "streetId": this.streetId,
-        "street": this.street,
-        "home": this.home,
-        "housing": this.housing,
-        "doorphone": this.doorphone || '',
-        "entrance": this.entrance || '',
-        "floor": this.floor || '',
-        "apartment": this.apartment || ''
+      let data: OrderCartInput = {
+        cartId: this.cart.id,
+        customer: {
+          phone: this.preparePhone(this.phone),
+          mail: this.email,
+          name: this.name
+        },
+      };
+
+      if (this.paymentMethodId) {
+        data.paymentMethodId = this.paymentMethodId;
       }
-    }
 
-    const cartId = this.cart.id;
-
-    const onSuccess = (result: { action: { data: { [x: string]: string | undefined; redirectLink: any; }; }; }) => {
-      if (result?.action?.data?.redirectLink) {
-        this.paymentRedirect.emit(result.action.data['redirectLink']);
+      data.selfService = this.selfService;
+      if (this.locationId) {
+        data.locationId = this.locationId;
       } else {
-        console.log('Emit cartId', cartId);
-        this.success.emit(cartId);
+        data.address = {
+          streetId: this.streetId,
+          street: this.street,
+          home: this.home,
+          housing: this.housing,
+          doorphone: this.doorphone || '',
+          entrance: this.entrance || '',
+          floor: this.floor || '',
+          apartment: this.apartment || ''
+        }
       }
-    };
-    if (this.phonePaymentSmsCode && this.phone) {
-      this.cartService
-        .paymentLink$(this.phonePaymentSmsCode, this.phone)
-        .subscribe(
-          onSuccess,
-          error => this.error.emit(error)
-        );
-    } else {
-      this.cartService
-        .orderCart$(data)
-        .subscribe(
-          onSuccess,
-          error => this.error.emit(error)
-        );
+
+      const cartId = this.cart.id;
+      const onSuccess = (result: { action: { data: { [x: string]: string | undefined; redirectLink: any; }; }; }) => {
+        if (result?.action?.data?.redirectLink) {
+          this.paymentRedirect.emit(result.action.data['redirectLink']);
+        } else {
+          console.log('Emit cartId', cartId);
+          this.success.emit(cartId);
+        }
+      };
+      if (this.phonePaymentSmsCode && this.phone) {
+        this.cartService
+          .paymentLink$(this.phonePaymentSmsCode, this.phone)
+          .subscribe(
+            onSuccess,
+            error => this.error.emit(error)
+          );
+      } else {
+        this.cartService
+          .orderCart$(data)
+          .subscribe(
+            onSuccess,
+            error => this.error.emit(error)
+          );
+      }
     }
+
+
+
+
 
   }
 
@@ -182,74 +138,67 @@ export class CheckoutDirective {
   }
 
   checkStreet() {
-
-    //if(this.streetId == '0') return;
-
     let comment = this.comment || "";
-    let paymentMethod = this.paymentMethod || "Не указано";
-
-    let data: OrderCartInput & {
-      personsCount: number
-    } = {
-      "cartId": this.cart.id,
-      "comment": comment,
-      "customer": {
-        "phone": this.phone ? this.preparePhone(this.phone) : '',
-        "mail": this.email,
-        "name": this.name || ''
-      },
-      "personsCount": +this.personsCount
-    };
-
-    data["selfService"] = this.selfService;
-
-    if (this.paymentMethodId) {
-      data["paymentMethodId"] = this.paymentMethodId;
-    }
-
-    if (this.callback) {
-      data["customData"] = { callback: true };
-      data["comment"] = 'Позвоните мне для уточнения деталей. ' + data["comment"];
-    }
-
-    if (this.date) {
-      data["date"] = this.date;
-    }
-
-    if (this.notifyMethodId) {
-      data["notifyMethodId"] = this.notifyMethodId;
-    }
-
-    if (this.locationId) {
-      data["locationId"] = this.locationId;
+    if (!this.cart) {
+      return;
     } else {
-      data["address"] = {
-        "streetId": this.streetId,
-        "street": this.street,
-        "home": this.home,
-        "housing": this.housing,
-        "doorphone": this.doorphone || '',
-        "entrance": this.entrance || '',
-        "floor": this.floor || '',
-        "apartment": this.apartment || ''
+      let data: OrderCartInput & {
+        personsCount: number
+      } = {
+        cartId: this.cart.id,
+        comment: comment,
+        customer: {
+          phone: this.phone ? this.preparePhone(this.phone) : '',
+          mail: this.email,
+          name: this.name || ''
+        },
+        personsCount: +this.personsCount
+      };
+
+      data.selfService = this.selfService;
+
+      if (this.paymentMethodId) {
+        data.paymentMethodId = this.paymentMethodId;
       }
-    }
 
-    if (this.callback) {
-      data["customData"] = { callback: true };
-    }
+      if (this.callback) {
+        data.customData = { callback: true };
+        data.comment = 'Позвоните мне для уточнения деталей. ' + data["comment"];
+      }
 
+      if (this.date) {
+        data.date = this.date;
+      }
 
-    this.isChecking.emit(true);
+      if (this.notifyMethodId) {
+        data.notifyMethodId = this.notifyMethodId;
+      }
 
-    this.cartService
-      .checkCart$(data)
-      .subscribe(
-        //() => this.success.emit(true),
-        //error => this.error.emit(error)
-        () => this.isChecking.emit(false),
-        () => this.isChecking.emit(false)
-      );
+      if (this.locationId) {
+        data.locationId = this.locationId;
+      } else {
+        data.address = {
+          streetId: this.streetId,
+          street: this.street,
+          home: this.home,
+          housing: this.housing,
+          doorphone: this.doorphone || '',
+          entrance: this.entrance || '',
+          floor: this.floor || '',
+          apartment: this.apartment || ''
+        }
+      }
+      if (this.callback) {
+        data.customData = { callback: true };
+      }
+      this.isChecking.emit(true);
+      this.cartService
+        .checkCart$(data)
+        .subscribe(
+          () => this.isChecking.emit(true),
+          () => this.isChecking.emit(false)
+        );
+    };
   }
 
   preparePhone(phone: string | undefined) {

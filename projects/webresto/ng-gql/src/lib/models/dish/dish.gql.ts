@@ -9,7 +9,6 @@ export const DishFragments = {
 			id
 			name
 			description
-			groupId
 			price
 			weight
 			balance
@@ -32,9 +31,7 @@ export const DishFragments = {
 			order
 			isDeleted
 			isModificable
-			composition
 			visible
-			modifier
 			promo
 			images {
 				...ImageFragment

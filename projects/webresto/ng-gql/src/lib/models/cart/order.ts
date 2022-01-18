@@ -1,4 +1,4 @@
-import { Cart } from './cart';
+import type { Cart } from './cart';
 
 export interface Order {
 	cart: Cart;

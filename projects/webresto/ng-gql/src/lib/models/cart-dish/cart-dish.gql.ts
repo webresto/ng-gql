@@ -20,10 +20,8 @@ export const CartDishFragments = {
 			discountTotal
 			discountType
 			comment
-			weight
 			totalWeight
 			itemTotal
-			uniqueItems
 		}
 		${DishFragments.dish}
 	`

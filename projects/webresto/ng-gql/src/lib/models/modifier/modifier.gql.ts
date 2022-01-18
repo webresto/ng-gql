@@ -8,7 +8,6 @@ export const ModifierFragments = {
 			maxAmount
 			minAmount
 			defaultAmount
-			hideIfDefaultAmount
 			dish {
 				id
 				name

@@ -2,7 +2,7 @@ import { gql } from 'apollo-angular';
 import { PaymentMethodFragments } from '../payment-method/payment-method.gql';
 import { CartDishFragments } from '../cart-dish/cart-dish.gql';
 import { DishFragments } from '../dish/dish.gql';
-import { CartModifier } from '../modifier/cart-modifier';
+import type { CartModifier } from '../modifier/cart-modifier';
 import type { CustomfFields } from '../custom-fields/custom-fields';
 
 export type AddToCartInput = {
@@ -86,22 +86,15 @@ export const CartFragments = {
 			discountTotal
 			state
 			customData
+			customer
+			address
 		}
 	`,
 	cartOrderData: gql`
 		fragment CartOrderDataFragment on Cart {
-			rmsDelivered
 			rmsId
 			rmsOrderNumber
-			rmsOrderData
 			rmsDeliveryDate
-			rmsErrorMessage
-			rmsErrorCode
-			rmsStatusCode
-			customer
-			address
-			paid
-			isPaymentPromise
 		}
 	`,
 };
