@@ -1,13 +1,31 @@
 import { Injectable } from '@angular/core';
-import type { FetchResult, SubscriptionOptions } from '@apollo/client/core';
+import type { FetchResult } from '@apollo/client/core';
 import { gql } from 'apollo-angular';
-import type { EmptyObject, ExtraSubscriptionOptions } from 'apollo-angular/types';
+import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject } from 'rxjs';
 import { filter, take, map, switchMap, shareReplay } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
-import { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, NavigationGql, DishGql, PaymentMethodGql } from './models';
-import { CartGql, GroupGql, AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
+import type { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
+import { CartGql, GroupGql, NavigationGql, DishGql, PaymentMethodGql } from './models';
 import { ApolloService } from './services/apollo.service';
+
+type FieldTypes = Object | number | bigint | Symbol | string | boolean;
+
+export function makeFieldList<T>(source: T, name: string, indent: number = 1): string {
+  const indentString = new Array<string>(indent * 2).fill(' ').join('');
+  return `${name} {\n  ${indentString}${Object.entries(source).
+    filter(
+      (entry): entry is [string, FieldTypes] => typeof entry[1] !== 'function'
+    ).
+    map(
+      entry => typeof entry[1] === 'object' && entry[1] !== undefined && entry[1] !== null ? makeFieldList(
+        Array.isArray(entry[1]) && entry[1][0] ? entry[1][0] : entry[1], entry[0], indent + 1
+      ) : String(entry[0])
+    ).join(
+      `,\n  ${indentString}`
+    )
+    }\n${indentString}}`
+}
 
 @Injectable({
   providedIn: 'root'
@@ -394,8 +412,13 @@ export class NgGqlService {
     });
   }
 
-  customSubscribe$<T, V = EmptyObject>(options: SubscriptionOptions<V, T>, extra?: ExtraSubscriptionOptions): Observable<FetchResult<T>> {
-    return this.apollo.subscribe<T, V>(options, extra);
+  customSubscribe$<T, N extends string = `${string}`>(
+    name: N, queryObject: Partial<T>, variables?: Partial<T>, extra?: ExtraSubscriptionOptions): Observable<Partial<T> | Partial<T>[]> {
+    return this.apollo.subscribe<Record<N, T | T[]>, Partial<T>>({
+      query: gql`subscription ${makeFieldList(queryObject, name)}`
+    }, extra).pipe(
+      map(result => result?.data?.[name]!)
+    );
   }
 
 }
