@@ -412,9 +412,9 @@ export class NgGqlService {
     });
   }
 
-  customSubscribe$<T, N extends string = `${string}`>(
-    name: N, queryObject: Partial<T>, variables?: Partial<T>, extra?: ExtraSubscriptionOptions): Observable<Partial<T> | Partial<T>[]> {
-    return this.apollo.subscribe<Record<N, T | T[]>, Partial<T>>({
+  customSubscribe$<T, N extends string = `${string}`, R = { [K in keyof Partial<T>]: T[K] }>(
+    name: N, queryObject: R, variables?: Partial<R>, extra?: ExtraSubscriptionOptions): Observable<R | R[]> {
+    return this.apollo.subscribe<Record<N, R | R[]>, R>({
       query: gql`subscription ${makeFieldList(queryObject, name)}`
     }, extra).pipe(
       map(result => result?.data?.[name]!)
@@ -422,3 +422,5 @@ export class NgGqlService {
   }
 
 }
+
+

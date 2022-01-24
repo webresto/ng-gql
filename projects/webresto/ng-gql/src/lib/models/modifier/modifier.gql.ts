@@ -12,11 +12,13 @@ export const ModifierFragments = {
 				id
 				name
 				description
-				groupId
 				price
 				weight
 				balance
 				tags
+				parentGroup {
+					id
+				}
 				images {
 					...ImageFragment
 				}
