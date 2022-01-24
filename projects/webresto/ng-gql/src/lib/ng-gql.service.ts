@@ -11,6 +11,10 @@ import { ApolloService } from './services/apollo.service';
 
 type FieldTypes = Object | number | bigint | Symbol | string | boolean;
 
+type ValueOrBoolean<T> = {
+  [ K in keyof T ]: ValueOrBoolean<T[K]>
+} | boolean;
+
 export function makeFieldList<T>(source: T, name: string, indent: number = 1): string {
   const indentString = new Array<string>(indent * 2).fill(' ').join('');
   return `${name} {\n  ${indentString}${Object.entries(source).
