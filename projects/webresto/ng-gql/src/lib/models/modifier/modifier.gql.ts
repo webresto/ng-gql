@@ -16,9 +16,7 @@ export const ModifierFragments = {
 				weight
 				balance
 				tags
-				parentGroup {
-					id
-				}
+				groupId 
 				images {
 					...ImageFragment
 				}

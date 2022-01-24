@@ -11,6 +11,7 @@ export interface Dish {
   tags?: DishTag[];
   additionalInfo?: string | number | { [key: string]: string | any } | null;
   images: Image[];
+  groupId:string;
   parentGroup: {
     id: string;
     dishPlaceholder: Image | null
