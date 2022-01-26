@@ -25,6 +25,10 @@
             },
             "development": {
               "tsConfig": "projects/webresto/ng-gql/tsconfig.lib.json"
+            },
+            "axrl": {
+              "project": "projects/webresto/ng-gql/ng-package-axrl.json",
+              "tsConfig": "projects/webresto/ng-gql/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"

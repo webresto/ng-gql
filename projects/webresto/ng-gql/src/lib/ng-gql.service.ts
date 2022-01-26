@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import type { FetchResult } from '@apollo/client/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject } from 'rxjs';
@@ -11,23 +10,35 @@ import { ApolloService } from './services/apollo.service';
 
 type FieldTypes = Object | number | bigint | Symbol | string | boolean;
 
-type ValueOrBoolean<T> = {
-  [ K in keyof T ]: ValueOrBoolean<T[K]>
+export type ValueOrBoolean<T> = {
+  [K in keyof T]: ValueOrBoolean<T[K]>
 } | boolean;
 
-export function makeFieldList<T>(source: T, name: string, indent: number = 1): string {
+function getGqlType(value: FieldTypes): string {
+  switch (typeof value) {
+    case 'number': return 'Int';
+    case 'string': return 'String';
+    case 'boolean': return 'Boolean';
+    default: throw new Error('Параметр должен принадлежать типам number, string или boolean');
+  }
+}
+
+export function makeFieldList<T, V>(source: T, name: string, indent: number = 1, variables?: V): string {
   const indentString = new Array<string>(indent * 2).fill(' ').join('');
-  return `${name} {\n  ${indentString}${Object.entries(source).
-    filter(
-      (entry): entry is [string, FieldTypes] => typeof entry[1] !== 'function'
-    ).
-    map(
-      entry => typeof entry[1] === 'object' && entry[1] !== undefined && entry[1] !== null ? makeFieldList(
-        Array.isArray(entry[1]) && entry[1][0] ? entry[1][0] : entry[1], entry[0], indent + 1
-      ) : String(entry[0])
-    ).join(
-      `,\n  ${indentString}`
-    )
+  return `${name}${indent === 1 && variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
+    key => `${key}:$${key}`
+  ).join(',')
+    })` : ''} {\n  ${indentString}${Object.entries(source).
+      filter(
+        (entry): entry is [string, FieldTypes] => typeof entry[1] !== 'function'
+      ).
+      map(
+        entry => typeof entry[1] === 'object' && entry[1] !== undefined && entry[1] !== null ? makeFieldList(
+          Array.isArray(entry[1]) && entry[1][0] ? entry[1][0] : entry[1], entry[0], indent + 1
+        ) : String(entry[0])
+      ).join(
+        `,\n  ${indentString}`
+      )
     }\n${indentString}}`
 }
 
@@ -345,12 +356,11 @@ export class NgGqlService {
       )
   }
 
-  customQuery$<T, N extends `${string}`, V extends unknown = unknown>(
-    name: N, queryObject: Record<N, { [K in keyof T]: boolean | T[K] }>, variables?: V) {
+  customQuery$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V) {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
       query: gql`query ${makeFieldList(queryObject, name)}`,
       variables,
-      canonizeResults: true
     }).valueChanges
       .pipe(
         map(
@@ -359,16 +369,19 @@ export class NgGqlService {
       );
   }
 
-  customMutation$<T, N extends `${string}`, V extends unknown = unknown>(name: N, queryObject: T, variables: V) {
+  customMutation$<T, N extends `${string}`, V>(name: N, queryObject: T, variables: V) {
+    const requestString = `mutation ${name[0].toUpperCase() + name.slice(1)} (${(<(keyof V)[]>Object.keys(variables)).map(
+      key => `$${key}:${getGqlType(variables[key])}`
+    ).join(',')
+      }) {\n${makeFieldList(queryObject, name, 1, variables)}\n}`;
     return this.apollo.mutate<Record<N, T>, V>({
-      mutation: gql`mutation ${makeFieldList(queryObject, name)}`,
-      variables,
-      awaitRefetchQueries: true
+      mutation: gql`${requestString}`,
+      variables
     });
   }
 
-  customSubscribe$<T, N extends `${string}`, V extends unknown = unknown>(
-    name: N, queryObject: Record<N, { [K in keyof T]: boolean | T[K] }>, variables?: V, extra?: ExtraSubscriptionOptions) {
+  customSubscribe$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V, extra?: ExtraSubscriptionOptions) {
     return this.apollo.subscribe<Record<N, T>, V>({
       query: gql`subscription ${makeFieldList(queryObject, name)}`,
       variables
