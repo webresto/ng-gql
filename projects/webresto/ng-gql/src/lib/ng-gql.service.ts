@@ -357,9 +357,13 @@ export class NgGqlService {
   }
 
   customQuery$<T, N extends `${string}`, V = Object>(
-    name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V) {
+    name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V): Observable<Record<N, T | T[]>>
+  customQuery$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: T, variables?: V): Observable<Record<N, T | T[]>>
+  customQuery$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: Record<N, ValueOrBoolean<T>> | T, variables?: V): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
-      query: gql`query ${makeFieldList(queryObject, name)}`,
+      query: gql`query ${this.getRequestString(name, name in queryObject ? (<Record<N, ValueOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
       variables,
     }).valueChanges
       .pipe(
@@ -370,24 +374,31 @@ export class NgGqlService {
   }
 
   customMutation$<T, N extends `${string}`, V>(name: N, queryObject: T, variables: V) {
-    const requestString = `mutation ${name[0].toUpperCase() + name.slice(1)} (${(<(keyof V)[]>Object.keys(variables)).map(
-      key => `$${key}:${getGqlType(variables[key])}`
-    ).join(',')
-      }) {\n${makeFieldList(queryObject, name, 1, variables)}\n}`;
     return this.apollo.mutate<Record<N, T>, V>({
-      mutation: gql`${requestString}`,
+      mutation: gql`mutation ${this.getRequestString(name, queryObject, variables)}`,
       variables
     });
   }
 
   customSubscribe$<T, N extends `${string}`, V = Object>(
-    name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V, extra?: ExtraSubscriptionOptions) {
+    name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<NonNullable<Record<N, T>>[N]>>
+  customSubscribe$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: T, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<NonNullable<Record<N, T>>[N]>>
+  customSubscribe$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: Record<N, ValueOrBoolean<T>> | T, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<NonNullable<Record<N, T>>[N]>> {
     return this.apollo.subscribe<Record<N, T>, V>({
-      query: gql`subscription ${makeFieldList(queryObject, name)}`,
+      query: gql`subscription ${this.getRequestString(name, name in queryObject ? (<Record<N, ValueOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
       variables
     }, extra).pipe(
       map(result => result?.data?.[name]!)
     );
+  }
+
+  getRequestString<T, N extends `${string}`, V>(name: N, queryObject: T, variables: V) {
+    return `${name[0].toUpperCase() + name.slice(1)} (${(<(keyof V)[]>Object.keys(variables)).map(
+      key => `$${key}:${getGqlType(variables[key])}`
+    ).join(',')
+      }) {\n${makeFieldList(queryObject, name, 1, variables)}\n}`;
   }
 
 }
