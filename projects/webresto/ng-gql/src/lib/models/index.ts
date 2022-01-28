@@ -12,3 +12,4 @@ export * from './payment-method/payment-method.gql';
 export * from './event-message/event-message';
 export * from './navigation/navigation';
 export * from './navigation/navigation.gql';
+export * from './is-value';

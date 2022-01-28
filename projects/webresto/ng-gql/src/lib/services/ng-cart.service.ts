@@ -1,4 +1,5 @@
-import { Injectable, SimpleChanges } from '@angular/core';
+import { Injectable } from '@angular/core';
+import type { SimpleChanges } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { tap, filter, map, catchError } from 'rxjs/operators';
