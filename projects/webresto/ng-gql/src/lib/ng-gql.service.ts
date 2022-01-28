@@ -41,10 +41,10 @@ export function generateQueryString<T, N extends `${string}`, V>(name: N, queryO
       default: throw new Error('Параметр должен принадлежать типам number, string или boolean');
     }
   };
-  return `${name[0].toUpperCase() + name.slice(1)} (${(<(keyof V)[]>Object.keys(variables)).map(
+  return `${name[0].toUpperCase() + name.slice(1)} ${variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
     key => `$${key}:${getGqlType(variables[key])}`
   ).join(',')
-    }) {\n${makeFieldList(queryObject, name, 1, variables)}\n}`;
+    })` : ''} {\n${makeFieldList(queryObject, name, 1, variables)}\n}`;
 }
 
 @Injectable({
