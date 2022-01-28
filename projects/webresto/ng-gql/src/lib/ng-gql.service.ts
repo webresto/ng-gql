@@ -38,7 +38,8 @@ export function generateQueryString<T, N extends `${string}`, V>(name: N, queryO
       case 'number': return 'Int';
       case 'string': return 'String';
       case 'boolean': return 'Boolean';
-      default: throw new Error('Параметр должен принадлежать типам number, string или boolean');
+      case 'object': return 'Json';
+      default: throw new Error('Параметр должен принадлежать типам number, string, object или boolean');
     }
   };
   return `${name[0].toUpperCase() + name.slice(1)} ${variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
