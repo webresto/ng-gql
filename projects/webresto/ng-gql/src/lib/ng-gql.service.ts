@@ -5,10 +5,14 @@ import { BehaviorSubject } from 'rxjs';
 import { filter, take, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
 import type { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
-import { CartGql, GroupGql, NavigationGql, DishGql, PaymentMethodGql, isValue } from './models';
+import { CartGql, GroupGql, DishGql, PaymentMethodGql, isValue } from './models';
 import { ApolloService } from './services/apollo.service';
 
 type FieldTypes = Object | number | bigint | Symbol | string | boolean;
+
+export type ValuesOrBoolean<T> = {
+  [K in keyof T]: ValueOrBoolean<T[K]>
+};
 
 export type ValueOrBoolean<T> = {
   [K in keyof T]: ValueOrBoolean<T[K]>
@@ -76,17 +80,27 @@ export class NgGqlService {
     }
   }
 
-  getNavigation$(): Observable<Navigation[]> {
-    return this.apollo.watchQuery<{ navigations: Navigation[] }>({
-      query: NavigationGql.queries.getNavigationes(this.customFields)
-    }).valueChanges.pipe(
-      map(
-        ({ data, loading }) => {
-          this.menuLoading = loading;
-          return data.navigations;
-        }),
-      shareReplay(1)
+  private _navigationData$: Observable<Navigation[]> = this.queryAndSubscribe<Navigation, 'navigations', unknown>('navigations', {
+    mnemonicId: true,
+    description: true,
+    options: true,
+    id: true,
+    navigation_menu: true
+  }, (store, newValue) => {
+    const array = (Array.isArray(store) ? store : [store]);
+    const findItem = array.find(
+      item => newValue.mnemonicId === item.mnemonicId
     );
+    if (findItem) {
+      Object.assign(findItem, newValue);
+      return array;
+    } else {
+      return [...array, newValue];
+    }
+  });
+
+  getNavigation$(): Observable<Navigation[]> {
+    return this._navigationData$;
   }
 
   getMenu$(slug: string | string[] | undefined): Observable<Group[] | null> {
@@ -365,9 +379,9 @@ export class NgGqlService {
   customQuery$<T, N extends `${string}`, V = Object>(
     name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V): Observable<Record<N, T | T[]>>
   customQuery$<T, N extends `${string}`, V = Object>(
-    name: N, queryObject: T, variables?: V): Observable<Record<N, T | T[]>>
+    name: N, queryObject: ValuesOrBoolean<T>, variables?: V): Observable<Record<N, T | T[]>>
   customQuery$<T, N extends `${string}`, V = Object>(
-    name: N, queryObject: Record<N, ValueOrBoolean<T>> | T, variables?: V): Observable<Record<N, T | T[]>> {
+    name: N, queryObject: Record<N, ValueOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
       query: gql`query ${generateQueryString(name, name in queryObject ? (<Record<N, ValueOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
       variables,
@@ -389,9 +403,9 @@ export class NgGqlService {
   customSubscribe$<T, N extends `${string}`, V = Object>(
     name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<Record<N, T>>[N]>
   customSubscribe$<T, N extends `${string}`, V = Object>(
-    name: N, queryObject: T, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<Record<N, T>>[N]>
+    name: N, queryObject: ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<Record<N, T>>[N]>
   customSubscribe$<T, N extends `${string}`, V = Object>(
-    name: N, queryObject: Record<N, ValueOrBoolean<T>> | T, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<Record<N, T>>[N]> {
+    name: N, queryObject: Record<N, ValueOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<Record<N, T>>[N]> {
     return this.apollo.subscribe<Record<N, T>, V>({
       query: gql`subscription ${generateQueryString(name, name in queryObject ? (<Record<N, ValueOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
       variables
@@ -401,18 +415,17 @@ export class NgGqlService {
   }
 
   queryAndSubscribe<T, N extends `${string}`, V>(
-    name: N, queryObject: Record<N, {
-      [K in keyof T]: ValueOrBoolean<T[K]>;
-    }>, updateFn: (store: T | T[], subscribeValue: T) => T[], variables?: V) {
-
-    return this.customQuery$<T, N, V>(name, queryObject, variables).pipe(
+    name: N, queryObject: ValuesOrBoolean<T>, updateFn: (store: T | T[], subscribeValue: T) => T[], variables?: V) {
+    return this.customQuery$(name, queryObject, variables).pipe(
       switchMap(
         result => this.customSubscribe$(name, queryObject, variables).pipe(
           startWith(null),
           map(
             updatedValue => isValue(updatedValue) ?
               updateFn(result[name], Object.assign({}, updatedValue)) :
-              result[name]
+              Array.isArray(result[name]) ?
+                [... <T[]>result[name]] :
+                <T[]>[result[name]]
           ),
           shareReplay(1)
         )

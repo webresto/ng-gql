@@ -24,5 +24,16 @@ export const NavigationGql = {
 			}
 			${NavigationFragments.navigation}
 		`
+	},
+	subscribes: {
+		getNavigationes: (customFields: CustomfFields) => gql`
+			subscription GetNavigation {
+				navigations {
+					...NavigationFragment
+					${(customFields['Navigation'] || []).join('\n')}
+				}
+			}
+			${NavigationFragments.navigation}
+		`
 	}
 }
