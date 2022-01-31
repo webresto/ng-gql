@@ -1,14 +1,15 @@
-import { Dish } from '../dish/dish';
+import type { Dish } from '../dish/dish';
 
 export interface Group {
 	id: string;
 	description: string;
 	name: string;
-	visible: string;
+	slug?: string;
+	visible: boolean;
+	isIncludedInMenu: boolean;
 	order: number;
 	dishes?: Dish[];
 	discount?: number;
 	parentGroup?: Group;
-  	slug?: string;
-	childGroups: Group[]
+	childGroups: Group[];
 }	

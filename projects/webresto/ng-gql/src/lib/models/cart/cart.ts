@@ -1,16 +1,14 @@
 import { CartDish } from "../cart-dish/cart-dish";
-import { Dish } from "../dish/dish";
 import { PaymentMethod } from "../payment-method/payment-method";
 
 export interface Cart {
   id: string;
   dishes: CartDish[];
   dishesCount: number;
-  comment: string;
-  personsCount: number;
+  comment: string | null;
+  personsCount: number | null;
   deliveryDescription: string;
-  message: string;
-  deliveryItem: Dish;
+  message: string | null;
   deliveryCost: number;
   totalWeight: number;
   total: number;
@@ -18,14 +16,9 @@ export interface Cart {
   cartTotal: number;
   discountTotal: number;
   state: string;
-  rmsDelivered?: boolean;
   rmsId?: string;
   rmsOrderNumber?: string;
-  rmsOrderData?: any;
   rmsDeliveryDate?: string;
-  rmsErrorMessage?: string;
-  rmsErrorCode?: string;
-  rmsStatusCode?: string;
   customer?: Customer;
   address?: Address;
   paid?: boolean;
@@ -33,9 +26,8 @@ export interface Cart {
   paymentMethod?: PaymentMethod;
   customData?: {
     [key: string]: string | any;
-  };
+  } | null;
 }
-
 
 export interface Customer {
   phone: string;

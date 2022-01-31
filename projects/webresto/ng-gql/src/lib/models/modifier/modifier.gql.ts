@@ -8,16 +8,15 @@ export const ModifierFragments = {
 			maxAmount
 			minAmount
 			defaultAmount
-			hideIfDefaultAmount
 			dish {
 				id
 				name
 				description
-				groupId
 				price
 				weight
 				balance
 				tags
+				groupId 
 				images {
 					...ImageFragment
 				}

@@ -1,31 +1,26 @@
-import { Image } from "../image/image";
-import { GroupModifier } from "../group-modifier/group-modifier";
+import type { Image } from "../image/image";
+import type { GroupModifier } from "../group-modifier/group-modifier";
 
 export interface Dish {
   id: string;
   name: string;
   description: string;
-  groupId: string;
   price: number;
-  oldPrice: number;
   weight: number;
   balance: number;
   tags?: DishTag[];
   additionalInfo?: string | number | { [key: string]: string | any } | null;
   images: Image[];
-  discountAmount: number;
-  discountType: string;
+  groupId:string;
   parentGroup: {
     id: string;
-    dishPlaceholder: Image
+    dishPlaceholder: Image | null
   };
   modifiers?: GroupModifier[];
-
-  //
-  seoDescription?: string;
-  seoKeywords?: string;
-  seoText?: string;
-  seoTitle?: string;
+  seoDescription?: string | null;
+  seoKeywords?: string | null;
+  seoText?: string | null;
+  seoTitle?: string | null;
   carbohydrateAmount?: number;
   carbohydrateFullAmount?: number;
   energyAmount?: number;
@@ -40,9 +35,9 @@ export interface Dish {
   isDeleted?: boolean;
   isModificable?: boolean;
   composition?: string;
-  visible?: boolean;
+  visible?: boolean | null;
   modifier?: boolean;
-  promo?: boolean;
+  promo?: boolean | null;
 }
 
 export interface DishTag {

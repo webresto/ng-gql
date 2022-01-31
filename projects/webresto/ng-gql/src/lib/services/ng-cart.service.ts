@@ -1,4 +1,5 @@
-import { Injectable, SimpleChanges } from '@angular/core';
+import { Injectable } from '@angular/core';
+import type { SimpleChanges } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { tap, filter, map, catchError } from 'rxjs/operators';
@@ -18,7 +19,7 @@ export class NgCartService {
   modifiers$ = new BehaviorSubject<Partial<Modifier[]>>([]);
   modifiersMessage$: BehaviorSubject<EventMessage[]> = new BehaviorSubject<EventMessage[]>([]);
   messages: EventMessage[] = [];
-  OrderFormChange = new BehaviorSubject<SimpleChanges |null>(null);
+  OrderFormChange = new BehaviorSubject<SimpleChanges | null>(null);
   cartSubscription: Subscription | undefined;
 
   constructor(
@@ -103,8 +104,11 @@ export class NgCartService {
     //return of(null);
     return this.ngGqlService.customMutation$('paymentLink', {
       paymentLink: 1
-    }, {
+    }, this.cartId ? {
       cartId: this.cartId,
+      phone,
+      fromPhone
+    } : {
       phone,
       fromPhone
     })

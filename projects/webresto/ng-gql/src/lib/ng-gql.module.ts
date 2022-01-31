@@ -8,8 +8,6 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import type { OperationDefinitionNode } from 'graphql';
 import { AddDishToCartDirective, CheckoutDirective } from './directives';
 
-//import { ModifiresDirective } from './directives/modifires.directive';
-
 const DIRECTIVES = [
   AddDishToCartDirective,
   CheckoutDirective,

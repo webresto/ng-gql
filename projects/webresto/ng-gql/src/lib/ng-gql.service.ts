@@ -1,12 +1,52 @@
 import { Injectable } from '@angular/core';
-import type { FetchResult, SubscriptionOptions } from '@apollo/client';
-import { Apollo, gql } from 'apollo-angular';
-import type { EmptyObject, ExtraSubscriptionOptions } from 'apollo-angular/types';
+import { gql } from 'apollo-angular';
+import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject } from 'rxjs';
-import { filter, take, map, switchMap, shareReplay } from 'rxjs/operators';
+import { filter, take, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
-import { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, NavigationGql, DishGql, PaymentMethodGql } from './models';
-import { CartGql, GroupGql, AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
+import type { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
+import { CartGql, GroupGql, NavigationGql, DishGql, PaymentMethodGql, isValue } from './models';
+import { ApolloService } from './services/apollo.service';
+
+type FieldTypes = Object | number | bigint | Symbol | string | boolean;
+
+export type ValueOrBoolean<T> = {
+  [K in keyof T]: ValueOrBoolean<T[K]>
+} | boolean;
+
+export function generateQueryString<T, N extends `${string}`, V>(name: N, queryObject: T, variables: V) {
+  const makeFieldList = <T, V>(source: T, name: string, indent: number = 1, variables?: V): string => {
+    const indentString = new Array<string>(indent * 2).fill(' ').join('');
+    return `${name}${indent === 1 && variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
+      key => `${key}:$${key}`
+    ).join(',')
+      })` : ''} {\n  ${indentString}${Object.entries(source).
+        filter(
+          (entry): entry is [string, FieldTypes] => typeof entry[1] !== 'function'
+        ).
+        map(
+          entry => typeof entry[1] === 'object' && entry[1] !== undefined && entry[1] !== null ? makeFieldList(
+            Array.isArray(entry[1]) && entry[1][0] ? entry[1][0] : entry[1], entry[0], indent + 1
+          ) : String(entry[0])
+        ).join(
+          `,\n  ${indentString}`
+        )
+      }\n${indentString}}`
+  };
+  const getGqlType = (value: FieldTypes): string => {
+    switch (typeof value) {
+      case 'number': return 'Int';
+      case 'string': return 'String';
+      case 'boolean': return 'Boolean';
+      case 'object': return 'Json';
+      default: throw new Error('Параметр должен принадлежать типам number, string, object или boolean');
+    }
+  };
+  return `${name[0].toUpperCase() + name.slice(1)} ${variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
+    key => `$${key}:${getGqlType(variables[key])}`
+  ).join(',')
+    })` : ''} {\n${makeFieldList(queryObject, name, 1, variables)}\n}`;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +58,6 @@ export class NgGqlService {
 
   private cart$: BehaviorSubject<Cart | null> = new BehaviorSubject<Cart | null>(null);
   cartLoading: boolean | undefined;
-
   navigationDataLoading: boolean | undefined;
   paymentMethodLoading: boolean | undefined;
   getPhoneLoading: boolean | undefined;
@@ -26,7 +65,7 @@ export class NgGqlService {
 
   customFields: { [key: string]: string[] } = {};
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: ApolloService) { }
 
   addCustomField(modelName: string, field: string) {
     if (!this.customFields[modelName]) {
@@ -156,7 +195,6 @@ export class NgGqlService {
   }
 
   getCart$(cartId: string | undefined): Observable<Cart> {
-
     return this.apollo.watchQuery<{ cart: Cart }>({
       query: CartGql.queries.getCart(cartId, this.customFields),
       canonizeResults: true,
@@ -324,38 +362,15 @@ export class NgGqlService {
       )
   }
 
-  customQuery$<T, N extends string = `${string}`>(name: N, queryObject: Record<N, Record<Extract<T, keyof T>, boolean>>, variables: any = {}): Observable<Record<N, T | T[]>> {
-    let queryArgumentsStrings: string[] = [];
-    for (let key in variables) {
-      let valueString = variables[key];
-      switch (typeof valueString) {
-        case 'object':
-          valueString = JSON.stringify(valueString).replace(/\{"([^"]+)"\:/gi, '{$1:')
-          break;
-        case 'string':
-          valueString = `"${valueString}"`;
-          break;
-      };
-      queryArgumentsStrings.push(`${key}: ${valueString}`);
-    };
-    let queryArgumentsString = queryArgumentsStrings.length
-      ? `(${queryArgumentsStrings.join(', ')})`
-      : ``;
-    let query = JSON.stringify(queryObject)
-      .replace(/"/g, '')
-      .replace(/\:[a-z0-9]+/gi, '')
-      .replace(/\:/g, '');
-    if (queryArgumentsString) {
-      const queriesKeys = Object.keys(queryObject);
-      const countOfQueries = queriesKeys.length;
-      if (countOfQueries == 1) {
-        query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + queryArgumentsString);
-      }
-    };
-
-    return this.apollo.watchQuery<Record<N, T | T[]>, boolean>({
-      query: gql`query ${name}${query}`,
-      canonizeResults: true
+  customQuery$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V): Observable<Record<N, T | T[]>>
+  customQuery$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: T, variables?: V): Observable<Record<N, T | T[]>>
+  customQuery$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: Record<N, ValueOrBoolean<T>> | T, variables?: V): Observable<Record<N, T | T[]>> {
+    return this.apollo.watchQuery<Record<N, T | T[]>, V>({
+      query: gql`query ${generateQueryString(name, name in queryObject ? (<Record<N, ValueOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
+      variables,
     }).valueChanges
       .pipe(
         map(
@@ -364,40 +379,48 @@ export class NgGqlService {
       );
   }
 
-  customMutation$<T, N extends string = `${string}`>(name: N, queryObject: Record<N, Record<Extract<T, keyof T>, boolean>>, variables: T): Observable<FetchResult<T>>
-  customMutation$<T extends any>(name: string, queryObject: any, variables: any | undefined): Observable<FetchResult<T>>
-  customMutation$<T extends any>(name: string, queryObject: any, variables: T): Observable<FetchResult<T>> {
-    let mutationArgumentsStrings: string[] = [];
-    for (let key in variables) {
-      let valueString: string = typeof variables[key] == 'string' ?
-        `"${variables[key]}"` :
-        JSON.stringify(variables[key]).replace(/\{"([^"]+)"\:/gi, '{$1:');
-      mutationArgumentsStrings.push(`${key}: ${valueString}`);
-    }
-    let mutationArgumentsString = mutationArgumentsStrings.length !== 0
-      ? `(${mutationArgumentsStrings.join(', ')})`
-      : ``;
-    let query = JSON.stringify(queryObject)
-      .replace(/"/g, '')
-      .replace(/\:[a-z0-9]+/gi, '')
-      .replace(/\:/g, '');
-    if (mutationArgumentsString) {
-      const queriesKeys = Object.keys(queryObject);
-      const countOfQueries = queriesKeys.length;
-      if (countOfQueries == 1) {
-        query = query.replace(new RegExp('(\{.*)' + queriesKeys[0]), '$1' + queriesKeys[0] + mutationArgumentsString);
-      }
-    }
-    return this.apollo.mutate<T>({
-      mutation: gql`mutation ${name}${query}`,
-      awaitRefetchQueries: true
+  customMutation$<T, N extends `${string}`, V>(name: N, queryObject: T, variables: V) {
+    return this.apollo.mutate<Record<N, T>, V>({
+      mutation: gql`mutation ${generateQueryString(name, queryObject, variables)}`,
+      variables
     });
   }
 
-  customSubscribe$<T, V = EmptyObject>(options: SubscriptionOptions<V, T>, extra?: ExtraSubscriptionOptions): Observable<FetchResult<T>> {
-    return this.apollo.subscribe<T, V>(options, extra);
+  customSubscribe$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: Record<N, ValueOrBoolean<T>>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<Record<N, T>>[N]>
+  customSubscribe$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: T, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<Record<N, T>>[N]>
+  customSubscribe$<T, N extends `${string}`, V = Object>(
+    name: N, queryObject: Record<N, ValueOrBoolean<T>> | T, variables?: V, extra?: ExtraSubscriptionOptions): Observable<NonNullable<Record<N, T>>[N]> {
+    return this.apollo.subscribe<Record<N, T>, V>({
+      query: gql`subscription ${generateQueryString(name, name in queryObject ? (<Record<N, ValueOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
+      variables
+    }, extra).pipe(
+      map(result => result.data![name])
+    );
   }
 
+  queryAndSubscribe<T, N extends `${string}`, V>(
+    name: N, queryObject: Record<N, {
+      [K in keyof T]: ValueOrBoolean<T[K]>;
+    }>, updateFn: (store: T | T[], subscribeValue: T) => T[], variables?: V) {
 
+    return this.customQuery$<T, N, V>(name, queryObject, variables).pipe(
+      switchMap(
+        result => this.customSubscribe$(name, queryObject, variables).pipe(
+          startWith(null),
+          map(
+            updatedValue => isValue(updatedValue) ?
+              updateFn(result[name], Object.assign({}, updatedValue)) :
+              result[name]
+          ),
+          shareReplay(1)
+        )
+      ),
+      shareReplay(1)
+    );
+  }
 
 }
+
+

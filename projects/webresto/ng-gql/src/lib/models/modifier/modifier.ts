@@ -7,6 +7,5 @@ export interface Modifier {
 	minAmount: number;
 	amount?: number;
 	defaultAmount: number;
-	hideIfDefaultAmount: boolean;
 	dish: Dish;
 }

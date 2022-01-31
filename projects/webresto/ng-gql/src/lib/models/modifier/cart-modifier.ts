@@ -1,4 +1,4 @@
-import { Dish } from '../dish/dish';
+import type { Dish } from '../dish/dish';
 
 export interface CartModifier {
 	id: string;
