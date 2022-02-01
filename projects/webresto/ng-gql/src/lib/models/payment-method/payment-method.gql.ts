@@ -18,11 +18,11 @@ export const PaymentMethodFragments = {
 
 export const PaymentMethodGql = {
 	queries: {
-		getPaymentMethod: (cartId: string | null = null, customFields:CustomfFields) => {
-			if (cartId == 'null') {
-				cartId = null;
+		getPaymentMethod: (orderId: string | null = null, customFields:CustomfFields) => {
+			if (orderId == 'null') {
+				orderId = null;
 			};
-			const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
+			const queryArguments = orderId ? `(orderId: "${orderId}")` : '';
 			return gql`
 				query GetPaymentMethods {
 					paymentMethods:paymentMethod${queryArguments} {

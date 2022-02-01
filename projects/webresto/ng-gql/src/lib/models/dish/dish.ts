@@ -14,7 +14,7 @@ export interface Dish {
   groupId:string;
   parentGroup: {
     id: string;
-    dishPlaceholder: Image | null
+    dishesPlaceholder: Image | null
   };
   modifiers?: GroupModifier[];
   seoDescription?: string | null;

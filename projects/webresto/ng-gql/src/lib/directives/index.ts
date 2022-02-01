@@ -1,2 +1,2 @@
-export * from './add-dish-to-cart.directive';
+export * from './add-dish-to-order.directive';
 export * from "./checkout.directive";

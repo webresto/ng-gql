@@ -6,10 +6,10 @@ import { split, InMemoryCache } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import type { OperationDefinitionNode } from 'graphql';
-import { AddDishToCartDirective, CheckoutDirective } from './directives';
+import { AddDishToOrderDirective, CheckoutDirective } from './directives';
 
 const DIRECTIVES = [
-  AddDishToCartDirective,
+  AddDishToOrderDirective,
   CheckoutDirective,
 ];
 

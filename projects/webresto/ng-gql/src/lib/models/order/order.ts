@@ -1,9 +1,9 @@
-import { CartDish } from "../cart-dish/cart-dish";
+import { OrderDish } from "../order-dish/order-dish";
 import { PaymentMethod } from "../payment-method/payment-method";
 
-export interface Cart {
+export interface Order {
   id: string;
-  dishes: CartDish[];
+  dishes: OrderDish[];
   dishesCount: number;
   comment: string | null;
   personsCount: number | null;
@@ -12,8 +12,8 @@ export interface Cart {
   deliveryCost: number;
   totalWeight: number;
   total: number;
-  orderTotal: number;
   cartTotal: number;
+  orderTotal: number;
   discountTotal: number;
   state: string;
   rmsId?: string;
@@ -47,4 +47,9 @@ export interface Address {
   floor?: string;
   apartment?: string;
   doorphone?: string;
+}
+
+export interface OrderData {
+	order: Order;
+	customData: any;
 }

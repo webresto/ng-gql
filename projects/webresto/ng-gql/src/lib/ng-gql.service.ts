@@ -4,8 +4,8 @@ import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject } from 'rxjs';
 import { filter, take, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
-import type { Group, Dish, Cart, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToCartInput, OrderCartInput, CheckPhoneCodeInput, RemoveFromCartInput, SetDishAmountInput, SetDishCommentInput } from './models';
-import { CartGql, GroupGql, DishGql, PaymentMethodGql, isValue } from './models';
+import type { Group, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, OrderData } from './models';
+import { OrderGql, GroupGql, DishGql, PaymentMethodGql, isValue } from './models';
 import { ApolloService } from './services/apollo.service';
 
 type FieldTypes = Object | number | bigint | Symbol | string | boolean;
@@ -59,8 +59,8 @@ export class NgGqlService {
   menuLoading: boolean | undefined;
   dishesLoading: boolean | undefined;
 
-  private cart$: BehaviorSubject<Cart | null> = new BehaviorSubject<Cart | null>(null);
-  cartLoading: boolean | undefined;
+  private order$: BehaviorSubject<Order | null> = new BehaviorSubject<Order | null>(null);
+  orderLoading: boolean | undefined;
   navigationDataLoading: boolean | undefined;
   paymentMethodLoading: boolean | undefined;
   getPhoneLoading: boolean | undefined;
@@ -188,9 +188,9 @@ export class NgGqlService {
     );
   }
 
-  getOrder$(orderId: string): Observable<Order> {
-    return this.apollo.watchQuery<{ getOrder: Order }>({
-      query: CartGql.queries.getOrder(orderId, this.customFields)
+  getOrder$(orderId: string): Observable<OrderData> {
+    return this.apollo.watchQuery<{ getOrder: OrderData }>({
+      query: OrderGql.queries.getOrder(orderId, this.customFields)
     }).valueChanges.pipe(
       take(1),
       map(({ data }) => data.getOrder),
@@ -198,19 +198,19 @@ export class NgGqlService {
     )
   }
 
-  getCart$(cartId: string | undefined): Observable<Cart> {
-    return this.apollo.watchQuery<{ cart: Cart }>({
-      query: CartGql.queries.getCart(cartId, this.customFields),
+  getOrderAsCart$(orderId: string | undefined): Observable<Order> {
+    return this.apollo.watchQuery<{ order: Order }>({
+      query: OrderGql.queries.getOrderAsCart(orderId, this.customFields),
       canonizeResults: true,
       fetchPolicy: 'no-cache'
     }).valueChanges.pipe(
       switchMap(({ data, loading }) => {
-        this.cartLoading = loading;
-        this.cart$.next(data.cart);
-        return this.cart$.asObservable();
+        this.orderLoading = loading;
+        this.order$.next(data.order);
+        return this.order$.asObservable();
       }),
       filter(
-        (cart): cart is Cart => !!cart
+        (order): order is Order => !!order
       ),
       shareReplay(1)
     );
@@ -218,7 +218,7 @@ export class NgGqlService {
 
   getPhone$(phone: string): Observable<Phone> {
     return this.apollo.watchQuery<any>({
-      query: CartGql.queries.getPhone(phone, this.customFields),
+      query: OrderGql.queries.getPhone(phone, this.customFields),
       fetchPolicy: 'no-cache'
     })
       .valueChanges
@@ -232,7 +232,7 @@ export class NgGqlService {
 
   checkPhone$(phone: string): Observable<CheckPhoneResponse> {
     return this.apollo.watchQuery<any>({
-      query: CartGql.queries.checkPhone(phone, this.customFields),
+      query: OrderGql.queries.checkPhone(phone, this.customFields),
       fetchPolicy: 'no-cache'
     }).valueChanges.pipe(
       map(({ data, loading }) => {
@@ -242,9 +242,9 @@ export class NgGqlService {
     );
   }
 
-  getPaymentMethods$(cartId: string): Observable<PaymentMethod[]> {
+  getPaymentMethods$(orderId: string): Observable<PaymentMethod[]> {
     return this.apollo.watchQuery<any>({
-      query: PaymentMethodGql.queries.getPaymentMethod(cartId, this.customFields)
+      query: PaymentMethodGql.queries.getPaymentMethod(orderId, this.customFields)
     }).valueChanges.pipe(
       map(({ data, loading }) => {
         this.paymentMethodLoading = loading;
@@ -253,51 +253,51 @@ export class NgGqlService {
     );
   }
 
-  addDishToCart$(data: AddToCartInput): Observable<Cart> {
+  addDishToOrder$(data: AddToOrderInput): Observable<Order> {
     return this.apollo.mutate<{
-      cartAddDish: Cart
+      orderAddDish: Order
     }>({
-      mutation: CartGql.mutations.addDishToCart(this.customFields),
+      mutation: OrderGql.mutations.addDishToOrder(this.customFields),
       variables: data
     })
       .pipe(
         map(({ data }) => {
-          const cart: Cart = data!.cartAddDish;
-          if (cart) {
-            this.cart$.next(cart);
+          const order: Order = data!.orderAddDish;
+          if (order) {
+            this.order$.next(order);
           };
-          return cart;
+          return order;
         })
       )
   }
 
-  orderCart$(data: OrderCartInput): Observable<CheckResponse> {
+  orderOrder$(data: OrderInput): Observable<CheckResponse> {
     return this.apollo.mutate<{
-      orderCart: CheckResponse
+      orderOrder: CheckResponse
     }>({
-      mutation: CartGql.mutations.orderCart(this.customFields),
+      mutation: OrderGql.mutations.orderOrder(this.customFields),
       variables: data
     })
       .pipe(
         map(({ data }) => {
-          const checkResponse: CheckResponse = data!.orderCart;
-          this.cart$.next(checkResponse.cart);
+          const checkResponse: CheckResponse = data!.orderOrder;
+          this.order$.next(checkResponse.order);
           return checkResponse;
         })
       )
   }
 
-  checkCart$(data: OrderCartInput): Observable<CheckResponse> {
+  checkOrder$(data: OrderInput): Observable<CheckResponse> {
     return this.apollo.mutate<{
-      checkCart: CheckResponse
+      checkOrder: CheckResponse
     }>({
-      mutation: CartGql.mutations.checkCart(this.customFields),
+      mutation: OrderGql.mutations.checkOrder(this.customFields),
       variables: data
     })
       .pipe(
         map(({ data }) => {
-          const checkResponse: CheckResponse = data!['checkCart'];
-          this.cart$.next(checkResponse.cart);
+          const checkResponse: CheckResponse = data!['checkOrder'];
+          this.order$.next(checkResponse.order);
           return checkResponse;
         })
       )
@@ -307,7 +307,7 @@ export class NgGqlService {
     return this.apollo.mutate<{
       setPhoneCode: CheckPhoneResponse
     }>({
-      mutation: CartGql.mutations.checkPhoneCode(this.customFields),
+      mutation: OrderGql.mutations.checkPhoneCode(this.customFields),
       variables: data
     })
       .pipe(
@@ -318,50 +318,50 @@ export class NgGqlService {
       )
   }
 
-  removeDishFromCart$(data: RemoveFromCartInput): Observable<Cart> {
+  removeDishFromOrder$(data: RemoveFromOrderInput): Observable<Order> {
     return this.apollo.mutate<{
-      cartRemoveDish: Cart
+      orderRemoveDish: Order
     }>({
-      mutation: CartGql.mutations.removeDishFromCart(this.customFields),
+      mutation: OrderGql.mutations.removeDishFromOrder(this.customFields),
       variables: data
     })
       .pipe(
         map(({ data }) => {
-          const cart: Cart = data!['cartRemoveDish'];
-          this.cart$.next(cart);
-          return cart;
+          const order: Order = data!['orderRemoveDish'];
+          this.order$.next(order);
+          return order;
         })
       )
   }
 
-  setDishAmount$(data: SetDishAmountInput): Observable<Cart> {
+  setDishAmount$(data: SetDishAmountInput): Observable<Order> {
     return this.apollo.mutate<{
-      cartSetDishAmount: Cart
+      orderSetDishAmount: Order
     }>({
-      mutation: CartGql.mutations.setDishAmount(this.customFields),
+      mutation: OrderGql.mutations.setDishAmount(this.customFields),
       variables: data
     })
       .pipe(
         map(({ data }) => {
-          const cart: Cart = data!['cartSetDishAmount'];
-          this.cart$.next(cart);
-          return cart;
+          const order: Order = data!['orderSetDishAmount'];
+          this.order$.next(order);
+          return order;
         })
       )
   }
 
-  setDishComment$(data: SetDishCommentInput): Observable<Cart> {
+  setDishComment$(data: SetDishCommentInput): Observable<Order> {
     return this.apollo.mutate<{
-      cartSetDishComment: Cart
+      orderSetDishComment: Order
     }>({
-      mutation: CartGql.mutations.setDishComment(this.customFields),
+      mutation: OrderGql.mutations.setDishComment(this.customFields),
       variables: data
     })
       .pipe(
         map(({ data }) => {
-          const cart: Cart = data!['cartSetDishComment'];
-          this.cart$.next(cart);
-          return cart;
+          const order: Order = data!['orderSetDishComment'];
+          this.order$.next(order);
+          return order;
         })
       )
   }

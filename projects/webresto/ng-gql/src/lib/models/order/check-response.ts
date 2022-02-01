@@ -1,7 +1,7 @@
-import type { Cart } from './cart';
+import type { Order } from './order';
 
 export interface CheckResponse {
-	cart: Cart;
+	order: Order;
 	message: {
 		title: string,
 		type: string,

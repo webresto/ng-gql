@@ -1,9 +1,9 @@
 import { gql } from 'apollo-angular';
 import { DishFragments } from '../dish/dish.gql';
 
-export const CartDishFragments = {
-	cartDish: gql`
-		fragment CartDishFragment on CartDish {
+export const OrderDishFragments = {
+	orderDish: gql`
+		fragment OrderDishFragment on OrderDish {
 			id
 			amount
 			dish {

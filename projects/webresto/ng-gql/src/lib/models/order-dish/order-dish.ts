@@ -1,7 +1,7 @@
 import type { Dish } from '../dish/dish';
-import type { CartModifier } from '../modifier/cart-modifier';
+import type { OrderModifier } from '../modifier/order-modifier';
 
-export interface CartDish {
+export interface OrderDish {
 	id: number;
 	amount: number;
 	dish: Dish;
@@ -12,5 +12,5 @@ export interface CartDish {
 	comment: string | null;
 	totalWeight: number;
 	total: number;
-	modifiers: CartModifier[];
+	modifiers: OrderModifier[];
 }

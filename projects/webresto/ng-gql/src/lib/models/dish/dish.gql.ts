@@ -41,7 +41,7 @@ export const DishFragments = {
 			}
 			parentGroup {
 				id
-				dishPlaceholder {
+				dishesPlaceholder {
 					...ImageFragment
 				}
 			}
@@ -53,7 +53,7 @@ export const DishFragments = {
 
 export const DishGql = {
 	queries: {
-		getDishes: (customFields:CustomfFields) => gql`
+		getDishes: (customFields: CustomfFields) => gql`
 			query GetDishes {
 				dishes {
 					...DishFragment

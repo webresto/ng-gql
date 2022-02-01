@@ -1,42 +1,41 @@
 import { gql } from 'apollo-angular';
 import { PaymentMethodFragments } from '../payment-method/payment-method.gql';
-import { CartDishFragments } from '../cart-dish/cart-dish.gql';
+import { OrderDishFragments } from '../order-dish/order-dish.gql';
 import { DishFragments } from '../dish/dish.gql';
-import type { CartModifier } from '../modifier/cart-modifier';
+import type { OrderModifier } from '../modifier/order-modifier';
 import type { CustomfFields } from '../custom-fields/custom-fields';
-import { DocumentNode } from 'graphql';
 
-export type AddToCartInput = {
-	cartId?: string,
+export type AddToOrderInput = {
+	orderId?: string,
 	dishId?: string,
 	amount?: number,
-	modifiers?: CartModifier[],
+	modifiers?: OrderModifier[],
 	comment?: string,
 	from?: string,
 	replace?: boolean,
-	cartDishId?: string
+	orderDishId?: string
 };
 
-export type RemoveFromCartInput = {
-	cartId?: string,
-	cartDishId?: number,
+export type RemoveFromOrderInput = {
+	orderId?: string,
+	orderDishId?: number,
 	amount?: number
 };
 
 export type SetDishAmountInput = {
-	cartId?: string,
-	cartDishId?: number,
+	orderId?: string,
+	orderDishId?: number,
 	amount?: number
 };
 
 export type SetDishCommentInput = {
-	cartId?: string,
-	cartDishId?: number,
+	orderId?: string,
+	orderDishId?: number,
 	comment?: string
 };
 
-export type OrderCartInput = {
-	cartId: string,
+export type OrderInput = {
+	orderId: string,
 	paymentMethodId?: string,
 	selfService?: boolean,
 	pickupAddressId?: string,
@@ -70,9 +69,9 @@ export type CheckPhoneCodeInput = {
 	code: string
 };
 
-export const CartFragments = {
-	cart: gql`
-		fragment CartFragment on Cart {
+export const OrderFragments = {
+	order: gql`
+		fragment OrderFragment on Order {
 			id
 			dishesCount
 			comment
@@ -83,7 +82,7 @@ export const CartFragments = {
 			totalWeight
 			total
 			orderTotal
-			cartTotal
+			orderTotal
 			discountTotal
 			state
 			customData
@@ -91,8 +90,8 @@ export const CartFragments = {
 			address
 		}
 	`,
-	cartOrderData: gql`
-		fragment CartOrderDataFragment on Cart {
+	orderOrderData: gql`
+		fragment OrderOrderFragment on Order {
 			rmsId
 			rmsOrderNumber
 			rmsDeliveryDate
@@ -100,19 +99,19 @@ export const CartFragments = {
 	`,
 };
 
-export const CartGql = {
+export const OrderGql = {
 	queries: {
 		getOrder: (orderId: string, customFields: CustomfFields) => {
 			const queryArguments = orderId ? `(orderNumber: "${orderId}")` : '';
 			return gql`
 				query getOrder {
 					getOrder${queryArguments} {
-						cart {
-							...CartFragment
-							...CartOrderDataFragment
+						order {
+							...OrderFragment
+							...OrderOrderDataFragment
 							dishes {
-								...CartDishFragment
-								${(customFields['CartDish'] || []).join('\n')}
+								...OrderDishFragment
+								${(customFields['OrderDish'] || []).join('\n')}
 							}
 							paymentMethod {
 								...PaymentMethodFragment
@@ -122,28 +121,28 @@ export const CartGql = {
 						customData
 					}
 				}
-				${CartFragments.cart}
-				${CartDishFragments.cartDish}
-				${CartFragments.cartOrderData}
+				${OrderFragments.order}
+				${OrderDishFragments.orderDish}
+				${OrderFragments.orderOrderData}
 				${PaymentMethodFragments.paymentMethod}
 			`;
 		},
-		getCart: (cartId: string | null = null, customFields: CustomfFields) => {
-			if (cartId == 'null') cartId = null;
-			const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
+		getOrderAsCart: (orderId: string | null = null, customFields: CustomfFields) => {
+			if (orderId == 'null') orderId = null;
+			const queryArguments = orderId ? `(orderId: "${orderId}")` : '';
 			return gql`
-				query GetCart {
-					cart${queryArguments} {
-						...CartFragment
-						${(customFields['Cart'] || []).join('\n')}
+				query GetOrder {
+					order${queryArguments} {
+						...OrderFragment
+						${(customFields['Order'] || []).join('\n')}
 						dishes {
-							...CartDishFragment
-							${(customFields['CartDish'] || []).join('\n')}
+							...OrderDishFragment
+							${(customFields['OrderDish'] || []).join('\n')}
 						}
 					}
 				}
-				${CartFragments.cart}
-				${CartDishFragments.cartDish}
+				${OrderFragments.order}
+				${OrderDishFragments.orderDish}
 			`;
 		},
 		getPhone: (phone: string, customFields: CustomfFields) => {
@@ -178,33 +177,33 @@ export const CartGql = {
 		}
 	},
 	mutations: {
-		addDishToCart: (customFields: CustomfFields) => {
+		addDishToOrder: (customFields: CustomfFields) => {
 			return gql`
-				mutation AddDishToCart(
-					$cartId: String, 
+				mutation AddDishToOrder(
+					$orderId: String, 
 					$dishId: String, 
 					$amount: Int, 
 					$modifiers: Json, 
 					$comment: String,
 					$from: String,
 					$replace: Boolean,
-					$cartDishId: Int
+					$orderDishId: Int
 				) {
-					cartAddDish(
-						cartId: $cartId,
+					orderAddDish(
+						orderId: $orderId,
 						dishId: $dishId,
 						amount: $amount,
 						modifiers: $modifiers,
 						comment: $comment,
 						from: $from,
 						replace: $replace,
-						cartDishId: $cartDishId
+						orderDishId: $orderDishId
 					) {
-						...CartFragment
-						${(customFields['Cart'] || []).join('\n')}
+						...OrderFragment
+						${(customFields['Order'] || []).join('\n')}
 						dishes {
-							...CartDishFragment
-							${(customFields['CartDish'] || []).join('\n')}
+							...OrderDishFragment
+							${(customFields['OrderDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
@@ -212,28 +211,28 @@ export const CartGql = {
 						}
 					}
 				}
-				${CartFragments.cart}
-				${CartDishFragments.cartDish}
+				${OrderFragments.order}
+				${OrderDishFragments.orderDish}
 				${DishFragments.dish}
 			`;
 		},
-		removeDishFromCart: (customFields: CustomfFields) => {
+		removeDishFromOrder: (customFields: CustomfFields) => {
 			return gql`
-				mutation cartRemoveDish(
-					$cartId: String!, 
-					$cartDishId: Int!, 
+				mutation orderRemoveDish(
+					$orderId: String!, 
+					$orderDishId: Int!, 
 					$amount: Int!, 
 				) {
-					cartRemoveDish(
-						id: $cartId,
-						cartDishId: $cartDishId,
+					orderRemoveDish(
+						id: $orderId,
+						orderDishId: $orderDishId,
 						amount: $amount,
 					) {
-						...CartFragment
-						${(customFields['Cart'] || []).join('\n')}
+						...OrderFragment
+						${(customFields['Order'] || []).join('\n')}
 						dishes {
-							...CartDishFragment
-							${(customFields['CartDish'] || []).join('\n')}
+							...OrderDishFragment
+							${(customFields['OrderDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
@@ -241,28 +240,28 @@ export const CartGql = {
 						}
 					}
 				}
-				${CartFragments.cart}
-				${CartDishFragments.cartDish}
+				${OrderFragments.order}
+				${OrderDishFragments.orderDish}
 				${DishFragments.dish}
 			`;
 		},
 		setDishAmount: (customFields: CustomfFields) => {
 			return gql`
-				mutation cartSetDishAmount(
-					$cartId: String,
-					$cartDishId: Int,
+				mutation orderSetDishAmount(
+					$orderId: String,
+					$orderDishId: Int,
 					$amount: Int
 				) {
-					cartSetDishAmount(
-						id: $cartId,
-						cartDishId: $cartDishId,
+					orderSetDishAmount(
+						id: $orderId,
+						orderDishId: $orderDishId,
 						amount: $amount
 					) {
-						...CartFragment
-						${(customFields['Cart'] || []).join('\n')}
+						...OrderFragment
+						${(customFields['Order'] || []).join('\n')}
 						dishes {
-							...CartDishFragment
-							${(customFields['CartDish'] || []).join('\n')}
+							...OrderDishFragment
+							${(customFields['OrderDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
@@ -270,28 +269,28 @@ export const CartGql = {
 						}
 					}
 				}
-				${CartFragments.cart}
-				${CartDishFragments.cartDish}
+				${OrderFragments.order}
+				${OrderDishFragments.orderDish}
 				${DishFragments.dish}
 			`;
 		},
 		setDishComment: (customFields: CustomfFields) => {
 			return gql`
-				mutation cartSetDishComment(
-					$cartId: String,
-					$cartDishId: Int,
+				mutation orderSetDishComment(
+					$orderId: String,
+					$orderDishId: Int,
 					$comment: Int
 				) {
-					cartSetDishComment(
-						id: $cartId,
-						cartDishId: $cartDishId,
+					orderSetDishComment(
+						id: $orderId,
+						orderDishId: $orderDishId,
 						comment: $comment
 					) {
-						...CartFragment
-						${(customFields['Cart'] || []).join('\n')}
+						...OrderFragment
+						${(customFields['Order'] || []).join('\n')}
 						dishes {
-							...CartDishFragment
-							${(customFields['CartDish'] || []).join('\n')}
+							...OrderDishFragment
+							${(customFields['OrderDish'] || []).join('\n')}
 						}
 						deliveryItem {
 							...DishFragment
@@ -299,33 +298,33 @@ export const CartGql = {
 						}
 					}
 				}
-				${CartFragments.cart}
-				${CartDishFragments.cartDish}
+				${OrderFragments.order}
+				${OrderDishFragments.orderDish}
 				${DishFragments.dish}
 			`;
 		},
-		orderCart: (customFields: CustomfFields) => {
+		orderOrder: (customFields: CustomfFields) => {
 			return gql`
-				mutation orderCart(
-					$cartId: String!, 
+				mutation orderOrder(
+					$orderId: String!, 
 					$paymentMethodId: String!,
 					$selfService: Boolean,
 					$address: Address,
 					$customer: Customer!
 				) {
-					orderCart(
-						cartId: $cartId,
+					orderOrder(
+						orderId: $orderId,
 						paymentMethodId: $paymentMethodId,
 						selfService: $selfService,
 						address: $address,
 						customer: $customer
 					) {
-						cart {
-							...CartFragment
-							${(customFields['Cart'] || []).join('\n')}
+						order {
+							...OrderFragment
+							${(customFields['Order'] || []).join('\n')}
 							dishes {
-								...CartDishFragment
-								${(customFields['CartDish'] || []).join('\n')}
+								...OrderDishFragment
+								${(customFields['OrderDish'] || []).join('\n')}
 							}
 							deliveryItem {
 								...DishFragment
@@ -343,15 +342,15 @@ export const CartGql = {
 						}
 					}
 				}
-				${CartFragments.cart}
-				${CartDishFragments.cartDish}
+				${OrderFragments.order}
+				${OrderDishFragments.orderDish}
 				${DishFragments.dish}
 			`;
 		},
-		checkCart: (customFields: CustomfFields) => {
+		checkOrder: (customFields: CustomfFields) => {
 			return gql`
-				mutation checkCart(
-					$cartId: String!, 
+				mutation checkOrder(
+					$orderId: String!, 
 					$paymentMethodId: String!,
 					$selfService: Boolean,
 					$address: Address,
@@ -360,8 +359,8 @@ export const CartGql = {
 					$date: String,
 					$customData: Json
 				) {
-					checkCart(
-						cartId: $cartId,
+					checkOrder(
+						orderId: $orderId,
 						paymentMethodId: $paymentMethodId,
 						selfService: $selfService,
 						address: $address,
@@ -370,12 +369,12 @@ export const CartGql = {
 						date: $date,
 						customData: $customData
 					) {
-						cart {
-							...CartFragment
-							${(customFields['Cart'] || []).join('\n')}
+						order {
+							...OrderFragment
+							${(customFields['Order'] || []).join('\n')}
 							dishes {
-								...CartDishFragment
-								${(customFields['CartDish'] || []).join('\n')}
+								...OrderDishFragment
+								${(customFields['OrderDish'] || []).join('\n')}
 							}
 							deliveryItem {
 								...DishFragment
@@ -393,8 +392,8 @@ export const CartGql = {
 						}
 					}
 				}
-				${CartFragments.cart}
-				${CartDishFragments.cartDish}
+				${OrderFragments.order}
+				${OrderDishFragments.orderDish}
 				${DishFragments.dish}
 			`;
 		},
@@ -420,23 +419,23 @@ export const CartGql = {
 		},
 	},
 	subscriptions: {
-		getCart: (cartId: string | null = null) => {
-			if (cartId == 'null') cartId = null;
-			const queryArguments = cartId ? `(cartId: "${cartId}")` : '';
+		getOrder: (orderId: string | null = null) => {
+			if (orderId == 'null') orderId = null;
+			const queryArguments = orderId ? `(orderId: "${orderId}")` : '';
 			return gql`
-				GetCart {
-					cart${queryArguments} {
+				GetOrder {
+					order${queryArguments} {
 						id
 						dishesCount
 						deliveryDescription
 						message
 						total
 						orderTotal
-						cartTotal
+						orderTotal
 						discountTotal
 					}
 				}
-				${CartFragments.cart}
+				${OrderFragments.order}
 			`;
 		}
 	}
