@@ -406,7 +406,6 @@ export class NgGqlService {
   }
 
   queryAndSubscribe<T, NQuery extends `${string}`, NSubscribe extends `${string}`, V>(nameQuery: NQuery, nameSubscribe: NSubscribe, queryObject: ValuesOrBoolean<T>, uniqueKeyForCompareItem: keyof T, variables?: V) {
-
     const updateFn: (store: T | T[], subscribeValue: T) => T[] = (store, newValue) => {
       const array = (Array.isArray(store) ? store : [store]);
       const findItem = array.find(
