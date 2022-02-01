@@ -113,7 +113,6 @@ export class NgCartService {
       fromPhone
     })
       .pipe(
-        map(data => data.data),
         catchError(error => {
           console.log('error', error);
           this.eventer.emitMessageEvent({
