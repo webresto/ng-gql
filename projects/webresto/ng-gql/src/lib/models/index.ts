@@ -1,15 +1,12 @@
-export * from './order';
-export * from './order-dish/order-dish';;
-export * from './dish/dish';
 export * from './dish/dish.gql';
-export * from './group/group';
 export * from './group/group.gql';
-export * from './modifier/modifier';
-export * from './modifier/order-modifier';
-export * from './group-modifier/group-modifier';
-export * from './payment-method/payment-method';
+export * from './group-modifier/group-modifier.gql'
+export * from './image/image.gql';
+export * from './modifier/modifier.gql';
+export * from './navigation/navigation.gql';
+export * from './order';
+export * from './order-dish/order-dish.gql';;
 export * from './payment-method/payment-method.gql';
 export * from './event-message/event-message';
-export * from './navigation/navigation';
-export * from './navigation/navigation.gql';
-export * from './is-value';
+export { isValue } from './is-value';
+export { ValuesOrBoolean } from './values-or-boolean';

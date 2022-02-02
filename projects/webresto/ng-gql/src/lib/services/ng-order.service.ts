@@ -96,7 +96,7 @@ export class NgOrderService {
 
 
   orderCart$(data: OrderInput): Observable<CheckResponse> {
-    return this.ngGqlService.orderOrder$(data);
+    return this.ngGqlService.sendOrder$(data);
   }
 
   paymentLink$(phone: string, fromPhone: string): Observable<any> {

@@ -1,9 +1,64 @@
 import { gql } from 'apollo-angular';
+import type { PaymentMethod } from '../payment-method/payment-method.gql';
+import type { OrderDish } from '../order-dish/order-dish.gql';
 import { PaymentMethodFragments } from '../payment-method/payment-method.gql';
 import { OrderDishFragments } from '../order-dish/order-dish.gql';
 import { DishFragments } from '../dish/dish.gql';
-import type { OrderModifier } from '../modifier/order-modifier';
+import type { OrderModifier } from '../modifier/modifier.gql';
 import type { CustomfFields } from '../custom-fields/custom-fields';
+
+export interface Order {
+	id: string;
+	dishes: OrderDish[];
+	dishesCount: number;
+	comment: string | null;
+	personsCount: number | null;
+	deliveryDescription: string;
+	message: string | null;
+	deliveryCost: number;
+	totalWeight: number;
+	total: number;
+	cartTotal: number;
+	orderTotal: number;
+	discountTotal: number;
+	state: string;
+	rmsId?: string;
+	rmsOrderNumber?: string;
+	rmsDeliveryDate?: string;
+	customer?: Customer;
+	address?: Address;
+	paid?: boolean;
+	paymentMethod?: PaymentMethod;
+	customData?: {
+		[key: string]: string | any;
+	} | null;
+}
+
+export interface Customer {
+	phone: string;
+	mail?: string;
+	name: string;
+}
+
+export interface Address {
+	streetId?: string;
+	home: string;
+	comment?: string;
+	city?: string;
+	street: string;
+	housing?: string;
+	index?: string;
+	entrance?: string;
+	floor?: string;
+	apartment?: string;
+	doorphone?: string;
+}
+
+export interface OrderData {
+	order: Order;
+	customData: any;
+}
+
 
 export type AddToOrderInput = {
 	orderId?: string,
@@ -108,14 +163,7 @@ export const OrderFragments = {
 		rmsOrderNumber: true,
 		rmsDeliveryDate: true,
 		dishes: OrderDishFragments.vOb
-	},
-	orderOrderData: gql`
-		fragment OrderOrderFragment on Order {
-			rmsId
-			rmsOrderNumber
-			rmsDeliveryDate
-		}
-	`,
+	}
 };
 
 export const OrderGql = {
@@ -142,7 +190,6 @@ export const OrderGql = {
 				}
 				${OrderFragments.order}
 				${OrderDishFragments.orderDish}
-				${OrderFragments.orderOrderData}
 				${PaymentMethodFragments.paymentMethod}
 			`;
 		},
@@ -322,16 +369,16 @@ export const OrderGql = {
 				${DishFragments.dish}
 			`;
 		},
-		orderOrder: (customFields: CustomfFields) => {
+		sendOrder: (customFields: CustomfFields) => {
 			return gql`
-				mutation orderOrder(
+				mutation SendOrder(
 					$orderId: String!, 
 					$paymentMethodId: String!,
 					$selfService: Boolean,
 					$address: Address,
 					$customer: Customer!
 				) {
-					orderOrder(
+					sendOrder(
 						orderId: $orderId,
 						paymentMethodId: $paymentMethodId,
 						selfService: $selfService,

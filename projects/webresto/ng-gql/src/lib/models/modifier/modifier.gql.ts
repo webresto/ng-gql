@@ -1,5 +1,25 @@
 import { gql } from 'apollo-angular';
 import { ImageFragments } from '../image/image.gql';
+import type { ValuesOrBoolean } from '../values-or-boolean';
+import type { Dish } from "../dish/dish.gql";
+
+export interface OrderModifier {
+	id: string;
+	amount?: number;
+	groupId: string;
+	dish: Dish;
+}
+
+export interface Modifier {
+	modifierId: string;
+	groupId?: string;
+	maxAmount: number;
+	minAmount: number;
+	amount?: number;
+	defaultAmount: number;
+	dish: Dish;
+}
+
 
 export const ModifierFragments = {
 	modifier: gql`
@@ -24,7 +44,7 @@ export const ModifierFragments = {
 		}
 		${ImageFragments.image}
 	`,
-	vOb: {
+	vOb: <ValuesOrBoolean<Modifier>>{
 		modifierId: true,
 		maxAmount: true,
 		minAmount: true,

@@ -5,14 +5,10 @@ import { BehaviorSubject } from 'rxjs';
 import { filter, take, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
 import type { Group, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, OrderData } from './models';
-import { OrderGql, GroupGql, DishGql, PaymentMethodGql, isValue } from './models';
+import { OrderGql, GroupGql, DishGql, PaymentMethodGql, isValue, NavigationFragments, ValuesOrBoolean } from './models';
 import { ApolloService } from './services/apollo.service';
 
 type FieldTypes = Object | number | bigint | Symbol | string | boolean;
-
-export type ValuesOrBoolean<T> = {
-  [K in keyof T]: T[K] extends Array<infer U> ? ValuesOrBoolean<U> | boolean : ValuesOrBoolean<T[K]> |boolean
-};
 
 export function generateQueryString<T, N extends `${string}`, V>(name: N, queryObject: T, variables: V) {
   const makeFieldList = <T, V>(source: T, name: string, indent: number = 1, variables?: V): string => {
@@ -53,15 +49,8 @@ export function generateQueryString<T, N extends `${string}`, V>(name: N, queryO
 })
 export class NgGqlService {
 
-  menuLoading: boolean | undefined;
-  dishesLoading: boolean | undefined;
 
   private order$: BehaviorSubject<Order | null> = new BehaviorSubject<Order | null>(null);
-  orderLoading: boolean | undefined;
-  navigationDataLoading: boolean | undefined;
-  paymentMethodLoading: boolean | undefined;
-  getPhoneLoading: boolean | undefined;
-  checkPhoneLoading: boolean | undefined;
 
   customFields: { [key: string]: string[] } = {};
 
@@ -76,14 +65,8 @@ export class NgGqlService {
     }
   }
 
-  private _navigationData$: Observable<Navigation[]> = this.queryAndSubscribe<Navigation, 'navigations', 'navigation', unknown>(
-    'navigations', 'navigation', {
-    mnemonicId: true,
-    description: true,
-    options: true,
-    id: true,
-    navigation_menu: true
-  }, 'mnemonicId'
+  private _navigationData$: Observable<Navigation[]> = this.queryAndSubscribe(
+    'navigations', 'navigation', NavigationFragments.vOb, 'mnemonicId'
   );
 
   getNavigation$(): Observable<Navigation[]> {
@@ -97,8 +80,7 @@ export class NgGqlService {
     }>({
       query: GroupGql.queries.getGroupsAndDishes(this.customFields)
     }).valueChanges.pipe(
-      map(({ data, loading }) => {
-        this.menuLoading = loading;
+      map(({ data }) => {
         const { groups, dishes } = data;
         // Groups indexing
         const groupsById = groups.reduce<{
@@ -170,8 +152,7 @@ export class NgGqlService {
     }>({
       query: DishGql.queries.getDishes(this.customFields)
     }).valueChanges.pipe(
-      map(({ data, loading }) => {
-        this.dishesLoading = loading;
+      map(({ data }) => {
         return data.dishes;
       }),
       shareReplay(1)
@@ -194,8 +175,7 @@ export class NgGqlService {
       canonizeResults: true,
       fetchPolicy: 'no-cache'
     }).valueChanges.pipe(
-      switchMap(({ data, loading }) => {
-        this.orderLoading = loading;
+      switchMap(({ data }) => {
         this.order$.next(data.order);
         return this.order$.asObservable();
       }),
@@ -213,10 +193,9 @@ export class NgGqlService {
     })
       .valueChanges
       .pipe(
-        map(({ data, loading }) => {
-          this.getPhoneLoading = loading;
-          return data.phone
-        })
+        map(
+          ({ data }) => data.phone
+        )
       );
   }
 
@@ -225,10 +204,9 @@ export class NgGqlService {
       query: OrderGql.queries.checkPhone(phone, this.customFields),
       fetchPolicy: 'no-cache'
     }).valueChanges.pipe(
-      map(({ data, loading }) => {
-        this.checkPhoneLoading = loading;
-        return data.checkPhone
-      })
+      map(
+        ({ data }) => data.checkPhone
+      )
     );
   }
 
@@ -236,10 +214,9 @@ export class NgGqlService {
     return this.apollo.watchQuery<any>({
       query: PaymentMethodGql.queries.getPaymentMethod(orderId, this.customFields)
     }).valueChanges.pipe(
-      map(({ data, loading }) => {
-        this.paymentMethodLoading = loading;
-        return data.paymentMethods
-      })
+      map(
+        ({ data }) => data.paymentMethods
+      )
     );
   }
 
@@ -261,16 +238,16 @@ export class NgGqlService {
       )
   }
 
-  orderOrder$(data: OrderInput): Observable<CheckResponse> {
+  sendOrder$(data: OrderInput): Observable<CheckResponse> {
     return this.apollo.mutate<{
-      orderOrder: CheckResponse
+      sendOrder: CheckResponse
     }>({
-      mutation: OrderGql.mutations.orderOrder(this.customFields),
+      mutation: OrderGql.mutations.sendOrder(this.customFields),
       variables: data
     })
       .pipe(
         map(({ data }) => {
-          const checkResponse: CheckResponse = data!.orderOrder;
+          const checkResponse: CheckResponse = data!.sendOrder;
           this.order$.next(checkResponse.order);
           return checkResponse;
         })

@@ -1,6 +1,23 @@
 import { gql } from 'apollo-angular';
 import { DishFragments } from '../dish/dish.gql';
 import type { CustomfFields } from '../custom-fields/custom-fields';
+import type { Dish } from '../dish/dish.gql';
+import type { Image } from '../image/image.gql';
+
+export interface Group {
+	id: string;
+	description: string;
+	name: string;
+	slug?: string;
+	visible: boolean;
+	isIncludedInMenu: boolean;
+	order: number;
+	dishes?: Dish[];
+	discount?: number;
+	parentGroup?: Group;
+	childGroups: Group[];
+	dishesPlaceholder: Image | null;
+}	
 
 export const GroupFragments = {
 	group: gql`
