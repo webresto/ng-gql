@@ -38,7 +38,9 @@ export const ModifierFragments = {
 				groupId
 				parentGroup {
 					id,
-					dishesPlaceholder
+					dishesPlaceholder {
+						...ImageFragment
+					}
 				}
 				images {
 					...ImageFragment
@@ -63,7 +65,7 @@ export const ModifierFragments = {
 			groupId: true,
 			parentGroup: {
 				id: true,
-				dishesPlaceholder:true
+				dishesPlaceholder: ImageFragments.vOb
 			},
 			images: ImageFragments.vOb
 		}

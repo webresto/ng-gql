@@ -2,7 +2,7 @@ import { gql } from 'apollo-angular';
 import { DishFragments } from '../dish/dish.gql';
 import type { CustomfFields } from '../custom-fields/custom-fields';
 import type { Dish } from '../dish/dish.gql';
-import type { Image } from '../image/image.gql';
+import { Image, ImageFragments } from '../image/image.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
 export interface Group {
@@ -30,7 +30,9 @@ export const GroupFragments = {
 			slug
 			parentGroup {
 				id
-				dishesPlaceholder
+				dishesPlaceholder {
+					...ImageFragment
+				}
 			}
 		}
 	`,
@@ -41,10 +43,10 @@ export const GroupFragments = {
 		order: true,
 		visible: true,
 		slug: true,
-		dishesPlaceholder:true,
+		dishesPlaceholder: ImageFragments.vOb,
 		parentGroup: {
-			id:true,
-			dishesPlaceholder:true
+			id: true,
+			dishesPlaceholder: ImageFragments.vOb
 		}
 	}
 };
