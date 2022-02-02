@@ -11,16 +11,12 @@ export interface Dish {
   tags?: DishTag[];
   additionalInfo?: string | number | { [key: string]: string | any } | null;
   images: Image[];
-  groupId:string;
+  groupId?:string;
   parentGroup: {
     id: string;
     dishesPlaceholder: Image | null
   };
   modifiers?: GroupModifier[];
-  seoDescription?: string | null;
-  seoKeywords?: string | null;
-  seoText?: string | null;
-  seoTitle?: string | null;
   carbohydrateAmount?: number;
   carbohydrateFullAmount?: number;
   energyAmount?: number;
@@ -30,14 +26,6 @@ export interface Dish {
   fiberAmount?: number;
   fiberFullAmount?: number;
   measureUnit?: string;
-  type?: string;
-  order?: number;
-  isDeleted?: boolean;
-  isModificable?: boolean;
-  composition?: string;
-  visible?: boolean | null;
-  modifier?: boolean;
-  promo?: boolean | null;
 }
 
 export interface DishTag {

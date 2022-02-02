@@ -9,12 +9,9 @@ import { OrderGql, GroupGql, DishGql, PaymentMethodGql, isValue } from './models
 import { ApolloService } from './services/apollo.service';
 
 type FieldTypes = Object | number | bigint | Symbol | string | boolean;
-type ValueOrBoolean<T> = {
-  [K in keyof T]: ValueOrBoolean<T[K]>
-} | boolean;
 
 export type ValuesOrBoolean<T> = {
-  [K in keyof T]: ValueOrBoolean<T[K]>
+  [K in keyof T]: T[K] extends Array<infer U> ? ValuesOrBoolean<U> | boolean : ValuesOrBoolean<T[K]> |boolean
 };
 
 export function generateQueryString<T, N extends `${string}`, V>(name: N, queryObject: T, variables: V) {
@@ -135,11 +132,6 @@ export class NgGqlService {
         // Create groups hierarchy
         for (let groupId in groupsById) {
           const group = groupsById[groupId];
-          try {
-            group.dishes?.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-          } catch (e) {
-            console.warn(`Group ${groupId} sort error`, e);
-          }
 
           const parentGroupId = group.parentGroup?.id;
           groupIdsBySlug[group.slug!] = groupId;
@@ -155,9 +147,7 @@ export class NgGqlService {
               if (!groupIdsBySlug[slug]) {
                 return [];
               } else {
-                return groupsById[groupIdsBySlug[slug]].childGroups.sort(
-                  (g1: Group, g2: Group) => g1.order - g2.order
-                );
+                return groupsById[groupIdsBySlug[slug]].childGroups;
               };
             default:
               if (!slug.length) {
@@ -167,7 +157,7 @@ export class NgGqlService {
               };
           }
         } else {
-          return Object.values(groupsById).sort((g1: Group, g2: Group) => g1.order - g2.order) as Group[];
+          return Object.values(groupsById) as Group[];
         }
       }),
       shareReplay()
