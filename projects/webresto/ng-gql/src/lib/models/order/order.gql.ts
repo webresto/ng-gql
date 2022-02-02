@@ -12,13 +12,11 @@ export interface Order {
 	dishes: OrderDish[];
 	dishesCount: number;
 	comment: string | null;
-	personsCount: number | null;
 	deliveryDescription: string;
 	message: string | null;
 	deliveryCost: number;
 	totalWeight: number;
 	total: number;
-	cartTotal: number;
 	orderTotal: number;
 	discountTotal: number;
 	state: string;
@@ -143,27 +141,7 @@ export const OrderFragments = {
 			customer
 			address
 		}
-	`,
-	vOb: {
-		id: true,
-		dishesCount: true,
-		comment: true,
-		deliveryDescription: true,
-		message: true,
-		deliveryCost: true,
-		totalWeight: true,
-		total: true,
-		orderTotal: true,
-		discountTotal: true,
-		state: true,
-		customData: true,
-		customer: true,
-		address: true,
-		rmsId: true,
-		rmsOrderNumber: true,
-		rmsDeliveryDate: true,
-		dishes: OrderDishFragments.vOb
-	}
+	`
 };
 
 export const OrderGql = {
@@ -484,25 +462,24 @@ export const OrderGql = {
 			`;
 		},
 	},
-	subscriptions: {
-		getOrder: (orderId: string | null = null) => {
-			if (orderId == 'null') orderId = null;
-			const queryArguments = orderId ? `(orderId: "${orderId}")` : '';
-			return gql`
-				GetOrder {
-					order${queryArguments} {
-						id
-						dishesCount
-						deliveryDescription
-						message
-						total
-						orderTotal
-						orderTotal
-						discountTotal
-					}
-				}
-				${OrderFragments.order}
-			`;
-		}
+	vOb: {
+		id: true,
+		dishesCount: true,
+		comment: true,
+		deliveryDescription: true,
+		message: true,
+		deliveryCost: true,
+		totalWeight: true,
+		total: true,
+		orderTotal: true,
+		discountTotal: true,
+		state: true,
+		customData: true,
+		customer: true,
+		address: true,
+		rmsId: true,
+		rmsOrderNumber: true,
+		rmsDeliveryDate: true,
+		dishes: OrderDishFragments.vOb
 	}
 }

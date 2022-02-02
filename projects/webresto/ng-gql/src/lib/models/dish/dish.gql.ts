@@ -18,7 +18,7 @@ export interface Dish {
 	images: Image[];
 	groupId?: string;
 	parentGroup: Pick<Group, 'id' | 'dishesPlaceholder'>;
-	modifiers?: GroupModifier[] | undefined ;
+	modifiers?: GroupModifier[] | undefined;
 	carbohydrateAmount?: number;
 	carbohydrateFullAmount?: number;
 	energyAmount?: number;
@@ -46,10 +46,6 @@ export const DishFragments = {
 			balance
 			tags
 			additionalInfo
-			seoDescription
-			seoKeywords
-			seoText
-			seoTitle
 			carbohydrateAmount
 			carbohydrateFullAmount
 			energyAmount
@@ -59,12 +55,6 @@ export const DishFragments = {
 			fiberAmount
 			fiberFullAmount
 			measureUnit
-			type
-			order
-			isDeleted
-			isModificable
-			visible
-			promo
 			images {
 				...ImageFragment
 			}
@@ -101,6 +91,7 @@ export const DishFragments = {
 		measureUnit: true,
 		images: ImageFragments.vOb,
 		modifiers: GroupModifierFragments.vOb,
+		groupId: true,
 		parentGroup: {
 			id: true,
 			dishesPlaceholder: ImageFragments.vOb

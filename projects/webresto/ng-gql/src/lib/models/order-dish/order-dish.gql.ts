@@ -1,13 +1,15 @@
 import { gql } from 'apollo-angular';
 import { DishFragments } from '../dish/dish.gql';
-import type { Dish } from "../dish/dish.gql";
 import type { OrderModifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
+import type { Dish } from '../dish/dish.gql';
+import { ImageFragments } from '../image/image.gql';
 
 export interface OrderDish {
 	id: number;
 	amount: number;
-	dish: Dish;
+	dishId: string;
+	dish: Pick<Dish, 'id' | 'name' | 'price' | 'weight' | 'carbohydrateAmount' | 'carbohydrateFullAmount' | 'energyAmount' | 'energyFullAmount' | 'fatAmount' | 'fatFullAmount' | 'fiberAmount' | 'fiberFullAmount' | 'images' | 'parentGroup'>,
 	itemTotal: number;
 	itemTotalBeforeDiscount?: number;
 	discountTotal: number | null;
@@ -23,8 +25,9 @@ export const OrderDishFragments = {
 		fragment OrderDishFragment on OrderDish {
 			id
 			amount
+			dishId
 			dish {
-				...DishFragment
+				id
 			}
 			modifiers {
 				id
@@ -45,7 +48,25 @@ export const OrderDishFragments = {
 	vOb: <ValuesOrBoolean<OrderDish>>{
 		id: true,
 		amount: true,
-		dish: DishFragments.vOb,
+		dish: {
+			id: true,
+			name: true,
+			price: true,
+			weight: true,
+			carbohydrateAmount: true,
+			carbohydrateFullAmount: true,
+			energyAmount: true,
+			energyFullAmount: true,
+			fatAmount: true,
+			fatFullAmount: true,
+			fiberAmount: true,
+			fiberFullAmount: true,
+			images: ImageFragments.vOb,
+			parentGroup: {
+				id: true,
+				dishesPlaceholder: ImageFragments.vOb
+			}
+		},
 		modifiers: {
 			id: true,
 			dish: DishFragments.vOb,

@@ -15,6 +15,7 @@
     "@angular/compiler": "^13.2.0",
     "@angular/core": "^13.2.0",
     "@apollo/client": "^3.5.8",
+    "@axrl/ngx-extended-form-builder": "^1.0.9",
     "apollo-angular": "^2.6.0",
     "graphql": "^16.3.0",
     "rxjs": "~7.5.2",

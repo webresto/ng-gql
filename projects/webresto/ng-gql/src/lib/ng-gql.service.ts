@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject } from 'rxjs';
-import { filter, take, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
-import type { Group, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, OrderData } from './models';
+import { Group, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, OrderData, GroupFragments, DishFragments } from './models';
 import { OrderGql, GroupGql, DishGql, PaymentMethodGql, isValue, NavigationFragments, ValuesOrBoolean } from './models';
 import { ApolloService } from './services/apollo.service';
+import { makeForm } from '@axrl/ngx-extended-form-builder';
 
 type FieldTypes = Object | number | bigint | Symbol | string | boolean;
 
@@ -49,9 +50,6 @@ export function generateQueryString<T, N extends `${string}`, V>(name: N, queryO
 })
 export class NgGqlService {
 
-
-  private order$: BehaviorSubject<Order | null> = new BehaviorSubject<Order | null>(null);
-
   customFields: { [key: string]: string[] } = {};
 
   constructor(private apollo: ApolloService) { }
@@ -73,56 +71,132 @@ export class NgGqlService {
     return this._navigationData$;
   }
 
-  getMenu$(slug: string | string[] | undefined): Observable<Group[] | null> {
-    return this.apollo.watchQuery<{
-      groups: Group[],
-      dishes: Dish[]
-    }>({
-      query: GroupGql.queries.getGroupsAndDishes(this.customFields)
-    }).valueChanges.pipe(
-      map(({ data }) => {
-        const { groups, dishes } = data;
-        // Groups indexing
-        const groupsById = groups.reduce<{
-          [key: string]: Group
-        }>(
-          (accumulator, current) => {
-            accumulator[current.id] = {
-              ...current,
-              dishes: [],
-              childGroups: []
-            }
-            return accumulator;
-          }, {}
-        );
-        const groupIdsBySlug: {
-          [key: string]: string
-        } = {};
+  orderLoader$ = new BehaviorSubject<string | undefined | null>(null);
 
-        // Inserting dishes by groups
-        for (let dish of dishes) {
-          //const { groupId } = dish;
-          const groupId = dish.parentGroup?.id;
-          if (!groupId) continue;
-          if (!groupsById[groupId]) continue;
-          if (groupsById[groupId].dishes) {
-            groupsById[groupId].dishes?.push(dish);
-          } else {
-            groupsById[groupId].dishes = [dish];
+  order$ = this.orderLoader$.asObservable().pipe(
+    filter((value): value is string | undefined => value !== null),
+    switchMap(
+      orderId => {
+        return this.getOrder$(orderId)
+      }
+    ),
+    switchMap(
+      order => this.dishes$.pipe(
+        map(
+          dishes => {
+            order.dishes.forEach(
+              orderDish => {
+                if (!orderDish.dish && orderDish.dishId) {
+                  orderDish.dish = dishes?.find(dish => orderDish.dishId === dish.id)!
+                };
+              });
+            return order;
+          }),
+        shareReplay(1)
+      )),
+    shareReplay(1)
+  );
+
+  private dishes$ = new BehaviorSubject<Dish[] | null>(null);
+
+  private loadedMenu$ = this._navigationData$.pipe(
+    switchMap(
+      navigationData => {
+        const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
+        const slug: string | string[] = menuItem.options.initGroupSlug?.includes('navigationmenu') ? menuItem.navigation_menu.map(item => item.groupSlug) : menuItem.options.initGroupSlug;
+        return this.customQuery$<Group, 'groups' /*,
+         {
+          criteria: {
+            slug: string | string[]
           }
-        }
-        // Create groups hierarchy
-        for (let groupId in groupsById) {
-          const group = groupsById[groupId];
+        }*/>('groups', GroupFragments.vOb, /*{
+          criteria: { slug }
+        }*/).pipe(
+          switchMap(
+            result => this.customSubscribe$<Group, 'group'>('group', GroupFragments.vOb).pipe(
+              startWith(null),
+              map(
+                updatedValue => {
+                  const store: Group[] = (<Group[]>makeForm(result.groups).value);
+                  const copyedUpdatedValue: Group = makeForm(updatedValue).value;
+                  const updateFn: (store: Group[], subscribeValue: Group) => Group[] = (store, newValue) => {
+                    const findItem = store.find(
+                      item => newValue.id === item.id
+                    );
+                    if (findItem) {
+                      Object.assign(findItem, newValue);
+                      return store;
+                    } else {
+                      return [...store, newValue];
+                    };
+                  }
+                  return isValue(updatedValue) ?
+                    updateFn(store, copyedUpdatedValue) :
+                    store
+                }),
+              shareReplay(1)
+            )
+          ),
+          shareReplay(1)
+        );
+      }),
+    switchMap(
+      groups => {
+        return this.queryAndSubscribe<Dish, 'dishes', 'dish', unknown>('dishes', 'dish', DishFragments.vOb, 'id').pipe(
+          map(dishes => {
+            // Groups indexing
+            this.dishes$.next(dishes);
+            const groupsById = groups.reduce<{
+              [key: string]: Group
+            }>(
+              (accumulator, current) => {
+                if (!current.childGroups) {
+                  current.childGroups = [];
+                };
+                if (!current.dishes) {
+                  current.dishes = []
+                };
+                accumulator[current.id] = current;
+                return accumulator;
+              }, {}
+            );
+            const groupIdsBySlug: {
+              [key: string]: string
+            } = {};
 
-          const parentGroupId = group.parentGroup?.id;
-          groupIdsBySlug[group.slug!] = groupId;
-          if (!parentGroupId) continue;
-          if (!groupsById[parentGroupId]) continue;
-          groupsById[parentGroupId].childGroups.push(group);
-          //delete groupsById[groupId];
-        }
+            // Inserting dishes by groups
+            for (let dish of dishes) {
+              const groupId = dish.parentGroup?.id || dish.groupId;
+              if (!groupId) continue;
+              if (!groupsById[groupId]) continue;
+              if (groupsById[groupId].dishes) {
+                groupsById[groupId].dishes?.push(dish);
+              } else {
+                groupsById[groupId].dishes = [dish];
+              }
+            }
+            // Create groups hierarchy
+            for (let groupId in groupsById) {
+              const group = groupsById[groupId];
+              const parentGroupId = group.parentGroup?.id;
+              groupIdsBySlug[group.slug!] = groupId;
+              if (!parentGroupId) continue;
+              if (!groupsById[parentGroupId]) continue;
+              if (groupsById[parentGroupId].childGroups.find(chGroup => chGroup.id === group.id)) continue;
+              groupsById[parentGroupId].childGroups.push(group);
+            }
+            return { groupsById, groupIdsBySlug };
+          }),
+          shareReplay(1)
+        )
+      }
+    ),
+    shareReplay(1)
+  );
 
+  getMenu$(slug: string | string[] | undefined): Observable<Group[] | null> {
+    return this.loadedMenu$.pipe(
+      map(({ groupsById, groupIdsBySlug }) => {
         if (slug) {
           switch (typeof slug) {
             case 'string':
@@ -147,43 +221,22 @@ export class NgGqlService {
   }
 
   getDishes$(): Observable<Dish[]> {
-    return this.apollo.watchQuery<{
-      dishes: Dish[]
-    }>({
-      query: DishGql.queries.getDishes(this.customFields)
-    }).valueChanges.pipe(
-      map(({ data }) => {
-        return data.dishes;
-      }),
-      shareReplay(1)
+    return this.dishes$.asObservable().pipe(
+      filter((data): data is Dish[] => !!data)
     );
   }
 
-  getOrder$(orderId: string): Observable<OrderData> {
-    return this.apollo.watchQuery<{ getOrder: OrderData }>({
-      query: OrderGql.queries.getOrder(orderId, this.customFields)
-    }).valueChanges.pipe(
-      take(1),
-      map(({ data }) => data.getOrder),
-      shareReplay(1)
-    )
+  getOrder$(orderId: string | undefined): Observable<Order> {
+    return this.queryAndSubscribe<Order, 'order', 'order', { orderId: string } | undefined>('order', 'order', OrderGql.vOb, 'id', orderId ? {
+      orderId
+    } : undefined).pipe(
+      map(values => values[0])
+    );
   }
 
   getOrderAsCart$(orderId: string | undefined): Observable<Order> {
-    return this.apollo.watchQuery<{ order: Order }>({
-      query: OrderGql.queries.getOrderAsCart(orderId, this.customFields),
-      canonizeResults: true,
-      fetchPolicy: 'no-cache'
-    }).valueChanges.pipe(
-      switchMap(({ data }) => {
-        this.order$.next(data.order);
-        return this.order$.asObservable();
-      }),
-      filter(
-        (order): order is Order => !!order
-      ),
-      shareReplay(1)
-    );
+    this.orderLoader$.next(orderId);
+    return this.order$;
   }
 
   getPhone$(phone: string): Observable<Phone> {
@@ -230,9 +283,6 @@ export class NgGqlService {
       .pipe(
         map(({ data }) => {
           const order: Order = data!.orderAddDish;
-          if (order) {
-            this.order$.next(order);
-          };
           return order;
         })
       )
@@ -248,7 +298,6 @@ export class NgGqlService {
       .pipe(
         map(({ data }) => {
           const checkResponse: CheckResponse = data!.sendOrder;
-          this.order$.next(checkResponse.order);
           return checkResponse;
         })
       )
@@ -264,7 +313,6 @@ export class NgGqlService {
       .pipe(
         map(({ data }) => {
           const checkResponse: CheckResponse = data!['checkOrder'];
-          this.order$.next(checkResponse.order);
           return checkResponse;
         })
       )
@@ -295,7 +343,6 @@ export class NgGqlService {
       .pipe(
         map(({ data }) => {
           const order: Order = data!['orderRemoveDish'];
-          this.order$.next(order);
           return order;
         })
       )
@@ -311,7 +358,6 @@ export class NgGqlService {
       .pipe(
         map(({ data }) => {
           const order: Order = data!['orderSetDishAmount'];
-          this.order$.next(order);
           return order;
         })
       )
@@ -327,15 +373,14 @@ export class NgGqlService {
       .pipe(
         map(({ data }) => {
           const order: Order = data!['orderSetDishComment'];
-          this.order$.next(order);
           return order;
         })
       )
   }
 
-  customQuery$<T, N extends `${string}`, V = Object>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V): Observable<Record<N, T | T[]>>
-  customQuery$<T, N extends `${string}`, V = Object>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V): Observable<Record<N, T | T[]>>
-  customQuery$<T, N extends `${string}`, V = Object>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V): Observable<Record<N, T | T[]>> {
+  customQuery$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V): Observable<Record<N, T | T[]>>
+  customQuery$<T, N extends `${string}`, V = unknown>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V): Observable<Record<N, T | T[]>>
+  customQuery$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
       query: gql`query ${generateQueryString(name, name in queryObject ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
       variables,
@@ -347,9 +392,9 @@ export class NgGqlService {
       );
   }
 
-  customMutation$<T, N extends `${string}`, V>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V): Observable<Record<N, T>>
-  customMutation$<T, N extends `${string}`, V>(name: N, queryObject: ValuesOrBoolean<T>, variables: V): Observable<Record<N, T>>
-  customMutation$<T, N extends `${string}`, V>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V): Observable<Record<N, T>> {
+  customMutation$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V): Observable<Record<N, T>>
+  customMutation$<T, N extends `${string}`, V = unknown>(name: N, queryObject: ValuesOrBoolean<T>, variables: V): Observable<Record<N, T>>
+  customMutation$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V): Observable<Record<N, T>> {
     return this.apollo.mutate<Record<N, T>, V>({
       mutation: gql`mutation ${generateQueryString(name, name in queryObject ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
       variables
@@ -359,9 +404,9 @@ export class NgGqlService {
     );
   }
 
-  customSubscribe$<T, N extends `${string}`, V = Object>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>
-  customSubscribe$<T, N extends `${string}`, V = Object>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>
-  customSubscribe$<T, N extends `${string}`, V = Object>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]> {
+  customSubscribe$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>
+  customSubscribe$<T, N extends `${string}`, V = unknown>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>
+  customSubscribe$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]> {
     return this.apollo.subscribe<Record<N, T>, V>({
       query: gql`subscription ${generateQueryString(name, name in queryObject ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
       variables
@@ -372,7 +417,7 @@ export class NgGqlService {
     );
   }
 
-  queryAndSubscribe<T, NQuery extends `${string}`, NSubscribe extends `${string}`, V>(nameQuery: NQuery, nameSubscribe: NSubscribe, queryObject: ValuesOrBoolean<T>, uniqueKeyForCompareItem: keyof T, variables?: V) {
+  queryAndSubscribe<T, NQuery extends `${string}`, NSubscribe extends `${string}`, V = unknown>(nameQuery: NQuery, nameSubscribe: NSubscribe, queryObject: ValuesOrBoolean<T>, uniqueKeyForCompareItem: keyof T, variables?: V) {
     const updateFn: (store: T | T[], subscribeValue: T) => T[] = (store, newValue) => {
       const array = (Array.isArray(store) ? store : [store]);
       const findItem = array.find(
@@ -390,12 +435,15 @@ export class NgGqlService {
         result => this.customSubscribe$(nameSubscribe, queryObject, variables).pipe(
           startWith(null),
           map(
-            updatedValue => isValue(updatedValue) ?
-              updateFn(result[nameQuery], Object.assign({}, updatedValue)) :
-              Array.isArray(result[nameQuery]) ?
-                [... <T[]>result[nameQuery]] :
-                <T[]>[result[nameQuery]]
-          ),
+            updatedValue => {
+              const store: T | T[] = makeForm(result[nameQuery]).value;
+              const copyedUpdatedValue: T = makeForm(updatedValue).value;
+              return isValue(updatedValue) ?
+                updateFn(store, copyedUpdatedValue) :
+                Array.isArray(store) ?
+                  store :
+                  <T[]>[store]
+            }),
           shareReplay(1)
         )
       ),

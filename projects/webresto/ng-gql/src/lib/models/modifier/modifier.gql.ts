@@ -20,7 +20,6 @@ export interface Modifier {
 	dish: Dish;
 }
 
-
 export const ModifierFragments = {
 	modifier: gql`
 		fragment ModifierFragment on Modifier {
@@ -36,7 +35,11 @@ export const ModifierFragments = {
 				weight
 				balance
 				tags
-				groupId 
+				groupId
+				parentGroup {
+					id,
+					dishesPlaceholder
+				}
 				images {
 					...ImageFragment
 				}
@@ -58,6 +61,10 @@ export const ModifierFragments = {
 			balance: true,
 			tags: true,
 			groupId: true,
+			parentGroup: {
+				id: true,
+				dishesPlaceholder:true
+			},
 			images: ImageFragments.vOb
 		}
 	}
