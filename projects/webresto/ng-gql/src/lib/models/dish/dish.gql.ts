@@ -48,7 +48,32 @@ export const DishFragments = {
 		}
 		${ImageFragments.image}
 		${GroupModifierFragments.groupModifier}
-	`
+	`,
+	vOb: {
+		id: true,
+		name: true,
+		description: true,
+		price: true,
+		weight: true,
+		balance: true,
+		tags: true,
+		additionalInfo: true,
+		carbohydrateAmount: true,
+		carbohydrateFullAmount: true,
+		energyAmount: true,
+		energyFullAmount: true,
+		fatAmount: true,
+		fatFullAmount: true,
+		fiberAmount: true,
+		fiberFullAmount: true,
+		measureUnit: true,
+		images: ImageFragments.vOb,
+		modifiers: GroupModifierFragments.vOb,
+		parentGroup: {
+			id: true,
+			dishesPlaceholder: ImageFragments.vOb
+		}
+	}
 };
 
 export const DishGql = {

@@ -22,7 +22,6 @@ export interface Order {
   customer?: Customer;
   address?: Address;
   paid?: boolean;
-  isPaymentPromise?: boolean;
   paymentMethod?: PaymentMethod;
   customData?: {
     [key: string]: string | any;

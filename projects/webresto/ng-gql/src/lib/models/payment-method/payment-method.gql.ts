@@ -13,12 +13,22 @@ export const PaymentMethodFragments = {
 			enable
 			customData
 		}
-	`
+	`,
+	vOb: {
+		id: true,
+		type: true,
+		title: true,
+		description: true,
+		adapter: true,
+		order: true,
+		enable: true,
+		customData: true,
+	}
 };
 
 export const PaymentMethodGql = {
 	queries: {
-		getPaymentMethod: (orderId: string | null = null, customFields:CustomfFields) => {
+		getPaymentMethod: (orderId: string | null = null, customFields: CustomfFields) => {
 			if (orderId == 'null') {
 				orderId = null;
 			};

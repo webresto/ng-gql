@@ -17,5 +17,15 @@ export const GroupModifierFragments = {
 			}
 		}
 		${ModifierFragments.modifier}
-	`
+	`, vOb: {
+		modifierId: true,
+		maxAmount: true,
+		minAmount: true,
+		required: true,
+		childModifiers: ModifierFragments.vOb,
+		group: {
+			id: true,
+			name: true,
+		}
+	}
 };

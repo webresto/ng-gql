@@ -12,7 +12,15 @@ export const GroupFragments = {
 			visible
 			slug
 		}
-	`
+	`,
+	vOb: {
+		id: true,
+		description: true,
+		name: true,
+		order: true,
+		visible: true,
+		slug: true,
+	}
 };
 
 export const GroupGql = {
@@ -29,7 +37,7 @@ export const GroupGql = {
 			${GroupFragments.group}
 			${DishFragments.dish}
 		`,
-		getGroupsAndDishes: (customFields:CustomfFields) => gql`
+		getGroupsAndDishes: (customFields: CustomfFields) => gql`
 			query GetGroupsAndDishes {
 				groups {
 					parentGroup {

@@ -82,7 +82,6 @@ export const OrderFragments = {
 			totalWeight
 			total
 			orderTotal
-			orderTotal
 			discountTotal
 			state
 			customData
@@ -90,6 +89,26 @@ export const OrderFragments = {
 			address
 		}
 	`,
+	vOb: {
+		id: true,
+		dishesCount: true,
+		comment: true,
+		deliveryDescription: true,
+		message: true,
+		deliveryCost: true,
+		totalWeight: true,
+		total: true,
+		orderTotal: true,
+		discountTotal: true,
+		state: true,
+		customData: true,
+		customer: true,
+		address: true,
+		rmsId: true,
+		rmsOrderNumber: true,
+		rmsDeliveryDate: true,
+		dishes: OrderDishFragments.vOb
+	},
 	orderOrderData: gql`
 		fragment OrderOrderFragment on Order {
 			rmsId

@@ -23,5 +23,22 @@ export const ModifierFragments = {
 			}
 		}
 		${ImageFragments.image}
-	`
+	`,
+	vOb: {
+		modifierId: true,
+		maxAmount: true,
+		minAmount: true,
+		defaultAmount: true,
+		dish: {
+			id: true,
+			name: true,
+			description: true,
+			price: true,
+			weight: true,
+			balance: true,
+			tags: true,
+			groupId: true,
+			images: ImageFragments.vOb
+		}
+	}
 };

@@ -7,5 +7,10 @@ export const ImageFragments = {
 			uploadDate
 			images
 		}
-	`
+	`,
+	vOb: {
+		id: true,
+		uploadDate: true,
+		images: true,
+	}
 };

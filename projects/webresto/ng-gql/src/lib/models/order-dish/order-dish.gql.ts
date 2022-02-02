@@ -24,5 +24,21 @@ export const OrderDishFragments = {
 			itemTotal
 		}
 		${DishFragments.dish}
-	`
+	`,
+	vOb: {
+		id:true,
+			amount:true,
+			dish:DishFragments.vOb,
+			modifiers: {
+				id:true,
+				dish: DishFragments,
+				amount:true,
+				groupId:true,
+			},
+			discountTotal:true,
+			discountType:true,
+			comment:true,
+			totalWeight:true,
+			itemTotal:true,
+	}
 };
