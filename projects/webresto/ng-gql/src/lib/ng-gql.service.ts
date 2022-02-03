@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { filter, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
 import { Group, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, OrderData, GroupFragments, DishFragments } from './models';
@@ -70,6 +70,34 @@ export class NgGqlService {
   getNavigation$(): Observable<Navigation[]> {
     return this._navigationData$;
   }
+
+  rootGroupsSlugs$ = this._navigationData$.pipe(
+    switchMap(navigationData => {
+      const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
+      return menuItem.options.behavior?.includes('navigationmenu') ?
+        of(menuItem.navigation_menu.map(item => item.groupSlug)) :
+        this.customQuery$<{ childGroups: { id: string }[] }, 'groups', {
+          criteria: {
+            slug: string
+          }
+        }>('groups', {
+          childGroups: {
+            id: true
+          }
+        }, {
+          criteria: {
+            slug: menuItem.options.initGroupSlug
+          }
+        }).pipe(
+          map(group => (<{
+            childGroups: {
+              id: string;
+            }[];
+          }[]>group.groups)[0].childGroups.map(child => child.id)
+          ),
+        );
+    })
+  )
 
   orderLoader$ = new BehaviorSubject<string | undefined | null>(null);
 
