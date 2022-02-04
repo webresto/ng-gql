@@ -4,14 +4,25 @@ import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject, of } from 'rxjs';
 import { filter, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
-import { Group, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, OrderData, GroupFragments, DishFragments } from './models';
-import { OrderGql, GroupGql, DishGql, PaymentMethodGql, isValue, NavigationFragments, ValuesOrBoolean } from './models';
+import type { Group, ValuesOrBoolean, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput } from './models';
+import { OrderGql, PaymentMethodGql, isValue, NavigationFragments, GroupFragments, DishFragments } from './models';
 import { ApolloService } from './services/apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
 
+export type VCriteria = {
+  criteria: {
+    [key: string]: any
+  }
+}
+
 type FieldTypes = Object | number | bigint | Symbol | string | boolean;
 
-export function generateQueryString<T, N extends `${string}`, V>(name: N, queryObject: T, variables: V) {
+export function generateQueryString<T, N extends `${string}`, V>(options: {
+  name: N,
+  queryObject: T,
+  variables: V,
+}) {
+  const { name, queryObject, variables } = options;
   const makeFieldList = <T, V>(source: T, name: string, indent: number = 1, variables?: V): string => {
     const indentString = new Array<string>(indent * 2).fill(' ').join('');
     return `${name}${indent === 1 && variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
@@ -22,13 +33,18 @@ export function generateQueryString<T, N extends `${string}`, V>(name: N, queryO
           (entry): entry is [string, FieldTypes] => typeof entry[1] !== 'function'
         ).
         map(
-          entry => typeof entry[1] === 'object' && entry[1] !== undefined && entry[1] !== null ? makeFieldList(
-            Array.isArray(entry[1]) && entry[1][0] ? entry[1][0] : entry[1], entry[0], indent + 1
-          ) : String(entry[0])
+          entry => typeof entry[1] === 'object' && entry[1] !== undefined && entry[1] !== null ?
+            makeFieldList(
+              Array.isArray(entry[1]) && entry[1][0] ? entry[1][0] : entry[1], entry[0], indent + 1
+            ) :
+            typeof entry[1] === 'string' && entry[1].includes('Fragment') ?
+              `${entry[0]} : {...${entry[1]}}` :
+              String(entry[0])
         ).join(
           `,\n  ${indentString}`
         )
-      }\n${indentString}}`
+      }\n${indentString}}
+      `
   };
   const getGqlType = (value: FieldTypes): string => {
     switch (typeof value) {
@@ -76,13 +92,9 @@ export class NgGqlService {
       const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
       return menuItem.options.behavior?.includes('navigationmenu') ?
         of(menuItem.navigation_menu.map(item => item.groupSlug)) :
-        this.customQuery$<{ childGroups: { id: string }[] }, 'groups', {
-          criteria: {
-            slug: string
-          }
-        }>('groups', {
+        this.customQuery$<{ childGroups: { slug: string }[] }, 'groups', VCriteria>('groups', {
           childGroups: {
-            id: true
+            slug: true
           }
         }, {
           criteria: {
@@ -91,9 +103,9 @@ export class NgGqlService {
         }).pipe(
           map(group => (<{
             childGroups: {
-              id: string;
+              slug: string;
             }[];
-          }[]>group.groups)[0].childGroups.map(child => child.id)
+          }[]>group.groups)[0].childGroups.map(child => child.slug)
           ),
         );
     })
@@ -127,46 +139,11 @@ export class NgGqlService {
 
   private dishes$ = new BehaviorSubject<Dish[] | null>(null);
 
-  private loadedMenu$ = this._navigationData$.pipe(
+  private loadedMenu$ = this.rootGroupsSlugs$.pipe(
     switchMap(
-      navigationData => {
-        const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
-        const slug: string | string[] = menuItem.options.initGroupSlug?.includes('navigationmenu') ? menuItem.navigation_menu.map(item => item.groupSlug) : menuItem.options.initGroupSlug;
-        return this.customQuery$<Group, 'groups' /*,
-         {
-          criteria: {
-            slug: string | string[]
-          }
-        }*/>('groups', GroupFragments.vOb, /*{
-          criteria: { slug }
-        }*/).pipe(
-          switchMap(
-            result => this.customSubscribe$<Group, 'group'>('group', GroupFragments.vOb).pipe(
-              startWith(null),
-              map(
-                updatedValue => {
-                  const store: Group[] = (<Group[]>makeForm(result.groups).value);
-                  const copyedUpdatedValue: Group = makeForm(updatedValue).value;
-                  const updateFn: (store: Group[], subscribeValue: Group) => Group[] = (store, newValue) => {
-                    const findItem = store.find(
-                      item => newValue.id === item.id
-                    );
-                    if (findItem) {
-                      Object.assign(findItem, newValue);
-                      return store;
-                    } else {
-                      return [...store, newValue];
-                    };
-                  }
-                  return isValue(updatedValue) ?
-                    updateFn(store, copyedUpdatedValue) :
-                    store
-                }),
-              shareReplay(1)
-            )
-          ),
-          shareReplay(1)
-        );
+      slugs => {
+        console.log(slugs);
+        return this.queryAndSubscribe<Group, 'groups', 'group' /*, VCriteria*/>('groups', 'group', GroupFragments.vOb, 'id');
       }),
     switchMap(
       groups => {
@@ -174,6 +151,7 @@ export class NgGqlService {
           map(dishes => {
             // Groups indexing
             this.dishes$.next(dishes);
+
             const groupsById = groups.reduce<{
               [key: string]: Group
             }>(
@@ -410,7 +388,11 @@ export class NgGqlService {
   customQuery$<T, N extends `${string}`, V = unknown>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V): Observable<Record<N, T | T[]>>
   customQuery$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
-      query: gql`query ${generateQueryString(name, name in queryObject ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
+      query: gql`query ${generateQueryString({
+        name,
+        queryObject: name in queryObject ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject,
+        variables,
+      })}`,
       variables,
     }).valueChanges
       .pipe(
@@ -424,7 +406,11 @@ export class NgGqlService {
   customMutation$<T, N extends `${string}`, V = unknown>(name: N, queryObject: ValuesOrBoolean<T>, variables: V): Observable<Record<N, T>>
   customMutation$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V): Observable<Record<N, T>> {
     return this.apollo.mutate<Record<N, T>, V>({
-      mutation: gql`mutation ${generateQueryString(name, name in queryObject ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
+      mutation: gql`mutation ${generateQueryString({
+        name,
+        queryObject: name in queryObject ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject,
+        variables,
+      })}`,
       variables
     }).pipe(
       map(result => result.data),
@@ -436,7 +422,11 @@ export class NgGqlService {
   customSubscribe$<T, N extends `${string}`, V = unknown>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>
   customSubscribe$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]> {
     return this.apollo.subscribe<Record<N, T>, V>({
-      query: gql`subscription ${generateQueryString(name, name in queryObject ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject, variables)}`,
+      query: gql`subscription ${generateQueryString({
+        name,
+        queryObject: name in queryObject ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject,
+        variables
+      })}`,
       variables
     }, extra).pipe(
       map(result => result.data),

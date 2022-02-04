@@ -1,8 +1,9 @@
 import { gql } from 'apollo-angular';
 import { DishFragments } from '../dish/dish.gql';
+import { ImageFragments } from '../image/image.gql';
 import type { CustomfFields } from '../custom-fields/custom-fields';
 import type { Dish } from '../dish/dish.gql';
-import { Image, ImageFragments } from '../image/image.gql';
+import type { Image } from '../image/image.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
 export interface Group {
@@ -14,7 +15,7 @@ export interface Group {
 	order: number;
 	dishes?: Dish[];
 	discount?: number;
-	parentGroup?: Group;
+	parentGroup?: Pick<Group, 'id' | 'dishesPlaceholder'>;
 	childGroups: Group[];
 	dishesPlaceholder: Image | null;
 }
