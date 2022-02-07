@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject, of } from 'rxjs';
-import { filter, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, startWith, distinctUntilChanged } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
 import type { Group, ValuesOrBoolean, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput } from './models';
 import { OrderGql, PaymentMethodGql, isValue, NavigationFragments, GroupFragments, DishFragments } from './models';
 import { ApolloService } from './services/apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
+import type { NgGqlConfig } from './ng-gql.module';
 
 export type VCriteria = {
   criteria: {
@@ -68,7 +69,7 @@ export class NgGqlService {
 
   customFields: { [key: string]: string[] } = {};
 
-  constructor(private apollo: ApolloService) { }
+  constructor(private apollo: ApolloService, @Inject('config') private config: NgGqlConfig) { }
 
   addCustomField(modelName: string, field: string) {
     if (!this.customFields[modelName]) {
@@ -107,14 +108,17 @@ export class NgGqlService {
             }[];
           }[]>group.groups)[0].childGroups.map(child => child.slug)
           ),
+          shareReplay(1)
         );
-    })
+    }),
+    shareReplay(1)
   )
 
   orderLoader$ = new BehaviorSubject<string | undefined | null>(null);
 
   order$ = this.orderLoader$.asObservable().pipe(
     filter((value): value is string | undefined => value !== null),
+    distinctUntilChanged(),
     switchMap(
       orderId => {
         return this.getOrder$(orderId)
@@ -124,6 +128,9 @@ export class NgGqlService {
       order => this.dishes$.pipe(
         map(
           dishes => {
+            if (!order.dishes) {
+              order.dishes = [];
+            };
             order.dishes.forEach(
               orderDish => {
                 if (!orderDish.dish && orderDish.dishId) {
@@ -142,17 +149,49 @@ export class NgGqlService {
   private loadedMenu$ = this.rootGroupsSlugs$.pipe(
     switchMap(
       slugs => {
-        console.log(slugs);
-        return this.queryAndSubscribe<Group, 'groups', 'group' /*, VCriteria*/>('groups', 'group', GroupFragments.vOb, 'id');
+        const nesting = this.config.nesting ?? 2;
+        const queryObject: ValuesOrBoolean<Group> = new Array(nesting).fill(nesting).reduce(
+          (accumulator: ValuesOrBoolean<Group>) => {
+            const item = { ...GroupFragments.vOb };
+            item.childGroups = accumulator;
+            return item;
+          }, { ...GroupFragments.vOb, childGroups: { ...GroupFragments.vOb } }
+        );
+        return this.queryAndSubscribe<Group, 'groups', 'group', VCriteria>('groups', 'group', queryObject, 'id', {
+          criteria: {
+            slug: slugs
+          }
+        });
       }),
     switchMap(
       groups => {
-        return this.queryAndSubscribe<Dish, 'dishes', 'dish', unknown>('dishes', 'dish', DishFragments.vOb, 'id').pipe(
+        const addGroup = (items: Group[], item: Group) => {
+          if (!items.find(value => value.id === item.id)) {
+            items.push(item);
+          }
+        };
+        const getGroups = (items: Group[]) => items.reduce<Group[]>(
+          (accumulator, current) => {
+            addGroup(accumulator, current);
+            if (current.childGroups && current.childGroups.length > 0) {
+              getGroups(current.childGroups).forEach(
+                child => addGroup(accumulator, child)
+              );
+            };
+            return accumulator;
+          }, []
+        );
+        const allNestingsGroups = getGroups(groups);
+        const allNestingsIds = allNestingsGroups.map(group => group.id);
+        console.log(allNestingsGroups);
+        return this.queryAndSubscribe<Dish, 'dishes', 'dish', VCriteria>('dishes', 'dish', DishFragments.vOb, 'id', {
+          criteria: {
+            parentGroup: allNestingsIds
+          }
+        }).pipe(
           map(dishes => {
-            // Groups indexing
             this.dishes$.next(dishes);
-
-            const groupsById = groups.reduce<{
+            const groupsById = allNestingsGroups.reduce<{
               [key: string]: Group
             }>(
               (accumulator, current) => {

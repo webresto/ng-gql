@@ -15,6 +15,7 @@ const DIRECTIVES = [
 
 export interface NgGqlConfig {
   url: string;
+  nesting: number
 }
 
 @NgModule({

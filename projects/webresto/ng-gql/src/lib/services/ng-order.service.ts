@@ -26,7 +26,6 @@ export class NgOrderService {
     private ngGqlService: NgGqlService,
     private eventer: EventerService
   ) {
-    this.initialStorage();
     this.modifiersMessage$.subscribe(messages => this.messages = messages);
   }
 
