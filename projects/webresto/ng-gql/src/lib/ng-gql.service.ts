@@ -10,58 +10,6 @@ import { ApolloService } from './services/apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
 import type { NgGqlConfig } from './ng-gql.module';
 
-export type VCriteria = {
-  criteria: {
-    [key: string]: any
-  }
-}
-
-type FieldTypes = Object | number | bigint | Symbol | string | boolean;
-
-export function generateQueryString<T, N extends `${string}`, V>(options: {
-  name: N,
-  queryObject: T,
-  variables: V,
-}) {
-  const { name, queryObject, variables } = options;
-  const makeFieldList = <T, V>(source: T, name: string, indent: number = 1, variables?: V): string => {
-    const indentString = new Array<string>(indent * 2).fill(' ').join('');
-    return `${name}${indent === 1 && variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
-      key => `${key}:$${key}`
-    ).join(',')
-      })` : ''} {\n  ${indentString}${Object.entries(source).
-        filter(
-          (entry): entry is [string, FieldTypes] => typeof entry[1] !== 'function'
-        ).
-        map(
-          entry => typeof entry[1] === 'object' && entry[1] !== undefined && entry[1] !== null ?
-            makeFieldList(
-              Array.isArray(entry[1]) && entry[1][0] ? entry[1][0] : entry[1], entry[0], indent + 1
-            ) :
-            typeof entry[1] === 'string' && entry[1].includes('Fragment') ?
-              `${entry[0]} : {...${entry[1]}}` :
-              String(entry[0])
-        ).join(
-          `,\n  ${indentString}`
-        )
-      }\n${indentString}}
-      `
-  };
-  const getGqlType = (value: FieldTypes): string => {
-    switch (typeof value) {
-      case 'number': return 'Int';
-      case 'string': return 'String';
-      case 'boolean': return 'Boolean';
-      case 'object': return 'Json';
-      default: throw new Error('Параметр должен принадлежать типам number, string, object или boolean');
-    }
-  };
-  return ` load${name[0].toUpperCase() + name.slice(1)} ${variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
-    key => `$${key}:${getGqlType(variables[key])}`
-  ).join(',')
-    })` : ''} {\n${makeFieldList(queryObject, name, 1, variables)}\n}`;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -114,16 +62,18 @@ export class NgGqlService {
     shareReplay(1)
   )
 
-  orderLoader$ = new BehaviorSubject<string | undefined | null>(null);
+  private _orderLoader$ = new BehaviorSubject<string | undefined | null>(null);
+  orderLoader$ = this._orderLoader$.asObservable().pipe(
+    map(orderId => orderId ?? undefined),
+    shareReplay(1),
+    distinctUntilChanged()
+  );
 
-  order$ = this.orderLoader$.asObservable().pipe(
-    filter((value): value is string | undefined => value !== null),
-    distinctUntilChanged(),
+  order$ = this.orderLoader$.pipe(
     switchMap(
       orderId => {
-        return this.getOrder$(orderId)
-      }
-    ),
+        return this._getOrder$(orderId);
+      }),
     switchMap(
       order => this.dishes$.pipe(
         map(
@@ -261,17 +211,44 @@ export class NgGqlService {
           return Object.values(groupsById) as Group[];
         }
       }),
-      shareReplay()
+      shareReplay(1)
     )
   }
 
-  getDishes$(): Observable<Dish[]> {
-    return this.dishes$.asObservable().pipe(
-      filter((data): data is Dish[] => !!data)
-    );
+  getDishes$(id?: string | string[]): Observable<Dish[]> {
+    const dishes = this.dishes$.value;
+    if (dishes) {
+      const ids = typeof id === 'string' ? [id] : id;
+      const dishesInStock = dishes.filter(item => typeof id === 'string' ? item.id === id : id?.includes(item.id));
+      if (!ids) {
+        return of(dishes);
+      } else {
+        if (dishesInStock.length == ids.length) {
+          return of(dishesInStock);
+        } else {
+          const dishesNotInStock = ids.filter(dishId => !dishes.find(dish => dish.id === dishId));
+          return this.customQuery$<Dish, 'dishes', VCriteria>('dishes', DishFragments.vOb, {
+            criteria: {
+              id: dishesNotInStock
+            }
+          }).pipe(
+            map(loadedDishes => {
+              const result = Array.isArray(loadedDishes.dishes) ? loadedDishes.dishes : [loadedDishes.dishes]
+              dishes.push(...result);
+              this.dishes$.next(dishes);
+              return [...dishesInStock, ...result];
+            })
+          )
+        }
+      }
+    } else {
+      return this.dishes$.asObservable().pipe(
+        filter((data): data is Dish[] => !!data)
+      );
+    }
   }
 
-  getOrder$(orderId: string | undefined): Observable<Order> {
+  private _getOrder$(orderId: string | undefined): Observable<Order> {
     return this.queryAndSubscribe<Order, 'order', 'order', { orderId: string } | undefined>('order', 'order', OrderGql.vOb, 'id', orderId ? {
       orderId
     } : undefined).pipe(
@@ -279,29 +256,32 @@ export class NgGqlService {
     );
   }
 
-  getOrderAsCart$(orderId: string | undefined): Observable<Order> {
-    this.orderLoader$.next(orderId);
-    return this.order$;
+  getOrder(orderId: string | undefined): Observable<Order> {
+    return this._getOrder$(orderId);
+  }
+
+  loadOrderAsCart$(orderId: string | undefined): void {
+    if (this._orderLoader$.value !== orderId) {
+      this._orderLoader$.next(orderId);
+    };
   }
 
   getPhone$(phone: string): Observable<Phone> {
     return this.apollo.watchQuery<any>({
       query: OrderGql.queries.getPhone(phone, this.customFields),
       fetchPolicy: 'no-cache'
-    })
-      .valueChanges
-      .pipe(
-        map(
-          ({ data }) => data.phone
-        )
-      );
+    }).pipe(
+      map(
+        ({ data }) => data.phone
+      )
+    );
   }
 
   checkPhone$(phone: string): Observable<CheckPhoneResponse> {
     return this.apollo.watchQuery<any>({
       query: OrderGql.queries.checkPhone(phone, this.customFields),
       fetchPolicy: 'no-cache'
-    }).valueChanges.pipe(
+    }).pipe(
       map(
         ({ data }) => data.checkPhone
       )
@@ -311,7 +291,7 @@ export class NgGqlService {
   getPaymentMethods$(orderId: string): Observable<PaymentMethod[]> {
     return this.apollo.watchQuery<any>({
       query: PaymentMethodGql.queries.getPaymentMethod(orderId, this.customFields)
-    }).valueChanges.pipe(
+    }).pipe(
       map(
         ({ data }) => data.paymentMethods
       )
@@ -324,13 +304,12 @@ export class NgGqlService {
     }>({
       mutation: OrderGql.mutations.addDishToOrder(this.customFields),
       variables: data
-    })
-      .pipe(
-        map(({ data }) => {
-          const order: Order = data!.orderAddDish;
-          return order;
-        })
-      )
+    }).pipe(
+      map(({ data }) => {
+        const order: Order = data!.orderAddDish;
+        return order;
+      })
+    )
   }
 
   sendOrder$(data: OrderInput): Observable<CheckResponse> {
@@ -339,13 +318,12 @@ export class NgGqlService {
     }>({
       mutation: OrderGql.mutations.sendOrder(this.customFields),
       variables: data
-    })
-      .pipe(
-        map(({ data }) => {
-          const checkResponse: CheckResponse = data!.sendOrder;
-          return checkResponse;
-        })
-      )
+    }).pipe(
+      map(({ data }) => {
+        const checkResponse: CheckResponse = data!.sendOrder;
+        return checkResponse;
+      })
+    )
   }
 
   checkOrder$(data: OrderInput): Observable<CheckResponse> {
@@ -354,13 +332,12 @@ export class NgGqlService {
     }>({
       mutation: OrderGql.mutations.checkOrder(this.customFields),
       variables: data
-    })
-      .pipe(
-        map(({ data }) => {
-          const checkResponse: CheckResponse = data!['checkOrder'];
-          return checkResponse;
-        })
-      )
+    }).pipe(
+      map(({ data }) => {
+        const checkResponse: CheckResponse = data!['checkOrder'];
+        return checkResponse;
+      })
+    )
   }
 
   checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
@@ -369,13 +346,12 @@ export class NgGqlService {
     }>({
       mutation: OrderGql.mutations.checkPhoneCode(this.customFields),
       variables: data
-    })
-      .pipe(
-        map(({ data }) => {
-          const checkPhoneResponse: CheckPhoneResponse = data!['setPhoneCode'];
-          return checkPhoneResponse;
-        })
-      )
+    }).pipe(
+      map(({ data }) => {
+        const checkPhoneResponse: CheckPhoneResponse = data!['setPhoneCode'];
+        return checkPhoneResponse;
+      })
+    )
   }
 
   removeDishFromOrder$(data: RemoveFromOrderInput): Observable<Order> {
@@ -384,13 +360,12 @@ export class NgGqlService {
     }>({
       mutation: OrderGql.mutations.removeDishFromOrder(this.customFields),
       variables: data
-    })
-      .pipe(
-        map(({ data }) => {
-          const order: Order = data!['orderRemoveDish'];
-          return order;
-        })
-      )
+    }).pipe(
+      map(({ data }) => {
+        const order: Order = data!['orderRemoveDish'];
+        return order;
+      })
+    )
   }
 
   setDishAmount$(data: SetDishAmountInput): Observable<Order> {
@@ -399,13 +374,12 @@ export class NgGqlService {
     }>({
       mutation: OrderGql.mutations.setDishAmount(this.customFields),
       variables: data
-    })
-      .pipe(
-        map(({ data }) => {
-          const order: Order = data!['orderSetDishAmount'];
-          return order;
-        })
-      )
+    }).pipe(
+      map(({ data }) => {
+        const order: Order = data!['orderSetDishAmount'];
+        return order;
+      })
+    )
   }
 
   setDishComment$(data: SetDishCommentInput): Observable<Order> {
@@ -414,13 +388,12 @@ export class NgGqlService {
     }>({
       mutation: OrderGql.mutations.setDishComment(this.customFields),
       variables: data
-    })
-      .pipe(
-        map(({ data }) => {
-          const order: Order = data!['orderSetDishComment'];
-          return order;
-        })
-      )
+    }).pipe(
+      map(({ data }) => {
+        const order: Order = data!['orderSetDishComment'];
+        return order;
+      })
+    )
   }
 
   customQuery$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V): Observable<Record<N, T | T[]>>
@@ -433,12 +406,11 @@ export class NgGqlService {
         variables,
       })}`,
       variables,
-    }).valueChanges
-      .pipe(
-        map(
-          res => res.error || res.errors ? null : res.data),
-        filter((data): data is Record<N, T | T[]> => !!data)
-      );
+    }).pipe(
+      map(
+        res => res.error || res.errors ? null : res.data),
+      filter((data): data is Record<N, T | T[]> => !!data)
+    );
   }
 
   customMutation$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V): Observable<Record<N, T>>
@@ -510,4 +482,55 @@ export class NgGqlService {
 
 }
 
+export type VCriteria = {
+  criteria: {
+    [key: string]: any
+  }
+}
+
+type FieldTypes = Object | number | bigint | Symbol | string | boolean;
+
+export function generateQueryString<T, N extends `${string}`, V>(options: {
+  name: N,
+  queryObject: T,
+  variables: V,
+}) {
+  const { name, queryObject, variables } = options;
+  const makeFieldList = <T, V>(source: T, name: string, indent: number = 1, variables?: V): string => {
+    const indentString = new Array<string>(indent * 2).fill(' ').join('');
+    return `${name}${indent === 1 && variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
+      key => `${key}:$${key}`
+    ).join(',')
+      })` : ''} {\n  ${indentString}${Object.entries(source).
+        filter(
+          (entry): entry is [string, FieldTypes] => typeof entry[1] !== 'function'
+        ).
+        map(
+          entry => typeof entry[1] === 'object' && entry[1] !== undefined && entry[1] !== null ?
+            makeFieldList(
+              Array.isArray(entry[1]) && entry[1][0] ? entry[1][0] : entry[1], entry[0], indent + 1
+            ) :
+            typeof entry[1] === 'string' && entry[1].includes('Fragment') ?
+              `${entry[0]} : {...${entry[1]}}` :
+              String(entry[0])
+        ).join(
+          `,\n  ${indentString}`
+        )
+      }\n${indentString}}
+      `
+  };
+  const getGqlType = (value: FieldTypes): string => {
+    switch (typeof value) {
+      case 'number': return 'Int';
+      case 'string': return 'String';
+      case 'boolean': return 'Boolean';
+      case 'object': return 'Json';
+      default: throw new Error('Параметр должен принадлежать типам number, string, object или boolean');
+    }
+  };
+  return ` load${name[0].toUpperCase() + name.slice(1)} ${variables ? `(${(<(keyof V)[]>Object.keys(variables)).map(
+    key => `$${key}:${getGqlType(variables[key])}`
+  ).join(',')
+    })` : ''} {\n${makeFieldList(queryObject, name, 1, variables)}\n}`;
+}
 

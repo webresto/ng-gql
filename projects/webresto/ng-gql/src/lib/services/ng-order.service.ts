@@ -59,8 +59,8 @@ export class NgOrderService {
   initialStorage() {
     this.orderId = this.getOrderId();
     this.orderSubscription?.unsubscribe();
-    this.orderSubscription = this.ngGqlService
-      .getOrderAsCart$(this.orderId)
+    this.ngGqlService.loadOrderAsCart$(this.orderId);
+    this.orderSubscription = this.ngGqlService.order$
       .pipe(
         tap(order => {
           console.log('order tap', order);
@@ -72,7 +72,8 @@ export class NgOrderService {
       )
       .subscribe(
         order => this.order.next(order),
-        error => this.removeOrderId()
+        error => this.removeOrderId(),
+        () => this.orderSubscription?.unsubscribe()
       );
   }
 
