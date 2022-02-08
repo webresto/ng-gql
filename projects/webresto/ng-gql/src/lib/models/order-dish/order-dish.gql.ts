@@ -4,6 +4,7 @@ import type { OrderModifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from '../dish/dish.gql';
 import { ImageFragments } from '../image/image.gql';
+import { GroupModifierFragments } from '../group-modifier/group-modifier.gql';
 
 export interface OrderDish {
 	id: number;
@@ -50,6 +51,9 @@ export const OrderDishFragments = {
 		amount: true,
 		dish: {
 			id: true,
+			balance:true,
+			description:true,
+			modifiers: GroupModifierFragments.vOb,
 			name: true,
 			price: true,
 			weight: true,

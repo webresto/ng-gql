@@ -15,7 +15,7 @@ import type { NgGqlConfig } from './ng-gql.module';
 })
 export class NgGqlService {
 
-  customFields: { [key: string]: string[] } = {};
+  customFields: { [modelName: string]: string[] } = {};
 
   constructor(private apollo: ApolloService, @Inject('config') private config: NgGqlConfig) { }
 
