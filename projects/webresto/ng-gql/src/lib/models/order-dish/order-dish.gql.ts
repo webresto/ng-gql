@@ -9,7 +9,7 @@ export interface OrderDish {
 	id: number;
 	amount: number;
 	dishId: string;
-	dish: Pick<Dish, 'id' | 'name' | 'price' | 'weight' | 'carbohydrateAmount' | 'carbohydrateFullAmount' | 'energyAmount' | 'energyFullAmount' | 'fatAmount' | 'fatFullAmount' | 'fiberAmount' | 'fiberFullAmount' | 'images' | 'parentGroup'>,
+	dish: Dish,
 	itemTotal: number;
 	itemTotalBeforeDiscount?: number;
 	discountTotal: number | null;
