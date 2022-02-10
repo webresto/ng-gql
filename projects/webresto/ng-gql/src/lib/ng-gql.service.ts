@@ -4,8 +4,8 @@ import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject, of } from 'rxjs';
 import { filter, map, switchMap, shareReplay, startWith, distinctUntilChanged } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
-import type { Group, ValuesOrBoolean, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, CheckResponse, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput } from './models';
-import { OrderGql, PaymentMethodGql, isValue, NavigationFragments, GroupFragments, DishFragments } from './models';
+import { Group, ValuesOrBoolean, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, PaymentMethodFragments } from './models';
+import { OrderGql, isValue, NavigationFragments, GroupFragments, DishFragments } from './models';
 import { ApolloService } from './services/apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
 import type { NgGqlConfig } from './ng-gql.module';
@@ -266,134 +266,115 @@ export class NgGqlService {
     };
   }
 
-  getPhone$(phone: string): Observable<Phone> {
-    return this.apollo.watchQuery<any>({
-      query: OrderGql.queries.getPhone(phone, this.customFields),
-      fetchPolicy: 'no-cache'
+  getPhone$(phone: string): Observable<Phone | Phone[]> {
+    return this.customQuery$<Phone, 'phone', {
+      phone: string
+    }>('phone', {
+      id: true,
+      phone: true,
+      isFirst: true,
+      isConfirm: true,
+      codeTime: true,
+      confirmCode: true
+    }, {
+      phone
     }).pipe(
       map(
-        ({ data }) => data.phone
+        data => data.phone
       )
     );
   }
 
-  checkPhone$(phone: string): Observable<CheckPhoneResponse> {
-    return this.apollo.watchQuery<any>({
-      query: OrderGql.queries.checkPhone(phone, this.customFields),
-      fetchPolicy: 'no-cache'
+  checkPhone$(phone: string): Observable<CheckPhoneResponse | CheckPhoneResponse[]> {
+    return this.customQuery$<CheckPhoneResponse, 'checkPhone'>('checkPhone', {
+      type: true,
+      title: true,
+      message: true,
+      confirmed: true,
+      firstbuy: true
+    }, {
+      phone
     }).pipe(
       map(
-        ({ data }) => data.checkPhone
+        data => data.checkPhone
       )
     );
   }
 
-  getPaymentMethods$(orderId: string): Observable<PaymentMethod[]> {
-    return this.apollo.watchQuery<any>({
-      query: PaymentMethodGql.queries.getPaymentMethod(orderId, this.customFields)
+  getPaymentMethods$(orderId: string): Observable<PaymentMethod | PaymentMethod[]> {
+    return this.customQuery$<PaymentMethod, 'paymentMethods', {
+      orderId: string
+    }>('paymentMethods', PaymentMethodFragments.vOb, {
+      orderId
     }).pipe(
       map(
-        ({ data }) => data.paymentMethods
+        data => data.paymentMethods
       )
     );
   }
 
   addDishToOrder$(data: AddToOrderInput): Observable<Order> {
-    return this.apollo.mutate<{
-      orderAddDish: Order
-    }>({
-      mutation: OrderGql.mutations.addDishToOrder(this.customFields),
-      variables: data
-    }).pipe(
-      map(({ data }) => {
-        const order: Order = data!.orderAddDish;
-        return order;
-      })
-    )
+    return this.customMutation$<Order, 'orderAddDish', AddToOrderInput>(
+      'orderAddDish', OrderGql.vOb, data
+    ).pipe(
+      map(
+        data => data.orderAddDish
+      )
+    );
   }
 
-  sendOrder$(data: OrderInput): Observable<CheckResponse> {
-    return this.apollo.mutate<{
-      sendOrder: CheckResponse
-    }>({
-      mutation: OrderGql.mutations.sendOrder(this.customFields),
-      variables: data
-    }).pipe(
-      map(({ data }) => {
-        const checkResponse: CheckResponse = data!.sendOrder;
-        return checkResponse;
-      })
-    )
+  sendOrder$(data: OrderInput): Observable<Order> {
+    return this.customMutation$<Order, 'sendOrder', OrderInput>('sendOrder', OrderGql.vOb, data).pipe(
+      map(
+        data => data.sendOrder
+      )
+    );
   }
 
-  checkOrder$(data: OrderInput): Observable<CheckResponse> {
-    return this.apollo.mutate<{
-      checkOrder: CheckResponse
-    }>({
-      mutation: OrderGql.mutations.checkOrder(this.customFields),
-      variables: data
-    }).pipe(
-      map(({ data }) => {
-        const checkResponse: CheckResponse = data!['checkOrder'];
-        return checkResponse;
-      })
-    )
+  checkOrder$(data: OrderInput): Observable<Order> {
+    return this.customMutation$<Order, 'checkOrder', OrderInput>('checkOrder', OrderGql.vOb, data).pipe(
+      map(
+        data => data.checkOrder
+      )
+    );
   }
 
   checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
-    return this.apollo.mutate<{
-      setPhoneCode: CheckPhoneResponse
-    }>({
-      mutation: OrderGql.mutations.checkPhoneCode(this.customFields),
-      variables: data
-    }).pipe(
-      map(({ data }) => {
-        const checkPhoneResponse: CheckPhoneResponse = data!['setPhoneCode'];
-        return checkPhoneResponse;
-      })
+    return this.customMutation$<CheckPhoneResponse, 'setPhoneCode', CheckPhoneCodeInput>('setPhoneCode', {
+      type: true,
+      title: true,
+      message: true,
+      confirmed: true,
+      firstbuy: true
+    }, data).pipe(
+      map(
+        result => result.setPhoneCode
+      )
     )
   }
 
   removeDishFromOrder$(data: RemoveFromOrderInput): Observable<Order> {
-    return this.apollo.mutate<{
-      orderRemoveDish: Order
-    }>({
-      mutation: OrderGql.mutations.removeDishFromOrder(this.customFields),
-      variables: data
-    }).pipe(
-      map(({ data }) => {
-        const order: Order = data!['orderRemoveDish'];
-        return order;
-      })
-    )
+    return this.customMutation$<Order, 'orderRemoveDish', RemoveFromOrderInput>('orderRemoveDish', OrderGql.vOb, data).pipe(
+      map(
+        data => data.orderRemoveDish
+      )
+    );
   }
 
   setDishAmount$(data: SetDishAmountInput): Observable<Order> {
-    return this.apollo.mutate<{
-      orderSetDishAmount: Order
-    }>({
-      mutation: OrderGql.mutations.setDishAmount(this.customFields),
-      variables: data
-    }).pipe(
-      map(({ data }) => {
-        const order: Order = data!['orderSetDishAmount'];
-        return order;
-      })
-    )
+    return this.customMutation$<Order, 'orderSetDishAmount', SetDishAmountInput>('orderSetDishAmount', OrderGql.vOb, data).pipe(
+      map(
+        data => data.orderSetDishAmount
+      )
+    );
   }
 
   setDishComment$(data: SetDishCommentInput): Observable<Order> {
-    return this.apollo.mutate<{
-      orderSetDishComment: Order
-    }>({
-      mutation: OrderGql.mutations.setDishComment(this.customFields),
-      variables: data
-    }).pipe(
-      map(({ data }) => {
-        const order: Order = data!['orderSetDishComment'];
-        return order;
-      })
-    )
+    return this.customMutation$<Order, 'orderSetDishComment', SetDishCommentInput>('orderSetDishComment', OrderGql.vOb, data).pipe(
+      map(
+        data => data.orderSetDishComment
+      )
+    );
   }
 
   customQuery$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V): Observable<Record<N, T | T[]>>
