@@ -1,7 +1,7 @@
 import { Directive, Input, Output, HostListener, EventEmitter } from '@angular/core';
 import type { SimpleChanges } from '@angular/core';
 import { filter, debounceTime } from 'rxjs/operators';
-import type { Order, OrderInput, PaymentMethod } from '../models';
+import type { Order, OrderInput, PaymentMethod, CheckResponse } from '../models';
 import { NgOrderService } from '../services/ng-order.service';
 
 @Directive( {
@@ -102,7 +102,7 @@ export class CheckoutDirective {
       }
 
       const orderId = this.order.id;
-      const onSuccess = ( result: any ) => {
+      const onSuccess = ( result: CheckResponse ) => {
         if ( result?.action?.data?.redirectLink ) {
           this.paymentRedirect.emit( result.action.data[ 'redirectLink' ] );
         } else {

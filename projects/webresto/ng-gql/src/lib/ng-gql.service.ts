@@ -1,14 +1,23 @@
-import { Inject, Injectable } from '@angular/core';
+import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject, of } from 'rxjs';
-import { filter, map, switchMap, shareReplay, startWith, distinctUntilChanged } from 'rxjs/operators';
-import type { Observable } from 'rxjs';
-import { Group, ValuesOrBoolean, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, PaymentMethodFragments, VCriteria, generateQueryString } from './models';
-import { OrderFragments, isValue, NavigationFragments, GroupFragments, DishFragments } from './models';
+import { filter, map, switchMap, shareReplay, startWith, distinctUntilChanged, concatMap, catchError, distinctUntilKeyChanged } from 'rxjs/operators';
+import type { Observable, Subscription } from 'rxjs';
+import type { Action, Message, Group, ValuesOrBoolean, Dish, Order, Phone, CheckPhoneResponse, PaymentMethod, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, VCriteria } from './models';
+import { OrderFragments, isValue, NavigationFragments, GroupFragments, DishFragments, CheckResponse, generateQueryString, PaymentMethodFragments } from './models';
 import { ApolloService } from './services/apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
 import type { NgGqlConfig } from './ng-gql.module';
+export type CartBusEvent = {
+  event: 'add'; data: AddToOrderInput; loading: BehaviorSubject<boolean>, order: Order;
+} | {
+  event: 'remove'; data: RemoveFromOrderInput & { dish: Dish; }; loading: BehaviorSubject<boolean>, order: Order;
+} | {
+  event: 'check' | 'order'; order: OrderInput, ordered?: BehaviorSubject<boolean>;
+} | {
+  event: 'load'; orderId: string | undefined;
+};
 
 @Injectable( {
   providedIn: 'root'
@@ -61,12 +70,11 @@ export class NgGqlService {
     } ),
     shareReplay( 1 )
   );
-
   private _orderLoader$ = new BehaviorSubject<string | undefined | null>( null );
-  orderLoader$ = this._orderLoader$.asObservable().pipe(
+  private orderLoader$ = this._orderLoader$.asObservable().pipe(
+    distinctUntilChanged(),
     map( orderId => orderId ?? undefined ),
-    shareReplay( 1 ),
-    distinctUntilChanged()
+    shareReplay( 1 )
   );
 
   order$ = this.orderLoader$.pipe(
@@ -90,7 +98,35 @@ export class NgGqlService {
             return order;
           } ),
         shareReplay( 1 )
-      ) ),
+      )
+    ),
+    shareReplay( 1 )
+  );
+
+  actions$ = this.order$.pipe(
+    distinctUntilKeyChanged( 'id' ),
+    switchMap(
+      order => this.customSubscribe$<Action, 'action', {
+        orderId: string;
+      }>( 'action', {
+        type: true,
+        data: true
+      }, { orderId: order.id } )
+    ),
+    shareReplay( 1 )
+  );
+
+  messages$ = this.order$.pipe(
+    distinctUntilKeyChanged( 'id' ),
+    switchMap(
+      order => this.customSubscribe$<Message, 'message', {
+        orderId: string;
+      }>( 'message', {
+        title: true,
+        type: true,
+        message: true
+      }, { orderId: order.id } )
+    ),
     shareReplay( 1 )
   );
 
@@ -265,6 +301,78 @@ export class NgGqlService {
     };
   }
 
+  private _cartBus$ = new EventEmitter<CartBusEvent>();
+
+  cartBus$: Subscription = this._cartBus$.pipe(
+    concatMap(
+      busEvent => {
+        switch ( busEvent.event ) {
+          case 'load':
+            this.loadOrderAsCart$( busEvent.orderId );
+            return of( () => { } );
+          case 'add':
+            busEvent.data.orderId = busEvent.order.id;
+            return this.addDishToOrder$( busEvent.data ).pipe(
+              map( () => {
+                busEvent.loading.next( false );
+              } ),
+              catchError( ( err: unknown ) => {
+                busEvent.loading.next( false );
+                console.log( err );
+                return of( () => { } );
+              } )
+            );
+          case 'remove':
+            const requestData: RemoveFromOrderInput = {
+              id: busEvent.order.id,
+              orderDishId: busEvent.data.orderDishId,
+              amount: busEvent.data.amount
+            };
+            return this.removeDishFromOrder$( requestData ).pipe(
+              map( () => {
+                busEvent.loading.next( false );
+              } ),
+              catchError( err => {
+                console.log( err );
+                return of(
+                  () => { }
+                );
+              } )
+            );
+          case 'check': return this.checkOrder$( busEvent.order ).pipe(
+            map( () => {
+            } ),
+            catchError( err => {
+              console.log( err );
+              return of(
+                () => { }
+              );
+            } )
+          );
+          case 'order': return this.sendOrder$( busEvent.order ).pipe(
+            map( res => {
+              if ( busEvent.ordered ) {
+                busEvent.ordered.next( true );
+              };
+
+            } ),
+            catchError( err => {
+              console.log( err );
+              return of(
+                () => { }
+              );
+            } )
+          );
+        }
+      } ),
+    shareReplay( 1 )
+  ).subscribe( {
+    next: () => { },
+    error: () => { },
+    complete: () => this.cartBus$.unsubscribe()
+  } );
+
+
   getPhone$ ( phone: string ): Observable<Phone | Phone[]> {
     return this.customQuery$<Phone, 'phone', {
       phone: string;
@@ -282,7 +390,7 @@ export class NgGqlService {
         data => data.phone
       )
     );
-  }
+  };
 
   checkPhone$ ( phone: string ): Observable<CheckPhoneResponse | CheckPhoneResponse[]> {
     return this.customQuery$<CheckPhoneResponse, 'checkPhone'>( 'checkPhone', {
@@ -298,19 +406,19 @@ export class NgGqlService {
         data => data.checkPhone
       )
     );
-  }
+  };
 
-  getPaymentMethods$ ( orderId: string ): Observable<PaymentMethod | PaymentMethod[]> {
-    return this.customQuery$<PaymentMethod, 'paymentMethods', {
+  getPaymentMethods$ ( orderId: string ): Observable<PaymentMethod[]> {
+    return this.customQuery$<PaymentMethod, 'paymentMethod', {
       orderId: string;
-    }>( 'paymentMethods', PaymentMethodFragments.vOb, {
+    }>( 'paymentMethod', PaymentMethodFragments.vOb, {
       orderId
-    } ).pipe(
+    }, [ 'orderId' ] ).pipe(
       map(
-        data => data.paymentMethods
+        data => Array.isArray( data.paymentMethod ) ? data.paymentMethod : [ data.paymentMethod ]
       )
     );
-  }
+  };
 
   addDishToOrder$ ( data: AddToOrderInput ): Observable<Order> {
     return this.customMutation$<Order, 'orderAddDish', AddToOrderInput>(
@@ -320,23 +428,23 @@ export class NgGqlService {
         data => data.orderAddDish
       )
     );
-  }
+  };
 
-  sendOrder$ ( data: OrderInput ): Observable<Order> {
-    return this.customMutation$<Order, 'sendOrder', OrderInput>( 'sendOrder', OrderFragments.vOb, data ).pipe(
+  sendOrder$ ( data: OrderInput ): Observable<CheckResponse> {
+    return this.customMutation$<CheckResponse, 'sendOrder', OrderInput>( 'sendOrder', OrderFragments.vOb, data, [ 'orderId', 'paymentMethodId' ] ).pipe(
       map(
         data => data.sendOrder
       )
     );
-  }
+  };
 
-  checkOrder$ ( data: OrderInput ): Observable<Order> {
-    return this.customMutation$<Order, 'checkOrder', OrderInput>( 'checkOrder', OrderFragments.vOb, data ).pipe(
+  checkOrder$ ( data: OrderInput ): Observable<CheckResponse> {
+    return this.customMutation$<CheckResponse, 'checkOrder', OrderInput>( 'checkOrder', OrderFragments.vOb, data, [ 'orderId', 'paymentMethodId', 'customer' ] ).pipe(
       map(
         data => data.checkOrder
       )
     );
-  }
+  };
 
   checkPhoneCode$ ( data: CheckPhoneCodeInput ): Observable<CheckPhoneResponse> {
     return this.customMutation$<CheckPhoneResponse, 'setPhoneCode', CheckPhoneCodeInput>( 'setPhoneCode', {
@@ -350,15 +458,15 @@ export class NgGqlService {
         result => result.setPhoneCode
       )
     );
-  }
+  };
 
   removeDishFromOrder$ ( data: RemoveFromOrderInput ): Observable<Order> {
-    return this.customMutation$<Order, 'orderRemoveDish', RemoveFromOrderInput>( 'orderRemoveDish', OrderFragments.vOb, data ).pipe(
+    return this.customMutation$<Order, 'orderRemoveDish', RemoveFromOrderInput>( 'orderRemoveDish', OrderFragments.vOb, data, [ 'id', 'orderDishId' ] ).pipe(
       map(
         data => data.orderRemoveDish
       )
     );
-  }
+  };
 
   setDishAmount$ ( data: SetDishAmountInput ): Observable<Order> {
     return this.customMutation$<Order, 'orderSetDishAmount', SetDishAmountInput>( 'orderSetDishAmount', OrderFragments.vOb, data ).pipe(
@@ -366,7 +474,7 @@ export class NgGqlService {
         data => data.orderSetDishAmount
       )
     );
-  }
+  };
 
   setDishComment$ ( data: SetDishCommentInput ): Observable<Order> {
     return this.customMutation$<Order, 'orderSetDishComment', SetDishCommentInput>( 'orderSetDishComment', OrderFragments.vOb, data ).pipe(
@@ -374,16 +482,17 @@ export class NgGqlService {
         data => data.orderSetDishComment
       )
     );
-  }
+  };
 
-  customQuery$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V ): Observable<Record<N, T | T[]>>;
-  customQuery$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: ValuesOrBoolean<T>, variables?: V ): Observable<Record<N, T | T[]>>;
-  customQuery$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V ): Observable<Record<N, T | T[]>> {
+  customQuery$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, optionalFields?: string[] ): Observable<Record<N, T | T[]>>;
+  customQuery$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: ValuesOrBoolean<T>, variables?: V, optionalFields?: string[] ): Observable<Record<N, T | T[]>>;
+  customQuery$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, optionalFields?: string[] ): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>( {
       query: gql`query ${ generateQueryString( {
         name,
-        queryObject: name in queryObject ? ( <Record<N, ValuesOrBoolean<T>>> queryObject )[ name ] : queryObject,
+        queryObject: name in queryObject && Object.keys( queryObject ).length == 1 ? ( <Record<N, ValuesOrBoolean<T>>> queryObject )[ name ] : queryObject,
         variables,
+        optionalFields
       } ) }`,
       variables,
     } ).pipe(
@@ -391,40 +500,43 @@ export class NgGqlService {
         res => res.error || res.errors ? null : res.data ),
       filter( ( data ): data is Record<N, T | T[]> => !!data )
     );
-  }
+  };
 
-  customMutation$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V ): Observable<Record<N, T>>;
-  customMutation$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: ValuesOrBoolean<T>, variables: V ): Observable<Record<N, T>>;
-  customMutation$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V ): Observable<Record<N, T>> {
+  customMutation$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V, optionalFields?: string[] ): Observable<Record<N, T>>;
+  customMutation$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: ValuesOrBoolean<T>, variables: V, optionalFields?: string[] ): Observable<Record<N, T>>;
+  customMutation$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V, optionalFields?: string[] ): Observable<Record<N, T>> {
     return this.apollo.mutate<Record<N, T>, V>( {
       mutation: gql`mutation ${ generateQueryString( {
         name,
-        queryObject: name in queryObject ? ( <Record<N, ValuesOrBoolean<T>>> queryObject )[ name ] : queryObject,
+        queryObject: name in queryObject && Object.keys( queryObject ).length == 1 ? ( <Record<N, ValuesOrBoolean<T>>> queryObject )[ name ] : queryObject,
         variables,
+        optionalFields
       } ) }`,
       variables
     } ).pipe(
       map( result => result.data ),
       filter( ( res ): res is Record<N, T> => !!res )
     );
-  }
+  };
 
-  customSubscribe$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, extra?: ExtraSubscriptionOptions ): Observable<Record<N, T>[ N ]>;
-  customSubscribe$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions ): Observable<Record<N, T>[ N ]>;
-  customSubscribe$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, extra?: ExtraSubscriptionOptions ): Observable<Record<N, T>[ N ]> {
+  customSubscribe$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, optionalFields?: string[], extra?: ExtraSubscriptionOptions ): Observable<Record<N, T>[ N ]>;
+  customSubscribe$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: ValuesOrBoolean<T>, variables?: V, optionalFields?: string[], extra?: ExtraSubscriptionOptions ): Observable<Record<N, T>[ N ]>;
+  customSubscribe$<T, N extends `${ string }`, V = unknown> ( name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, optionalFields?: string[], extra?: ExtraSubscriptionOptions ): Observable<Record<N, T>[ N ]> {
+    const q = generateQueryString( {
+      name,
+      queryObject: name in queryObject && Object.keys( queryObject ).length == 1 ? ( <Record<N, ValuesOrBoolean<T>>> queryObject )[ name ] : queryObject,
+      variables,
+      optionalFields
+    } );
     return this.apollo.subscribe<Record<N, T>, V>( {
-      query: gql`subscription ${ generateQueryString( {
-        name,
-        queryObject: name in queryObject ? ( <Record<N, ValuesOrBoolean<T>>> queryObject )[ name ] : queryObject,
-        variables
-      } ) }`,
+      query: gql`subscription ${ q }`,
       variables
     }, extra ).pipe(
       map( result => result.data ),
       filter( ( res ): res is Record<N, T> => !!res ),
       map( res => res[ name ] )
     );
-  }
+  };
 
   queryAndSubscribe<T, NQuery extends `${ string }`, NSubscribe extends `${ string }`, V = unknown> ( nameQuery: NQuery, nameSubscribe: NSubscribe, queryObject: ValuesOrBoolean<T>, uniqueKeyForCompareItem: keyof T, variables?: V ) {
     const updateFn: ( store: T | T[], subscribeValue: T ) => T[] = ( store, newValue ) => {
@@ -457,6 +569,17 @@ export class NgGqlService {
         )
       ),
       shareReplay( 1 )
+    );
+  }
+
+  destroy () {
+    if ( !this.cartBus$.closed ) {
+      this.cartBus$.unsubscribe();
+    };
+    Object.values( this ).filter(
+      ( property ): property is EventEmitter<unknown> | BehaviorSubject<unknown> => property instanceof EventEmitter || property instanceof BehaviorSubject
+    ).forEach(
+      property => property.complete()
     );
   }
 

@@ -2,6 +2,7 @@ import type { PaymentMethod } from '../payment-method/payment-method.gql';
 import type { OrderDish } from '../order-dish/order-dish.gql';
 import { OrderDishFragments } from '../order-dish/order-dish.gql';
 import type { OrderModifier } from '../modifier/modifier.gql';
+import type { Message, Action } from '../event-message/event-message';
 
 export interface Order {
 	id: string;
@@ -66,19 +67,19 @@ export type AddToOrderInput = {
 };
 
 export type RemoveFromOrderInput = {
-	orderId?: string,
+	id?: string,
 	orderDishId?: number,
 	amount?: number;
 };
 
 export type SetDishAmountInput = {
-	orderId?: string,
+	id?: string,
 	orderDishId?: number,
 	amount?: number;
 };
 
 export type SetDishCommentInput = {
-	orderId?: string,
+	id?: string,
 	orderDishId?: number,
 	comment?: string;
 };
@@ -134,6 +135,12 @@ export interface CheckPhoneResponse {
 	message: string;
 	confirmed: boolean;
 	firstbuy: boolean;
+}
+
+export interface CheckResponse {
+	order: Order;
+	message: Message;
+	action: Action;
 }
 
 export const OrderFragments = {

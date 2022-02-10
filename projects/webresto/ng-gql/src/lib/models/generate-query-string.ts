@@ -10,6 +10,7 @@ export function generateQueryString<T, N extends `${ string }`, V> ( options: {
   name: N,
   queryObject: T,
   variables: V,
+  optionalFields?: string[];
 } ) {
   const { name, queryObject, variables } = options;
   const makeFieldList = <T, V> ( source: T, name: string, indent: number = 1, variables?: V ): string => {
@@ -35,17 +36,17 @@ export function generateQueryString<T, N extends `${ string }`, V> ( options: {
       }\n${ indentString }}
       `;
   };
-  const getGqlType = ( value: FieldTypes ): string => {
+  const getGqlType = ( value: FieldTypes, optionalField: boolean = false ): string => {
     switch ( typeof value ) {
-      case 'number': return 'Int';
-      case 'string': return 'String';
-      case 'boolean': return 'Boolean';
-      case 'object': return 'Json';
+      case 'number': return optionalField ? 'Int!' : 'Int';
+      case 'string': return optionalField ? 'String!' : "String";
+      case 'boolean': return optionalField ? 'Boolean!' : 'Boolean';
+      case 'object': return optionalField ? 'Json!' : 'Json';
       default: throw new Error( 'Параметр должен принадлежать типам number, string, object или boolean' );
     }
   };
   return ` load${ name[ 0 ].toUpperCase() + name.slice( 1 ) } ${ variables ? `(${ ( <( keyof V )[]> Object.keys( variables ) ).map(
-    key => `$${ key }:${ getGqlType( variables[ key ] ) }`
+    key => `$${ key }:${ getGqlType( variables[ key ], options.optionalFields && options.optionalFields.includes( String( key ) ) ) }`
   ).join( ',' )
     })` : '' } {\n${ makeFieldList( queryObject, name, 1, variables ) }\n}`;
 }

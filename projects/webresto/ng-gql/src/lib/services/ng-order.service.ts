@@ -3,7 +3,7 @@ import type { SimpleChanges } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { tap, filter, catchError } from 'rxjs/operators';
-import type { EventMessage, OrderInput, Order, AddToOrderInput, Modifier } from '../models';
+import type { EventMessage, OrderInput, Order, AddToOrderInput, Modifier, CheckResponse } from '../models';
 import { NgGqlService } from '../ng-gql.service';
 import { EventerService } from './eventer.service';
 
@@ -89,13 +89,13 @@ export class NgOrderService {
   removeDishFromOrder$ ( dishId: number, amount: number ) {
     return this.ngGqlService.removeDishFromOrder$( {
       orderDishId: dishId,
-      orderId: this.orderId,
+      id: this.orderId,
       amount
     } );
   }
 
 
-  orderCart$ ( data: OrderInput ): Observable<Order> {
+  orderCart$ ( data: OrderInput ): Observable<CheckResponse> {
     return this.ngGqlService.sendOrder$( data );
   }
 
@@ -124,7 +124,7 @@ export class NgOrderService {
       );
   }
 
-  checkOrder$ ( data: OrderInput ): Observable<Order> {
+  checkOrder$ ( data: OrderInput ): Observable<CheckResponse> {
     console.log( 'Check order$', data );
     return this.ngGqlService.checkOrder$( data );
   }
@@ -132,7 +132,7 @@ export class NgOrderService {
   setDishCountToOrder$ ( dishId: number, amount: number ) {
     return this.ngGqlService.setDishAmount$( {
       orderDishId: dishId,
-      orderId: this.orderId,
+      id: this.orderId,
       amount
     } );
   }
@@ -140,7 +140,7 @@ export class NgOrderService {
   setDishComment$ ( dishId: number, comment: string ) {
     return this.ngGqlService.setDishComment$( {
       orderDishId: dishId,
-      orderId: this.orderId,
+      id: this.orderId,
       comment
     } );
   }
