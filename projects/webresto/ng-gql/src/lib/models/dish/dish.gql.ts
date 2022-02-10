@@ -1,8 +1,6 @@
-import { gql } from 'apollo-angular';
 import { ImageFragments } from '../image/image.gql';
 import { GroupModifier, GroupModifierFragments } from '../group-modifier/group-modifier.gql';
-import type { CustomfFields } from '../custom-fields/custom-fields';
-import { ValuesOrBoolean } from '../values-or-boolean';
+import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Image } from "../image/image.gql";
 import type { Group } from '../group/group.gql';
 
@@ -14,7 +12,7 @@ export interface Dish {
 	weight: number;
 	balance: number;
 	tags?: DishTag[];
-	additionalInfo?: string | number | { [key: string]: string | any } | null;
+	additionalInfo?: string | number | { [ key: string ]: string | any; } | null;
 	images: Image[];
 	groupId?: string;
 	parentGroup: Pick<Group, 'id' | 'dishesPlaceholder'>;
@@ -36,42 +34,7 @@ export interface DishTag {
 
 
 export const DishFragments = {
-	dish: gql`
-		fragment DishFragment on Dish {
-			id
-			name
-			description
-			price
-			weight
-			balance
-			tags
-			additionalInfo
-			carbohydrateAmount
-			carbohydrateFullAmount
-			energyAmount
-			energyFullAmount
-			fatAmount
-			fatFullAmount
-			fiberAmount
-			fiberFullAmount
-			measureUnit
-			images {
-				...ImageFragment
-			}
-			modifiers {
-				...GroupModifierFragment
-			}
-			parentGroup {
-				id
-				dishesPlaceholder {
-					...ImageFragment
-				}
-			}
-		}
-		${ImageFragments.image}
-		${GroupModifierFragments.groupModifier}
-	`,
-	vOb: <ValuesOrBoolean<Dish>>{
+	vOb: <ValuesOrBoolean<Dish>> {
 		id: true,
 		name: true,
 		description: true,
@@ -98,17 +61,3 @@ export const DishFragments = {
 		}
 	}
 };
-
-export const DishGql = {
-	queries: {
-		getDishes: (customFields: CustomfFields) => gql`
-			query GetDishes {
-				dishes {
-					...DishFragment
-					${(customFields['Dish'] || []).join('\n')}
-				}
-			}
-			${DishFragments.dish}
-		`
-	}
-}

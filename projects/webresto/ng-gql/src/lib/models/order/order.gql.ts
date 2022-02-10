@@ -24,7 +24,7 @@ export interface Order {
 	paid?: boolean;
 	paymentMethod?: PaymentMethod;
 	customData?: {
-		[key: string]: string | any;
+		[ key: string ]: string | any;
 	} | null;
 }
 
@@ -62,25 +62,25 @@ export type AddToOrderInput = {
 	comment?: string,
 	from?: string,
 	replace?: boolean,
-	orderDishId?: string
+	orderDishId?: string;
 };
 
 export type RemoveFromOrderInput = {
 	orderId?: string,
 	orderDishId?: number,
-	amount?: number
+	amount?: number;
 };
 
 export type SetDishAmountInput = {
 	orderId?: string,
 	orderDishId?: number,
-	amount?: number
+	amount?: number;
 };
 
 export type SetDishCommentInput = {
 	orderId?: string,
 	orderDishId?: number,
-	comment?: string
+	comment?: string;
 };
 
 export type OrderInput = {
@@ -101,16 +101,16 @@ export type OrderInput = {
 		entrance?: string,
 		floor?: string,
 		apartment?: string,
-		doorphone?: string
+		doorphone?: string;
 	},
 	customer?: {
 		phone?: string,
 		mail?: string,
-		name?: string
+		name?: string;
 	},
 	comment?: string,
 	notifyMethodId?: string,
-	customData?: any
+	customData?: any;
 };
 
 export interface Phone {
@@ -136,7 +136,7 @@ export interface CheckPhoneResponse {
 	firstbuy: boolean;
 }
 
-export const OrderGql = {
+export const OrderFragments = {
 	vOb: {
 		id: true,
 		dishesCount: true,
@@ -157,4 +157,4 @@ export const OrderGql = {
 		rmsDeliveryDate: true,
 		dishes: OrderDishFragments.vOb
 	}
-}
+};

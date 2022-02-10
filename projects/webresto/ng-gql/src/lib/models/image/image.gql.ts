@@ -1,4 +1,3 @@
-import { gql } from 'apollo-angular';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
 export interface Image {
@@ -14,13 +13,6 @@ export interface ImageItem {
 }
 
 export const ImageFragments = {
-	image: gql`
-		fragment ImageFragment on Image {
-			id
-			uploadDate
-			images
-		}
-	`,
 	vOb: <ValuesOrBoolean<Image>> {
 		id: true,
 		uploadDate: true,

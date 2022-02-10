@@ -1,4 +1,3 @@
-import { gql } from 'apollo-angular';
 import { ImageFragments } from '../image/image.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from "../dish/dish.gql";
@@ -21,35 +20,7 @@ export interface Modifier {
 }
 
 export const ModifierFragments = {
-	modifier: gql`
-		fragment ModifierFragment on Modifier {
-			modifierId
-			maxAmount
-			minAmount
-			defaultAmount
-			dish {
-				id
-				name
-				description
-				price
-				weight
-				balance
-				tags
-				groupId
-				parentGroup {
-					id,
-					dishesPlaceholder {
-						...ImageFragment
-					}
-				}
-				images {
-					...ImageFragment
-				}
-			}
-		}
-		${ImageFragments.image}
-	`,
-	vOb: <ValuesOrBoolean<Modifier>>{
+	vOb: <ValuesOrBoolean<Modifier>> {
 		modifierId: true,
 		maxAmount: true,
 		minAmount: true,

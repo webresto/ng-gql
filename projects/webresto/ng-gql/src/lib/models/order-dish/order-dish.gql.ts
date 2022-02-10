@@ -1,4 +1,3 @@
-import { gql } from 'apollo-angular';
 import { DishFragments } from '../dish/dish.gql';
 import type { OrderModifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
@@ -22,37 +21,13 @@ export interface OrderDish {
 }
 
 export const OrderDishFragments = {
-	orderDish: gql`
-		fragment OrderDishFragment on OrderDish {
-			id
-			amount
-			dishId
-			dish {
-				id
-			}
-			modifiers {
-				id
-				dish {
-					...DishFragment
-				}
-				amount
-				groupId
-			}
-			discountTotal
-			discountType
-			comment
-			totalWeight
-			itemTotal
-		}
-		${DishFragments.dish}
-	`,
-	vOb: <ValuesOrBoolean<OrderDish>>{
+	vOb: <ValuesOrBoolean<OrderDish>> {
 		id: true,
 		amount: true,
 		dish: {
 			id: true,
-			balance:true,
-			description:true,
+			balance: true,
+			description: true,
 			modifiers: GroupModifierFragments.vOb,
 			name: true,
 			price: true,

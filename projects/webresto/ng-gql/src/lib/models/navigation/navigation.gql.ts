@@ -1,6 +1,4 @@
-import { gql } from 'apollo-angular';
 import { ValuesOrBoolean } from '../values-or-boolean';
-import type { CustomfFields } from '../custom-fields/custom-fields';
 
 export interface Navigation {
 	mnemonicId: string;
@@ -29,16 +27,7 @@ export interface NavigationsOptions {
 
 
 export const NavigationFragments = {
-	navigation: gql`
-		fragment NavigationFragment on Navigation {
-			mnemonicId,
-			description,
-			options,
-			id,
-			navigation_menu
-		}
-	`,
-	vOb: <ValuesOrBoolean<Navigation>>{
+	vOb: <ValuesOrBoolean<Navigation>> {
 		mnemonicId: true,
 		description: true,
 		options: true,
@@ -46,28 +35,3 @@ export const NavigationFragments = {
 		navigation_menu: true
 	}
 };
-
-export const NavigationGql = {
-	queries: {
-		getNavigationes: (customFields: CustomfFields) => gql`
-			query GetNavigation {
-				navigations {
-					...NavigationFragment
-					${(customFields['Navigation'] || []).join('\n')}
-				}
-			}
-			${NavigationFragments.navigation}
-		`
-	},
-	subscribes: {
-		getNavigationes: (customFields: CustomfFields) => gql`
-			subscription GetNavigation {
-				navigations {
-					...NavigationFragment
-					${(customFields['Navigation'] || []).join('\n')}
-				}
-			}
-			${NavigationFragments.navigation}
-		`
-	}
-}

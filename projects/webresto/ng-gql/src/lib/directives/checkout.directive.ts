@@ -1,12 +1,12 @@
 import { Directive, Input, Output, HostListener, EventEmitter } from '@angular/core';
 import type { SimpleChanges } from '@angular/core';
-import { filter, debounceTime } from 'rxjs/operators'
+import { filter, debounceTime } from 'rxjs/operators';
 import type { Order, OrderInput, PaymentMethod } from '../models';
 import { NgOrderService } from '../services/ng-order.service';
 
-@Directive({
+@Directive( {
   selector: '[checkout]'
-})
+} )
 export class CheckoutDirective {
 
   @Input() orderTotal: number | undefined;
@@ -38,55 +38,55 @@ export class CheckoutDirective {
   @Output() error = new EventEmitter<string>();
   @Output() isChecking = new EventEmitter<boolean>();
 
-  order: Order | undefined;
+  order: Order | null | undefined;
   lastFormChangeKey: string | undefined;
 
-  constructor(
+  constructor (
     private orderService: NgOrderService
   ) {
 
     this.orderService
       .userOrder$()
-      .subscribe(order => this.order = order);
+      .subscribe( order => this.order = order );
     this.orderService.OrderFormChange
       .pipe(
-        filter(value => {
+        filter( value => {
           //if((this.locationId || this.streetId) && this.home && this.phone && this.preparePhone(this.phone).length > 11) {
-          if (this.locationId || (this.streetId || this.street) && this.home || this.selfService) {
+          if ( this.locationId || ( this.streetId || this.street ) && this.home || this.selfService ) {
             return true;
           } else {
             return false;
           }
-        }),
-        debounceTime(1000)
+        } ),
+        debounceTime( 1000 )
       )
-      .subscribe(() => this.checkStreet());
+      .subscribe( () => this.checkStreet() );
   }
 
-  @HostListener('click')
-  onClick() {
-    if (!this.locationId && !((this.streetId || this.street) && this.home) && !this.selfService) {
-      this.error.emit('Нужно указать адрес');
+  @HostListener( 'click' )
+  onClick () {
+    if ( !this.locationId && !( ( this.streetId || this.street ) && this.home ) && !this.selfService ) {
+      this.error.emit( 'Нужно указать адрес' );
       return;
     }
-    if (!this.order) {
+    if ( !this.order ) {
       return;
     } else {
       let data: OrderInput = {
         orderId: this.order.id,
         customer: {
-          phone: this.preparePhone(this.phone),
+          phone: this.preparePhone( this.phone ),
           mail: this.email,
           name: this.name
         },
       };
 
-      if (this.paymentMethodId) {
+      if ( this.paymentMethodId ) {
         data.paymentMethodId = this.paymentMethodId;
       }
 
       data.selfService = this.selfService;
-      if (this.locationId) {
+      if ( this.locationId ) {
         data.locationId = this.locationId;
       } else {
         data.address = {
@@ -98,32 +98,33 @@ export class CheckoutDirective {
           entrance: this.entrance || '',
           floor: this.floor || '',
           apartment: this.apartment || ''
-        }
+        };
       }
 
       const orderId = this.order.id;
-      const onSuccess = (result: { action: { data: { [x: string]: string | undefined; redirectLink: any; }; }; }) => {
-        if (result?.action?.data?.redirectLink) {
-          this.paymentRedirect.emit(result.action.data['redirectLink']);
+      const onSuccess = ( result: any ) => {
+        if ( result?.action?.data?.redirectLink ) {
+          this.paymentRedirect.emit( result.action.data[ 'redirectLink' ] );
         } else {
-          console.log('Emit orderId', orderId);
-          this.success.emit(orderId);
+          console.log( 'Emit orderId', orderId );
+          this.success.emit( orderId );
         }
       };
-      if (this.phonePaymentSmsCode && this.phone) {
-        this.orderService
-          .paymentLink$(this.phonePaymentSmsCode, this.phone)
-          .subscribe(
-            onSuccess,
-            error => this.error.emit(error)
-          );
+      if ( this.phonePaymentSmsCode && this.phone ) {
+        this.orderService.paymentLink$( this.phonePaymentSmsCode, this.phone ).subscribe( {
+          next: res => onSuccess( res ),
+          error: err => this.error.emit( err ),
+          complete: () => { }
+        } );
       } else {
-        this.orderService
-          .orderCart$(data)
-          .subscribe(
-            onSuccess,
-            error => this.error.emit(error)
-          );
+        this.orderService.orderCart$( data ).subscribe( {
+          next: res => onSuccess( res ),
+          error: err => this.error.emit( err ),
+          complete: () => { }
+        }
+
+
+        );
       }
     }
 
@@ -133,22 +134,22 @@ export class CheckoutDirective {
 
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.orderService.OrderFormChange.next(changes);
+  ngOnChanges ( changes: SimpleChanges ) {
+    this.orderService.OrderFormChange.next( changes );
   }
 
-  checkStreet() {
+  checkStreet () {
     let comment = this.comment || "";
-    if (!this.order) {
+    if ( !this.order ) {
       return;
     } else {
       let data: OrderInput & {
-        personsCount: number
+        personsCount: number;
       } = {
         orderId: this.order.id,
         comment: comment,
         customer: {
-          phone: this.phone ? this.preparePhone(this.phone) : '',
+          phone: this.phone ? this.preparePhone( this.phone ) : '',
           mail: this.email,
           name: this.name || ''
         },
@@ -157,24 +158,24 @@ export class CheckoutDirective {
 
       data.selfService = this.selfService;
 
-      if (this.paymentMethodId) {
+      if ( this.paymentMethodId ) {
         data.paymentMethodId = this.paymentMethodId;
       }
 
-      if (this.callback) {
+      if ( this.callback ) {
         data.customData = { callback: true };
-        data.comment = 'Позвоните мне для уточнения деталей. ' + data["comment"];
+        data.comment = 'Позвоните мне для уточнения деталей. ' + data[ "comment" ];
       }
 
-      if (this.date) {
+      if ( this.date ) {
         data.date = this.date;
       }
 
-      if (this.notifyMethodId) {
+      if ( this.notifyMethodId ) {
         data.notifyMethodId = this.notifyMethodId;
       }
 
-      if (this.locationId) {
+      if ( this.locationId ) {
         data.locationId = this.locationId;
       } else {
         data.address = {
@@ -186,24 +187,24 @@ export class CheckoutDirective {
           entrance: this.entrance || '',
           floor: this.floor || '',
           apartment: this.apartment || ''
-        }
+        };
       }
-      if (this.callback) {
+      if ( this.callback ) {
         data.customData = { callback: true };
       }
-      this.isChecking.emit(true);
+      this.isChecking.emit( true );
       this.orderService
-        .checkOrder$(data)
+        .checkOrder$( data )
         .subscribe(
-          () => this.isChecking.emit(true),
-          () => this.isChecking.emit(false)
+          () => this.isChecking.emit( true ),
+          () => this.isChecking.emit( false )
         );
     };
   }
 
-  preparePhone(phone: string | undefined) {
-    if (!phone) return '';
-    phone = '+' + phone.replace(/[^0-9]/gim, '');
-    return phone.replace('+8', '+7');
+  preparePhone ( phone: string | undefined ) {
+    if ( !phone ) return '';
+    phone = '+' + phone.replace( /[^0-9]/gim, '' );
+    return phone.replace( '+8', '+7' );
   }
 }
