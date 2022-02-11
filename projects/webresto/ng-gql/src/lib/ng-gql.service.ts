@@ -61,14 +61,18 @@ export class NgGqlService {
     return this._navigationData$;
   }
 
-  rootGroupsSlugs$ = this._navigationData$.pipe(
+  rootGroups$: Observable<{
+    slug: string;
+    id: string | null;
+  }[]> = this._navigationData$.pipe(
     switchMap(navigationData => {
       const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
       return menuItem.options.behavior?.includes('navigationmenu') ?
-        of(menuItem.navigation_menu.map(item => item.groupSlug)) :
-        this.customQuery$<{ childGroups: { slug: string; }[]; }, 'groups', VCriteria>('groups', {
+        of(menuItem.navigation_menu.map(item => ({ slug: item.groupSlug, id: null }))) :
+        this.customQuery$<{ childGroups: { slug: string; id: string }[]; }, 'groups', VCriteria>('groups', {
           childGroups: {
-            slug: true
+            slug: true,
+            id: true
           }
         }, {
           criteria: {
@@ -77,9 +81,10 @@ export class NgGqlService {
         }).pipe(
           map(group => (<{
             childGroups: {
+              id: string;
               slug: string;
             }[];
-          }[]>group.groups)[0].childGroups.map(child => child.slug)
+          }[]>group.groups)[0].childGroups
           ),
           shareReplay(1)
         );
@@ -148,9 +153,9 @@ export class NgGqlService {
 
   private dishes$ = new BehaviorSubject<Dish[] | null>(null);
 
-  private loadedMenu$ = this.rootGroupsSlugs$.pipe(
+  private loadedMenu$ = this.rootGroups$.pipe(
     switchMap(
-      slugs => {
+      rootGroups => {
         const nesting = this.config.nesting ?? 2;
         const queryObject: ValuesOrBoolean<Group> = new Array(nesting).fill(nesting).reduce(
           (accumulator: ValuesOrBoolean<Group>) => {
@@ -159,10 +164,13 @@ export class NgGqlService {
             return item;
           }, { ...GroupFragments.vOb, childGroups: { ...GroupFragments.vOb } }
         );
+        const criteria = !!rootGroups[0]?.id ? {
+          id: rootGroups.map(rootGroup => rootGroup.id)
+        } : {
+          slug: rootGroups.map(rootGroup => rootGroup.slug)
+        };
         return this.queryAndSubscribe<Group, 'groups', 'group', VCriteria>('groups', 'group', queryObject, 'id', {
-          criteria: {
-            slug: slugs
-          }
+          criteria
         });
       }),
     switchMap(
