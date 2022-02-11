@@ -1,24 +1,76 @@
-# NgGql
+Documentation
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.0.
+export declare type CartBusEvent = {
+    event: 'add';
+    data: AddToOrderInput;
+    loading: BehaviorSubject<boolean>;
+    order: Order;
+    successCb?: (order: Order) => void;
+    errorCb?: (err: unknown) => void;
+} | {
+    event: 'remove';
+    data: RemoveFromOrderInput & {
+        dish: Dish;
+    };
+    loading: BehaviorSubject<boolean>;
+    order: Order;
+    successCb?: (order: Order) => void;
+    errorCb?: (err: unknown) => void;
+} | {
+    event: 'check' | 'order';
+    order: OrderInput;
+    ordered?: BehaviorSubject<boolean>;
+    successCb?: (check: CheckResponse) => void;
+    errorCb?: (err: unknown) => void;
+} | {
+    event: 'load';
+    orderId: string | undefined;
+};
 
-## Code scaffolding
 
-Run `ng generate component component-name --project ng-gql` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ng-gql`.
-> Note: Don't forget to add `--project ng-gql` or else it will be added to the default project in your `angular.json` file. 
-
-## Build
-
-Run `ng build ng-gql` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Publishing
-
-After building your library with `ng build ng-gql`, go to the dist folder `cd dist/ng-gql` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test ng-gql` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+export declare class NgGqlService {
+    private apollo;
+    private config;
+    customFields: {
+        [modelName: string]: string[];
+    };
+    constructor(apollo: ApolloService, config: NgGqlConfig);
+    addCustomField(modelName: string, field: string): void;
+    private _navigationData$;
+    getNavigation$(): Observable<Navigation[]>;
+    rootGroupsSlugs$: Observable<string[]>;
+    private _orderLoader$;
+    private orderLoader$;
+    order$: Observable<Order>;
+    actions$: Observable<Action>;
+    messages$: Observable<Message>;
+    private dishes$;
+    private loadedMenu$;
+    getMenu$(slug: string | string[] | undefined): Observable<Group[] | null>;
+    getDishes$(id?: string | string[]): Observable<Dish[]>;
+    private _getOrder$;
+    getOrder(orderId: string | undefined): Observable<Order>;
+    loadOrderAsCart$(orderId: string | undefined): void;
+    private _cartBus$;
+    cartBus$: Subscription;
+    getPhone$(phone: string): Observable<Phone | Phone[]>;
+    checkPhone$(phone: string): Observable<CheckPhoneResponse | CheckPhoneResponse[]>;
+    getPaymentMethods$(orderId: string): Observable<PaymentMethod[]>;
+    addDishToOrder$(data: AddToOrderInput): Observable<Order>;
+    sendOrder$(data: OrderInput): Observable<CheckResponse>;
+    checkOrder$(data: OrderInput): Observable<CheckResponse>;
+    checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse>;
+    removeDishFromOrder$(data: RemoveFromOrderInput): Observable<Order>;
+    setDishAmount$(data: SetDishAmountInput): Observable<Order>;
+    setDishComment$(data: SetDishCommentInput): Observable<Order>;
+    customQuery$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, optionalFields?: string[]): Observable<Record<N, T | T[]>>;
+    customQuery$<T, N extends `${string}`, V = unknown>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, optionalFields?: string[]): Observable<Record<N, T | T[]>>;
+    customMutation$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V, optionalFields?: string[]): Observable<Record<N, T>>;
+    customMutation$<T, N extends `${string}`, V = unknown>(name: N, queryObject: ValuesOrBoolean<T>, variables: V, optionalFields?: string[]): Observable<Record<N, T>>;
+    customSubscribe$<T, N extends `${string}`, V = unknown>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, optionalFields?: string[], extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>;
+    customSubscribe$<T, N extends `${string}`, V = unknown>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, optionalFields?: string[], extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>;
+    queryAndSubscribe<T, NQuery extends `${string}`, NSubscribe extends `${string}`, V = unknown>(nameQuery: NQuery, nameSubscribe: NSubscribe, queryObject: ValuesOrBoolean<T>, uniqueKeyForCompareItem: keyof T, variables?: V): Observable<T[]>;
+    destroy(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<NgGqlService, never>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<NgGqlService>;
+}
