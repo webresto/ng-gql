@@ -13,43 +13,53 @@ const DIRECTIVES = [
   CheckoutDirective,
 ];
 
+/** Обьект с параметрами работы бибилиотеки */
 export interface NgGqlConfig {
+
+  /** URL API сервера GraphQL */
   url: string;
-  nesting: number
+
+  /** Уровень вложенности групп с блюдами друг в друга.   */
+  nesting: number;
+  /** Способ подписки на события в шине. 
+   * При выборе параметра 'subscribe' - библиотека будет подписываться на события в шине событий и отписываться по завершении работы.
+   * В случае выбора параметра 'custom' - подписку на события необходимо произвести в проекте самостоятельно, к примеру, используя asyncPipe.
+   * */
+  busSubscribeMode: 'subscribe' | 'custom';
 }
 
-@NgModule({
+@NgModule( {
   imports: [],
-  exports: [DIRECTIVES],
-  declarations: [DIRECTIVES]
-})
+  exports: [ DIRECTIVES ],
+  declarations: [ DIRECTIVES ]
+} )
 export class NgGqlModule {
 
-  constructor(
+  constructor (
     apollo: Apollo,
     httpLink: HttpLink,
-    @Inject('config') config: NgGqlConfig
+    @Inject( 'config' ) config: NgGqlConfig
   ) {
 
     // Create an http link:
-    const http = httpLink.create({
+    const http = httpLink.create( {
       uri: config.url,
-    });
+    } );
 
     // Create a WebSocket link:
-    const ws = new WebSocketLink({
-      uri: config.url.replace('http', 'ws'),
+    const ws = new WebSocketLink( {
+      uri: config.url.replace( 'http', 'ws' ),
       options: {
         reconnect: true,
       },
-    });
+    } );
 
     // using the ability to split links, you can send data to each link
     // depending on what kind of operation is being sent
     const link = split(
       // split based on operation type
-      ({ query }) => {
-        const { kind, operation } = <OperationDefinitionNode>getMainDefinition(query);
+      ( { query } ) => {
+        const { kind, operation } = <OperationDefinitionNode> getMainDefinition( query );
         return (
           kind === 'OperationDefinition' && operation === 'subscription'
         );
@@ -58,15 +68,15 @@ export class NgGqlModule {
       http,
     );
 
-    if (!apollo.client) {
-      apollo.create({
+    if ( !apollo.client ) {
+      apollo.create( {
         link,
         cache: new InMemoryCache()
-      });
+      } );
     };
   }
 
-  static forRoot(config: NgGqlConfig): ModuleWithProviders<NgGqlModule> {
+  static forRoot ( config: NgGqlConfig ): ModuleWithProviders<NgGqlModule> {
     return {
       ngModule: NgGqlModule,
       providers: [
@@ -75,6 +85,6 @@ export class NgGqlModule {
           useValue: config
         }
       ]
-    }
+    };
   }
 }

@@ -54,7 +54,6 @@ export interface OrderData {
 	customData: any;
 }
 
-
 export type AddToOrderInput = {
 	orderId?: string,
 	dishId?: string,
@@ -109,7 +108,7 @@ export type OrderInput = {
 		mail?: string,
 		name?: string;
 	},
-	comment?: string,
+	comment?: string | null,
 	notifyMethodId?: string,
 	customData?: any;
 };
@@ -165,3 +164,17 @@ export const OrderFragments = {
 		dishes: OrderDishFragments.vOb
 	}
 };
+
+export type OrderAdditionalFields = {
+	selfService: boolean,
+	pickupAddressId?: string | undefined,
+	locationId?: string | undefined,
+	promocode?: string | undefined;
+	deliveryTimeInfo?: {
+		deliveryType: 'fast' | 'date-time' | undefined,
+		deliveryDate: string | undefined,
+		deliveryTime: string | undefined;
+	};
+};
+
+export type OrderForm = Order & OrderAdditionalFields;

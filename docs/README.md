@@ -1,3 +1,5 @@
+@webresto/ng-gql / [Exports](modules.md)
+
 # @webresto/ng-gql
 
 Библиотека для работы с GraphQL-API проектов Webresto.
