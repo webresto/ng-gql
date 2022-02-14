@@ -34,7 +34,6 @@
 - [Navigation](interfaces/Navigation.md)
 - [NavigationsMenuItem](interfaces/NavigationsMenuItem.md)
 - [NavigationsOptions](interfaces/NavigationsOptions.md)
-- [NgGqlConfig](interfaces/NgGqlConfig.md)
 - [Order](interfaces/Order.md)
 - [OrderData](interfaces/OrderData.md)
 - [OrderDish](interfaces/OrderDish.md)
