@@ -6,5 +6,21 @@
   },
   "angularCompilerOptions": {
     "compilationMode": "partial"
+  },
+  "typedocOptions":{
+    "entryPoints": [
+      "./src/public-api.ts"
+    ],
+    "out": "docs",
+    "plugin": [
+      "typedoc-plugin-markdown"
+    ],
+    "excludePrivate": true,
+    "includeVersion": true,
+    "disableSources": true,
+    "readme": "./README.md",
+    "hideGenerator": true,
+    "cleanOutputDir": true,
+    "sort":"source-order"
   }
 }

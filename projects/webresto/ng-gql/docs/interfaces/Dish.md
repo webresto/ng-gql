@@ -1,0 +1,155 @@
+[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Dish
+
+# Interface: Dish
+
+## Table of contents
+
+### Properties
+
+- [id](Dish.md#id)
+- [name](Dish.md#name)
+- [description](Dish.md#description)
+- [price](Dish.md#price)
+- [weight](Dish.md#weight)
+- [balance](Dish.md#balance)
+- [tags](Dish.md#tags)
+- [additionalInfo](Dish.md#additionalinfo)
+- [images](Dish.md#images)
+- [groupId](Dish.md#groupid)
+- [parentGroup](Dish.md#parentgroup)
+- [modifiers](Dish.md#modifiers)
+- [carbohydrateAmount](Dish.md#carbohydrateamount)
+- [carbohydrateFullAmount](Dish.md#carbohydratefullamount)
+- [energyAmount](Dish.md#energyamount)
+- [energyFullAmount](Dish.md#energyfullamount)
+- [fatAmount](Dish.md#fatamount)
+- [fatFullAmount](Dish.md#fatfullamount)
+- [fiberAmount](Dish.md#fiberamount)
+- [fiberFullAmount](Dish.md#fiberfullamount)
+- [measureUnit](Dish.md#measureunit)
+
+## Properties
+
+### id
+
+• **id**: `string`
+
+___
+
+### name
+
+• **name**: `string`
+
+___
+
+### description
+
+• **description**: `string`
+
+___
+
+### price
+
+• **price**: `number`
+
+___
+
+### weight
+
+• **weight**: `number`
+
+___
+
+### balance
+
+• **balance**: `number`
+
+___
+
+### tags
+
+• `Optional` **tags**: [`DishTag`](DishTag.md)[]
+
+___
+
+### additionalInfo
+
+• `Optional` **additionalInfo**: ``null`` \| `string` \| `number` \| { [key: string]: `string` \| `any`;  }
+
+___
+
+### images
+
+• **images**: [`Image`](Image.md)[]
+
+___
+
+### groupId
+
+• `Optional` **groupId**: `string`
+
+___
+
+### parentGroup
+
+• **parentGroup**: `Pick`<[`Group`](Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>
+
+___
+
+### modifiers
+
+• `Optional` **modifiers**: [`GroupModifier`](GroupModifier.md)[]
+
+___
+
+### carbohydrateAmount
+
+• `Optional` **carbohydrateAmount**: `number`
+
+___
+
+### carbohydrateFullAmount
+
+• `Optional` **carbohydrateFullAmount**: `number`
+
+___
+
+### energyAmount
+
+• `Optional` **energyAmount**: `number`
+
+___
+
+### energyFullAmount
+
+• `Optional` **energyFullAmount**: `number`
+
+___
+
+### fatAmount
+
+• `Optional` **fatAmount**: `number`
+
+___
+
+### fatFullAmount
+
+• `Optional` **fatFullAmount**: `number`
+
+___
+
+### fiberAmount
+
+• `Optional` **fiberAmount**: `number`
+
+___
+
+### fiberFullAmount
+
+• `Optional` **fiberFullAmount**: `number`
+
+___
+
+### measureUnit
+
+• `Optional` **measureUnit**: `string`

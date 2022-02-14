@@ -1,3 +1,4 @@
+@webresto/ng-gql - v1.1.12 / [Exports](modules.md)
 
 Библиотека для работы с GraphQL-API проектов Webresto.
 
