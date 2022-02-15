@@ -4,48 +4,48 @@
 
 ### Constructors
 
-- [constructor](./classes/NgGqlService.md#constructor)
+- [constructor](NgGqlService.md#constructor)
 
 ### Properties
 
-- [customFields](./classes/NgGqlService.md#customfields)
-- [rootGroups$](./classes/NgGqlService.md#rootgroups$)
-- [order$](./classes/NgGqlService.md#order$)
-- [actions$](./classes/NgGqlService.md#actions$)
-- [messages$](./classes/NgGqlService.md#messages$)
-- [orderBus$](./classes/NgGqlService.md#orderbus$)
+- [customFields](NgGqlService.md#customfields)
+- [rootGroups$](NgGqlService.md#rootgroups$)
+- [order$](NgGqlService.md#order$)
+- [actions$](NgGqlService.md#actions$)
+- [messages$](NgGqlService.md#messages$)
+- [orderBus$](NgGqlService.md#orderbus$)
 
 ### Methods
 
-- [addCustomField](./classes/NgGqlService.md#addcustomfield)
-- [getNavigation$](./classes/NgGqlService.md#getnavigation$)
-- [getMenu$](./classes/NgGqlService.md#getmenu$)
-- [getDishes$](./classes/NgGqlService.md#getdishes$)
-- [getOrder](./classes/NgGqlService.md#getorder)
-- [loadOrderAsCart$](./classes/NgGqlService.md#loadorderascart$)
-- [getPhone$](./classes/NgGqlService.md#getphone$)
-- [checkPhone$](./classes/NgGqlService.md#checkphone$)
-- [getPaymentMethods$](./classes/NgGqlService.md#getpaymentmethods$)
-- [addDishToOrder$](./classes/NgGqlService.md#adddishtoorder$)
-- [addToOrder](./classes/NgGqlService.md#addtoorder)
-- [removeFromOrder](./classes/NgGqlService.md#removefromorder)
-- [checkOrder](./classes/NgGqlService.md#checkorder)
-- [sendOrder](./classes/NgGqlService.md#sendorder)
-- [sendOrder$](./classes/NgGqlService.md#sendorder$)
-- [checkOrder$](./classes/NgGqlService.md#checkorder$)
-- [checkPhoneCode$](./classes/NgGqlService.md#checkphonecode$)
-- [removeDishFromOrder$](./classes/NgGqlService.md#removedishfromorder$)
-- [setDishAmount$](./classes/NgGqlService.md#setdishamount$)
-- [setDishComment$](./classes/NgGqlService.md#setdishcomment$)
-- [customQuery$](./classes/NgGqlService.md#customquery$)
-- [customMutation$](./classes/NgGqlService.md#custommutation$)
-- [customSubscribe$](./classes/NgGqlService.md#customsubscribe$)
-- [queryAndSubscribe](./classes/NgGqlService.md#queryandsubscribe)
-- [destroy](./classes/NgGqlService.md#destroy)
+- [addCustomField](NgGqlService.md#addcustomfield)
+- [getNavigation$](NgGqlService.md#getnavigation$)
+- [getMenu$](NgGqlService.md#getmenu$)
+- [getDishes$](NgGqlService.md#getdishes$)
+- [getOrder](NgGqlService.md#getorder)
+- [loadOrderAsCart$](NgGqlService.md#loadorderascart$)
+- [getPhone$](NgGqlService.md#getphone$)
+- [checkPhone$](NgGqlService.md#checkphone$)
+- [getPaymentMethods$](NgGqlService.md#getpaymentmethods$)
+- [addDishToOrder$](NgGqlService.md#adddishtoorder$)
+- [addToOrder](NgGqlService.md#addtoorder)
+- [removeFromOrder](NgGqlService.md#removefromorder)
+- [checkOrder](NgGqlService.md#checkorder)
+- [sendOrder](NgGqlService.md#sendorder)
+- [sendOrder$](NgGqlService.md#sendorder$)
+- [checkOrder$](NgGqlService.md#checkorder$)
+- [checkPhoneCode$](NgGqlService.md#checkphonecode$)
+- [removeDishFromOrder$](NgGqlService.md#removedishfromorder$)
+- [setDishAmount$](NgGqlService.md#setdishamount$)
+- [setDishComment$](NgGqlService.md#setdishcomment$)
+- [customQuery$](NgGqlService.md#customquery$)
+- [customMutation$](NgGqlService.md#custommutation$)
+- [customSubscribe$](NgGqlService.md#customsubscribe$)
+- [queryAndSubscribe](NgGqlService.md#queryandsubscribe)
+- [destroy](NgGqlService.md#destroy)
 
 ## Constructors
 
-### <a id="constructor" name="constructor"></a> constructor
+### constructor
 
 • **new NgGqlService**(`apollo`, `config`)
 
@@ -53,12 +53,12 @@
 
 | Name | Type |
 | :------ | :------ |
-| `apollo` | [`ApolloService`](./classes/ApolloService.md) |
-| `config` | [`NgGqlConfig`](./interfaces/NgGqlConfig.md) |
+| `apollo` | [`ApolloService`](ApolloService.md) |
+| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 
 ## Properties
 
-### <a id="customfields" name="customfields"></a> customFields
+### customFields
 
 • **customFields**: `Object` = `{}`
 
@@ -68,37 +68,37 @@
 
 ___
 
-### <a id="rootgroups$" name="rootgroups$"></a> rootGroups$
+### rootGroups$
 
 • **rootGroups$**: `Observable`<{ `slug`: `string` ; `id`: ``null`` \| `string`  }[]\>
 
 ___
 
-### <a id="order$" name="order$"></a> order$
+### order$
 
-• **order$**: `Observable`<[`Order`](./interfaces/Order.md)\>
-
-___
-
-### <a id="actions$" name="actions$"></a> actions$
-
-• **actions$**: `Observable`<[`Action`](./interfaces/Action.md)\>
+• **order$**: `Observable`<[`Order`](../interfaces/Order.md)\>
 
 ___
 
-### <a id="messages$" name="messages$"></a> messages$
+### actions$
 
-• **messages$**: `Observable`<[`Message`](./interfaces/Message.md)\>
+• **actions$**: `Observable`<[`Action`](../interfaces/Action.md)\>
 
 ___
 
-### <a id="orderbus$" name="orderbus$"></a> orderBus$
+### messages$
+
+• **messages$**: `Observable`<[`Message`](../interfaces/Message.md)\>
+
+___
+
+### orderBus$
 
 • **orderBus$**: `Observable`<`void` \| () => `void`\>
 
 ## Methods
 
-### <a id="addcustomfield" name="addcustomfield"></a> addCustomField
+### addCustomField
 
 ▸ **addCustomField**(`modelName`, `field`): `void`
 
@@ -115,19 +115,19 @@ ___
 
 ___
 
-### <a id="getnavigation$" name="getnavigation$"></a> getNavigation$
+### getNavigation$
 
-▸ **getNavigation$**(): `Observable`<[`Navigation`](./interfaces/Navigation.md)[]\>
+▸ **getNavigation$**(): `Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
 
 #### Returns
 
-`Observable`<[`Navigation`](./interfaces/Navigation.md)[]\>
+`Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
 
 ___
 
-### <a id="getmenu$" name="getmenu$"></a> getMenu$
+### getMenu$
 
-▸ **getMenu$**(`slug`): `Observable`<``null`` \| [`Group`](./interfaces/Group.md)[]\>
+▸ **getMenu$**(`slug`): `Observable`<``null`` \| [`Group`](../interfaces/Group.md)[]\>
 
 #### Parameters
 
@@ -137,13 +137,13 @@ ___
 
 #### Returns
 
-`Observable`<``null`` \| [`Group`](./interfaces/Group.md)[]\>
+`Observable`<``null`` \| [`Group`](../interfaces/Group.md)[]\>
 
 ___
 
-### <a id="getdishes$" name="getdishes$"></a> getDishes$
+### getDishes$
 
-▸ **getDishes$**(`id?`): `Observable`<[`Dish`](./interfaces/Dish.md)[]\>
+▸ **getDishes$**(`id?`): `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
 
 #### Parameters
 
@@ -153,13 +153,13 @@ ___
 
 #### Returns
 
-`Observable`<[`Dish`](./interfaces/Dish.md)[]\>
+`Observable`<[`Dish`](../interfaces/Dish.md)[]\>
 
 ___
 
-### <a id="getorder" name="getorder"></a> getOrder
+### getOrder
 
-▸ **getOrder**(`orderId`): `Observable`<[`Order`](./interfaces/Order.md)\>
+▸ **getOrder**(`orderId`): `Observable`<[`Order`](../interfaces/Order.md)\>
 
 #### Parameters
 
@@ -169,11 +169,11 @@ ___
 
 #### Returns
 
-`Observable`<[`Order`](./interfaces/Order.md)\>
+`Observable`<[`Order`](../interfaces/Order.md)\>
 
 ___
 
-### <a id="loadorderascart$" name="loadorderascart$"></a> loadOrderAsCart$
+### loadOrderAsCart$
 
 ▸ **loadOrderAsCart$**(`orderId`): `void`
 
@@ -189,25 +189,9 @@ ___
 
 ___
 
-### <a id="getphone$" name="getphone$"></a> getPhone$
+### getPhone$
 
-▸ **getPhone$**(`phone`): `Observable`<[`Phone`](./interfaces/Phone.md) \| [`Phone`](./interfaces/Phone.md)[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `phone` | `string` |
-
-#### Returns
-
-`Observable`<[`Phone`](./interfaces/Phone.md) \| [`Phone`](./interfaces/Phone.md)[]\>
-
-___
-
-### <a id="checkphone$" name="checkphone$"></a> checkPhone$
-
-▸ **checkPhone$**(`phone`): `Observable`<[`CheckPhoneResponse`](./interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](./interfaces/CheckPhoneResponse.md)[]\>
+▸ **getPhone$**(`phone`): `Observable`<[`Phone`](../interfaces/Phone.md) \| [`Phone`](../interfaces/Phone.md)[]\>
 
 #### Parameters
 
@@ -217,13 +201,29 @@ ___
 
 #### Returns
 
-`Observable`<[`CheckPhoneResponse`](./interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](./interfaces/CheckPhoneResponse.md)[]\>
+`Observable`<[`Phone`](../interfaces/Phone.md) \| [`Phone`](../interfaces/Phone.md)[]\>
 
 ___
 
-### <a id="getpaymentmethods$" name="getpaymentmethods$"></a> getPaymentMethods$
+### checkPhone$
 
-▸ **getPaymentMethods$**(`orderId`): `Observable`<[`PaymentMethod`](./interfaces/PaymentMethod.md)[]\>
+▸ **checkPhone$**(`phone`): `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `phone` | `string` |
+
+#### Returns
+
+`Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
+
+___
+
+### getPaymentMethods$
+
+▸ **getPaymentMethods$**(`orderId`): `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
 #### Parameters
 
@@ -233,27 +233,27 @@ ___
 
 #### Returns
 
-`Observable`<[`PaymentMethod`](./interfaces/PaymentMethod.md)[]\>
+`Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
 ___
 
-### <a id="adddishtoorder$" name="adddishtoorder$"></a> addDishToOrder$
+### addDishToOrder$
 
-▸ **addDishToOrder$**(`data`): `Observable`<[`Order`](./interfaces/Order.md)\>
+▸ **addDishToOrder$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`AddToOrderInput`](./modules.md#addtoorderinput) |
+| `data` | [`AddToOrderInput`](../modules.md#addtoorderinput) |
 
 #### Returns
 
-`Observable`<[`Order`](./interfaces/Order.md)\>
+`Observable`<[`Order`](../interfaces/Order.md)\>
 
 ___
 
-### <a id="addtoorder" name="addtoorder"></a> addToOrder
+### addToOrder
 
 ▸ **addToOrder**(`order`, `loading`, `dish`, `amount?`, `dishModifiers?`, `successCb?`, `errorCb?`): `void`
 
@@ -264,12 +264,12 @@ ___
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `order` | [`Order`](./interfaces/Order.md) | `undefined` | Заказ, с которым выполнется операция |
+| `order` | [`Order`](../interfaces/Order.md) | `undefined` | Заказ, с которым выполнется операция |
 | `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
-| `dish` | [`Dish`](./interfaces/Dish.md) | `undefined` | добавляемое блюдо |
+| `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | добавляемое блюдо |
 | `amount` | `number` | `1` | количество |
-| `dishModifiers` | [`Modifier`](./interfaces/Modifier.md)[] | `[]` | выбранные пользователем модификаторы блюда |
-| `successCb?` | (`order`: [`Order`](./interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `dishModifiers` | [`Modifier`](../interfaces/Modifier.md)[] | `[]` | выбранные пользователем модификаторы блюда |
+| `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
 #### Returns
@@ -278,7 +278,7 @@ ___
 
 ___
 
-### <a id="removefromorder" name="removefromorder"></a> removeFromOrder
+### removeFromOrder
 
 ▸ **removeFromOrder**(`loading`, `dish`, `amount?`, `orderDishId`, `order`, `successCb?`, `errorCb?`): `void`
 
@@ -290,11 +290,11 @@ ___
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
 | `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
-| `dish` | [`Dish`](./interfaces/Dish.md) | `undefined` | добавляемое блюдо |
+| `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | добавляемое блюдо |
 | `amount` | `number` | `1` | количество |
 | `orderDishId` | `undefined` \| `number` | `undefined` | id блюда в корзине |
-| `order` | [`Order`](./interfaces/Order.md) | `undefined` | Заказ, с которым выполнется операция |
-| `successCb?` | (`order`: [`Order`](./interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `order` | [`Order`](../interfaces/Order.md) | `undefined` | Заказ, с которым выполнется операция |
+| `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
 #### Returns
@@ -303,7 +303,7 @@ ___
 
 ___
 
-### <a id="checkorder" name="checkorder"></a> checkOrder
+### checkOrder
 
 ▸ **checkOrder**(`order`, `successCb?`, `errorCb?`): `void`
 
@@ -315,8 +315,8 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `order` | [`OrderForm`](./modules.md#orderform) | Проверяемый заказ |
-| `successCb?` | (`order`: [`CheckResponse`](./interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `order` | [`OrderForm`](../modules.md#orderform) | Проверяемый заказ |
+| `successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
 #### Returns
@@ -325,7 +325,7 @@ ___
 
 ___
 
-### <a id="sendorder" name="sendorder"></a> sendOrder
+### sendOrder
 
 ▸ **sendOrder**(`order`, `successCb?`, `errorCb?`): `void`
 
@@ -337,8 +337,8 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `order` | [`OrderForm`](./modules.md#orderform) | Оформляемый заказ |
-| `successCb?` | (`order`: [`CheckResponse`](./interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `order` | [`OrderForm`](../modules.md#orderform) | Оформляемый заказ |
+| `successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
 #### Returns
@@ -347,103 +347,103 @@ ___
 
 ___
 
-### <a id="sendorder$" name="sendorder$"></a> sendOrder$
+### sendOrder$
 
-▸ **sendOrder$**(`data`): `Observable`<[`CheckResponse`](./interfaces/CheckResponse.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data` | [`OrderInput`](./modules.md#orderinput) |
-
-#### Returns
-
-`Observable`<[`CheckResponse`](./interfaces/CheckResponse.md)\>
-
-___
-
-### <a id="checkorder$" name="checkorder$"></a> checkOrder$
-
-▸ **checkOrder$**(`data`): `Observable`<[`CheckResponse`](./interfaces/CheckResponse.md)\>
+▸ **sendOrder$**(`data`): `Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`OrderInput`](./modules.md#orderinput) |
+| `data` | [`OrderInput`](../modules.md#orderinput) |
 
 #### Returns
 
-`Observable`<[`CheckResponse`](./interfaces/CheckResponse.md)\>
+`Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
 
 ___
 
-### <a id="checkphonecode$" name="checkphonecode$"></a> checkPhoneCode$
+### checkOrder$
 
-▸ **checkPhoneCode$**(`data`): `Observable`<[`CheckPhoneResponse`](./interfaces/CheckPhoneResponse.md)\>
+▸ **checkOrder$**(`data`): `Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`CheckPhoneCodeInput`](./interfaces/CheckPhoneCodeInput.md) |
+| `data` | [`OrderInput`](../modules.md#orderinput) |
 
 #### Returns
 
-`Observable`<[`CheckPhoneResponse`](./interfaces/CheckPhoneResponse.md)\>
+`Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
 
 ___
 
-### <a id="removedishfromorder$" name="removedishfromorder$"></a> removeDishFromOrder$
+### checkPhoneCode$
 
-▸ **removeDishFromOrder$**(`data`): `Observable`<[`Order`](./interfaces/Order.md)\>
+▸ **checkPhoneCode$**(`data`): `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`RemoveFromOrderInput`](./modules.md#removefromorderinput) |
+| `data` | [`CheckPhoneCodeInput`](../interfaces/CheckPhoneCodeInput.md) |
 
 #### Returns
 
-`Observable`<[`Order`](./interfaces/Order.md)\>
+`Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)\>
 
 ___
 
-### <a id="setdishamount$" name="setdishamount$"></a> setDishAmount$
+### removeDishFromOrder$
 
-▸ **setDishAmount$**(`data`): `Observable`<[`Order`](./interfaces/Order.md)\>
+▸ **removeDishFromOrder$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`SetDishAmountInput`](./modules.md#setdishamountinput) |
+| `data` | [`RemoveFromOrderInput`](../modules.md#removefromorderinput) |
 
 #### Returns
 
-`Observable`<[`Order`](./interfaces/Order.md)\>
+`Observable`<[`Order`](../interfaces/Order.md)\>
 
 ___
 
-### <a id="setdishcomment$" name="setdishcomment$"></a> setDishComment$
+### setDishAmount$
 
-▸ **setDishComment$**(`data`): `Observable`<[`Order`](./interfaces/Order.md)\>
+▸ **setDishAmount$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`SetDishCommentInput`](./modules.md#setdishcommentinput) |
+| `data` | [`SetDishAmountInput`](../modules.md#setdishamountinput) |
 
 #### Returns
 
-`Observable`<[`Order`](./interfaces/Order.md)\>
+`Observable`<[`Order`](../interfaces/Order.md)\>
 
 ___
 
-### <a id="customquery$" name="customquery$"></a> customQuery$
+### setDishComment$
+
+▸ **setDishComment$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`SetDishCommentInput`](../modules.md#setdishcommentinput) |
+
+#### Returns
+
+`Observable`<[`Order`](../interfaces/Order.md)\>
+
+___
+
+### customQuery$
 
 ▸ **customQuery$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `optionalFields?`): `Observable`<`Record`<`N`, `T` \| `T`[]\>\>
 
@@ -457,14 +457,14 @@ ___
 | :------ | :------ |
 | `T` | `T` |
 | `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
+| `V` | [`GQLRequestVariables`](../modules.md#gqlrequestvariables) |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
-| `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](./modules.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:    1. Обьекта, реализующего тип ValuesOrBoolean<T>.    2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения. |
+| `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../modules.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:    1. Обьекта, реализующего тип ValuesOrBoolean<T>.    2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения. |
 | `variables?` | `V` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
 | `optionalFields?` | keyof `V`[] | необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
 
@@ -483,14 +483,14 @@ ___
 | :------ | :------ |
 | `T` | `T` |
 | `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
+| `V` | [`GQLRequestVariables`](../modules.md#gqlrequestvariables) |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `name` | `N` |
-| `queryObject` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<`T`\> |
+| `queryObject` | [`ValuesOrBoolean`](../modules.md#valuesorboolean)<`T`\> |
 | `variables?` | `V` |
 | `optionalFields?` | keyof `V`[] |
 
@@ -500,7 +500,7 @@ ___
 
 ___
 
-### <a id="custommutation$" name="custommutation$"></a> customMutation$
+### customMutation$
 
 ▸ **customMutation$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables`, `optionalFields?`): `Observable`<`Record`<`N`, `T`\>\>
 
@@ -512,14 +512,14 @@ ___
 | :------ | :------ |
 | `T` | `T` |
 | `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
+| `V` | [`GQLRequestVariables`](../modules.md#gqlrequestvariables) |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
-| `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](./modules.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
+| `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../modules.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
 | `variables` | `V` | обязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
 | `optionalFields?` | keyof `V`[] | необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
 
@@ -537,14 +537,14 @@ ___
 | :------ | :------ |
 | `T` | `T` |
 | `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
+| `V` | [`GQLRequestVariables`](../modules.md#gqlrequestvariables) |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `name` | `N` |
-| `queryObject` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<`T`\> |
+| `queryObject` | [`ValuesOrBoolean`](../modules.md#valuesorboolean)<`T`\> |
 | `variables` | `V` |
 | `optionalFields?` | keyof `V`[] |
 
@@ -554,7 +554,7 @@ ___
 
 ___
 
-### <a id="customsubscribe$" name="customsubscribe$"></a> customSubscribe$
+### customSubscribe$
 
 ▸ **customSubscribe$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `optionalFields?`, `extra?`): `Observable`<`Record`<`N`, `T`\>[`N`]\>
 
@@ -568,14 +568,14 @@ ___
 | :------ | :------ |
 | `T` | `T` |
 | `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
+| `V` | [`GQLRequestVariables`](../modules.md#gqlrequestvariables) |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
-| `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](./modules.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре данных, на которые происходит подписка.   Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
+| `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../modules.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре данных, на которые происходит подписка.   Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
 | `variables?` | `V` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
 | `optionalFields?` | keyof `V`[] | необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
 | `extra?` | `ExtraSubscriptionOptions` | - |
@@ -597,14 +597,14 @@ ___
 | :------ | :------ |
 | `T` | `T` |
 | `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
+| `V` | [`GQLRequestVariables`](../modules.md#gqlrequestvariables) |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `name` | `N` |
-| `queryObject` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<`T`\> |
+| `queryObject` | [`ValuesOrBoolean`](../modules.md#valuesorboolean)<`T`\> |
 | `variables?` | `V` |
 | `optionalFields?` | keyof `V`[] |
 | `extra?` | `ExtraSubscriptionOptions` |
@@ -615,12 +615,12 @@ ___
 
 ___
 
-### <a id="queryandsubscribe" name="queryandsubscribe"></a> queryAndSubscribe
+### queryAndSubscribe
 
 ▸ **queryAndSubscribe**<`T`, `NQuery`, `NSubscribe`, `VQ`, `VS`\>(`nameQuery`, `nameSubscribe`, `queryObject`, `uniqueKeyForCompareItem`, `variables?`, `optionalFields?`): `Observable`<`T`[]\>
 
 **`method`** queryAndSubscribe
-Метод, объединяющий получение неких первоначальных данных и подписку на их обнровление.
+Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
 
 **`see`** ValuesOrBoolean<T>
 
@@ -631,7 +631,7 @@ ___
 | `T` | `T` |
 | `NQuery` | extends `string` |
 | `NSubscribe` | extends `string` |
-| `VQ` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
+| `VQ` | [`GQLRequestVariables`](../modules.md#gqlrequestvariables) |
 | `VS` | `VQ` |
 
 #### Parameters
@@ -640,7 +640,7 @@ ___
 | :------ | :------ | :------ |
 | `nameQuery` | `NQuery` | название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL. |
 | `nameSubscribe` | `NSubscribe` | название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных. |
-| `queryObject` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<`T`\> | объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка в виде обьекта, реализующего тип ValuesOrBoolean<T>. |
+| `queryObject` | [`ValuesOrBoolean`](../modules.md#valuesorboolean)<`T`\> | объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка в виде обьекта, реализующего тип ValuesOrBoolean<T>. |
 | `uniqueKeyForCompareItem` | keyof `T` | наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id'). Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки. |
 | `variables?` | `VQ` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
 | `optionalFields?` | keyof `VQ`[] | необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
@@ -662,8 +662,8 @@ ___
 | `T` | `T` |
 | `NQuery` | extends `string` |
 | `NSubscribe` | extends `string` |
-| `VQ` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
-| `VS` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
+| `VQ` | [`GQLRequestVariables`](../modules.md#gqlrequestvariables) |
+| `VS` | [`GQLRequestVariables`](../modules.md#gqlrequestvariables) |
 
 #### Parameters
 
@@ -671,7 +671,7 @@ ___
 | :------ | :------ |
 | `nameQuery` | `NQuery` |
 | `nameSubscribe` | `NSubscribe` |
-| `queryObject` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<`T`\> |
+| `queryObject` | [`ValuesOrBoolean`](../modules.md#valuesorboolean)<`T`\> |
 | `uniqueKeyForCompareItem` | keyof `T` |
 | `variables?` | `Object` |
 | `variables.query?` | `VQ` |
@@ -686,7 +686,7 @@ ___
 
 ___
 
-### <a id="destroy" name="destroy"></a> destroy
+### destroy
 
 ▸ **destroy**(): `void`
 

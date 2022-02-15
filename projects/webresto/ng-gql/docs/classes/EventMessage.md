@@ -4,17 +4,17 @@
 
 ### Constructors
 
-- [constructor](./classes/EventMessage.md#constructor)
+- [constructor](EventMessage.md#constructor)
 
 ### Properties
 
-- [type](./classes/EventMessage.md#type)
-- [title](./classes/EventMessage.md#title)
-- [body](./classes/EventMessage.md#body)
+- [type](EventMessage.md#type)
+- [title](EventMessage.md#title)
+- [body](EventMessage.md#body)
 
 ## Constructors
 
-### <a id="constructor" name="constructor"></a> constructor
+### constructor
 
 • **new EventMessage**(`type`, `title`, `body`)
 
@@ -28,18 +28,18 @@
 
 ## Properties
 
-### <a id="type" name="type"></a> type
+### type
 
 • **type**: `string`
 
 ___
 
-### <a id="title" name="title"></a> title
+### title
 
 • **title**: `string`
 
 ___
 
-### <a id="body" name="body"></a> body
+### body
 
 • **body**: `string`

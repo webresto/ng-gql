@@ -4,17 +4,17 @@
 
 ### Properties
 
-- [order](./interfaces/OrderData.md#order)
-- [customData](./interfaces/OrderData.md#customdata)
+- [order](OrderData.md#order)
+- [customData](OrderData.md#customdata)
 
 ## Properties
 
-### <a id="order" name="order"></a> order
+### order
 
-• **order**: [`Order`](./interfaces/Order.md)
+• **order**: [`Order`](Order.md)
 
 ___
 
-### <a id="customdata" name="customdata"></a> customData
+### customData
 
 • **customData**: `any`

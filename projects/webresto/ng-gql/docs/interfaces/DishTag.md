@@ -4,10 +4,10 @@
 
 ### Properties
 
-- [name](./interfaces/DishTag.md#name)
+- [name](DishTag.md#name)
 
 ## Properties
 
-### <a id="name" name="name"></a> name
+### name
 
 • **name**: `string`

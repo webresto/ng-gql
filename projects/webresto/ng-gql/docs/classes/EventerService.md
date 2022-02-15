@@ -4,41 +4,41 @@
 
 ### Constructors
 
-- [constructor](./classes/EventerService.md#constructor)
+- [constructor](EventerService.md#constructor)
 
 ### Properties
 
-- [eventMessage](./classes/EventerService.md#eventmessage)
-- [eventAction](./classes/EventerService.md#eventaction)
+- [eventMessage](EventerService.md#eventmessage)
+- [eventAction](EventerService.md#eventaction)
 
 ### Methods
 
-- [emitMessageEvent](./classes/EventerService.md#emitmessageevent)
-- [emitActionEvent](./classes/EventerService.md#emitactionevent)
-- [getMessageEmitter](./classes/EventerService.md#getmessageemitter)
-- [getActionEmitter](./classes/EventerService.md#getactionemitter)
+- [emitMessageEvent](EventerService.md#emitmessageevent)
+- [emitActionEvent](EventerService.md#emitactionevent)
+- [getMessageEmitter](EventerService.md#getmessageemitter)
+- [getActionEmitter](EventerService.md#getactionemitter)
 
 ## Constructors
 
-### <a id="constructor" name="constructor"></a> constructor
+### constructor
 
 • **new EventerService**()
 
 ## Properties
 
-### <a id="eventmessage" name="eventmessage"></a> eventMessage
+### eventMessage
 
 • **eventMessage**: `EventEmitter`<`any`\>
 
 ___
 
-### <a id="eventaction" name="eventaction"></a> eventAction
+### eventAction
 
 • **eventAction**: `EventEmitter`<`any`\>
 
 ## Methods
 
-### <a id="emitmessageevent" name="emitmessageevent"></a> emitMessageEvent
+### emitMessageEvent
 
 ▸ **emitMessageEvent**(`message`): `void`
 
@@ -46,7 +46,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `message` | [`EventMessage`](./classes/EventMessage.md) |
+| `message` | [`EventMessage`](EventMessage.md) |
 
 #### Returns
 
@@ -54,7 +54,7 @@ ___
 
 ___
 
-### <a id="emitactionevent" name="emitactionevent"></a> emitActionEvent
+### emitActionEvent
 
 ▸ **emitActionEvent**(`action`): `void`
 
@@ -62,7 +62,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `action` | [`EventMessage`](./classes/EventMessage.md) |
+| `action` | [`EventMessage`](EventMessage.md) |
 
 #### Returns
 
@@ -70,7 +70,7 @@ ___
 
 ___
 
-### <a id="getmessageemitter" name="getmessageemitter"></a> getMessageEmitter
+### getMessageEmitter
 
 ▸ **getMessageEmitter**(): `EventEmitter`<`any`\>
 
@@ -80,7 +80,7 @@ ___
 
 ___
 
-### <a id="getactionemitter" name="getactionemitter"></a> getActionEmitter
+### getActionEmitter
 
 ▸ **getActionEmitter**(): `EventEmitter`<`any`\>
 

@@ -4,31 +4,31 @@
 
 ### Methods
 
-- [forRoot](./classes/NgGqlModule.md#forroot)
+- [forRoot](NgGqlModule.md#forroot)
 
 ### Constructors
 
-- [constructor](./classes/NgGqlModule.md#constructor)
+- [constructor](NgGqlModule.md#constructor)
 
 ## Methods
 
-### <a id="forroot" name="forroot"></a> forRoot
+### forRoot
 
-▸ `Static` **forRoot**(`config`): `ModuleWithProviders`<[`NgGqlModule`](./classes/NgGqlModule.md)\>
+▸ `Static` **forRoot**(`config`): `ModuleWithProviders`<[`NgGqlModule`](NgGqlModule.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `config` | [`NgGqlConfig`](./interfaces/NgGqlConfig.md) |
+| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 
 #### Returns
 
-`ModuleWithProviders`<[`NgGqlModule`](./classes/NgGqlModule.md)\>
+`ModuleWithProviders`<[`NgGqlModule`](NgGqlModule.md)\>
 
 ## Constructors
 
-### <a id="constructor" name="constructor"></a> constructor
+### constructor
 
 • **new NgGqlModule**(`apollo`, `httpLink`, `config`)
 
@@ -38,4 +38,4 @@
 | :------ | :------ |
 | `apollo` | `Apollo` |
 | `httpLink` | `HttpLink` |
-| `config` | [`NgGqlConfig`](./interfaces/NgGqlConfig.md) |
+| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |

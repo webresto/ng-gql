@@ -4,52 +4,52 @@
 
 ### Properties
 
-- [modifierId](./interfaces/Modifier.md#modifierid)
-- [groupId](./interfaces/Modifier.md#groupid)
-- [maxAmount](./interfaces/Modifier.md#maxamount)
-- [minAmount](./interfaces/Modifier.md#minamount)
-- [amount](./interfaces/Modifier.md#amount)
-- [defaultAmount](./interfaces/Modifier.md#defaultamount)
-- [dish](./interfaces/Modifier.md#dish)
+- [modifierId](Modifier.md#modifierid)
+- [groupId](Modifier.md#groupid)
+- [maxAmount](Modifier.md#maxamount)
+- [minAmount](Modifier.md#minamount)
+- [amount](Modifier.md#amount)
+- [defaultAmount](Modifier.md#defaultamount)
+- [dish](Modifier.md#dish)
 
 ## Properties
 
-### <a id="modifierid" name="modifierid"></a> modifierId
+### modifierId
 
 • **modifierId**: `string`
 
 ___
 
-### <a id="groupid" name="groupid"></a> groupId
+### groupId
 
 • `Optional` **groupId**: `string`
 
 ___
 
-### <a id="maxamount" name="maxamount"></a> maxAmount
+### maxAmount
 
 • **maxAmount**: `number`
 
 ___
 
-### <a id="minamount" name="minamount"></a> minAmount
+### minAmount
 
 • **minAmount**: `number`
 
 ___
 
-### <a id="amount" name="amount"></a> amount
+### amount
 
 • `Optional` **amount**: `number`
 
 ___
 
-### <a id="defaultamount" name="defaultamount"></a> defaultAmount
+### defaultAmount
 
 • **defaultAmount**: `number`
 
 ___
 
-### <a id="dish" name="dish"></a> dish
+### dish
 
-• **dish**: [`Dish`](./interfaces/Dish.md)
+• **dish**: [`Dish`](Dish.md)

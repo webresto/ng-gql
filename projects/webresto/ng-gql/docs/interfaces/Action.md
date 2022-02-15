@@ -4,17 +4,17 @@
 
 ### Properties
 
-- [type](./interfaces/Action.md#type)
-- [data](./interfaces/Action.md#data)
+- [type](Action.md#type)
+- [data](Action.md#data)
 
 ## Properties
 
-### <a id="type" name="type"></a> type
+### type
 
 • **type**: `String`
 
 ___
 
-### <a id="data" name="data"></a> data
+### data
 
 • **data**: `any`

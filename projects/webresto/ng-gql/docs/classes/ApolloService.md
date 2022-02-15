@@ -4,18 +4,18 @@
 
 ### Constructors
 
-- [constructor](./classes/ApolloService.md#constructor)
+- [constructor](ApolloService.md#constructor)
 
 ### Methods
 
-- [watchQuery](./classes/ApolloService.md#watchquery)
-- [query](./classes/ApolloService.md#query)
-- [mutate](./classes/ApolloService.md#mutate)
-- [subscribe](./classes/ApolloService.md#subscribe)
+- [watchQuery](ApolloService.md#watchquery)
+- [query](ApolloService.md#query)
+- [mutate](ApolloService.md#mutate)
+- [subscribe](ApolloService.md#subscribe)
 
 ## Constructors
 
-### <a id="constructor" name="constructor"></a> constructor
+### constructor
 
 • **new ApolloService**(`apollo`)
 
@@ -27,7 +27,7 @@
 
 ## Methods
 
-### <a id="watchquery" name="watchquery"></a> watchQuery
+### watchQuery
 
 ▸ **watchQuery**<`TData`, `TVariables`\>(`options`): `Observable`<`ApolloQueryResult`<`TData`\>\>
 
@@ -50,7 +50,7 @@
 
 ___
 
-### <a id="query" name="query"></a> query
+### query
 
 ▸ **query**<`T`, `V`\>(`options`): `Observable`<`ApolloQueryResult`<`T`\>\>
 
@@ -73,7 +73,7 @@ ___
 
 ___
 
-### <a id="mutate" name="mutate"></a> mutate
+### mutate
 
 ▸ **mutate**<`T`, `V`\>(`options`): `Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
 
@@ -96,7 +96,7 @@ ___
 
 ___
 
-### <a id="subscribe" name="subscribe"></a> subscribe
+### subscribe
 
 ▸ **subscribe**<`T`, `V`\>(`options`, `extra?`): `Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
 

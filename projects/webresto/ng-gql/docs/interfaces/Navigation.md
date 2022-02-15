@@ -4,38 +4,38 @@
 
 ### Properties
 
-- [mnemonicId](./interfaces/Navigation.md#mnemonicid)
-- [description](./interfaces/Navigation.md#description)
-- [options](./interfaces/Navigation.md#options)
-- [id](./interfaces/Navigation.md#id)
-- [navigation\_menu](./interfaces/Navigation.md#navigation_menu)
+- [mnemonicId](Navigation.md#mnemonicid)
+- [description](Navigation.md#description)
+- [options](Navigation.md#options)
+- [id](Navigation.md#id)
+- [navigation\_menu](Navigation.md#navigation_menu)
 
 ## Properties
 
-### <a id="mnemonicid" name="mnemonicid"></a> mnemonicId
+### mnemonicId
 
 • **mnemonicId**: `string`
 
 ___
 
-### <a id="description" name="description"></a> description
+### description
 
 • **description**: `string`
 
 ___
 
-### <a id="options" name="options"></a> options
+### options
 
-• **options**: [`NavigationsOptions`](./interfaces/NavigationsOptions.md)
+• **options**: [`NavigationsOptions`](NavigationsOptions.md)
 
 ___
 
-### <a id="id" name="id"></a> id
+### id
 
 • **id**: `number`
 
 ___
 
-### <a id="navigation_menu" name="navigation_menu"></a> navigation\_menu
+### navigation\_menu
 
-• **navigation\_menu**: [`NavigationsMenuItem`](./interfaces/NavigationsMenuItem.md)[]
+• **navigation\_menu**: [`NavigationsMenuItem`](NavigationsMenuItem.md)[]

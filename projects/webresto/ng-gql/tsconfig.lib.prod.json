@@ -16,14 +16,13 @@
       "typedoc-plugin-markdown"
     ],
     "excludePrivate": true,
-    "includeVersion": true,
     "disableSources": true,
-    "readme": "./README.md",
+    "readme": false,
     "hideGenerator": true,
     "cleanOutputDir": true,
     "sort": "source-order",
     "hideBreadcrumbs": true,
-    "namedAnchors": true,
-    "publicPath": "./"
+    "darkHighlightTheme": "material-darker",
+    "pretty": true,
   }
 }

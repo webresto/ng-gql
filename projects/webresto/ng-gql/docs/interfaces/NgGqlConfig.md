@@ -6,13 +6,13 @@
 
 ### Properties
 
-- [url](./interfaces/NgGqlConfig.md#url)
-- [nesting](./interfaces/NgGqlConfig.md#nesting)
-- [busSubscribeMode](./interfaces/NgGqlConfig.md#bussubscribemode)
+- [url](NgGqlConfig.md#url)
+- [nesting](NgGqlConfig.md#nesting)
+- [busSubscribeMode](NgGqlConfig.md#bussubscribemode)
 
 ## Properties
 
-### <a id="url" name="url"></a> url
+### url
 
 • **url**: `string`
 
@@ -20,7 +20,7 @@ URL API сервера GraphQL
 
 ___
 
-### <a id="nesting" name="nesting"></a> nesting
+### nesting
 
 • **nesting**: `number`
 
@@ -28,7 +28,7 @@ ___
 
 ___
 
-### <a id="bussubscribemode" name="bussubscribemode"></a> busSubscribeMode
+### busSubscribeMode
 
 • **busSubscribeMode**: ``"subscribe"`` \| ``"custom"``
 

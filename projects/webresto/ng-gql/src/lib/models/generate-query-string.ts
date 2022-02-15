@@ -1,7 +1,8 @@
 import {isValue} from './is-value';
 
 /** 
- * @typedef VCriteria Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
+ * @alias VCriteria
+ * Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
  * Формируется по правилам Waterline query language. 
  * Подробнее: https://docs.webresto.org/docs/data/criteria/
 */
@@ -15,7 +16,7 @@ export type VCriteria = {
 type FieldTypes = Object | number | bigint | Symbol | string | boolean | null | undefined;
 
 /**
- * @typedef GQLRequestVariables 
+ * @alias GQLRequestVariables
  * Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описанным для запроса в схеме GraphQL сервера с соответствующими им значениями.
  * В качестве ключей выступают строки, соответствующие названиям параметров.
  * Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
@@ -26,7 +27,8 @@ export type GQLRequestVariables = undefined | VCriteria | {
 };
 
 /**
- * @function generateQueryString Функция - генератор строки запроса к серверу GraphQL.
+ * @function generateQueryString 
+ * Функция - генератор строки запроса к серверу GraphQL.
  * @param options - объект с данными, необходимыми для формирования запроса, где:
  * @param options.name - название операции, объвленное в схеме сервера GraphQL.
  * @param options.queryObject - объект-источник информации о структуре запрашиваемых данных

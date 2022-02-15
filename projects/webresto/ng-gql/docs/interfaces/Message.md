@@ -4,24 +4,24 @@
 
 ### Properties
 
-- [title](./interfaces/Message.md#title)
-- [type](./interfaces/Message.md#type)
-- [message](./interfaces/Message.md#message)
+- [title](Message.md#title)
+- [type](Message.md#type)
+- [message](Message.md#message)
 
 ## Properties
 
-### <a id="title" name="title"></a> title
+### title
 
 • **title**: `String`
 
 ___
 
-### <a id="type" name="type"></a> type
+### type
 
 • **type**: `String`
 
 ___
 
-### <a id="message" name="message"></a> message
+### message
 
 • **message**: `String`

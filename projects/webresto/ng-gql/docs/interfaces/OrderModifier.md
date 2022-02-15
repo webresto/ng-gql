@@ -4,31 +4,31 @@
 
 ### Properties
 
-- [id](./interfaces/OrderModifier.md#id)
-- [amount](./interfaces/OrderModifier.md#amount)
-- [groupId](./interfaces/OrderModifier.md#groupid)
-- [dish](./interfaces/OrderModifier.md#dish)
+- [id](OrderModifier.md#id)
+- [amount](OrderModifier.md#amount)
+- [groupId](OrderModifier.md#groupid)
+- [dish](OrderModifier.md#dish)
 
 ## Properties
 
-### <a id="id" name="id"></a> id
+### id
 
 • **id**: `string`
 
 ___
 
-### <a id="amount" name="amount"></a> amount
+### amount
 
 • `Optional` **amount**: `number`
 
 ___
 
-### <a id="groupid" name="groupid"></a> groupId
+### groupId
 
 • **groupId**: `string`
 
 ___
 
-### <a id="dish" name="dish"></a> dish
+### dish
 
-• **dish**: [`Dish`](./interfaces/Dish.md)
+• **dish**: [`Dish`](Dish.md)

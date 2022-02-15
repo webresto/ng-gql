@@ -4,17 +4,17 @@
 
 ### Properties
 
-- [initGroupSlug](./interfaces/NavigationsOptions.md#initgroupslug)
-- [behavior](./interfaces/NavigationsOptions.md#behavior)
+- [initGroupSlug](NavigationsOptions.md#initgroupslug)
+- [behavior](NavigationsOptions.md#behavior)
 
 ## Properties
 
-### <a id="initgroupslug" name="initgroupslug"></a> initGroupSlug
+### initGroupSlug
 
 • **initGroupSlug**: `string`
 
 ___
 
-### <a id="behavior" name="behavior"></a> behavior
+### behavior
 
 • `Optional` **behavior**: ``"newpagebyslug"`` \| ``"onepagebyslug"`` \| ``"newpagebynavigationmenu"`` \| ``"onepagebynavigationmenu"``

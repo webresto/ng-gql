@@ -4,150 +4,150 @@
 
 ### Properties
 
-- [id](./interfaces/Dish.md#id)
-- [name](./interfaces/Dish.md#name)
-- [description](./interfaces/Dish.md#description)
-- [price](./interfaces/Dish.md#price)
-- [weight](./interfaces/Dish.md#weight)
-- [balance](./interfaces/Dish.md#balance)
-- [tags](./interfaces/Dish.md#tags)
-- [additionalInfo](./interfaces/Dish.md#additionalinfo)
-- [images](./interfaces/Dish.md#images)
-- [groupId](./interfaces/Dish.md#groupid)
-- [parentGroup](./interfaces/Dish.md#parentgroup)
-- [modifiers](./interfaces/Dish.md#modifiers)
-- [carbohydrateAmount](./interfaces/Dish.md#carbohydrateamount)
-- [carbohydrateFullAmount](./interfaces/Dish.md#carbohydratefullamount)
-- [energyAmount](./interfaces/Dish.md#energyamount)
-- [energyFullAmount](./interfaces/Dish.md#energyfullamount)
-- [fatAmount](./interfaces/Dish.md#fatamount)
-- [fatFullAmount](./interfaces/Dish.md#fatfullamount)
-- [fiberAmount](./interfaces/Dish.md#fiberamount)
-- [fiberFullAmount](./interfaces/Dish.md#fiberfullamount)
-- [measureUnit](./interfaces/Dish.md#measureunit)
+- [id](Dish.md#id)
+- [name](Dish.md#name)
+- [description](Dish.md#description)
+- [price](Dish.md#price)
+- [weight](Dish.md#weight)
+- [balance](Dish.md#balance)
+- [tags](Dish.md#tags)
+- [additionalInfo](Dish.md#additionalinfo)
+- [images](Dish.md#images)
+- [groupId](Dish.md#groupid)
+- [parentGroup](Dish.md#parentgroup)
+- [modifiers](Dish.md#modifiers)
+- [carbohydrateAmount](Dish.md#carbohydrateamount)
+- [carbohydrateFullAmount](Dish.md#carbohydratefullamount)
+- [energyAmount](Dish.md#energyamount)
+- [energyFullAmount](Dish.md#energyfullamount)
+- [fatAmount](Dish.md#fatamount)
+- [fatFullAmount](Dish.md#fatfullamount)
+- [fiberAmount](Dish.md#fiberamount)
+- [fiberFullAmount](Dish.md#fiberfullamount)
+- [measureUnit](Dish.md#measureunit)
 
 ## Properties
 
-### <a id="id" name="id"></a> id
+### id
 
 • **id**: `string`
 
 ___
 
-### <a id="name" name="name"></a> name
+### name
 
 • **name**: `string`
 
 ___
 
-### <a id="description" name="description"></a> description
+### description
 
 • **description**: `string`
 
 ___
 
-### <a id="price" name="price"></a> price
+### price
 
 • **price**: `number`
 
 ___
 
-### <a id="weight" name="weight"></a> weight
+### weight
 
 • **weight**: `number`
 
 ___
 
-### <a id="balance" name="balance"></a> balance
+### balance
 
 • **balance**: `number`
 
 ___
 
-### <a id="tags" name="tags"></a> tags
+### tags
 
-• `Optional` **tags**: [`DishTag`](./interfaces/DishTag.md)[]
+• `Optional` **tags**: [`DishTag`](DishTag.md)[]
 
 ___
 
-### <a id="additionalinfo" name="additionalinfo"></a> additionalInfo
+### additionalInfo
 
 • `Optional` **additionalInfo**: ``null`` \| `string` \| `number` \| { `[key: string]`: `string` \| `any`;  }
 
 ___
 
-### <a id="images" name="images"></a> images
+### images
 
-• **images**: [`Image`](./interfaces/Image.md)[]
+• **images**: [`Image`](Image.md)[]
 
 ___
 
-### <a id="groupid" name="groupid"></a> groupId
+### groupId
 
 • `Optional` **groupId**: `string`
 
 ___
 
-### <a id="parentgroup" name="parentgroup"></a> parentGroup
+### parentGroup
 
-• **parentGroup**: `Pick`<[`Group`](./interfaces/Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>
-
-___
-
-### <a id="modifiers" name="modifiers"></a> modifiers
-
-• `Optional` **modifiers**: [`GroupModifier`](./interfaces/GroupModifier.md)[]
+• **parentGroup**: `Pick`<[`Group`](Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>
 
 ___
 
-### <a id="carbohydrateamount" name="carbohydrateamount"></a> carbohydrateAmount
+### modifiers
+
+• `Optional` **modifiers**: [`GroupModifier`](GroupModifier.md)[]
+
+___
+
+### carbohydrateAmount
 
 • `Optional` **carbohydrateAmount**: `number`
 
 ___
 
-### <a id="carbohydratefullamount" name="carbohydratefullamount"></a> carbohydrateFullAmount
+### carbohydrateFullAmount
 
 • `Optional` **carbohydrateFullAmount**: `number`
 
 ___
 
-### <a id="energyamount" name="energyamount"></a> energyAmount
+### energyAmount
 
 • `Optional` **energyAmount**: `number`
 
 ___
 
-### <a id="energyfullamount" name="energyfullamount"></a> energyFullAmount
+### energyFullAmount
 
 • `Optional` **energyFullAmount**: `number`
 
 ___
 
-### <a id="fatamount" name="fatamount"></a> fatAmount
+### fatAmount
 
 • `Optional` **fatAmount**: `number`
 
 ___
 
-### <a id="fatfullamount" name="fatfullamount"></a> fatFullAmount
+### fatFullAmount
 
 • `Optional` **fatFullAmount**: `number`
 
 ___
 
-### <a id="fiberamount" name="fiberamount"></a> fiberAmount
+### fiberAmount
 
 • `Optional` **fiberAmount**: `number`
 
 ___
 
-### <a id="fiberfullamount" name="fiberfullamount"></a> fiberFullAmount
+### fiberFullAmount
 
 • `Optional` **fiberFullAmount**: `number`
 
 ___
 
-### <a id="measureunit" name="measureunit"></a> measureUnit
+### measureUnit
 
 • `Optional` **measureUnit**: `string`

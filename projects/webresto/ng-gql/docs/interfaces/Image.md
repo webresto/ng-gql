@@ -4,24 +4,24 @@
 
 ### Properties
 
-- [id](./interfaces/Image.md#id)
-- [uploadDate](./interfaces/Image.md#uploaddate)
-- [images](./interfaces/Image.md#images)
+- [id](Image.md#id)
+- [uploadDate](Image.md#uploaddate)
+- [images](Image.md#images)
 
 ## Properties
 
-### <a id="id" name="id"></a> id
+### id
 
 • **id**: `string`
 
 ___
 
-### <a id="uploaddate" name="uploaddate"></a> uploadDate
+### uploadDate
 
 • **uploadDate**: `string`
 
 ___
 
-### <a id="images" name="images"></a> images
+### images
 
-• **images**: [`ImageItem`](./interfaces/ImageItem.md)
+• **images**: [`ImageItem`](ImageItem.md)

@@ -4,24 +4,24 @@
 
 ### Properties
 
-- [order](./interfaces/CheckResponse.md#order)
-- [message](./interfaces/CheckResponse.md#message)
-- [action](./interfaces/CheckResponse.md#action)
+- [order](CheckResponse.md#order)
+- [message](CheckResponse.md#message)
+- [action](CheckResponse.md#action)
 
 ## Properties
 
-### <a id="order" name="order"></a> order
+### order
 
-• **order**: [`Order`](./interfaces/Order.md)
-
-___
-
-### <a id="message" name="message"></a> message
-
-• **message**: [`Message`](./interfaces/Message.md)
+• **order**: [`Order`](Order.md)
 
 ___
 
-### <a id="action" name="action"></a> action
+### message
 
-• **action**: [`Action`](./interfaces/Action.md)
+• **message**: [`Message`](Message.md)
+
+___
+
+### action
+
+• **action**: [`Action`](Action.md)

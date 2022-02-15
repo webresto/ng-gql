@@ -11,7 +11,7 @@ import {makeForm} from '@axrl/ngx-extended-form-builder';
 import type {NgGqlConfig} from './ng-gql.module';
 
 /**
- * @typedef CartBusEvent
+ * @alias CartBusEvent
  * Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
  */
 export type CartBusEvent = {
@@ -780,7 +780,7 @@ export class NgGqlService {
 
   /**
 * @method queryAndSubscribe 
-* Метод, объединяющий получение неких первоначальных данных и подписку на их обнровление.
+* Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
 
 * @param nameQuery - название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL.
 * @param nameSubscribe - название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных.
