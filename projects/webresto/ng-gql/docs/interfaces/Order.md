@@ -1,148 +1,146 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Order
-
 # Interface: Order
 
 ## Table of contents
 
 ### Properties
 
-- [id](Order.md#id)
-- [dishes](Order.md#dishes)
-- [dishesCount](Order.md#dishescount)
-- [comment](Order.md#comment)
-- [deliveryDescription](Order.md#deliverydescription)
-- [message](Order.md#message)
-- [deliveryCost](Order.md#deliverycost)
-- [totalWeight](Order.md#totalweight)
-- [total](Order.md#total)
-- [orderTotal](Order.md#ordertotal)
-- [discountTotal](Order.md#discounttotal)
-- [state](Order.md#state)
-- [rmsId](Order.md#rmsid)
-- [rmsOrderNumber](Order.md#rmsordernumber)
-- [rmsDeliveryDate](Order.md#rmsdeliverydate)
-- [customer](Order.md#customer)
-- [address](Order.md#address)
-- [paid](Order.md#paid)
-- [paymentMethod](Order.md#paymentmethod)
-- [customData](Order.md#customdata)
+- [id](./interfaces/Order.md#id)
+- [dishes](./interfaces/Order.md#dishes)
+- [dishesCount](./interfaces/Order.md#dishescount)
+- [comment](./interfaces/Order.md#comment)
+- [deliveryDescription](./interfaces/Order.md#deliverydescription)
+- [message](./interfaces/Order.md#message)
+- [deliveryCost](./interfaces/Order.md#deliverycost)
+- [totalWeight](./interfaces/Order.md#totalweight)
+- [total](./interfaces/Order.md#total)
+- [orderTotal](./interfaces/Order.md#ordertotal)
+- [discountTotal](./interfaces/Order.md#discounttotal)
+- [state](./interfaces/Order.md#state)
+- [rmsId](./interfaces/Order.md#rmsid)
+- [rmsOrderNumber](./interfaces/Order.md#rmsordernumber)
+- [rmsDeliveryDate](./interfaces/Order.md#rmsdeliverydate)
+- [customer](./interfaces/Order.md#customer)
+- [address](./interfaces/Order.md#address)
+- [paid](./interfaces/Order.md#paid)
+- [paymentMethod](./interfaces/Order.md#paymentmethod)
+- [customData](./interfaces/Order.md#customdata)
 
 ## Properties
 
-### id
+### <a id="id" name="id"></a> id
 
 • **id**: `string`
 
 ___
 
-### dishes
+### <a id="dishes" name="dishes"></a> dishes
 
-• **dishes**: [`OrderDish`](OrderDish.md)[]
+• **dishes**: [`OrderDish`](./interfaces/OrderDish.md)[]
 
 ___
 
-### dishesCount
+### <a id="dishescount" name="dishescount"></a> dishesCount
 
 • **dishesCount**: `number`
 
 ___
 
-### comment
+### <a id="comment" name="comment"></a> comment
 
 • **comment**: ``null`` \| `string`
 
 ___
 
-### deliveryDescription
+### <a id="deliverydescription" name="deliverydescription"></a> deliveryDescription
 
 • **deliveryDescription**: `string`
 
 ___
 
-### message
+### <a id="message" name="message"></a> message
 
 • **message**: ``null`` \| `string`
 
 ___
 
-### deliveryCost
+### <a id="deliverycost" name="deliverycost"></a> deliveryCost
 
 • **deliveryCost**: `number`
 
 ___
 
-### totalWeight
+### <a id="totalweight" name="totalweight"></a> totalWeight
 
 • **totalWeight**: `number`
 
 ___
 
-### total
+### <a id="total" name="total"></a> total
 
 • **total**: `number`
 
 ___
 
-### orderTotal
+### <a id="ordertotal" name="ordertotal"></a> orderTotal
 
 • **orderTotal**: `number`
 
 ___
 
-### discountTotal
+### <a id="discounttotal" name="discounttotal"></a> discountTotal
 
 • **discountTotal**: `number`
 
 ___
 
-### state
+### <a id="state" name="state"></a> state
 
 • **state**: `string`
 
 ___
 
-### rmsId
+### <a id="rmsid" name="rmsid"></a> rmsId
 
 • `Optional` **rmsId**: `string`
 
 ___
 
-### rmsOrderNumber
+### <a id="rmsordernumber" name="rmsordernumber"></a> rmsOrderNumber
 
 • `Optional` **rmsOrderNumber**: `string`
 
 ___
 
-### rmsDeliveryDate
+### <a id="rmsdeliverydate" name="rmsdeliverydate"></a> rmsDeliveryDate
 
 • `Optional` **rmsDeliveryDate**: `string`
 
 ___
 
-### customer
+### <a id="customer" name="customer"></a> customer
 
-• `Optional` **customer**: [`Customer`](Customer.md)
-
-___
-
-### address
-
-• `Optional` **address**: [`Address`](Address.md)
+• `Optional` **customer**: [`Customer`](./interfaces/Customer.md)
 
 ___
 
-### paid
+### <a id="address" name="address"></a> address
+
+• `Optional` **address**: [`Address`](./interfaces/Address.md)
+
+___
+
+### <a id="paid" name="paid"></a> paid
 
 • `Optional` **paid**: `boolean`
 
 ___
 
-### paymentMethod
+### <a id="paymentmethod" name="paymentmethod"></a> paymentMethod
 
-• `Optional` **paymentMethod**: [`PaymentMethod`](PaymentMethod.md)
+• `Optional` **paymentMethod**: [`PaymentMethod`](./interfaces/PaymentMethod.md)
 
 ___
 
-### customData
+### <a id="customdata" name="customdata"></a> customData
 
-• `Optional` **customData**: ``null`` \| { [key: string]: `string` \| `any`;  }
+• `Optional` **customData**: ``null`` \| { `[key: string]`: `string` \| `any`;  }

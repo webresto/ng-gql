@@ -7,7 +7,7 @@
   "angularCompilerOptions": {
     "compilationMode": "partial"
   },
-  "typedocOptions":{
+  "typedocOptions": {
     "entryPoints": [
       "./src/public-api.ts"
     ],
@@ -21,6 +21,9 @@
     "readme": "./README.md",
     "hideGenerator": true,
     "cleanOutputDir": true,
-    "sort":"source-order"
+    "sort": "source-order",
+    "hideBreadcrumbs": true,
+    "namedAnchors": true,
+    "publicPath": "./"
   }
 }

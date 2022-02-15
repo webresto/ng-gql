@@ -1,43 +1,41 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / CheckPhoneResponse
-
 # Interface: CheckPhoneResponse
 
 ## Table of contents
 
 ### Properties
 
-- [type](CheckPhoneResponse.md#type)
-- [title](CheckPhoneResponse.md#title)
-- [message](CheckPhoneResponse.md#message)
-- [confirmed](CheckPhoneResponse.md#confirmed)
-- [firstbuy](CheckPhoneResponse.md#firstbuy)
+- [type](./interfaces/CheckPhoneResponse.md#type)
+- [title](./interfaces/CheckPhoneResponse.md#title)
+- [message](./interfaces/CheckPhoneResponse.md#message)
+- [confirmed](./interfaces/CheckPhoneResponse.md#confirmed)
+- [firstbuy](./interfaces/CheckPhoneResponse.md#firstbuy)
 
 ## Properties
 
-### type
+### <a id="type" name="type"></a> type
 
 • **type**: `string`
 
 ___
 
-### title
+### <a id="title" name="title"></a> title
 
 • **title**: `string`
 
 ___
 
-### message
+### <a id="message" name="message"></a> message
 
 • **message**: `string`
 
 ___
 
-### confirmed
+### <a id="confirmed" name="confirmed"></a> confirmed
 
 • **confirmed**: `boolean`
 
 ___
 
-### firstbuy
+### <a id="firstbuy" name="firstbuy"></a> firstbuy
 
 • **firstbuy**: `boolean`

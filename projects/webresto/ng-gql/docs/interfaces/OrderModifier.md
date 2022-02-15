@@ -1,36 +1,34 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / OrderModifier
-
 # Interface: OrderModifier
 
 ## Table of contents
 
 ### Properties
 
-- [id](OrderModifier.md#id)
-- [amount](OrderModifier.md#amount)
-- [groupId](OrderModifier.md#groupid)
-- [dish](OrderModifier.md#dish)
+- [id](./interfaces/OrderModifier.md#id)
+- [amount](./interfaces/OrderModifier.md#amount)
+- [groupId](./interfaces/OrderModifier.md#groupid)
+- [dish](./interfaces/OrderModifier.md#dish)
 
 ## Properties
 
-### id
+### <a id="id" name="id"></a> id
 
 • **id**: `string`
 
 ___
 
-### amount
+### <a id="amount" name="amount"></a> amount
 
 • `Optional` **amount**: `number`
 
 ___
 
-### groupId
+### <a id="groupid" name="groupid"></a> groupId
 
 • **groupId**: `string`
 
 ___
 
-### dish
+### <a id="dish" name="dish"></a> dish
 
-• **dish**: [`Dish`](Dish.md)
+• **dish**: [`Dish`](./interfaces/Dish.md)

@@ -1,50 +1,48 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / NavigationsMenuItem
-
 # Interface: NavigationsMenuItem
 
 ## Table of contents
 
 ### Properties
 
-- [label](NavigationsMenuItem.md#label)
-- [link](NavigationsMenuItem.md#link)
-- [icon](NavigationsMenuItem.md#icon)
-- [groupSlug](NavigationsMenuItem.md#groupslug)
-- [active](NavigationsMenuItem.md#active)
-- [visible](NavigationsMenuItem.md#visible)
+- [label](./interfaces/NavigationsMenuItem.md#label)
+- [link](./interfaces/NavigationsMenuItem.md#link)
+- [icon](./interfaces/NavigationsMenuItem.md#icon)
+- [groupSlug](./interfaces/NavigationsMenuItem.md#groupslug)
+- [active](./interfaces/NavigationsMenuItem.md#active)
+- [visible](./interfaces/NavigationsMenuItem.md#visible)
 
 ## Properties
 
-### label
+### <a id="label" name="label"></a> label
 
 • **label**: `string`
 
 ___
 
-### link
+### <a id="link" name="link"></a> link
 
 • **link**: `string`
 
 ___
 
-### icon
+### <a id="icon" name="icon"></a> icon
 
 • `Optional` **icon**: `string`
 
 ___
 
-### groupSlug
+### <a id="groupslug" name="groupslug"></a> groupSlug
 
 • **groupSlug**: `string`
 
 ___
 
-### active
+### <a id="active" name="active"></a> active
 
 • `Optional` **active**: `boolean`
 
 ___
 
-### visible
+### <a id="visible" name="visible"></a> visible
 
 • `Optional` **visible**: `boolean`

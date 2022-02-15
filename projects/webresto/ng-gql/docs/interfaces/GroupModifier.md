@@ -1,10 +1,8 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / GroupModifier
-
 # Interface: GroupModifier
 
 ## Hierarchy
 
-- `Exclude`<[`Modifier`](Modifier.md), ``"amount"`` \| ``"defaultAmount"`` \| ``"hideIfDefaultAmount"`` \| ``"groupId"`` \| ``"dish"``\>
+- `Exclude`<[`Modifier`](./interfaces/Modifier.md), ``"amount"`` \| ``"defaultAmount"`` \| ``"hideIfDefaultAmount"`` \| ``"groupId"`` \| ``"dish"``\>
 
   ↳ **`GroupModifier`**
 
@@ -12,33 +10,33 @@
 
 ### Properties
 
-- [required](GroupModifier.md#required)
-- [childModifiers](GroupModifier.md#childmodifiers)
-- [group](GroupModifier.md#group)
-- [totalAmount](GroupModifier.md#totalamount)
-- [modifierId](GroupModifier.md#modifierid)
-- [groupId](GroupModifier.md#groupid)
-- [maxAmount](GroupModifier.md#maxamount)
-- [minAmount](GroupModifier.md#minamount)
-- [amount](GroupModifier.md#amount)
-- [defaultAmount](GroupModifier.md#defaultamount)
-- [dish](GroupModifier.md#dish)
+- [required](./interfaces/GroupModifier.md#required)
+- [childModifiers](./interfaces/GroupModifier.md#childmodifiers)
+- [group](./interfaces/GroupModifier.md#group)
+- [totalAmount](./interfaces/GroupModifier.md#totalamount)
+- [modifierId](./interfaces/GroupModifier.md#modifierid)
+- [groupId](./interfaces/GroupModifier.md#groupid)
+- [maxAmount](./interfaces/GroupModifier.md#maxamount)
+- [minAmount](./interfaces/GroupModifier.md#minamount)
+- [amount](./interfaces/GroupModifier.md#amount)
+- [defaultAmount](./interfaces/GroupModifier.md#defaultamount)
+- [dish](./interfaces/GroupModifier.md#dish)
 
 ## Properties
 
-### required
+### <a id="required" name="required"></a> required
 
 • **required**: `boolean`
 
 ___
 
-### childModifiers
+### <a id="childmodifiers" name="childmodifiers"></a> childModifiers
 
-• **childModifiers**: [`Modifier`](Modifier.md)[]
+• **childModifiers**: [`Modifier`](./interfaces/Modifier.md)[]
 
 ___
 
-### group
+### <a id="group" name="group"></a> group
 
 • **group**: `Object`
 
@@ -51,13 +49,13 @@ ___
 
 ___
 
-### totalAmount
+### <a id="totalamount" name="totalamount"></a> totalAmount
 
 • **totalAmount**: `number`
 
 ___
 
-### modifierId
+### <a id="modifierid" name="modifierid"></a> modifierId
 
 • **modifierId**: `string`
 
@@ -67,7 +65,7 @@ Exclude.modifierId
 
 ___
 
-### groupId
+### <a id="groupid" name="groupid"></a> groupId
 
 • `Optional` **groupId**: `string`
 
@@ -77,7 +75,7 @@ Exclude.groupId
 
 ___
 
-### maxAmount
+### <a id="maxamount" name="maxamount"></a> maxAmount
 
 • **maxAmount**: `number`
 
@@ -87,7 +85,7 @@ Exclude.maxAmount
 
 ___
 
-### minAmount
+### <a id="minamount" name="minamount"></a> minAmount
 
 • **minAmount**: `number`
 
@@ -97,7 +95,7 @@ Exclude.minAmount
 
 ___
 
-### amount
+### <a id="amount" name="amount"></a> amount
 
 • `Optional` **amount**: `number`
 
@@ -107,7 +105,7 @@ Exclude.amount
 
 ___
 
-### defaultAmount
+### <a id="defaultamount" name="defaultamount"></a> defaultAmount
 
 • **defaultAmount**: `number`
 
@@ -117,9 +115,9 @@ Exclude.defaultAmount
 
 ___
 
-### dish
+### <a id="dish" name="dish"></a> dish
 
-• **dish**: [`Dish`](Dish.md)
+• **dish**: [`Dish`](./interfaces/Dish.md)
 
 #### Inherited from
 

@@ -1,22 +1,20 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / CheckPhoneCodeInput
-
 # Interface: CheckPhoneCodeInput
 
 ## Table of contents
 
 ### Properties
 
-- [phone](CheckPhoneCodeInput.md#phone)
-- [code](CheckPhoneCodeInput.md#code)
+- [phone](./interfaces/CheckPhoneCodeInput.md#phone)
+- [code](./interfaces/CheckPhoneCodeInput.md#code)
 
 ## Properties
 
-### phone
+### <a id="phone" name="phone"></a> phone
 
 • **phone**: `string`
 
 ___
 
-### code
+### <a id="code" name="code"></a> code
 
 • **code**: `string`

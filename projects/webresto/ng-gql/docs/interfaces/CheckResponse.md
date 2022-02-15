@@ -1,29 +1,27 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / CheckResponse
-
 # Interface: CheckResponse
 
 ## Table of contents
 
 ### Properties
 
-- [order](CheckResponse.md#order)
-- [message](CheckResponse.md#message)
-- [action](CheckResponse.md#action)
+- [order](./interfaces/CheckResponse.md#order)
+- [message](./interfaces/CheckResponse.md#message)
+- [action](./interfaces/CheckResponse.md#action)
 
 ## Properties
 
-### order
+### <a id="order" name="order"></a> order
 
-• **order**: [`Order`](Order.md)
-
-___
-
-### message
-
-• **message**: [`Message`](Message.md)
+• **order**: [`Order`](./interfaces/Order.md)
 
 ___
 
-### action
+### <a id="message" name="message"></a> message
 
-• **action**: [`Action`](Action.md)
+• **message**: [`Message`](./interfaces/Message.md)
+
+___
+
+### <a id="action" name="action"></a> action
+
+• **action**: [`Action`](./interfaces/Action.md)

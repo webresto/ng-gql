@@ -1,85 +1,83 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Group
-
 # Interface: Group
 
 ## Table of contents
 
 ### Properties
 
-- [id](Group.md#id)
-- [description](Group.md#description)
-- [name](Group.md#name)
-- [slug](Group.md#slug)
-- [visible](Group.md#visible)
-- [order](Group.md#order)
-- [dishes](Group.md#dishes)
-- [discount](Group.md#discount)
-- [parentGroup](Group.md#parentgroup)
-- [childGroups](Group.md#childgroups)
-- [dishesPlaceholder](Group.md#dishesplaceholder)
+- [id](./interfaces/Group.md#id)
+- [description](./interfaces/Group.md#description)
+- [name](./interfaces/Group.md#name)
+- [slug](./interfaces/Group.md#slug)
+- [visible](./interfaces/Group.md#visible)
+- [order](./interfaces/Group.md#order)
+- [dishes](./interfaces/Group.md#dishes)
+- [discount](./interfaces/Group.md#discount)
+- [parentGroup](./interfaces/Group.md#parentgroup)
+- [childGroups](./interfaces/Group.md#childgroups)
+- [dishesPlaceholder](./interfaces/Group.md#dishesplaceholder)
 
 ## Properties
 
-### id
+### <a id="id" name="id"></a> id
 
 • **id**: `string`
 
 ___
 
-### description
+### <a id="description" name="description"></a> description
 
 • **description**: `string`
 
 ___
 
-### name
+### <a id="name" name="name"></a> name
 
 • **name**: `string`
 
 ___
 
-### slug
+### <a id="slug" name="slug"></a> slug
 
 • `Optional` **slug**: `string`
 
 ___
 
-### visible
+### <a id="visible" name="visible"></a> visible
 
 • **visible**: `boolean`
 
 ___
 
-### order
+### <a id="order" name="order"></a> order
 
 • **order**: `number`
 
 ___
 
-### dishes
+### <a id="dishes" name="dishes"></a> dishes
 
-• `Optional` **dishes**: [`Dish`](Dish.md)[]
+• `Optional` **dishes**: [`Dish`](./interfaces/Dish.md)[]
 
 ___
 
-### discount
+### <a id="discount" name="discount"></a> discount
 
 • `Optional` **discount**: `number`
 
 ___
 
-### parentGroup
+### <a id="parentgroup" name="parentgroup"></a> parentGroup
 
-• `Optional` **parentGroup**: `Pick`<[`Group`](Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>
-
-___
-
-### childGroups
-
-• **childGroups**: [`Group`](Group.md)[]
+• `Optional` **parentGroup**: `Pick`<[`Group`](./interfaces/Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>
 
 ___
 
-### dishesPlaceholder
+### <a id="childgroups" name="childgroups"></a> childGroups
 
-• **dishesPlaceholder**: ``null`` \| [`Image`](Image.md)
+• **childGroups**: [`Group`](./interfaces/Group.md)[]
+
+___
+
+### <a id="dishesplaceholder" name="dishesplaceholder"></a> dishesPlaceholder
+
+• **dishesPlaceholder**: ``null`` \| [`Image`](./interfaces/Image.md)

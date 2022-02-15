@@ -1,29 +1,27 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Customer
-
 # Interface: Customer
 
 ## Table of contents
 
 ### Properties
 
-- [phone](Customer.md#phone)
-- [mail](Customer.md#mail)
-- [name](Customer.md#name)
+- [phone](./interfaces/Customer.md#phone)
+- [mail](./interfaces/Customer.md#mail)
+- [name](./interfaces/Customer.md#name)
 
 ## Properties
 
-### phone
+### <a id="phone" name="phone"></a> phone
 
 • **phone**: `string`
 
 ___
 
-### mail
+### <a id="mail" name="mail"></a> mail
 
 • `Optional` **mail**: `string`
 
 ___
 
-### name
+### <a id="name" name="name"></a> name
 
 • **name**: `string`

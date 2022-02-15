@@ -1,29 +1,27 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Image
-
 # Interface: Image
 
 ## Table of contents
 
 ### Properties
 
-- [id](Image.md#id)
-- [uploadDate](Image.md#uploaddate)
-- [images](Image.md#images)
+- [id](./interfaces/Image.md#id)
+- [uploadDate](./interfaces/Image.md#uploaddate)
+- [images](./interfaces/Image.md#images)
 
 ## Properties
 
-### id
+### <a id="id" name="id"></a> id
 
 • **id**: `string`
 
 ___
 
-### uploadDate
+### <a id="uploaddate" name="uploaddate"></a> uploadDate
 
 • **uploadDate**: `string`
 
 ___
 
-### images
+### <a id="images" name="images"></a> images
 
-• **images**: [`ImageItem`](ImageItem.md)
+• **images**: [`ImageItem`](./interfaces/ImageItem.md)

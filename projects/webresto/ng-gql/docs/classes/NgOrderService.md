@@ -1,43 +1,41 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / NgOrderService
-
 # Class: NgOrderService
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](NgOrderService.md#constructor)
+- [constructor](./classes/NgOrderService.md#constructor)
 
 ### Properties
 
-- [orderId](NgOrderService.md#orderid)
-- [order](NgOrderService.md#order)
-- [modifiers$](NgOrderService.md#modifiers$)
-- [modifiersMessage$](NgOrderService.md#modifiersmessage$)
-- [messages](NgOrderService.md#messages)
-- [OrderFormChange](NgOrderService.md#orderformchange)
-- [orderSubscription](NgOrderService.md#ordersubscription)
+- [orderId](./classes/NgOrderService.md#orderid)
+- [order](./classes/NgOrderService.md#order)
+- [modifiers$](./classes/NgOrderService.md#modifiers$)
+- [modifiersMessage$](./classes/NgOrderService.md#modifiersmessage$)
+- [messages](./classes/NgOrderService.md#messages)
+- [OrderFormChange](./classes/NgOrderService.md#orderformchange)
+- [orderSubscription](./classes/NgOrderService.md#ordersubscription)
 
 ### Methods
 
-- [getOrderId](NgOrderService.md#getorderid)
-- [setOrderId](NgOrderService.md#setorderid)
-- [removeOrderId](NgOrderService.md#removeorderid)
-- [userOrder$](NgOrderService.md#userorder$)
-- [setModifiers](NgOrderService.md#setmodifiers)
-- [getModifiers](NgOrderService.md#getmodifiers)
-- [initialStorage](NgOrderService.md#initialstorage)
-- [addDishToOrder$](NgOrderService.md#adddishtoorder$)
-- [removeDishFromOrder$](NgOrderService.md#removedishfromorder$)
-- [orderCart$](NgOrderService.md#ordercart$)
-- [paymentLink$](NgOrderService.md#paymentlink$)
-- [checkOrder$](NgOrderService.md#checkorder$)
-- [setDishCountToOrder$](NgOrderService.md#setdishcounttoorder$)
-- [setDishComment$](NgOrderService.md#setdishcomment$)
+- [getOrderId](./classes/NgOrderService.md#getorderid)
+- [setOrderId](./classes/NgOrderService.md#setorderid)
+- [removeOrderId](./classes/NgOrderService.md#removeorderid)
+- [userOrder$](./classes/NgOrderService.md#userorder$)
+- [setModifiers](./classes/NgOrderService.md#setmodifiers)
+- [getModifiers](./classes/NgOrderService.md#getmodifiers)
+- [initialStorage](./classes/NgOrderService.md#initialstorage)
+- [addDishToOrder$](./classes/NgOrderService.md#adddishtoorder$)
+- [removeDishFromOrder$](./classes/NgOrderService.md#removedishfromorder$)
+- [orderCart$](./classes/NgOrderService.md#ordercart$)
+- [paymentLink$](./classes/NgOrderService.md#paymentlink$)
+- [checkOrder$](./classes/NgOrderService.md#checkorder$)
+- [setDishCountToOrder$](./classes/NgOrderService.md#setdishcounttoorder$)
+- [setDishComment$](./classes/NgOrderService.md#setdishcomment$)
 
 ## Constructors
 
-### constructor
+### <a id="constructor" name="constructor"></a> constructor
 
 • **new NgOrderService**(`ngGqlService`, `eventer`)
 
@@ -45,54 +43,54 @@
 
 | Name | Type |
 | :------ | :------ |
-| `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
-| `eventer` | [`EventerService`](EventerService.md) |
+| `ngGqlService` | [`NgGqlService`](./classes/NgGqlService.md) |
+| `eventer` | [`EventerService`](./classes/EventerService.md) |
 
 ## Properties
 
-### orderId
+### <a id="orderid" name="orderid"></a> orderId
 
 • **orderId**: `undefined` \| `string`
 
 ___
 
-### order
+### <a id="order" name="order"></a> order
 
-• **order**: `BehaviorSubject`<``null`` \| [`Order`](../interfaces/Order.md)\>
-
-___
-
-### modifiers$
-
-• **modifiers$**: `BehaviorSubject`<(`undefined` \| [`Modifier`](../interfaces/Modifier.md))[]\>
+• **order**: `BehaviorSubject`<``null`` \| [`Order`](./interfaces/Order.md)\>
 
 ___
 
-### modifiersMessage$
+### <a id="modifiers$" name="modifiers$"></a> modifiers$
 
-• **modifiersMessage$**: `BehaviorSubject`<[`EventMessage`](EventMessage.md)[]\>
-
-___
-
-### messages
-
-• **messages**: [`EventMessage`](EventMessage.md)[] = `[]`
+• **modifiers$**: `BehaviorSubject`<(`undefined` \| [`Modifier`](./interfaces/Modifier.md))[]\>
 
 ___
 
-### OrderFormChange
+### <a id="modifiersmessage$" name="modifiersmessage$"></a> modifiersMessage$
+
+• **modifiersMessage$**: `BehaviorSubject`<[`EventMessage`](./classes/EventMessage.md)[]\>
+
+___
+
+### <a id="messages" name="messages"></a> messages
+
+• **messages**: [`EventMessage`](./classes/EventMessage.md)[] = `[]`
+
+___
+
+### <a id="orderformchange" name="orderformchange"></a> OrderFormChange
 
 • **OrderFormChange**: `BehaviorSubject`<``null`` \| `SimpleChanges`\>
 
 ___
 
-### orderSubscription
+### <a id="ordersubscription" name="ordersubscription"></a> orderSubscription
 
 • **orderSubscription**: `undefined` \| `Subscription`
 
 ## Methods
 
-### getOrderId
+### <a id="getorderid" name="getorderid"></a> getOrderId
 
 ▸ **getOrderId**(): `undefined` \| `string`
 
@@ -102,7 +100,7 @@ ___
 
 ___
 
-### setOrderId
+### <a id="setorderid" name="setorderid"></a> setOrderId
 
 ▸ **setOrderId**(`orderId`): `void`
 
@@ -118,7 +116,7 @@ ___
 
 ___
 
-### removeOrderId
+### <a id="removeorderid" name="removeorderid"></a> removeOrderId
 
 ▸ **removeOrderId**(): `void`
 
@@ -128,17 +126,17 @@ ___
 
 ___
 
-### userOrder$
+### <a id="userorder$" name="userorder$"></a> userOrder$
 
-▸ **userOrder$**(): `Observable`<``null`` \| [`Order`](../interfaces/Order.md)\>
+▸ **userOrder$**(): `Observable`<``null`` \| [`Order`](./interfaces/Order.md)\>
 
 #### Returns
 
-`Observable`<``null`` \| [`Order`](../interfaces/Order.md)\>
+`Observable`<``null`` \| [`Order`](./interfaces/Order.md)\>
 
 ___
 
-### setModifiers
+### <a id="setmodifiers" name="setmodifiers"></a> setModifiers
 
 ▸ **setModifiers**(`modifiers`, `messages?`): `void`
 
@@ -146,8 +144,8 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `modifiers` | [`Modifier`](../interfaces/Modifier.md)[] |
-| `messages?` | [`EventMessage`](EventMessage.md)[] |
+| `modifiers` | [`Modifier`](./interfaces/Modifier.md)[] |
+| `messages?` | [`EventMessage`](./classes/EventMessage.md)[] |
 
 #### Returns
 
@@ -155,7 +153,7 @@ ___
 
 ___
 
-### getModifiers
+### <a id="getmodifiers" name="getmodifiers"></a> getModifiers
 
 ▸ **getModifiers**(): `Observable`<`any`\>
 
@@ -165,7 +163,7 @@ ___
 
 ___
 
-### initialStorage
+### <a id="initialstorage" name="initialstorage"></a> initialStorage
 
 ▸ **initialStorage**(): `void`
 
@@ -175,25 +173,25 @@ ___
 
 ___
 
-### addDishToOrder$
+### <a id="adddishtoorder$" name="adddishtoorder$"></a> addDishToOrder$
 
-▸ **addDishToOrder$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
+▸ **addDishToOrder$**(`data`): `Observable`<[`Order`](./interfaces/Order.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`AddToOrderInput`](../modules.md#addtoorderinput) |
+| `data` | [`AddToOrderInput`](./modules.md#addtoorderinput) |
 
 #### Returns
 
-`Observable`<[`Order`](../interfaces/Order.md)\>
+`Observable`<[`Order`](./interfaces/Order.md)\>
 
 ___
 
-### removeDishFromOrder$
+### <a id="removedishfromorder$" name="removedishfromorder$"></a> removeDishFromOrder$
 
-▸ **removeDishFromOrder$**(`dishId`, `amount`): `Observable`<[`Order`](../interfaces/Order.md)\>
+▸ **removeDishFromOrder$**(`dishId`, `amount`): `Observable`<[`Order`](./interfaces/Order.md)\>
 
 #### Parameters
 
@@ -204,27 +202,27 @@ ___
 
 #### Returns
 
-`Observable`<[`Order`](../interfaces/Order.md)\>
+`Observable`<[`Order`](./interfaces/Order.md)\>
 
 ___
 
-### orderCart$
+### <a id="ordercart$" name="ordercart$"></a> orderCart$
 
-▸ **orderCart$**(`data`): `Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
+▸ **orderCart$**(`data`): `Observable`<[`CheckResponse`](./interfaces/CheckResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`OrderInput`](../modules.md#orderinput) |
+| `data` | [`OrderInput`](./modules.md#orderinput) |
 
 #### Returns
 
-`Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
+`Observable`<[`CheckResponse`](./interfaces/CheckResponse.md)\>
 
 ___
 
-### paymentLink$
+### <a id="paymentlink$" name="paymentlink$"></a> paymentLink$
 
 ▸ **paymentLink$**(`phone`, `fromPhone`): `Observable`<`any`\>
 
@@ -241,25 +239,25 @@ ___
 
 ___
 
-### checkOrder$
+### <a id="checkorder$" name="checkorder$"></a> checkOrder$
 
-▸ **checkOrder$**(`data`): `Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
+▸ **checkOrder$**(`data`): `Observable`<[`CheckResponse`](./interfaces/CheckResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`OrderInput`](../modules.md#orderinput) |
+| `data` | [`OrderInput`](./modules.md#orderinput) |
 
 #### Returns
 
-`Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
+`Observable`<[`CheckResponse`](./interfaces/CheckResponse.md)\>
 
 ___
 
-### setDishCountToOrder$
+### <a id="setdishcounttoorder$" name="setdishcounttoorder$"></a> setDishCountToOrder$
 
-▸ **setDishCountToOrder$**(`dishId`, `amount`): `Observable`<[`Order`](../interfaces/Order.md)\>
+▸ **setDishCountToOrder$**(`dishId`, `amount`): `Observable`<[`Order`](./interfaces/Order.md)\>
 
 #### Parameters
 
@@ -270,13 +268,13 @@ ___
 
 #### Returns
 
-`Observable`<[`Order`](../interfaces/Order.md)\>
+`Observable`<[`Order`](./interfaces/Order.md)\>
 
 ___
 
-### setDishComment$
+### <a id="setdishcomment$" name="setdishcomment$"></a> setDishComment$
 
-▸ **setDishComment$**(`dishId`, `comment`): `Observable`<[`Order`](../interfaces/Order.md)\>
+▸ **setDishComment$**(`dishId`, `comment`): `Observable`<[`Order`](./interfaces/Order.md)\>
 
 #### Parameters
 
@@ -287,4 +285,4 @@ ___
 
 #### Returns
 
-`Observable`<[`Order`](../interfaces/Order.md)\>
+`Observable`<[`Order`](./interfaces/Order.md)\>

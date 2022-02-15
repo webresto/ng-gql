@@ -1,85 +1,83 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Address
-
 # Interface: Address
 
 ## Table of contents
 
 ### Properties
 
-- [streetId](Address.md#streetid)
-- [home](Address.md#home)
-- [comment](Address.md#comment)
-- [city](Address.md#city)
-- [street](Address.md#street)
-- [housing](Address.md#housing)
-- [index](Address.md#index)
-- [entrance](Address.md#entrance)
-- [floor](Address.md#floor)
-- [apartment](Address.md#apartment)
-- [doorphone](Address.md#doorphone)
+- [streetId](./interfaces/Address.md#streetid)
+- [home](./interfaces/Address.md#home)
+- [comment](./interfaces/Address.md#comment)
+- [city](./interfaces/Address.md#city)
+- [street](./interfaces/Address.md#street)
+- [housing](./interfaces/Address.md#housing)
+- [index](./interfaces/Address.md#index)
+- [entrance](./interfaces/Address.md#entrance)
+- [floor](./interfaces/Address.md#floor)
+- [apartment](./interfaces/Address.md#apartment)
+- [doorphone](./interfaces/Address.md#doorphone)
 
 ## Properties
 
-### streetId
+### <a id="streetid" name="streetid"></a> streetId
 
 • `Optional` **streetId**: `string`
 
 ___
 
-### home
+### <a id="home" name="home"></a> home
 
 • **home**: `string`
 
 ___
 
-### comment
+### <a id="comment" name="comment"></a> comment
 
 • `Optional` **comment**: `string`
 
 ___
 
-### city
+### <a id="city" name="city"></a> city
 
 • `Optional` **city**: `string`
 
 ___
 
-### street
+### <a id="street" name="street"></a> street
 
 • **street**: `string`
 
 ___
 
-### housing
+### <a id="housing" name="housing"></a> housing
 
 • `Optional` **housing**: `string`
 
 ___
 
-### index
+### <a id="index" name="index"></a> index
 
 • `Optional` **index**: `string`
 
 ___
 
-### entrance
+### <a id="entrance" name="entrance"></a> entrance
 
 • `Optional` **entrance**: `string`
 
 ___
 
-### floor
+### <a id="floor" name="floor"></a> floor
 
 • `Optional` **floor**: `string`
 
 ___
 
-### apartment
+### <a id="apartment" name="apartment"></a> apartment
 
 • `Optional` **apartment**: `string`
 
 ___
 
-### doorphone
+### <a id="doorphone" name="doorphone"></a> doorphone
 
 • `Optional` **doorphone**: `string`

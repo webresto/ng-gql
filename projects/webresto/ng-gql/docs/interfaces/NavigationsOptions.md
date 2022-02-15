@@ -1,22 +1,20 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / NavigationsOptions
-
 # Interface: NavigationsOptions
 
 ## Table of contents
 
 ### Properties
 
-- [initGroupSlug](NavigationsOptions.md#initgroupslug)
-- [behavior](NavigationsOptions.md#behavior)
+- [initGroupSlug](./interfaces/NavigationsOptions.md#initgroupslug)
+- [behavior](./interfaces/NavigationsOptions.md#behavior)
 
 ## Properties
 
-### initGroupSlug
+### <a id="initgroupslug" name="initgroupslug"></a> initGroupSlug
 
 • **initGroupSlug**: `string`
 
 ___
 
-### behavior
+### <a id="behavior" name="behavior"></a> behavior
 
 • `Optional` **behavior**: ``"newpagebyslug"`` \| ``"onepagebyslug"`` \| ``"newpagebynavigationmenu"`` \| ``"onepagebynavigationmenu"``

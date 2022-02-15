@@ -1,56 +1,54 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / CheckoutDirective
-
 # Class: CheckoutDirective
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](CheckoutDirective.md#constructor)
+- [constructor](./classes/CheckoutDirective.md#constructor)
 
 ### Properties
 
-- [orderTotal](CheckoutDirective.md#ordertotal)
-- [bonuses](CheckoutDirective.md#bonuses)
-- [name](CheckoutDirective.md#name)
-- [email](CheckoutDirective.md#email)
-- [phone](CheckoutDirective.md#phone)
-- [phonePaymentSmsCode](CheckoutDirective.md#phonepaymentsmscode)
-- [delivery](CheckoutDirective.md#delivery)
-- [selfService](CheckoutDirective.md#selfservice)
-- [locationId](CheckoutDirective.md#locationid)
-- [street](CheckoutDirective.md#street)
-- [streetId](CheckoutDirective.md#streetid)
-- [home](CheckoutDirective.md#home)
-- [housing](CheckoutDirective.md#housing)
-- [apartment](CheckoutDirective.md#apartment)
-- [entrance](CheckoutDirective.md#entrance)
-- [doorphone](CheckoutDirective.md#doorphone)
-- [floor](CheckoutDirective.md#floor)
-- [paymentMethod](CheckoutDirective.md#paymentmethod)
-- [paymentMethodId](CheckoutDirective.md#paymentmethodid)
-- [personsCount](CheckoutDirective.md#personscount)
-- [comment](CheckoutDirective.md#comment)
-- [callback](CheckoutDirective.md#callback)
-- [date](CheckoutDirective.md#date)
-- [notifyMethodId](CheckoutDirective.md#notifymethodid)
-- [success](CheckoutDirective.md#success)
-- [paymentRedirect](CheckoutDirective.md#paymentredirect)
-- [error](CheckoutDirective.md#error)
-- [isChecking](CheckoutDirective.md#ischecking)
-- [order](CheckoutDirective.md#order)
-- [lastFormChangeKey](CheckoutDirective.md#lastformchangekey)
+- [orderTotal](./classes/CheckoutDirective.md#ordertotal)
+- [bonuses](./classes/CheckoutDirective.md#bonuses)
+- [name](./classes/CheckoutDirective.md#name)
+- [email](./classes/CheckoutDirective.md#email)
+- [phone](./classes/CheckoutDirective.md#phone)
+- [phonePaymentSmsCode](./classes/CheckoutDirective.md#phonepaymentsmscode)
+- [delivery](./classes/CheckoutDirective.md#delivery)
+- [selfService](./classes/CheckoutDirective.md#selfservice)
+- [locationId](./classes/CheckoutDirective.md#locationid)
+- [street](./classes/CheckoutDirective.md#street)
+- [streetId](./classes/CheckoutDirective.md#streetid)
+- [home](./classes/CheckoutDirective.md#home)
+- [housing](./classes/CheckoutDirective.md#housing)
+- [apartment](./classes/CheckoutDirective.md#apartment)
+- [entrance](./classes/CheckoutDirective.md#entrance)
+- [doorphone](./classes/CheckoutDirective.md#doorphone)
+- [floor](./classes/CheckoutDirective.md#floor)
+- [paymentMethod](./classes/CheckoutDirective.md#paymentmethod)
+- [paymentMethodId](./classes/CheckoutDirective.md#paymentmethodid)
+- [personsCount](./classes/CheckoutDirective.md#personscount)
+- [comment](./classes/CheckoutDirective.md#comment)
+- [callback](./classes/CheckoutDirective.md#callback)
+- [date](./classes/CheckoutDirective.md#date)
+- [notifyMethodId](./classes/CheckoutDirective.md#notifymethodid)
+- [success](./classes/CheckoutDirective.md#success)
+- [paymentRedirect](./classes/CheckoutDirective.md#paymentredirect)
+- [error](./classes/CheckoutDirective.md#error)
+- [isChecking](./classes/CheckoutDirective.md#ischecking)
+- [order](./classes/CheckoutDirective.md#order)
+- [lastFormChangeKey](./classes/CheckoutDirective.md#lastformchangekey)
 
 ### Methods
 
-- [onClick](CheckoutDirective.md#onclick)
-- [ngOnChanges](CheckoutDirective.md#ngonchanges)
-- [checkStreet](CheckoutDirective.md#checkstreet)
-- [preparePhone](CheckoutDirective.md#preparephone)
+- [onClick](./classes/CheckoutDirective.md#onclick)
+- [ngOnChanges](./classes/CheckoutDirective.md#ngonchanges)
+- [checkStreet](./classes/CheckoutDirective.md#checkstreet)
+- [preparePhone](./classes/CheckoutDirective.md#preparephone)
 
 ## Constructors
 
-### constructor
+### <a id="constructor" name="constructor"></a> constructor
 
 • **new CheckoutDirective**(`orderService`)
 
@@ -58,191 +56,191 @@
 
 | Name | Type |
 | :------ | :------ |
-| `orderService` | [`NgOrderService`](NgOrderService.md) |
+| `orderService` | [`NgOrderService`](./classes/NgOrderService.md) |
 
 ## Properties
 
-### orderTotal
+### <a id="ordertotal" name="ordertotal"></a> orderTotal
 
 • **orderTotal**: `undefined` \| `number`
 
 ___
 
-### bonuses
+### <a id="bonuses" name="bonuses"></a> bonuses
 
 • **bonuses**: `any`
 
 ___
 
-### name
+### <a id="name" name="name"></a> name
 
 • **name**: `undefined` \| `string`
 
 ___
 
-### email
+### <a id="email" name="email"></a> email
 
 • **email**: `undefined` \| `string`
 
 ___
 
-### phone
+### <a id="phone" name="phone"></a> phone
 
 • **phone**: `undefined` \| `string`
 
 ___
 
-### phonePaymentSmsCode
+### <a id="phonepaymentsmscode" name="phonepaymentsmscode"></a> phonePaymentSmsCode
 
 • **phonePaymentSmsCode**: `undefined` \| `string`
 
 ___
 
-### delivery
+### <a id="delivery" name="delivery"></a> delivery
 
 • **delivery**: `any`
 
 ___
 
-### selfService
+### <a id="selfservice" name="selfservice"></a> selfService
 
 • **selfService**: `undefined` \| `boolean`
 
 ___
 
-### locationId
+### <a id="locationid" name="locationid"></a> locationId
 
 • **locationId**: `undefined` \| `string`
 
 ___
 
-### street
+### <a id="street" name="street"></a> street
 
 • **street**: `undefined` \| `string`
 
 ___
 
-### streetId
+### <a id="streetid" name="streetid"></a> streetId
 
 • **streetId**: `undefined` \| `string`
 
 ___
 
-### home
+### <a id="home" name="home"></a> home
 
 • **home**: `undefined` \| `string`
 
 ___
 
-### housing
+### <a id="housing" name="housing"></a> housing
 
 • **housing**: `undefined` \| `string`
 
 ___
 
-### apartment
+### <a id="apartment" name="apartment"></a> apartment
 
 • **apartment**: `undefined` \| `string`
 
 ___
 
-### entrance
+### <a id="entrance" name="entrance"></a> entrance
 
 • **entrance**: `undefined` \| `string`
 
 ___
 
-### doorphone
+### <a id="doorphone" name="doorphone"></a> doorphone
 
 • **doorphone**: `undefined` \| `string`
 
 ___
 
-### floor
+### <a id="floor" name="floor"></a> floor
 
 • **floor**: `undefined` \| `string`
 
 ___
 
-### paymentMethod
+### <a id="paymentmethod" name="paymentmethod"></a> paymentMethod
 
-• **paymentMethod**: `undefined` \| [`PaymentMethod`](../interfaces/PaymentMethod.md)
+• **paymentMethod**: `undefined` \| [`PaymentMethod`](./interfaces/PaymentMethod.md)
 
 ___
 
-### paymentMethodId
+### <a id="paymentmethodid" name="paymentmethodid"></a> paymentMethodId
 
 • **paymentMethodId**: `undefined` \| `string`
 
 ___
 
-### personsCount
+### <a id="personscount" name="personscount"></a> personsCount
 
 • **personsCount**: `number` = `0`
 
 ___
 
-### comment
+### <a id="comment" name="comment"></a> comment
 
 • **comment**: `undefined` \| `string`
 
 ___
 
-### callback
+### <a id="callback" name="callback"></a> callback
 
 • **callback**: `undefined` \| `string`
 
 ___
 
-### date
+### <a id="date" name="date"></a> date
 
 • **date**: `undefined` \| `string`
 
 ___
 
-### notifyMethodId
+### <a id="notifymethodid" name="notifymethodid"></a> notifyMethodId
 
 • **notifyMethodId**: `undefined` \| `string`
 
 ___
 
-### success
+### <a id="success" name="success"></a> success
 
 • **success**: `EventEmitter`<`string`\>
 
 ___
 
-### paymentRedirect
+### <a id="paymentredirect" name="paymentredirect"></a> paymentRedirect
 
 • **paymentRedirect**: `EventEmitter`<`string`\>
 
 ___
 
-### error
+### <a id="error" name="error"></a> error
 
 • **error**: `EventEmitter`<`string`\>
 
 ___
 
-### isChecking
+### <a id="ischecking" name="ischecking"></a> isChecking
 
 • **isChecking**: `EventEmitter`<`boolean`\>
 
 ___
 
-### order
+### <a id="order" name="order"></a> order
 
-• **order**: `undefined` \| ``null`` \| [`Order`](../interfaces/Order.md)
+• **order**: `undefined` \| ``null`` \| [`Order`](./interfaces/Order.md)
 
 ___
 
-### lastFormChangeKey
+### <a id="lastformchangekey" name="lastformchangekey"></a> lastFormChangeKey
 
 • **lastFormChangeKey**: `undefined` \| `string`
 
 ## Methods
 
-### onClick
+### <a id="onclick" name="onclick"></a> onClick
 
 ▸ **onClick**(): `void`
 
@@ -252,7 +250,7 @@ ___
 
 ___
 
-### ngOnChanges
+### <a id="ngonchanges" name="ngonchanges"></a> ngOnChanges
 
 ▸ **ngOnChanges**(`changes`): `void`
 
@@ -268,7 +266,7 @@ ___
 
 ___
 
-### checkStreet
+### <a id="checkstreet" name="checkstreet"></a> checkStreet
 
 ▸ **checkStreet**(): `void`
 
@@ -278,7 +276,7 @@ ___
 
 ___
 
-### preparePhone
+### <a id="preparephone" name="preparephone"></a> preparePhone
 
 ▸ **preparePhone**(`phone`): `string`
 

@@ -1,22 +1,20 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / OrderData
-
 # Interface: OrderData
 
 ## Table of contents
 
 ### Properties
 
-- [order](OrderData.md#order)
-- [customData](OrderData.md#customdata)
+- [order](./interfaces/OrderData.md#order)
+- [customData](./interfaces/OrderData.md#customdata)
 
 ## Properties
 
-### order
+### <a id="order" name="order"></a> order
 
-• **order**: [`Order`](Order.md)
+• **order**: [`Order`](./interfaces/Order.md)
 
 ___
 
-### customData
+### <a id="customdata" name="customdata"></a> customData
 
 • **customData**: `any`

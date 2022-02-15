@@ -1,92 +1,90 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / OrderDish
-
 # Interface: OrderDish
 
 ## Table of contents
 
 ### Properties
 
-- [id](OrderDish.md#id)
-- [amount](OrderDish.md#amount)
-- [dishId](OrderDish.md#dishid)
-- [dish](OrderDish.md#dish)
-- [itemTotal](OrderDish.md#itemtotal)
-- [itemTotalBeforeDiscount](OrderDish.md#itemtotalbeforediscount)
-- [discountTotal](OrderDish.md#discounttotal)
-- [discountType](OrderDish.md#discounttype)
-- [comment](OrderDish.md#comment)
-- [totalWeight](OrderDish.md#totalweight)
-- [total](OrderDish.md#total)
-- [modifiers](OrderDish.md#modifiers)
+- [id](./interfaces/OrderDish.md#id)
+- [amount](./interfaces/OrderDish.md#amount)
+- [dishId](./interfaces/OrderDish.md#dishid)
+- [dish](./interfaces/OrderDish.md#dish)
+- [itemTotal](./interfaces/OrderDish.md#itemtotal)
+- [itemTotalBeforeDiscount](./interfaces/OrderDish.md#itemtotalbeforediscount)
+- [discountTotal](./interfaces/OrderDish.md#discounttotal)
+- [discountType](./interfaces/OrderDish.md#discounttype)
+- [comment](./interfaces/OrderDish.md#comment)
+- [totalWeight](./interfaces/OrderDish.md#totalweight)
+- [total](./interfaces/OrderDish.md#total)
+- [modifiers](./interfaces/OrderDish.md#modifiers)
 
 ## Properties
 
-### id
+### <a id="id" name="id"></a> id
 
 • **id**: `number`
 
 ___
 
-### amount
+### <a id="amount" name="amount"></a> amount
 
 • **amount**: `number`
 
 ___
 
-### dishId
+### <a id="dishid" name="dishid"></a> dishId
 
 • **dishId**: `string`
 
 ___
 
-### dish
+### <a id="dish" name="dish"></a> dish
 
-• **dish**: [`Dish`](Dish.md)
+• **dish**: [`Dish`](./interfaces/Dish.md)
 
 ___
 
-### itemTotal
+### <a id="itemtotal" name="itemtotal"></a> itemTotal
 
 • **itemTotal**: `number`
 
 ___
 
-### itemTotalBeforeDiscount
+### <a id="itemtotalbeforediscount" name="itemtotalbeforediscount"></a> itemTotalBeforeDiscount
 
 • `Optional` **itemTotalBeforeDiscount**: `number`
 
 ___
 
-### discountTotal
+### <a id="discounttotal" name="discounttotal"></a> discountTotal
 
 • **discountTotal**: ``null`` \| `number`
 
 ___
 
-### discountType
+### <a id="discounttype" name="discounttype"></a> discountType
 
 • **discountType**: ``null`` \| `string`
 
 ___
 
-### comment
+### <a id="comment" name="comment"></a> comment
 
 • **comment**: ``null`` \| `string`
 
 ___
 
-### totalWeight
+### <a id="totalweight" name="totalweight"></a> totalWeight
 
 • **totalWeight**: `number`
 
 ___
 
-### total
+### <a id="total" name="total"></a> total
 
 • `Optional` **total**: `number`
 
 ___
 
-### modifiers
+### <a id="modifiers" name="modifiers"></a> modifiers
 
-• **modifiers**: [`OrderModifier`](OrderModifier.md)[]
+• **modifiers**: [`OrderModifier`](./interfaces/OrderModifier.md)[]

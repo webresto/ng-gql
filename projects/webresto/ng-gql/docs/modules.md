@@ -1,80 +1,79 @@
-[@webresto/ng-gql - v1.1.12](README.md) / Exports
-
 # @webresto/ng-gql - v1.1.12
 
 ## Table of contents
 
 ### Classes
 
-- [AddDishToOrderDirective](classes/AddDishToOrderDirective.md)
-- [CheckoutDirective](classes/CheckoutDirective.md)
-- [EventMessage](classes/EventMessage.md)
-- [NgGqlModule](classes/NgGqlModule.md)
-- [NgGqlService](classes/NgGqlService.md)
-- [ApolloService](classes/ApolloService.md)
-- [EventerService](classes/EventerService.md)
-- [NgOrderService](classes/NgOrderService.md)
+- [AddDishToOrderDirective](./classes/AddDishToOrderDirective.md)
+- [CheckoutDirective](./classes/CheckoutDirective.md)
+- [EventMessage](./classes/EventMessage.md)
+- [NgGqlModule](./classes/NgGqlModule.md)
+- [NgGqlService](./classes/NgGqlService.md)
+- [ApolloService](./classes/ApolloService.md)
+- [EventerService](./classes/EventerService.md)
+- [NgOrderService](./classes/NgOrderService.md)
 
 ### Interfaces
 
-- [Dish](interfaces/Dish.md)
-- [DishTag](interfaces/DishTag.md)
-- [Message](interfaces/Message.md)
-- [Action](interfaces/Action.md)
-- [GroupModifier](interfaces/GroupModifier.md)
-- [Group](interfaces/Group.md)
-- [Image](interfaces/Image.md)
-- [ImageItem](interfaces/ImageItem.md)
-- [OrderModifier](interfaces/OrderModifier.md)
-- [Modifier](interfaces/Modifier.md)
-- [Navigation](interfaces/Navigation.md)
-- [NavigationsMenuItem](interfaces/NavigationsMenuItem.md)
-- [NavigationsOptions](interfaces/NavigationsOptions.md)
-- [OrderDish](interfaces/OrderDish.md)
-- [Order](interfaces/Order.md)
-- [Customer](interfaces/Customer.md)
-- [Address](interfaces/Address.md)
-- [OrderData](interfaces/OrderData.md)
-- [Phone](interfaces/Phone.md)
-- [CheckPhoneCodeInput](interfaces/CheckPhoneCodeInput.md)
-- [CheckPhoneResponse](interfaces/CheckPhoneResponse.md)
-- [CheckResponse](interfaces/CheckResponse.md)
-- [PaymentMethod](interfaces/PaymentMethod.md)
-- [NgGqlConfig](interfaces/NgGqlConfig.md)
+- [Dish](./interfaces/Dish.md)
+- [DishTag](./interfaces/DishTag.md)
+- [Message](./interfaces/Message.md)
+- [Action](./interfaces/Action.md)
+- [GroupModifier](./interfaces/GroupModifier.md)
+- [Group](./interfaces/Group.md)
+- [Image](./interfaces/Image.md)
+- [ImageItem](./interfaces/ImageItem.md)
+- [OrderModifier](./interfaces/OrderModifier.md)
+- [Modifier](./interfaces/Modifier.md)
+- [Navigation](./interfaces/Navigation.md)
+- [NavigationsMenuItem](./interfaces/NavigationsMenuItem.md)
+- [NavigationsOptions](./interfaces/NavigationsOptions.md)
+- [OrderDish](./interfaces/OrderDish.md)
+- [Order](./interfaces/Order.md)
+- [Customer](./interfaces/Customer.md)
+- [Address](./interfaces/Address.md)
+- [OrderData](./interfaces/OrderData.md)
+- [Phone](./interfaces/Phone.md)
+- [CheckPhoneCodeInput](./interfaces/CheckPhoneCodeInput.md)
+- [CheckPhoneResponse](./interfaces/CheckPhoneResponse.md)
+- [CheckResponse](./interfaces/CheckResponse.md)
+- [PaymentMethod](./interfaces/PaymentMethod.md)
+- [NgGqlConfig](./interfaces/NgGqlConfig.md)
 
 ### Variables
 
-- [DishFragments](modules.md#dishfragments)
-- [GroupModifierFragments](modules.md#groupmodifierfragments)
-- [GroupFragments](modules.md#groupfragments)
-- [ImageFragments](modules.md#imagefragments)
-- [ModifierFragments](modules.md#modifierfragments)
-- [NavigationFragments](modules.md#navigationfragments)
-- [OrderDishFragments](modules.md#orderdishfragments)
-- [OrderFragments](modules.md#orderfragments)
-- [PaymentMethodFragments](modules.md#paymentmethodfragments)
+- [DishFragments](./modules.md#dishfragments)
+- [GroupModifierFragments](./modules.md#groupmodifierfragments)
+- [GroupFragments](./modules.md#groupfragments)
+- [ImageFragments](./modules.md#imagefragments)
+- [ModifierFragments](./modules.md#modifierfragments)
+- [NavigationFragments](./modules.md#navigationfragments)
+- [OrderDishFragments](./modules.md#orderdishfragments)
+- [OrderFragments](./modules.md#orderfragments)
+- [PaymentMethodFragments](./modules.md#paymentmethodfragments)
 
 ### Type aliases
 
-- [VCriteria](modules.md#vcriteria)
-- [AddToOrderInput](modules.md#addtoorderinput)
-- [RemoveFromOrderInput](modules.md#removefromorderinput)
-- [SetDishAmountInput](modules.md#setdishamountinput)
-- [SetDishCommentInput](modules.md#setdishcommentinput)
-- [OrderInput](modules.md#orderinput)
-- [OrderAdditionalFields](modules.md#orderadditionalfields)
-- [OrderForm](modules.md#orderform)
-- [ValuesOrBoolean](modules.md#valuesorboolean)
-- [CartBusEvent](modules.md#cartbusevent)
+- [VCriteria](./modules.md#vcriteria)
+- [GQLRequestVariables](./modules.md#gqlrequestvariables)
+- [AddToOrderInput](./modules.md#addtoorderinput)
+- [RemoveFromOrderInput](./modules.md#removefromorderinput)
+- [SetDishAmountInput](./modules.md#setdishamountinput)
+- [SetDishCommentInput](./modules.md#setdishcommentinput)
+- [OrderInput](./modules.md#orderinput)
+- [OrderAdditionalFields](./modules.md#orderadditionalfields)
+- [OrderForm](./modules.md#orderform)
+- [ValuesOrBoolean](./modules.md#valuesorboolean)
+- [CartBusEvent](./modules.md#cartbusevent)
 
 ### Functions
 
-- [generateQueryString](modules.md#generatequerystring)
-- [isValue](modules.md#isvalue)
+- [generateQueryString](./modules.md#generatequerystring)
+- [isValue](./modules.md#isvalue)
 
 ## Variables
 
-### DishFragments
+### <a id="dishfragments" name="dishfragments"></a> DishFragments
 
 • **DishFragments**: `Object`
 
@@ -82,11 +81,11 @@
 
 | Name | Type |
 | :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\> |
+| `vOb` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`Dish`](./interfaces/Dish.md)\> |
 
 ___
 
-### GroupModifierFragments
+### <a id="groupmodifierfragments" name="groupmodifierfragments"></a> GroupModifierFragments
 
 • **GroupModifierFragments**: `Object`
 
@@ -94,11 +93,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\> |
+| `vOb` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`GroupModifier`](./interfaces/GroupModifier.md)\> |
 
 ___
 
-### GroupFragments
+### <a id="groupfragments" name="groupfragments"></a> GroupFragments
 
 • **GroupFragments**: `Object`
 
@@ -106,11 +105,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`Group`](interfaces/Group.md)\> |
+| `vOb` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`Group`](./interfaces/Group.md)\> |
 
 ___
 
-### ImageFragments
+### <a id="imagefragments" name="imagefragments"></a> ImageFragments
 
 • **ImageFragments**: `Object`
 
@@ -118,11 +117,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`Image`](interfaces/Image.md)\> |
+| `vOb` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`Image`](./interfaces/Image.md)\> |
 
 ___
 
-### ModifierFragments
+### <a id="modifierfragments" name="modifierfragments"></a> ModifierFragments
 
 • **ModifierFragments**: `Object`
 
@@ -130,11 +129,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\> |
+| `vOb` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`Modifier`](./interfaces/Modifier.md)\> |
 
 ___
 
-### NavigationFragments
+### <a id="navigationfragments" name="navigationfragments"></a> NavigationFragments
 
 • **NavigationFragments**: `Object`
 
@@ -142,11 +141,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\> |
+| `vOb` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`Navigation`](./interfaces/Navigation.md)\> |
 
 ___
 
-### OrderDishFragments
+### <a id="orderdishfragments" name="orderdishfragments"></a> OrderDishFragments
 
 • **OrderDishFragments**: `Object`
 
@@ -154,11 +153,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> |
+| `vOb` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`OrderDish`](./interfaces/OrderDish.md)\> |
 
 ___
 
-### OrderFragments
+### <a id="orderfragments" name="orderfragments"></a> OrderFragments
 
 • **OrderFragments**: `Object`
 
@@ -166,7 +165,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `vOb` | { `id`: `boolean` = true; `dishesCount`: `boolean` = true; `comment`: `boolean` = true; `deliveryDescription`: `boolean` = true; `message`: `boolean` = true; `deliveryCost`: `boolean` = true; `totalWeight`: `boolean` = true; `total`: `boolean` = true; `orderTotal`: `boolean` = true; `discountTotal`: `boolean` = true; `state`: `boolean` = true; `customData`: `boolean` = true; `customer`: `boolean` = true; `address`: `boolean` = true; `rmsId`: `boolean` = true; `rmsOrderNumber`: `boolean` = true; `rmsDeliveryDate`: `boolean` = true; `dishes`: [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> = OrderDishFragments.vOb } |
+| `vOb` | { `id`: `boolean` = true; `dishesCount`: `boolean` = true; `comment`: `boolean` = true; `deliveryDescription`: `boolean` = true; `message`: `boolean` = true; `deliveryCost`: `boolean` = true; `totalWeight`: `boolean` = true; `total`: `boolean` = true; `orderTotal`: `boolean` = true; `discountTotal`: `boolean` = true; `state`: `boolean` = true; `customData`: `boolean` = true; `customer`: `boolean` = true; `address`: `boolean` = true; `rmsId`: `boolean` = true; `rmsOrderNumber`: `boolean` = true; `rmsDeliveryDate`: `boolean` = true; `dishes`: [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`OrderDish`](./interfaces/OrderDish.md)\> = OrderDishFragments.vOb } |
 | `vOb.id` | `boolean` |
 | `vOb.dishesCount` | `boolean` |
 | `vOb.comment` | `boolean` |
@@ -184,11 +183,11 @@ ___
 | `vOb.rmsId` | `boolean` |
 | `vOb.rmsOrderNumber` | `boolean` |
 | `vOb.rmsDeliveryDate` | `boolean` |
-| `vOb.dishes` | [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> |
+| `vOb.dishes` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`OrderDish`](./interfaces/OrderDish.md)\> |
 
 ___
 
-### PaymentMethodFragments
+### <a id="paymentmethodfragments" name="paymentmethodfragments"></a> PaymentMethodFragments
 
 • **PaymentMethodFragments**: `Object`
 
@@ -196,27 +195,29 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](modules.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\> |
+| `vOb` | [`ValuesOrBoolean`](./modules.md#valuesorboolean)<[`PaymentMethod`](./interfaces/PaymentMethod.md)\> |
 
 ## Type aliases
 
-### VCriteria
+### <a id="vcriteria" name="vcriteria"></a> VCriteria
 
 Ƭ **VCriteria**: `Object`
-
-Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
-Формируется по правилам Waterline query language.
-Подробнее: https://docs.webresto.org/docs/data/criteria/
 
 #### Type declaration
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `criteria` | { [key: string]: `any`;  } | Объект Waterline query language |
+| `criteria` | { `[key: string]`: `any`;  } | Объект Waterline query language |
 
 ___
 
-### AddToOrderInput
+### <a id="gqlrequestvariables" name="gqlrequestvariables"></a> GQLRequestVariables
+
+Ƭ **GQLRequestVariables**: `undefined` \| [`VCriteria`](./modules.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
+
+___
+
+### <a id="addtoorderinput" name="addtoorderinput"></a> AddToOrderInput
 
 Ƭ **AddToOrderInput**: `Object`
 
@@ -227,7 +228,7 @@ ___
 | `orderId?` | `string` |
 | `dishId?` | `string` |
 | `amount?` | `number` |
-| `modifiers?` | [`OrderModifier`](interfaces/OrderModifier.md)[] |
+| `modifiers?` | [`OrderModifier`](./interfaces/OrderModifier.md)[] |
 | `comment?` | `string` |
 | `from?` | `string` |
 | `replace?` | `boolean` |
@@ -235,7 +236,7 @@ ___
 
 ___
 
-### RemoveFromOrderInput
+### <a id="removefromorderinput" name="removefromorderinput"></a> RemoveFromOrderInput
 
 Ƭ **RemoveFromOrderInput**: `Object`
 
@@ -249,7 +250,7 @@ ___
 
 ___
 
-### SetDishAmountInput
+### <a id="setdishamountinput" name="setdishamountinput"></a> SetDishAmountInput
 
 Ƭ **SetDishAmountInput**: `Object`
 
@@ -263,7 +264,7 @@ ___
 
 ___
 
-### SetDishCommentInput
+### <a id="setdishcommentinput" name="setdishcommentinput"></a> SetDishCommentInput
 
 Ƭ **SetDishCommentInput**: `Object`
 
@@ -277,7 +278,7 @@ ___
 
 ___
 
-### OrderInput
+### <a id="orderinput" name="orderinput"></a> OrderInput
 
 Ƭ **OrderInput**: `Object`
 
@@ -313,7 +314,7 @@ ___
 
 ___
 
-### OrderAdditionalFields
+### <a id="orderadditionalfields" name="orderadditionalfields"></a> OrderAdditionalFields
 
 Ƭ **OrderAdditionalFields**: `Object`
 
@@ -332,25 +333,15 @@ ___
 
 ___
 
-### OrderForm
+### <a id="orderform" name="orderform"></a> OrderForm
 
-Ƭ **OrderForm**: [`Order`](interfaces/Order.md) & [`OrderAdditionalFields`](modules.md#orderadditionalfields)
+Ƭ **OrderForm**: [`Order`](./interfaces/Order.md) & [`OrderAdditionalFields`](./modules.md#orderadditionalfields)
 
 ___
 
-### ValuesOrBoolean
+### <a id="valuesorboolean" name="valuesorboolean"></a> ValuesOrBoolean
 
 Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof Partial<T\>]: boolean \| (T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? boolean : T[K] extends infer U[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
-
-Тип, описывающий объект-конфигуратор запроса к серверу GraphQL для данных типа T.
-Данный обьект будет использоваться в качестве источника информации о требуемых данных при генерации строки-запроса.
-Сервер вернет данные только для полей, присутсвующих в этом обьекте, с сохранением структуры по всем уровням вложенности.
-В качестве ключей (K) необходимо указать ключи из типа T, данные для которых необходимо получить. Структура возвращаемых данных будет соответствовать структуре, переданной в данном объекте, а не типе Т.
-То есть, даже если некие ключи-свойства в типе T указаны как обязательные, их все равно можно не указывать в данном обьекте, но и в возвращаемых API данных эти данные будут отсутствовать.
-В качестве значений:
-  1. true или T[K] - в случае, если T[K] принадлежит примитивным типам, undefined или null.
-  2. Если значение T[K] - "сложный" тип обьекта (НО НЕ МАССИВ!) - вложенный объект, формируемый по аналогичной схеме.
-  3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.
 
 #### Type parameters
 
@@ -360,19 +351,17 @@ ___
 
 ___
 
-### CartBusEvent
+### <a id="cartbusevent" name="cartbusevent"></a> CartBusEvent
 
-Ƭ **CartBusEvent**: { `event`: ``"add"`` ; `data`: [`AddToOrderInput`](modules.md#addtoorderinput) ; `loading`: `BehaviorSubject`<`boolean`\> ; `order`: [`Order`](interfaces/Order.md) ; `successCb?`: (`order`: [`Order`](interfaces/Order.md)) => `void` ; `errorCb?`: (`err`: `unknown`) => `void`  } \| { `event`: ``"remove"`` ; `data`: [`RemoveFromOrderInput`](modules.md#removefromorderinput) & { `dish`: [`Dish`](interfaces/Dish.md)  } ; `loading`: `BehaviorSubject`<`boolean`\> ; `order`: [`Order`](interfaces/Order.md) ; `successCb?`: (`order`: [`Order`](interfaces/Order.md)) => `void` ; `errorCb?`: (`err`: `unknown`) => `void`  } \| { `event`: ``"check"`` \| ``"order"`` ; `order`: [`OrderForm`](modules.md#orderform) ; `ordered?`: `BehaviorSubject`<`boolean`\> ; `successCb?`: (`order`: [`CheckResponse`](interfaces/CheckResponse.md)) => `void` ; `errorCb?`: (`err`: `unknown`) => `void`  } \| { `event`: ``"load"`` ; `orderId`: `string` \| `undefined`  }
-
-Тип событий, которые отслеживаются в потоке NgGqlService.orderBus$.
+Ƭ **CartBusEvent**: { `event`: ``"add"`` ; `data`: [`AddToOrderInput`](./modules.md#addtoorderinput) ; `loading`: `BehaviorSubject`<`boolean`\> ; `order`: [`Order`](./interfaces/Order.md) ; `successCb?`: (`order`: [`Order`](./interfaces/Order.md)) => `void` ; `errorCb?`: (`err`: `unknown`) => `void`  } \| { `event`: ``"remove"`` ; `data`: [`RemoveFromOrderInput`](./modules.md#removefromorderinput) & { `dish`: [`Dish`](./interfaces/Dish.md)  } ; `loading`: `BehaviorSubject`<`boolean`\> ; `order`: [`Order`](./interfaces/Order.md) ; `successCb?`: (`order`: [`Order`](./interfaces/Order.md)) => `void` ; `errorCb?`: (`err`: `unknown`) => `void`  } \| { `event`: ``"check"`` \| ``"order"`` ; `order`: [`OrderForm`](./modules.md#orderform) ; `ordered?`: `BehaviorSubject`<`boolean`\> ; `successCb?`: (`order`: [`CheckResponse`](./interfaces/CheckResponse.md)) => `void` ; `errorCb?`: (`err`: `unknown`) => `void`  } \| { `event`: ``"load"`` ; `orderId`: `string` \| `undefined`  }
 
 ## Functions
 
-### generateQueryString
+### <a id="generatequerystring" name="generatequerystring"></a> generateQueryString
 
 ▸ **generateQueryString**<`T`, `N`, `V`\>(`options`): `string`
 
-Функция - генератор строки запроса к серверу GraphQL.
+**`function`** generateQueryString Функция - генератор строки запроса к серверу GraphQL.
 
 #### Type parameters
 
@@ -380,17 +369,17 @@ ___
 | :------ | :------ |
 | `T` | `T` |
 | `N` | extends `string` |
-| `V` | `unknown` |
+| `V` | [`GQLRequestVariables`](./modules.md#gqlrequestvariables) |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `options` | `Object` | объект с данными, необходимыми для формирования запроса, где:  name - название операции, объвленное в схеме сервера GraphQL.  queryObject - объект-источник информации о структуре запрашиваемых данных  variables - необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа    параметров допустимо использовать типы - number, string, object или boolean.  optionalFields - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
-| `options.name` | `N` | - |
-| `options.queryObject` | `T` | - |
-| `options.variables` | `V` | - |
-| `options.optionalFields?` | `string`[] | - |
+| `options` | `Object` | объект с данными, необходимыми для формирования запроса, где: |
+| `options.name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
+| `options.queryObject` | `T` | объект-источник информации о структуре запрашиваемых данных |
+| `options.variables?` | `V` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа    параметров допустимо использовать типы - number, string, object или boolean. |
+| `options.optionalFields?` | keyof `V`[] | массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
 
 #### Returns
 
@@ -401,7 +390,7 @@ ___
 
 ___
 
-### isValue
+### <a id="isvalue" name="isvalue"></a> isValue
 
 ▸ **isValue**<`T`\>(`value`): value is NonNullable<T\>
 

@@ -1,5 +1,3 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / NgGqlConfig
-
 # Interface: NgGqlConfig
 
 Обьект с параметрами настройки библиотеки для определенного сервера-API
@@ -8,13 +6,13 @@
 
 ### Properties
 
-- [url](NgGqlConfig.md#url)
-- [nesting](NgGqlConfig.md#nesting)
-- [busSubscribeMode](NgGqlConfig.md#bussubscribemode)
+- [url](./interfaces/NgGqlConfig.md#url)
+- [nesting](./interfaces/NgGqlConfig.md#nesting)
+- [busSubscribeMode](./interfaces/NgGqlConfig.md#bussubscribemode)
 
 ## Properties
 
-### url
+### <a id="url" name="url"></a> url
 
 • **url**: `string`
 
@@ -22,7 +20,7 @@ URL API сервера GraphQL
 
 ___
 
-### nesting
+### <a id="nesting" name="nesting"></a> nesting
 
 • **nesting**: `number`
 
@@ -30,7 +28,7 @@ ___
 
 ___
 
-### busSubscribeMode
+### <a id="bussubscribemode" name="bussubscribemode"></a> busSubscribeMode
 
 • **busSubscribeMode**: ``"subscribe"`` \| ``"custom"``
 

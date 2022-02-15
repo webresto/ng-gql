@@ -1,46 +1,44 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / EventerService
-
 # Class: EventerService
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](EventerService.md#constructor)
+- [constructor](./classes/EventerService.md#constructor)
 
 ### Properties
 
-- [eventMessage](EventerService.md#eventmessage)
-- [eventAction](EventerService.md#eventaction)
+- [eventMessage](./classes/EventerService.md#eventmessage)
+- [eventAction](./classes/EventerService.md#eventaction)
 
 ### Methods
 
-- [emitMessageEvent](EventerService.md#emitmessageevent)
-- [emitActionEvent](EventerService.md#emitactionevent)
-- [getMessageEmitter](EventerService.md#getmessageemitter)
-- [getActionEmitter](EventerService.md#getactionemitter)
+- [emitMessageEvent](./classes/EventerService.md#emitmessageevent)
+- [emitActionEvent](./classes/EventerService.md#emitactionevent)
+- [getMessageEmitter](./classes/EventerService.md#getmessageemitter)
+- [getActionEmitter](./classes/EventerService.md#getactionemitter)
 
 ## Constructors
 
-### constructor
+### <a id="constructor" name="constructor"></a> constructor
 
 • **new EventerService**()
 
 ## Properties
 
-### eventMessage
+### <a id="eventmessage" name="eventmessage"></a> eventMessage
 
 • **eventMessage**: `EventEmitter`<`any`\>
 
 ___
 
-### eventAction
+### <a id="eventaction" name="eventaction"></a> eventAction
 
 • **eventAction**: `EventEmitter`<`any`\>
 
 ## Methods
 
-### emitMessageEvent
+### <a id="emitmessageevent" name="emitmessageevent"></a> emitMessageEvent
 
 ▸ **emitMessageEvent**(`message`): `void`
 
@@ -48,7 +46,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `message` | [`EventMessage`](EventMessage.md) |
+| `message` | [`EventMessage`](./classes/EventMessage.md) |
 
 #### Returns
 
@@ -56,7 +54,7 @@ ___
 
 ___
 
-### emitActionEvent
+### <a id="emitactionevent" name="emitactionevent"></a> emitActionEvent
 
 ▸ **emitActionEvent**(`action`): `void`
 
@@ -64,7 +62,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `action` | [`EventMessage`](EventMessage.md) |
+| `action` | [`EventMessage`](./classes/EventMessage.md) |
 
 #### Returns
 
@@ -72,7 +70,7 @@ ___
 
 ___
 
-### getMessageEmitter
+### <a id="getmessageemitter" name="getmessageemitter"></a> getMessageEmitter
 
 ▸ **getMessageEmitter**(): `EventEmitter`<`any`\>
 
@@ -82,7 +80,7 @@ ___
 
 ___
 
-### getActionEmitter
+### <a id="getactionemitter" name="getactionemitter"></a> getActionEmitter
 
 ▸ **getActionEmitter**(): `EventEmitter`<`any`\>
 

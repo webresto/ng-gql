@@ -1,36 +1,34 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / NgGqlModule
-
 # Class: NgGqlModule
 
 ## Table of contents
 
 ### Methods
 
-- [forRoot](NgGqlModule.md#forroot)
+- [forRoot](./classes/NgGqlModule.md#forroot)
 
 ### Constructors
 
-- [constructor](NgGqlModule.md#constructor)
+- [constructor](./classes/NgGqlModule.md#constructor)
 
 ## Methods
 
-### forRoot
+### <a id="forroot" name="forroot"></a> forRoot
 
-▸ `Static` **forRoot**(`config`): `ModuleWithProviders`<[`NgGqlModule`](NgGqlModule.md)\>
+▸ `Static` **forRoot**(`config`): `ModuleWithProviders`<[`NgGqlModule`](./classes/NgGqlModule.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
+| `config` | [`NgGqlConfig`](./interfaces/NgGqlConfig.md) |
 
 #### Returns
 
-`ModuleWithProviders`<[`NgGqlModule`](NgGqlModule.md)\>
+`ModuleWithProviders`<[`NgGqlModule`](./classes/NgGqlModule.md)\>
 
 ## Constructors
 
-### constructor
+### <a id="constructor" name="constructor"></a> constructor
 
 • **new NgGqlModule**(`apollo`, `httpLink`, `config`)
 
@@ -40,4 +38,4 @@
 | :------ | :------ |
 | `apollo` | `Apollo` |
 | `httpLink` | `HttpLink` |
-| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
+| `config` | [`NgGqlConfig`](./interfaces/NgGqlConfig.md) |

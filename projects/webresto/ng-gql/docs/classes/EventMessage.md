@@ -1,22 +1,20 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / EventMessage
-
 # Class: EventMessage
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](EventMessage.md#constructor)
+- [constructor](./classes/EventMessage.md#constructor)
 
 ### Properties
 
-- [type](EventMessage.md#type)
-- [title](EventMessage.md#title)
-- [body](EventMessage.md#body)
+- [type](./classes/EventMessage.md#type)
+- [title](./classes/EventMessage.md#title)
+- [body](./classes/EventMessage.md#body)
 
 ## Constructors
 
-### constructor
+### <a id="constructor" name="constructor"></a> constructor
 
 • **new EventMessage**(`type`, `title`, `body`)
 
@@ -30,18 +28,18 @@
 
 ## Properties
 
-### type
+### <a id="type" name="type"></a> type
 
 • **type**: `string`
 
 ___
 
-### title
+### <a id="title" name="title"></a> title
 
 • **title**: `string`
 
 ___
 
-### body
+### <a id="body" name="body"></a> body
 
 • **body**: `string`

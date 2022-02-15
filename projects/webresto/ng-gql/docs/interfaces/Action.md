@@ -1,22 +1,20 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Action
-
 # Interface: Action
 
 ## Table of contents
 
 ### Properties
 
-- [type](Action.md#type)
-- [data](Action.md#data)
+- [type](./interfaces/Action.md#type)
+- [data](./interfaces/Action.md#data)
 
 ## Properties
 
-### type
+### <a id="type" name="type"></a> type
 
 • **type**: `String`
 
 ___
 
-### data
+### <a id="data" name="data"></a> data
 
 • **data**: `any`

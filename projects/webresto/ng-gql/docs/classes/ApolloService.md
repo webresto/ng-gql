@@ -1,23 +1,21 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / ApolloService
-
 # Class: ApolloService
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](ApolloService.md#constructor)
+- [constructor](./classes/ApolloService.md#constructor)
 
 ### Methods
 
-- [watchQuery](ApolloService.md#watchquery)
-- [query](ApolloService.md#query)
-- [mutate](ApolloService.md#mutate)
-- [subscribe](ApolloService.md#subscribe)
+- [watchQuery](./classes/ApolloService.md#watchquery)
+- [query](./classes/ApolloService.md#query)
+- [mutate](./classes/ApolloService.md#mutate)
+- [subscribe](./classes/ApolloService.md#subscribe)
 
 ## Constructors
 
-### constructor
+### <a id="constructor" name="constructor"></a> constructor
 
 • **new ApolloService**(`apollo`)
 
@@ -29,7 +27,7 @@
 
 ## Methods
 
-### watchQuery
+### <a id="watchquery" name="watchquery"></a> watchQuery
 
 ▸ **watchQuery**<`TData`, `TVariables`\>(`options`): `Observable`<`ApolloQueryResult`<`TData`\>\>
 
@@ -52,7 +50,7 @@
 
 ___
 
-### query
+### <a id="query" name="query"></a> query
 
 ▸ **query**<`T`, `V`\>(`options`): `Observable`<`ApolloQueryResult`<`T`\>\>
 
@@ -75,7 +73,7 @@ ___
 
 ___
 
-### mutate
+### <a id="mutate" name="mutate"></a> mutate
 
 ▸ **mutate**<`T`, `V`\>(`options`): `Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
 
@@ -98,7 +96,7 @@ ___
 
 ___
 
-### subscribe
+### <a id="subscribe" name="subscribe"></a> subscribe
 
 ▸ **subscribe**<`T`, `V`\>(`options`, `extra?`): `Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
 

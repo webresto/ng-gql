@@ -1,43 +1,41 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Navigation
-
 # Interface: Navigation
 
 ## Table of contents
 
 ### Properties
 
-- [mnemonicId](Navigation.md#mnemonicid)
-- [description](Navigation.md#description)
-- [options](Navigation.md#options)
-- [id](Navigation.md#id)
-- [navigation\_menu](Navigation.md#navigation_menu)
+- [mnemonicId](./interfaces/Navigation.md#mnemonicid)
+- [description](./interfaces/Navigation.md#description)
+- [options](./interfaces/Navigation.md#options)
+- [id](./interfaces/Navigation.md#id)
+- [navigation\_menu](./interfaces/Navigation.md#navigation_menu)
 
 ## Properties
 
-### mnemonicId
+### <a id="mnemonicid" name="mnemonicid"></a> mnemonicId
 
 • **mnemonicId**: `string`
 
 ___
 
-### description
+### <a id="description" name="description"></a> description
 
 • **description**: `string`
 
 ___
 
-### options
+### <a id="options" name="options"></a> options
 
-• **options**: [`NavigationsOptions`](NavigationsOptions.md)
+• **options**: [`NavigationsOptions`](./interfaces/NavigationsOptions.md)
 
 ___
 
-### id
+### <a id="id" name="id"></a> id
 
 • **id**: `number`
 
 ___
 
-### navigation\_menu
+### <a id="navigation_menu" name="navigation_menu"></a> navigation\_menu
 
-• **navigation\_menu**: [`NavigationsMenuItem`](NavigationsMenuItem.md)[]
+• **navigation\_menu**: [`NavigationsMenuItem`](./interfaces/NavigationsMenuItem.md)[]

@@ -1,8 +1,8 @@
-import type { PaymentMethod } from '../payment-method/payment-method.gql';
-import type { OrderDish } from '../order-dish/order-dish.gql';
-import { OrderDishFragments } from '../order-dish/order-dish.gql';
-import type { OrderModifier } from '../modifier/modifier.gql';
-import type { Message, Action } from '../event-message/event-message';
+import type {PaymentMethod} from '../payment-method/payment-method.gql';
+import type {OrderDish} from '../order-dish/order-dish.gql';
+import {OrderDishFragments} from '../order-dish/order-dish.gql';
+import type {OrderModifier} from '../modifier/modifier.gql';
+import type {Message, Action} from '../event-message/event-message';
 
 export interface Order {
 	id: string;
@@ -25,7 +25,7 @@ export interface Order {
 	paid?: boolean;
 	paymentMethod?: PaymentMethod;
 	customData?: {
-		[ key: string ]: string | any;
+		[key: string]: string | any;
 	} | null;
 }
 

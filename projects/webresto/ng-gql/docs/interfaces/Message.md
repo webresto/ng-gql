@@ -1,29 +1,27 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Message
-
 # Interface: Message
 
 ## Table of contents
 
 ### Properties
 
-- [title](Message.md#title)
-- [type](Message.md#type)
-- [message](Message.md#message)
+- [title](./interfaces/Message.md#title)
+- [type](./interfaces/Message.md#type)
+- [message](./interfaces/Message.md#message)
 
 ## Properties
 
-### title
+### <a id="title" name="title"></a> title
 
 • **title**: `String`
 
 ___
 
-### type
+### <a id="type" name="type"></a> type
 
 • **type**: `String`
 
 ___
 
-### message
+### <a id="message" name="message"></a> message
 
 • **message**: `String`

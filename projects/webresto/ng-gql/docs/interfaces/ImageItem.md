@@ -1,29 +1,27 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / ImageItem
-
 # Interface: ImageItem
 
 ## Table of contents
 
 ### Properties
 
-- [large](ImageItem.md#large)
-- [origin](ImageItem.md#origin)
-- [small](ImageItem.md#small)
+- [large](./interfaces/ImageItem.md#large)
+- [origin](./interfaces/ImageItem.md#origin)
+- [small](./interfaces/ImageItem.md#small)
 
 ## Properties
 
-### large
+### <a id="large" name="large"></a> large
 
 • **large**: ``null`` \| `string`
 
 ___
 
-### origin
+### <a id="origin" name="origin"></a> origin
 
 • **origin**: ``null`` \| `string`
 
 ___
 
-### small
+### <a id="small" name="small"></a> small
 
 • **small**: ``null`` \| `string`

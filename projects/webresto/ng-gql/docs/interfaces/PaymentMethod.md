@@ -1,64 +1,62 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / PaymentMethod
-
 # Interface: PaymentMethod
 
 ## Table of contents
 
 ### Properties
 
-- [id](PaymentMethod.md#id)
-- [type](PaymentMethod.md#type)
-- [title](PaymentMethod.md#title)
-- [description](PaymentMethod.md#description)
-- [adapter](PaymentMethod.md#adapter)
-- [order](PaymentMethod.md#order)
-- [enable](PaymentMethod.md#enable)
-- [customData](PaymentMethod.md#customdata)
+- [id](./interfaces/PaymentMethod.md#id)
+- [type](./interfaces/PaymentMethod.md#type)
+- [title](./interfaces/PaymentMethod.md#title)
+- [description](./interfaces/PaymentMethod.md#description)
+- [adapter](./interfaces/PaymentMethod.md#adapter)
+- [order](./interfaces/PaymentMethod.md#order)
+- [enable](./interfaces/PaymentMethod.md#enable)
+- [customData](./interfaces/PaymentMethod.md#customdata)
 
 ## Properties
 
-### id
+### <a id="id" name="id"></a> id
 
 • **id**: `string`
 
 ___
 
-### type
+### <a id="type" name="type"></a> type
 
 • **type**: `string`
 
 ___
 
-### title
+### <a id="title" name="title"></a> title
 
 • **title**: `string`
 
 ___
 
-### description
+### <a id="description" name="description"></a> description
 
 • **description**: `string`
 
 ___
 
-### adapter
+### <a id="adapter" name="adapter"></a> adapter
 
 • **adapter**: `string`
 
 ___
 
-### order
+### <a id="order" name="order"></a> order
 
 • **order**: `number`
 
 ___
 
-### enable
+### <a id="enable" name="enable"></a> enable
 
 • **enable**: `boolean`
 
 ___
 
-### customData
+### <a id="customdata" name="customdata"></a> customData
 
 • **customData**: `any`

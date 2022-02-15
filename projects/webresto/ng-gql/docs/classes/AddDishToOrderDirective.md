@@ -1,32 +1,30 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / AddDishToOrderDirective
-
 # Class: AddDishToOrderDirective
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](AddDishToOrderDirective.md#constructor)
+- [constructor](./classes/AddDishToOrderDirective.md#constructor)
 
 ### Properties
 
-- [order](AddDishToOrderDirective.md#order)
-- [modifiers](AddDishToOrderDirective.md#modifiers)
-- [dish](AddDishToOrderDirective.md#dish)
-- [amountDish](AddDishToOrderDirective.md#amountdish)
-- [comment](AddDishToOrderDirective.md#comment)
-- [replaceOrderDishId](AddDishToOrderDirective.md#replaceorderdishid)
-- [loading](AddDishToOrderDirective.md#loading)
-- [success](AddDishToOrderDirective.md#success)
-- [error](AddDishToOrderDirective.md#error)
+- [order](./classes/AddDishToOrderDirective.md#order)
+- [modifiers](./classes/AddDishToOrderDirective.md#modifiers)
+- [dish](./classes/AddDishToOrderDirective.md#dish)
+- [amountDish](./classes/AddDishToOrderDirective.md#amountdish)
+- [comment](./classes/AddDishToOrderDirective.md#comment)
+- [replaceOrderDishId](./classes/AddDishToOrderDirective.md#replaceorderdishid)
+- [loading](./classes/AddDishToOrderDirective.md#loading)
+- [success](./classes/AddDishToOrderDirective.md#success)
+- [error](./classes/AddDishToOrderDirective.md#error)
 
 ### Methods
 
-- [onClick](AddDishToOrderDirective.md#onclick)
+- [onClick](./classes/AddDishToOrderDirective.md#onclick)
 
 ## Constructors
 
-### constructor
+### <a id="constructor" name="constructor"></a> constructor
 
 • **new AddDishToOrderDirective**(`orderService`)
 
@@ -34,65 +32,65 @@
 
 | Name | Type |
 | :------ | :------ |
-| `orderService` | [`NgOrderService`](NgOrderService.md) |
+| `orderService` | [`NgOrderService`](./classes/NgOrderService.md) |
 
 ## Properties
 
-### order
+### <a id="order" name="order"></a> order
 
-• **order**: `undefined` \| ``null`` \| [`Order`](../interfaces/Order.md)
-
-___
-
-### modifiers
-
-• **modifiers**: [`OrderModifier`](../interfaces/OrderModifier.md)[] = `[]`
+• **order**: `undefined` \| ``null`` \| [`Order`](./interfaces/Order.md)
 
 ___
 
-### dish
+### <a id="modifiers" name="modifiers"></a> modifiers
 
-• **dish**: `undefined` \| [`Dish`](../interfaces/Dish.md)
+• **modifiers**: [`OrderModifier`](./interfaces/OrderModifier.md)[] = `[]`
 
 ___
 
-### amountDish
+### <a id="dish" name="dish"></a> dish
+
+• **dish**: `undefined` \| [`Dish`](./interfaces/Dish.md)
+
+___
+
+### <a id="amountdish" name="amountdish"></a> amountDish
 
 • **amountDish**: `number` = `0`
 
 ___
 
-### comment
+### <a id="comment" name="comment"></a> comment
 
 • **comment**: `undefined` \| `string`
 
 ___
 
-### replaceOrderDishId
+### <a id="replaceorderdishid" name="replaceorderdishid"></a> replaceOrderDishId
 
 • **replaceOrderDishId**: `boolean` = `false`
 
 ___
 
-### loading
+### <a id="loading" name="loading"></a> loading
 
 • **loading**: `EventEmitter`<`boolean`\>
 
 ___
 
-### success
+### <a id="success" name="success"></a> success
 
 • **success**: `EventEmitter`<`boolean`\>
 
 ___
 
-### error
+### <a id="error" name="error"></a> error
 
 • **error**: `EventEmitter`<`any`\>
 
 ## Methods
 
-### onClick
+### <a id="onclick" name="onclick"></a> onClick
 
 ▸ **onClick**(): `void`
 

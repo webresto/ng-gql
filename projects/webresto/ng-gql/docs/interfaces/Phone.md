@@ -1,57 +1,55 @@
-[@webresto/ng-gql - v1.1.12](../README.md) / [Exports](../modules.md) / Phone
-
 # Interface: Phone
 
 ## Table of contents
 
 ### Properties
 
-- [id](Phone.md#id)
-- [phone](Phone.md#phone)
-- [isFirst](Phone.md#isfirst)
-- [isConfirm](Phone.md#isconfirm)
-- [codeTime](Phone.md#codetime)
-- [confirmCode](Phone.md#confirmcode)
-- [customData](Phone.md#customdata)
+- [id](./interfaces/Phone.md#id)
+- [phone](./interfaces/Phone.md#phone)
+- [isFirst](./interfaces/Phone.md#isfirst)
+- [isConfirm](./interfaces/Phone.md#isconfirm)
+- [codeTime](./interfaces/Phone.md#codetime)
+- [confirmCode](./interfaces/Phone.md#confirmcode)
+- [customData](./interfaces/Phone.md#customdata)
 
 ## Properties
 
-### id
+### <a id="id" name="id"></a> id
 
 • **id**: `number`
 
 ___
 
-### phone
+### <a id="phone" name="phone"></a> phone
 
 • **phone**: `string`
 
 ___
 
-### isFirst
+### <a id="isfirst" name="isfirst"></a> isFirst
 
 • **isFirst**: `boolean`
 
 ___
 
-### isConfirm
+### <a id="isconfirm" name="isconfirm"></a> isConfirm
 
 • **isConfirm**: `boolean`
 
 ___
 
-### codeTime
+### <a id="codetime" name="codetime"></a> codeTime
 
 • **codeTime**: `string`
 
 ___
 
-### confirmCode
+### <a id="confirmcode" name="confirmcode"></a> confirmCode
 
 • **confirmCode**: `string`
 
 ___
 
-### customData
+### <a id="customdata" name="customdata"></a> customData
 
 • **customData**: `any`
