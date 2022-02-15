@@ -13,7 +13,7 @@
     "@angular/common": "^13.2.2",
     "@angular/compiler": "^13.2.2",
     "@angular/core": "^13.2.2",
-    "@apollo/client": "^3.5.8",
+    "@apollo/client": "^3.5.9",
     "@axrl/ngx-extended-form-builder": "^1.0.9",
     "apollo-angular": "^2.6.0",
     "graphql": "^16.3.0",
