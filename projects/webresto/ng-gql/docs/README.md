@@ -16,6 +16,9 @@
 ### Type aliases
 
 - [CartBusEvent](README.md#cartbusevent)
+- [CartBusEventAdd](README.md#cartbuseventadd)
+- [CartBusEventRemove](README.md#cartbuseventremove)
+- [CartBusEventCheckSend](README.md#cartbuseventchecksend)
 - [VCriteria](README.md#vcriteria)
 - [GQLRequestVariables](README.md#gqlrequestvariables)
 - [AddToOrderInput](README.md#addtoorderinput)
@@ -26,12 +29,10 @@
 - [OrderAdditionalFields](README.md#orderadditionalfields)
 - [OrderForm](README.md#orderform)
 - [ValuesOrBoolean](README.md#valuesorboolean)
+- [ParamSettings](README.md#paramsettings)
 
 ### Interfaces
 
-- [CartBusEventAdd](interfaces/CartBusEventAdd.md)
-- [CartBusEventRemove](interfaces/CartBusEventRemove.md)
-- [CartBusEventCheckSend](interfaces/CartBusEventCheckSend.md)
 - [Dish](interfaces/Dish.md)
 - [DishTag](interfaces/DishTag.md)
 - [Message](interfaces/Message.md)
@@ -79,10 +80,66 @@
 
 ### CartBusEvent
 
-Ƭ **CartBusEvent**: [`CartBusEventAdd`](interfaces/CartBusEventAdd.md) \| [`CartBusEventRemove`](interfaces/CartBusEventRemove.md) \| [`CartBusEventCheckSend`](interfaces/CartBusEventCheckSend.md)
+Ƭ **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventCheckSend`](README.md#cartbuseventchecksend)
 
 **`alias`** CartBusEvent
 Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
+
+___
+
+### CartBusEventAdd
+
+Ƭ **CartBusEventAdd**: `Object`
+
+ Добавление в заказ (корзину).
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `event` | ``"add"`` | - |
+| `data` | [`AddToOrderInput`](README.md#addtoorderinput) | Данные для операции |
+| `loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `order` | [`Order`](interfaces/Order.md) | Заказ, с которым выполнется операция |
+| `successCb?` | (`order`: [`Order`](interfaces/Order.md)) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
+
+___
+
+### CartBusEventRemove
+
+Ƭ **CartBusEventRemove**: `Object`
+
+Удаление блюда из заказа (корзины).
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `event` | ``"remove"`` | - |
+| `data` | [`RemoveFromOrderInput`](README.md#removefromorderinput) & { `dish`: [`Dish`](interfaces/Dish.md)  } | Данные для операции |
+| `loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `order` | [`Order`](interfaces/Order.md) | Заказ, с которым выполнется операция |
+| `successCb?` | (`order`: [`Order`](interfaces/Order.md)) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
+
+___
+
+### CartBusEventCheckSend
+
+Ƭ **CartBusEventCheckSend**: `Object`
+
+Отправка заказа на проверку перед оформлением или непосредственно оформление.
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `event` | ``"check"`` \| ``"order"`` | - |
+| `order` | [`OrderForm`](README.md#orderform) | Данные формы чекаута |
+| `ordered?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `successCb?` | (`order`: [`CheckResponse`](interfaces/CheckResponse.md)) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
 ___
 
@@ -243,6 +300,27 @@ ___
 | Name |
 | :------ |
 | `T` |
+
+___
+
+### ParamSettings
+
+Ƭ **ParamSettings**<`V`\>: `Object`
+
+Объект настройки генерации части строки запроса с описанием типов параметров операции.
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `V` |
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `optionalFields?` | keyof `V`[] | Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип (например у параметра указан тип String!, а не String). ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`. |
+| `fieldsTypeMap?` | `Map`<keyof `V`, `string`\> | Необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строки-названия соответствующих им типов, определенных в схеме сервера GraphQL. ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как необязательный. |
 
 ## Variables
 
