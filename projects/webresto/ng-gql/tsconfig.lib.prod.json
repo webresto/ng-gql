@@ -17,12 +17,15 @@
     ],
     "excludePrivate": true,
     "disableSources": true,
-    "readme": false,
+    "readme": "none",
+    "emit": "both",
     "hideGenerator": true,
     "cleanOutputDir": true,
     "sort": "source-order",
     "hideBreadcrumbs": true,
     "darkHighlightTheme": "material-darker",
+    "theme": "markdown",
+    "entryPointStrategy": "expand",
     "pretty": true,
   }
 }

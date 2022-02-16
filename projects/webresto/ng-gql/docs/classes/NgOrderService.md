@@ -181,7 +181,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`AddToOrderInput`](../modules.md#addtoorderinput) |
+| `data` | [`AddToOrderInput`](../README.md#addtoorderinput) |
 
 #### Returns
 
@@ -214,7 +214,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`OrderInput`](../modules.md#orderinput) |
+| `data` | [`OrderInput`](../README.md#orderinput) |
 
 #### Returns
 
@@ -247,7 +247,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`OrderInput`](../modules.md#orderinput) |
+| `data` | [`OrderInput`](../README.md#orderinput) |
 
 #### Returns
 
