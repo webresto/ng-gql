@@ -13,8 +13,25 @@
 - [EventerService](classes/EventerService.md)
 - [NgOrderService](classes/NgOrderService.md)
 
+### Type aliases
+
+- [CartBusEvent](README.md#cartbusevent)
+- [VCriteria](README.md#vcriteria)
+- [GQLRequestVariables](README.md#gqlrequestvariables)
+- [AddToOrderInput](README.md#addtoorderinput)
+- [RemoveFromOrderInput](README.md#removefromorderinput)
+- [SetDishAmountInput](README.md#setdishamountinput)
+- [SetDishCommentInput](README.md#setdishcommentinput)
+- [OrderInput](README.md#orderinput)
+- [OrderAdditionalFields](README.md#orderadditionalfields)
+- [OrderForm](README.md#orderform)
+- [ValuesOrBoolean](README.md#valuesorboolean)
+
 ### Interfaces
 
+- [CartBusEventAdd](interfaces/CartBusEventAdd.md)
+- [CartBusEventRemove](interfaces/CartBusEventRemove.md)
+- [CartBusEventCheckSend](interfaces/CartBusEventCheckSend.md)
 - [Dish](interfaces/Dish.md)
 - [DishTag](interfaces/DishTag.md)
 - [Message](interfaces/Message.md)
@@ -43,6 +60,7 @@
 ### Variables
 
 - [DishFragments](README.md#dishfragments)
+- [MessageOrActionGql](README.md#messageoractiongql)
 - [GroupModifierFragments](README.md#groupmodifierfragments)
 - [GroupFragments](README.md#groupfragments)
 - [ImageFragments](README.md#imagefragments)
@@ -52,152 +70,21 @@
 - [OrderFragments](README.md#orderfragments)
 - [PaymentMethodFragments](README.md#paymentmethodfragments)
 
-### Type aliases
-
-- [VCriteria](README.md#vcriteria)
-- [GQLRequestVariables](README.md#gqlrequestvariables)
-- [AddToOrderInput](README.md#addtoorderinput)
-- [RemoveFromOrderInput](README.md#removefromorderinput)
-- [SetDishAmountInput](README.md#setdishamountinput)
-- [SetDishCommentInput](README.md#setdishcommentinput)
-- [OrderInput](README.md#orderinput)
-- [OrderAdditionalFields](README.md#orderadditionalfields)
-- [OrderForm](README.md#orderform)
-- [ValuesOrBoolean](README.md#valuesorboolean)
-- [CartBusEvent](README.md#cartbusevent)
-
 ### Functions
 
 - [generateQueryString](README.md#generatequerystring)
 - [isValue](README.md#isvalue)
 
-## Variables
-
-### DishFragments
-
-• **DishFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\> |
-
-___
-
-### GroupModifierFragments
-
-• **GroupModifierFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\> |
-
-___
-
-### GroupFragments
-
-• **GroupFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\> |
-
-___
-
-### ImageFragments
-
-• **ImageFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\> |
-
-___
-
-### ModifierFragments
-
-• **ModifierFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\> |
-
-___
-
-### NavigationFragments
-
-• **NavigationFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\> |
-
-___
-
-### OrderDishFragments
-
-• **OrderDishFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> |
-
-___
-
-### OrderFragments
-
-• **OrderFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | { `id`: `boolean` = true; `dishesCount`: `boolean` = true; `comment`: `boolean` = true; `deliveryDescription`: `boolean` = true; `message`: `boolean` = true; `deliveryCost`: `boolean` = true; `totalWeight`: `boolean` = true; `total`: `boolean` = true; `orderTotal`: `boolean` = true; `discountTotal`: `boolean` = true; `state`: `boolean` = true; `customData`: `boolean` = true; `customer`: `boolean` = true; `address`: `boolean` = true; `rmsId`: `boolean` = true; `rmsOrderNumber`: `boolean` = true; `rmsDeliveryDate`: `boolean` = true; `dishes`: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> = OrderDishFragments.vOb } |
-| `vOb.id` | `boolean` |
-| `vOb.dishesCount` | `boolean` |
-| `vOb.comment` | `boolean` |
-| `vOb.deliveryDescription` | `boolean` |
-| `vOb.message` | `boolean` |
-| `vOb.deliveryCost` | `boolean` |
-| `vOb.totalWeight` | `boolean` |
-| `vOb.total` | `boolean` |
-| `vOb.orderTotal` | `boolean` |
-| `vOb.discountTotal` | `boolean` |
-| `vOb.state` | `boolean` |
-| `vOb.customData` | `boolean` |
-| `vOb.customer` | `boolean` |
-| `vOb.address` | `boolean` |
-| `vOb.rmsId` | `boolean` |
-| `vOb.rmsOrderNumber` | `boolean` |
-| `vOb.rmsDeliveryDate` | `boolean` |
-| `vOb.dishes` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> |
-
-___
-
-### PaymentMethodFragments
-
-• **PaymentMethodFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\> |
-
 ## Type aliases
+
+### CartBusEvent
+
+Ƭ **CartBusEvent**: [`CartBusEventAdd`](interfaces/CartBusEventAdd.md) \| [`CartBusEventRemove`](interfaces/CartBusEventRemove.md) \| [`CartBusEventCheckSend`](interfaces/CartBusEventCheckSend.md)
+
+**`alias`** CartBusEvent
+Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
+
+___
 
 ### VCriteria
 
@@ -302,22 +189,8 @@ ___
 | `pickupAddressId?` | `string` |
 | `locationId?` | `string` |
 | `date?` | `string` |
-| `address?` | { `streetId?`: `string` ; `home?`: `string` ; `comment?`: `string` ; `city?`: `string` ; `street?`: `string` ; `housing?`: `string` ; `index?`: `string` ; `entrance?`: `string` ; `floor?`: `string` ; `apartment?`: `string` ; `doorphone?`: `string`  } |
-| `address.streetId?` | `string` |
-| `address.home?` | `string` |
-| `address.comment?` | `string` |
-| `address.city?` | `string` |
-| `address.street?` | `string` |
-| `address.housing?` | `string` |
-| `address.index?` | `string` |
-| `address.entrance?` | `string` |
-| `address.floor?` | `string` |
-| `address.apartment?` | `string` |
-| `address.doorphone?` | `string` |
-| `customer?` | { `phone?`: `string` ; `mail?`: `string` ; `name?`: `string`  } |
-| `customer.phone?` | `string` |
-| `customer.mail?` | `string` |
-| `customer.name?` | `string` |
+| `address?` | [`Address`](interfaces/Address.md) |
+| `customer?` | [`Customer`](interfaces/Customer.md) |
 | `comment?` | `string` \| ``null`` |
 | `notifyMethodId?` | `string` |
 | `customData?` | `any` |
@@ -371,14 +244,126 @@ ___
 | :------ |
 | `T` |
 
+## Variables
+
+### DishFragments
+
+• **DishFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\> |
+
 ___
 
-### CartBusEvent
+### MessageOrActionGql
 
-Ƭ **CartBusEvent**: { `event`: ``"add"`` ; `data`: [`AddToOrderInput`](README.md#addtoorderinput) ; `loading`: `BehaviorSubject`<`boolean`\> ; `order`: [`Order`](interfaces/Order.md) ; `successCb?`: (`order`: [`Order`](interfaces/Order.md)) => `void` ; `errorCb?`: (`err`: `unknown`) => `void`  } \| { `event`: ``"remove"`` ; `data`: [`RemoveFromOrderInput`](README.md#removefromorderinput) & { `dish`: [`Dish`](interfaces/Dish.md)  } ; `loading`: `BehaviorSubject`<`boolean`\> ; `order`: [`Order`](interfaces/Order.md) ; `successCb?`: (`order`: [`Order`](interfaces/Order.md)) => `void` ; `errorCb?`: (`err`: `unknown`) => `void`  } \| { `event`: ``"check"`` \| ``"order"`` ; `order`: [`OrderForm`](README.md#orderform) ; `ordered?`: `BehaviorSubject`<`boolean`\> ; `successCb?`: (`order`: [`CheckResponse`](interfaces/CheckResponse.md)) => `void` ; `errorCb?`: (`err`: `unknown`) => `void`  } \| { `event`: ``"load"`` ; `orderId`: `string` \| `undefined`  }
+• **MessageOrActionGql**: `Object`
 
-**`alias`** CartBusEvent
-Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `messageVob` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\> |
+| `actionVob` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\> |
+
+___
+
+### GroupModifierFragments
+
+• **GroupModifierFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\> |
+
+___
+
+### GroupFragments
+
+• **GroupFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\> |
+
+___
+
+### ImageFragments
+
+• **ImageFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\> |
+
+___
+
+### ModifierFragments
+
+• **ModifierFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\> |
+
+___
+
+### NavigationFragments
+
+• **NavigationFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\> |
+
+___
+
+### OrderDishFragments
+
+• **OrderDishFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> |
+
+___
+
+### OrderFragments
+
+• **OrderFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\> |
+
+___
+
+### PaymentMethodFragments
+
+• **PaymentMethodFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\> |
 
 ## Functions
 
@@ -405,7 +390,8 @@ ___
 | `options.name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
 | `options.queryObject` | `T` | объект-источник информации о структуре запрашиваемых данных |
 | `options.variables?` | `V` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа    параметров допустимо использовать типы - number, string, object или boolean. |
-| `options.optionalFields?` | keyof `V`[] | массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
+| `options.optionalFields?` | keyof `V`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.    (например у параметра указан тип String!, а не String). |
+| `options.fieldsTypeMap?` | `Map`<keyof `V`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL. ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный. |
 
 #### Returns
 

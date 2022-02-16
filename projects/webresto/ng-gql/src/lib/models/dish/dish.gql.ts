@@ -1,8 +1,8 @@
-import { ImageFragments } from '../image/image.gql';
-import { GroupModifier, GroupModifierFragments } from '../group-modifier/group-modifier.gql';
-import type { ValuesOrBoolean } from '../values-or-boolean';
-import type { Image } from "../image/image.gql";
-import type { Group } from '../group/group.gql';
+import {ImageFragments} from '../image/image.gql';
+import {GroupModifier, GroupModifierFragments} from '../group-modifier/group-modifier.gql';
+import type {ValuesOrBoolean} from '../values-or-boolean';
+import type {Image} from "../image/image.gql";
+import type {Group} from '../group/group.gql';
 
 export interface Dish {
 	id: string;
@@ -12,7 +12,7 @@ export interface Dish {
 	weight: number;
 	balance: number;
 	tags?: DishTag[];
-	additionalInfo?: string | number | { [ key: string ]: string | any; } | null;
+	additionalInfo?: string | number | {[key: string]: string | any;} | null;
 	images: Image[];
 	groupId?: string;
 	parentGroup: Pick<Group, 'id' | 'dishesPlaceholder'>;
@@ -31,7 +31,6 @@ export interface Dish {
 export interface DishTag {
 	name: string;
 }
-
 
 export const DishFragments = {
 	vOb: <ValuesOrBoolean<Dish>> {

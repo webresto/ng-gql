@@ -34,8 +34,12 @@ export type GQLRequestVariables = undefined | VCriteria | {
  * @param options.queryObject - объект-источник информации о структуре запрашиваемых данных
  * @param options.variables - необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа 
  *    параметров допустимо использовать типы - number, string, object или boolean. 
- * @param options.optionalFields - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип  
+ * @param options.optionalFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+ * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
  *    (например у параметра указан тип String!, а не String).
+ * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса, 
+ * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
+ * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный.
  * @returns часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V. 
  *  НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription 
  */
@@ -44,11 +48,14 @@ export function generateQueryString<T, N extends `${ string }`, V = GQLRequestVa
   queryObject: T,
   variables?: V,
   optionalFields?: (keyof V)[];
+  fieldsTypeMap?: Map<keyof V, string>;
 }) {
   const {name, queryObject, variables} = options;
   const makeFieldList = <T, V>(source: T, name: string, indent: number = 1, variables?: V): string => {
     const indentString = new Array<string>(indent * 2).fill(' ').join('');
-    return `${ name }${ indent === 1 && variables ? `(${ (<(keyof V)[]> Object.keys(variables)).map(
+    return `${ name }${ indent === 1 && variables ? `(${ (<(keyof V)[]> Object.keys(variables)).filter(
+      key => isValue(variables[key])
+    ).map(
       key => `${ key }:$${ key }`
     ).join(',')
       })` : '' } {\n  ${ indentString }${ Object.entries(source).
@@ -69,19 +76,20 @@ export function generateQueryString<T, N extends `${ string }`, V = GQLRequestVa
       }\n${ indentString }}
       `;
   };
-  const getGqlType = (value: FieldTypes, optionalField: boolean = false): string => {
-    switch (typeof value) {
-      case 'number': return optionalField ? 'Int!' : 'Int';
-      case 'string': return optionalField ? 'String!' : "String";
-      case 'boolean': return optionalField ? 'Boolean!' : 'Boolean';
-      case 'object': return optionalField ? 'Json!' : 'Json';
+  const getGqlType = <K extends keyof V>(key: K, value: V[K], optionalField: boolean = false, fieldsTypeMap?: Map<keyof V, string>): string => {
+    switch (true) {
+      case isValue(fieldsTypeMap) && fieldsTypeMap.has(key): return fieldsTypeMap?.get(key)!;
+      case typeof value === 'number': return optionalField ? 'Int!' : 'Int';
+      case typeof value === 'string': return optionalField ? 'String!' : "String";
+      case typeof value === 'boolean': return optionalField ? 'Boolean!' : 'Boolean';
+      case typeof value === 'object': return optionalField ? 'Json!' : 'Json';
       default: throw new Error('Параметр должен принадлежать типам number, string, object или boolean');
     }
   };
   return ` load${ name[0].toUpperCase() + name.slice(1) } ${ variables ? `(${ (<(keyof V)[]> Object.keys(variables)).filter(
     key => isValue(variables[key])
   ).map(
-    key => `$${ key }:${ getGqlType(variables[key], options.optionalFields && options.optionalFields.includes(key)) }`
+    key => `$${ key }:${ getGqlType(key, variables[key], options.optionalFields && options.optionalFields.includes(key), options.fieldsTypeMap) }`
   ).join(',')
     })` : '' } {\n${ makeFieldList(queryObject, name, 1, variables) }\n}`;
 }

@@ -4,58 +4,16 @@ import type {ExtraSubscriptionOptions} from 'apollo-angular/types';
 import {BehaviorSubject, of} from 'rxjs';
 import {filter, map, switchMap, shareReplay, startWith, distinctUntilChanged, concatMap, catchError, distinctUntilKeyChanged} from 'rxjs/operators';
 import type {Observable, Subscription} from 'rxjs';
-import type {Action, Message, GQLRequestVariables, Group, ValuesOrBoolean, Dish, Order, Phone, CheckResponse, CheckPhoneResponse, PaymentMethod, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, VCriteria, OrderForm, Modifier} from './models';
+import {CartBusEvent, Action, Message, GQLRequestVariables, Group, ValuesOrBoolean, Dish, Order, Phone, CheckResponse, CheckPhoneResponse, PaymentMethod, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, VCriteria, OrderForm, Modifier, MessageOrActionGql} from './models';
 import {OrderFragments, isValue, NavigationFragments, GroupFragments, DishFragments, generateQueryString, PaymentMethodFragments} from './models';
 import {ApolloService} from './services/apollo.service';
 import {makeForm} from '@axrl/ngx-extended-form-builder';
 import type {NgGqlConfig} from './ng-gql.module';
 
-/**
- * @alias CartBusEvent
- * Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
- */
-export type CartBusEvent = {
-  /** Добавление в заказ (корзину). */
-  event: 'add';
-  /** Данные для операции */
-  data: AddToOrderInput;
-  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  loading: BehaviorSubject<boolean>;
-  /** Заказ, с которым выполнется операция */
-  order: Order;
-  /** Пользовательский callback, который дополнительно будет выполнен в случае успешной операции */
-  successCb?: (order: Order) => void;
-  /** Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции */
-  errorCb?: (err: unknown) => void;
-} | {
-  /** Удаление блюда из заказа (корзины). */
-  event: 'remove';
-  /** Данные для операции */
-  data: RemoveFromOrderInput & {dish: Dish;};
-  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  loading: BehaviorSubject<boolean>;
-  /** Заказ, с которым выполнется операция */
-  order: Order;
-  /** Пользовательский callback, который дополнительно будет выполнен в случае успешной операции */
-  successCb?: (order: Order) => void;
-  /** Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции */
-  errorCb?: (err: unknown) => void;
-} | {
-  event: 'check' | 'order';
-  /** Данные формы чекаута */
-  order: OrderForm;
-  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  ordered?: BehaviorSubject<boolean>;
-  /** Пользовательский callback, который дополнительно будет выполнен в случае успешной операции */
-  successCb?: (order: CheckResponse) => void;
-  /** Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции */
-  errorCb?: (err: unknown) => void;
-} | {
-  /** Загрузка заказа */
-  event: 'load';
-  /** Загружается заказ с переданным orderId, иначе - создается новый. */
-  orderId: string | undefined;
-};
+interface ParamSettings<V> {
+  optionalFields?: (keyof V)[];
+  fieldsTypeMap?: Map<keyof V, string>;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -128,16 +86,15 @@ export class NgGqlService {
     shareReplay(1)
   );
   private _orderLoader$ = new BehaviorSubject<string | undefined | null>(null);
-  private orderLoader$ = this._orderLoader$.asObservable().pipe(
-    distinctUntilChanged(),
-    map(orderId => orderId ?? undefined),
+  private orderLoader$ = this._orderLoader$.pipe(
     shareReplay(1)
   );
 
   order$ = this.orderLoader$.pipe(
+    filter((value): value is string | undefined => value !== null),
     switchMap(
       orderId => {
-        return this._getOrder$(orderId);
+        return this.loadOrder$(orderId);
       }),
     switchMap(
       order => this.dishes$.pipe(
@@ -165,10 +122,7 @@ export class NgGqlService {
     switchMap(
       order => this.customSubscribe$<Action, 'action', {
         orderId: string;
-      }>('action', {
-        type: true,
-        data: true
-      }, {orderId: order.id})
+      }>('action', MessageOrActionGql.actionVob, {orderId: order.id})
     ),
     shareReplay(1)
   );
@@ -178,11 +132,7 @@ export class NgGqlService {
     switchMap(
       order => this.customSubscribe$<Message, 'message', {
         orderId: string;
-      }>('message', {
-        title: true,
-        type: true,
-        message: true
-      }, {orderId: order.id})
+      }>('message', MessageOrActionGql.messageVob, {orderId: order.id})
     ),
     shareReplay(1)
   );
@@ -343,33 +293,36 @@ export class NgGqlService {
       );
     }
   }
-  private _getOrder$(orderId: string | undefined): Observable<Order> {
+
+  /** 
+   * @method loadOrder$
+   * 
+   * Метод загружает заказ и делает подписку для получения по нему обновлений.
+   * Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
+   * (например, данные для страницы "Спасибо за заказ").
+   * 
+   * @param orderId - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
+   *  */
+  loadOrder$(orderId: string | undefined): Observable<Order> {
     return this.queryAndSubscribe<Order, 'order', 'order', {orderId: string;} | undefined>('order', 'order', OrderFragments.vOb, 'id', orderId ? {
       orderId
     } : undefined).pipe(
-      map(values => values[0])
+      map(values => values[0] ? values[0] : null),
+      filter((order): order is Order => isValue(order))
     );
   }
 
-  getOrder(orderId: string | undefined): Observable<Order> {
-    return this._getOrder$(orderId);
-  }
-
-  loadOrderAsCart$(orderId: string | undefined): void {
-    if (this._orderLoader$.value !== orderId) {
-      this._orderLoader$.next(orderId);
-    };
+  getOrder(): Observable<Order> {
+    return this.order$;
   }
 
   private _orderBus$ = new EventEmitter<CartBusEvent>();
 
-  orderBus$ = this._orderBus$.pipe(
+  orderBus$ = this._orderBus$.asObservable().pipe(
     concatMap(
       busEvent => {
+
         switch (busEvent.event) {
-          case 'load':
-            this.loadOrderAsCart$(busEvent.orderId);
-            return of(() => {});
           case 'add':
             busEvent.data.orderId = busEvent.order.id;
             return this.addDishToOrder$(busEvent.data).pipe(
@@ -412,8 +365,7 @@ export class NgGqlService {
               })
             );
           case 'check':
-            const checkInput = {...busEvent.order, orderId: busEvent.order.id};
-            return this.checkOrder$(checkInput).pipe(
+            return this.checkOrder$(this.makeOrderData(busEvent.order)).pipe(
               map(res => {
                 if (busEvent.successCb) {
                   busEvent.successCb(res);
@@ -430,8 +382,7 @@ export class NgGqlService {
               })
             );
           case 'order':
-            const oredrInput = {...busEvent.order, orderId: busEvent.order.id};
-            return this.sendOrder$(oredrInput).pipe(
+            return this.sendOrder$(this.makeOrderData(busEvent.order, 'send')).pipe(
               map(res => {
                 if (busEvent.ordered) {
                   busEvent.ordered.next(true);
@@ -457,62 +408,22 @@ export class NgGqlService {
 
   private _cartBusSubscription$: Subscription | undefined;
 
-  getPhone$(phone: string): Observable<Phone | Phone[]> {
-    return this.customQuery$<Phone, 'phone', {
-      phone: string;
-    }>('phone', {
-      id: true,
-      phone: true,
-      isFirst: true,
-      isConfirm: true,
-      codeTime: true,
-      confirmCode: true
-    }, {
-      phone
-    }).pipe(
-      map(
-        data => data.phone
-      )
-    );
-  };
-
-  checkPhone$(phone: string): Observable<CheckPhoneResponse | CheckPhoneResponse[]> {
-    return this.customQuery$<CheckPhoneResponse, 'checkPhone'>('checkPhone', {
-      type: true,
-      title: true,
-      message: true,
-      confirmed: true,
-      firstbuy: true
-    }, {
-      phone
-    }).pipe(
-      map(
-        data => data.checkPhone
-      )
-    );
-  };
-
   getPaymentMethods$(orderId: string): Observable<PaymentMethod[]> {
     return this.customQuery$<PaymentMethod, 'paymentMethod', {
       orderId: string;
     }>('paymentMethod', PaymentMethodFragments.vOb, {
       orderId
-    }, ['orderId']).pipe(
+    }, {optionalFields: ['orderId']}).pipe(
       map(
         data => Array.isArray(data.paymentMethod) ? data.paymentMethod : [data.paymentMethod]
       )
     );
   };
 
-  addDishToOrder$(data: AddToOrderInput): Observable<Order> {
-    return this.customMutation$<Order, 'orderAddDish', AddToOrderInput>(
-      'orderAddDish', OrderFragments.vOb, data
-    ).pipe(
-      map(
-        data => data.orderAddDish
-      )
-    );
-  };
+  loadOrderAsCart(orderId: string | undefined): void {
+    this._orderLoader$.next(orderId);
+  }
+
 
   /**
    * @method addToOrder
@@ -535,7 +446,7 @@ export class NgGqlService {
     errorCb?: (err: unknown) => void
   ) {
     loading.next(true);
-    this._orderBus$.next({
+    this._orderBus$.emit({
       event: 'add', loading, order, successCb, errorCb, data: {
         dishId: dish.id,
         modifiers: dishModifiers.map(
@@ -571,7 +482,7 @@ export class NgGqlService {
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void) {
     loading.next(true);
-    this._orderBus$.next({
+    this._orderBus$.emit({
       event: 'remove', loading, order, successCb, errorCb, data: {
         dish,
         orderDishId,
@@ -579,6 +490,23 @@ export class NgGqlService {
       }
     });
   }
+
+  private makeOrderData(orderForm: OrderForm, operation: 'check' | 'send' = 'check'): OrderInput {
+    const result = {
+      orderId: orderForm.id,
+      paymentMethodId: orderForm.paymentMethod?.id,
+      selfService: orderForm.selfService,
+      address: orderForm.address,
+      customer: orderForm.customer,
+      customData: orderForm.customData,
+      pickupAddressId: orderForm.pickupAddressId
+    };
+    return operation == 'send' ? result : {
+      comment: orderForm.comment ?? undefined,
+      ...result
+    };
+  }
+
 
   /**
    * @method checkOrder
@@ -592,7 +520,7 @@ export class NgGqlService {
     successCb?: (order: CheckResponse) => void,
     errorCb?: (err: unknown) => void
   ) {
-    this._orderBus$.next({
+    this._orderBus$.emit({
       event: 'check', successCb, errorCb, order,
     });
   }
@@ -609,13 +537,41 @@ export class NgGqlService {
     successCb?: (order: CheckResponse) => void,
     errorCb?: (err: unknown) => void
   ) {
-    this._orderBus$.next({
+    this._orderBus$.emit({
       event: 'order', successCb, errorCb, order
     });
   }
 
+  addDishToOrder$(data: AddToOrderInput): Observable<Order> {
+    return this.customMutation$<Order, 'orderAddDish', AddToOrderInput>(
+      'orderAddDish', OrderFragments.vOb, data
+    ).pipe(
+      map(
+        data => data.orderAddDish
+      )
+    );
+  };
+
+  removeDishFromOrder$(data: RemoveFromOrderInput): Observable<Order> {
+    return this.customMutation$<Order, 'orderRemoveDish', RemoveFromOrderInput>('orderRemoveDish', OrderFragments.vOb, data, {optionalFields: ['id', 'orderDishId']}).pipe(
+      map(
+        data => data.orderRemoveDish
+      )
+    );
+  };
+
   sendOrder$(data: OrderInput): Observable<CheckResponse> {
-    return this.customMutation$<CheckResponse, 'sendOrder', OrderInput>('sendOrder', OrderFragments.vOb, data, ['orderId', 'paymentMethodId']).pipe(
+    return this.customMutation$<CheckResponse, 'sendOrder', OrderInput>('sendOrder', {
+      order: OrderFragments.vOb,
+      message: MessageOrActionGql.messageVob,
+      action: MessageOrActionGql.actionVob
+    }, data, {
+      optionalFields: ['orderId', 'paymentMethodId'],
+      fieldsTypeMap: new Map([
+        ['address', 'Address'],
+        ['customer', 'Customer!']
+      ])
+    }).pipe(
       map(
         data => data.sendOrder
       )
@@ -623,13 +579,57 @@ export class NgGqlService {
   };
 
   checkOrder$(data: OrderInput): Observable<CheckResponse> {
-    return this.customMutation$<CheckResponse, 'checkOrder', OrderInput>('checkOrder', OrderFragments.vOb, data, ['orderId', 'paymentMethodId', 'customer']).pipe(
+    return this.customMutation$<CheckResponse, 'checkOrder', OrderInput>('checkOrder', {
+      order: OrderFragments.vOb,
+      message: MessageOrActionGql.messageVob,
+      action: MessageOrActionGql.actionVob
+    }, data, {
+      optionalFields: ['orderId', 'paymentMethodId', 'customer'],
+      fieldsTypeMap: new Map([
+        ['address', 'Address'],
+        ['customer', 'Customer!']
+      ])
+    }).pipe(
       map(
         data => data.checkOrder
       )
     );
   };
 
+  getPhone$(phone: string): Observable<Phone | Phone[]> {
+    return this.customQuery$<Phone, 'phone', {
+      phone: string;
+    }>('phone', {
+      id: true,
+      phone: true,
+      isFirst: true,
+      isConfirm: true,
+      codeTime: true,
+      confirmCode: true
+    }, {
+      phone
+    }).pipe(
+      map(
+        data => data.phone
+      )
+    );
+  };
+
+  checkPhone$(phone: string): Observable<CheckPhoneResponse | CheckPhoneResponse[]> {
+    return this.customQuery$<CheckPhoneResponse, 'checkPhone'>('checkPhone', {
+      type: true,
+      title: true,
+      message: true,
+      confirmed: true,
+      firstbuy: true
+    }, {
+      phone
+    }).pipe(
+      map(
+        data => data.checkPhone
+      )
+    );
+  };
   checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
     return this.customMutation$<CheckPhoneResponse, 'setPhoneCode', CheckPhoneCodeInput>('setPhoneCode', {
       type: true,
@@ -640,14 +640,6 @@ export class NgGqlService {
     }, data).pipe(
       map(
         result => result.setPhoneCode
-      )
-    );
-  };
-
-  removeDishFromOrder$(data: RemoveFromOrderInput): Observable<Order> {
-    return this.customMutation$<Order, 'orderRemoveDish', RemoveFromOrderInput>('orderRemoveDish', OrderFragments.vOb, data, ['id', 'orderDishId']).pipe(
-      map(
-        data => data.orderRemoveDish
       )
     );
   };
@@ -684,20 +676,27 @@ export class NgGqlService {
    *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
    *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields, 
    *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
-   * @param optionalFields - необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип  
+   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
+   * @param options.optionalFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
    *    (например у параметра указан тип String!, а не String).
+   * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса, 
+   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
+   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+   * 
    * @returns - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
    *  в виде одиночного объекта либо массива.
    **/
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, optionalFields?: (keyof V)[]): Observable<Record<N, T | T[]>>;
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, optionalFields?: (keyof V)[]): Observable<Record<N, T | T[]>>;
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, optionalFields?: (keyof V)[]): Observable<Record<N, T | T[]>> {
+  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, paramOptions?: ParamSettings<V>): Observable<Record<N, T | T[]>>;
+  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: ParamSettings<V>): Observable<Record<N, T | T[]>>;
+  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, paramOptions?: ParamSettings<V>): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
       query: gql`query ${ generateQueryString({
         name,
         queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[name] : queryObject,
         variables,
-        optionalFields
+        optionalFields: paramOptions?.optionalFields,
+        fieldsTypeMap: paramOptions?.fieldsTypeMap
       }) }`,
       variables,
     }).pipe(
@@ -723,19 +722,26 @@ export class NgGqlService {
  *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
  *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields, 
  *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
- * @param optionalFields - необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип  
+ * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
+ * @param options.optionalFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+ * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
  *    (например у параметра указан тип String!, а не String).
+ * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса, 
+ * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
+ * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+ * 
  * @returns - Observable поток с результатом выполнения операции в формате объекта с одним ключом N (название операции), значение которого - непосредственно результат операции.
  **/
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V, optionalFields?: (keyof V)[]): Observable<Record<N, T>>;
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables: V, optionalFields?: (keyof V)[]): Observable<Record<N, T>>;
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V, optionalFields?: (keyof V)[]): Observable<Record<N, T>> {
+  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V, paramOptions?: ParamSettings<V>): Observable<Record<N, T>>;
+  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables: V, paramOptions?: ParamSettings<V>): Observable<Record<N, T>>;
+  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V, paramOptions?: ParamSettings<V>): Observable<Record<N, T>> {
     return this.apollo.mutate<Record<N, T>, V>({
       mutation: gql`mutation ${ generateQueryString({
         name,
         queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[name] : queryObject,
         variables,
-        optionalFields
+        optionalFields: paramOptions?.optionalFields,
+        fieldsTypeMap: paramOptions?.fieldsTypeMap
       }) }`,
       variables
     }).pipe(
@@ -760,22 +766,29 @@ export class NgGqlService {
 *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
 *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields, 
 *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
-* @param optionalFields - необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип  
+* @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
+* @param options.optionalFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+* КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
 *    (например у параметра указан тип String!, а не String).
+* @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса, 
+* а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
+* ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+* 
 * @returns - Observable поток с данными типа T, которые будут поступать в рамках сделанной подписки.
-* Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка. 
+* ВАЖНО! В потоке будут поступать только обновления для данных, на которые сделана подписка. 
 * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
 * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
 * @see queryAndSubscribe
 **/
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, optionalFields?: (keyof V)[], extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>;
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, optionalFields?: (keyof V)[], extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>;
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, optionalFields?: (keyof V)[], extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]> {
+  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, paramOptions?: ParamSettings<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>;
+  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: ParamSettings<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>;
+  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, paramOptions?: ParamSettings<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]> {
     const q = generateQueryString({
       name,
       queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[name] : queryObject,
       variables,
-      optionalFields
+      optionalFields: paramOptions?.optionalFields,
+      fieldsTypeMap: paramOptions?.fieldsTypeMap
     });
     return this.apollo.subscribe<Record<N, T>, V>({
       query: gql`subscription ${ q }`,
@@ -788,34 +801,39 @@ export class NgGqlService {
   };
 
   /**
-* @method queryAndSubscribe 
-* Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
-
-* @param nameQuery - название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL.
-* @param nameSubscribe - название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных.
-* @param queryObject - объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка 
-в виде обьекта, реализующего тип ValuesOrBoolean<T>.
-*   @see ValuesOrBoolean<T>
-* @param uniqueKeyForCompareItem - наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id').
+  * @method queryAndSubscribe 
+  * Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
+  
+  * @param nameQuery - название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL.
+  * @param nameSubscribe - название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных.
+  * @param queryObject - объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка 
+  в виде обьекта, реализующего тип ValuesOrBoolean<T>.
+  *   @see ValuesOrBoolean<T>
+  * @param uniqueKeyForCompareItem - наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id').
     Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки.
-* @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса. 
-*  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
-*  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
-*  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields, 
-*  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
-* @param optionalFields - необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип  
-*    (например у параметра указан тип String!, а не String).
-* @returns - Observable поток с данными, которые будут поступать в рамках сделанной подписки.
-* Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка. 
-* Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
-**/
+  * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса. 
+  *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
+  *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
+  *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields, 
+  *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
+  * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
+  * @param options.optionalFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+  * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
+  *    (например у параметра указан тип String!, а не String).
+  * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса, 
+  * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
+  * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+  * @returns - Observable поток с данными, которые будут поступать в рамках сделанной подписки.
+  * Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка. 
+  * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
+  **/
   queryAndSubscribe<T, NQuery extends `${ string }`, NSubscribe extends `${ string }`, VQ = GQLRequestVariables, VS = VQ>(
     nameQuery: NQuery,
     nameSubscribe: NSubscribe,
     queryObject: ValuesOrBoolean<T>,
     uniqueKeyForCompareItem: keyof T,
     variables?: VQ,
-    optionalFields?: (keyof VQ)[]): Observable<T[]>;
+    paramOptions?: ParamSettings<VQ>): Observable<T[]>;
   queryAndSubscribe<
     T, NQuery extends `${ string }`, NSubscribe extends `${ string }`,
     VQ = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
@@ -828,9 +846,9 @@ export class NgGqlService {
         query?: VQ,
         subscribe?: VS;
       },
-      optionalFields?: {
-        query?: (keyof VQ)[],
-        subscribe?: (keyof VS)[];
+      paramOptions?: {
+        query?: ParamSettings<VQ>,
+        subscribe?: ParamSettings<VS>;
       }): Observable<T[]>;
   queryAndSubscribe<T, NQuery extends `${ string }`, NSubscribe extends `${ string }`, VQ = GQLRequestVariables, VS = GQLRequestVariables | VQ>(
     nameQuery: NQuery,
@@ -841,10 +859,10 @@ export class NgGqlService {
       query?: VQ,
       subscribe?: VS;
     } | VQ,
-    optionalFields?: {
-      query?: (keyof VQ)[],
-      subscribe?: (keyof VS)[];
-    } | (keyof VQ)[]): Observable<T[]> {
+    paramOptions?: {
+      query?: ParamSettings<VQ>,
+      subscribe?: ParamSettings<VS>;
+    } | ParamSettings<VQ>): Observable<T[]> {
     const updateFn: (store: T | T[], subscribeValue: T) => T[] = (store, newValue) => {
       const array = (Array.isArray(store) ? store : [store]);
       const findItem = array.find(
@@ -859,17 +877,17 @@ export class NgGqlService {
     };
     return this.customQuery$(
       nameQuery, queryObject,
-      variables && 'query' in variables ? variables.query : <VQ> variables,
-      optionalFields && 'query' in optionalFields ? optionalFields.query : <(keyof VQ)[]> optionalFields
+      isValue(variables) && 'query' in variables ? variables.query : <VQ> variables,
+      isValue(paramOptions) && 'query' in paramOptions ? paramOptions.query : <ParamSettings<VQ>> paramOptions
     ).pipe(
       switchMap(
         result => this.customSubscribe$<T, NSubscribe, VS>(
           nameSubscribe, queryObject,
           isValue(variables) && ('subscribe' in variables) ?
             variables.subscribe : <VS> variables,
-          isValue(optionalFields) && ('subscribe' in optionalFields) ?
-            optionalFields.subscribe :
-            <(keyof VS)[]> optionalFields).pipe(
+          isValue(paramOptions) && ('subscribe' in paramOptions) ?
+            paramOptions.subscribe :
+            <ParamSettings<VS>> paramOptions).pipe(
               startWith(null),
               map(
                 updatedValue => {

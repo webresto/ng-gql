@@ -18,10 +18,10 @@ ___
 
 ### message
 
-• **message**: [`Message`](Message.md)
+• **message**: ``null`` \| [`Message`](Message.md)
 
 ___
 
 ### action
 
-• **action**: [`Action`](Action.md)
+• **action**: ``null`` \| [`Action`](Action.md)

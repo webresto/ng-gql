@@ -3,9 +3,11 @@ import type {OrderDish} from '../order-dish/order-dish.gql';
 import {OrderDishFragments} from '../order-dish/order-dish.gql';
 import type {OrderModifier} from '../modifier/modifier.gql';
 import type {Message, Action} from '../event-message/event-message';
+import {ValuesOrBoolean} from '../values-or-boolean';
 
 export interface Order {
 	id: string;
+	shortId: string;
 	dishes: OrderDish[];
 	dishesCount: number;
 	comment: string | null;
@@ -90,24 +92,8 @@ export type OrderInput = {
 	pickupAddressId?: string,
 	locationId?: string,
 	date?: string,
-	address?: {
-		streetId?: string,
-		home?: string,
-		comment?: string,
-		city?: string,
-		street?: string,
-		housing?: string,
-		index?: string,
-		entrance?: string,
-		floor?: string,
-		apartment?: string,
-		doorphone?: string;
-	},
-	customer?: {
-		phone?: string,
-		mail?: string,
-		name?: string;
-	},
+	address?: Address,
+	customer?: Customer,
 	comment?: string | null,
 	notifyMethodId?: string,
 	customData?: any;
@@ -138,13 +124,14 @@ export interface CheckPhoneResponse {
 
 export interface CheckResponse {
 	order: Order;
-	message: Message;
-	action: Action;
+	message: Message | null;
+	action: Action | null;
 }
 
 export const OrderFragments = {
-	vOb: {
+	vOb: <ValuesOrBoolean<Order>> {
 		id: true,
+		shortId: true,
 		dishesCount: true,
 		comment: true,
 		deliveryDescription: true,
@@ -161,6 +148,7 @@ export const OrderFragments = {
 		rmsId: true,
 		rmsOrderNumber: true,
 		rmsDeliveryDate: true,
+		dishesIds: true,
 		dishes: OrderDishFragments.vOb
 	}
 };

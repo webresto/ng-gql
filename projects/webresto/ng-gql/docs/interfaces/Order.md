@@ -5,6 +5,7 @@
 ### Properties
 
 - [id](Order.md#id)
+- [shortId](Order.md#shortid)
 - [dishes](Order.md#dishes)
 - [dishesCount](Order.md#dishescount)
 - [comment](Order.md#comment)
@@ -30,6 +31,12 @@
 ### id
 
 • **id**: `string`
+
+___
+
+### shortId
+
+• **shortId**: `string`
 
 ___
 

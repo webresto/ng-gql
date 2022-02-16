@@ -21,20 +21,21 @@
 - [getNavigation$](NgGqlService.md#getnavigation$)
 - [getMenu$](NgGqlService.md#getmenu$)
 - [getDishes$](NgGqlService.md#getdishes$)
+- [loadOrder$](NgGqlService.md#loadorder$)
 - [getOrder](NgGqlService.md#getorder)
-- [loadOrderAsCart$](NgGqlService.md#loadorderascart$)
-- [getPhone$](NgGqlService.md#getphone$)
-- [checkPhone$](NgGqlService.md#checkphone$)
 - [getPaymentMethods$](NgGqlService.md#getpaymentmethods$)
-- [addDishToOrder$](NgGqlService.md#adddishtoorder$)
+- [loadOrderAsCart](NgGqlService.md#loadorderascart)
 - [addToOrder](NgGqlService.md#addtoorder)
 - [removeFromOrder](NgGqlService.md#removefromorder)
 - [checkOrder](NgGqlService.md#checkorder)
 - [sendOrder](NgGqlService.md#sendorder)
+- [addDishToOrder$](NgGqlService.md#adddishtoorder$)
+- [removeDishFromOrder$](NgGqlService.md#removedishfromorder$)
 - [sendOrder$](NgGqlService.md#sendorder$)
 - [checkOrder$](NgGqlService.md#checkorder$)
+- [getPhone$](NgGqlService.md#getphone$)
+- [checkPhone$](NgGqlService.md#checkphone$)
 - [checkPhoneCode$](NgGqlService.md#checkphonecode$)
-- [removeDishFromOrder$](NgGqlService.md#removedishfromorder$)
 - [setDishAmount$](NgGqlService.md#setdishamount$)
 - [setDishComment$](NgGqlService.md#setdishcomment$)
 - [customQuery$](NgGqlService.md#customquery$)
@@ -157,15 +158,21 @@ ___
 
 ___
 
-### getOrder
+### loadOrder$
 
-▸ **getOrder**(`orderId`): `Observable`<[`Order`](../interfaces/Order.md)\>
+▸ **loadOrder$**(`orderId`): `Observable`<[`Order`](../interfaces/Order.md)\>
+
+**`method`** loadOrder$
+
+Метод загружает заказ и делает подписку для получения по нему обновлений.
+Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
+(например, данные для страницы "Спасибо за заказ").
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `undefined` \| `string` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `orderId` | `undefined` \| `string` | id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему. |
 
 #### Returns
 
@@ -173,51 +180,13 @@ ___
 
 ___
 
-### loadOrderAsCart$
+### getOrder
 
-▸ **loadOrderAsCart$**(`orderId`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `undefined` \| `string` |
+▸ **getOrder**(): `Observable`<[`Order`](../interfaces/Order.md)\>
 
 #### Returns
 
-`void`
-
-___
-
-### getPhone$
-
-▸ **getPhone$**(`phone`): `Observable`<[`Phone`](../interfaces/Phone.md) \| [`Phone`](../interfaces/Phone.md)[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `phone` | `string` |
-
-#### Returns
-
-`Observable`<[`Phone`](../interfaces/Phone.md) \| [`Phone`](../interfaces/Phone.md)[]\>
-
-___
-
-### checkPhone$
-
-▸ **checkPhone$**(`phone`): `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `phone` | `string` |
-
-#### Returns
-
-`Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
+`Observable`<[`Order`](../interfaces/Order.md)\>
 
 ___
 
@@ -237,19 +206,19 @@ ___
 
 ___
 
-### addDishToOrder$
+### loadOrderAsCart
 
-▸ **addDishToOrder$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
+▸ **loadOrderAsCart**(`orderId`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`AddToOrderInput`](../README.md#addtoorderinput) |
+| `orderId` | `undefined` \| `string` |
 
 #### Returns
 
-`Observable`<[`Order`](../interfaces/Order.md)\>
+`void`
 
 ___
 
@@ -347,6 +316,38 @@ ___
 
 ___
 
+### addDishToOrder$
+
+▸ **addDishToOrder$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`AddToOrderInput`](../README.md#addtoorderinput) |
+
+#### Returns
+
+`Observable`<[`Order`](../interfaces/Order.md)\>
+
+___
+
+### removeDishFromOrder$
+
+▸ **removeDishFromOrder$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`RemoveFromOrderInput`](../README.md#removefromorderinput) |
+
+#### Returns
+
+`Observable`<[`Order`](../interfaces/Order.md)\>
+
+___
+
 ### sendOrder$
 
 ▸ **sendOrder$**(`data`): `Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
@@ -379,6 +380,38 @@ ___
 
 ___
 
+### getPhone$
+
+▸ **getPhone$**(`phone`): `Observable`<[`Phone`](../interfaces/Phone.md) \| [`Phone`](../interfaces/Phone.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `phone` | `string` |
+
+#### Returns
+
+`Observable`<[`Phone`](../interfaces/Phone.md) \| [`Phone`](../interfaces/Phone.md)[]\>
+
+___
+
+### checkPhone$
+
+▸ **checkPhone$**(`phone`): `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `phone` | `string` |
+
+#### Returns
+
+`Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
+
+___
+
 ### checkPhoneCode$
 
 ▸ **checkPhoneCode$**(`data`): `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)\>
@@ -392,22 +425,6 @@ ___
 #### Returns
 
 `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)\>
-
-___
-
-### removeDishFromOrder$
-
-▸ **removeDishFromOrder$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data` | [`RemoveFromOrderInput`](../README.md#removefromorderinput) |
-
-#### Returns
-
-`Observable`<[`Order`](../interfaces/Order.md)\>
 
 ___
 
@@ -445,7 +462,7 @@ ___
 
 ### customQuery$
 
-▸ **customQuery$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `optionalFields?`): `Observable`<`Record`<`N`, `T` \| `T`[]\>\>
+▸ **customQuery$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `paramOptions?`): `Observable`<`Record`<`N`, `T` \| `T`[]\>\>
 
 **`method`** customQuery$ для выполнения запросов типа "query" к серверу API GraphQL
 
@@ -466,7 +483,7 @@ ___
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
 | `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:    1. Обьекта, реализующего тип ValuesOrBoolean<T>.    2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения. |
 | `variables?` | `V` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
-| `optionalFields?` | keyof `V`[] | необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
+| `paramOptions?` | `ParamSettings`<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 
 #### Returns
 
@@ -475,7 +492,7 @@ ___
 - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
  в виде одиночного объекта либо массива.
 
-▸ **customQuery$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `optionalFields?`): `Observable`<`Record`<`N`, `T` \| `T`[]\>\>
+▸ **customQuery$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `paramOptions?`): `Observable`<`Record`<`N`, `T` \| `T`[]\>\>
 
 #### Type parameters
 
@@ -492,7 +509,7 @@ ___
 | `name` | `N` |
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |
 | `variables?` | `V` |
-| `optionalFields?` | keyof `V`[] |
+| `paramOptions?` | `ParamSettings`<`V`\> |
 
 #### Returns
 
@@ -502,7 +519,7 @@ ___
 
 ### customMutation$
 
-▸ **customMutation$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables`, `optionalFields?`): `Observable`<`Record`<`N`, `T`\>\>
+▸ **customMutation$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables`, `paramOptions?`): `Observable`<`Record`<`N`, `T`\>\>
 
 **`method`** customMutation$ для выполнения запросов типа "mutation" к серверу API GraphQL
 
@@ -521,7 +538,7 @@ ___
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
 | `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
 | `variables` | `V` | обязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
-| `optionalFields?` | keyof `V`[] | необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
+| `paramOptions?` | `ParamSettings`<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 
 #### Returns
 
@@ -529,7 +546,7 @@ ___
 
 - Observable поток с результатом выполнения операции в формате объекта с одним ключом N (название операции), значение которого - непосредственно результат операции.
 
-▸ **customMutation$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables`, `optionalFields?`): `Observable`<`Record`<`N`, `T`\>\>
+▸ **customMutation$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables`, `paramOptions?`): `Observable`<`Record`<`N`, `T`\>\>
 
 #### Type parameters
 
@@ -546,7 +563,7 @@ ___
 | `name` | `N` |
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |
 | `variables` | `V` |
-| `optionalFields?` | keyof `V`[] |
+| `paramOptions?` | `ParamSettings`<`V`\> |
 
 #### Returns
 
@@ -556,7 +573,7 @@ ___
 
 ### customSubscribe$
 
-▸ **customSubscribe$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `optionalFields?`, `extra?`): `Observable`<`Record`<`N`, `T`\>[`N`]\>
+▸ **customSubscribe$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `paramOptions?`, `extra?`): `Observable`<`Record`<`N`, `T`\>[`N`]\>
 
 **`method`** customSubscribe$ для выполнения запросов типа "subscription" к серверу API GraphQL
 
@@ -577,7 +594,7 @@ ___
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
 | `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре данных, на которые происходит подписка.   Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
 | `variables?` | `V` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
-| `optionalFields?` | keyof `V`[] | необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
+| `paramOptions?` | `ParamSettings`<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 | `extra?` | `ExtraSubscriptionOptions` | - |
 
 #### Returns
@@ -585,11 +602,11 @@ ___
 `Observable`<`Record`<`N`, `T`\>[`N`]\>
 
 - Observable поток с данными типа T, которые будут поступать в рамках сделанной подписки.
-Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
+ВАЖНО! В потоке будут поступать только обновления для данных, на которые сделана подписка.
 Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
 В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
 
-▸ **customSubscribe$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `optionalFields?`, `extra?`): `Observable`<`Record`<`N`, `T`\>[`N`]\>
+▸ **customSubscribe$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `paramOptions?`, `extra?`): `Observable`<`Record`<`N`, `T`\>[`N`]\>
 
 #### Type parameters
 
@@ -606,7 +623,7 @@ ___
 | `name` | `N` |
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |
 | `variables?` | `V` |
-| `optionalFields?` | keyof `V`[] |
+| `paramOptions?` | `ParamSettings`<`V`\> |
 | `extra?` | `ExtraSubscriptionOptions` |
 
 #### Returns
@@ -617,7 +634,7 @@ ___
 
 ### queryAndSubscribe
 
-▸ **queryAndSubscribe**<`T`, `NQuery`, `NSubscribe`, `VQ`, `VS`\>(`nameQuery`, `nameSubscribe`, `queryObject`, `uniqueKeyForCompareItem`, `variables?`, `optionalFields?`): `Observable`<`T`[]\>
+▸ **queryAndSubscribe**<`T`, `NQuery`, `NSubscribe`, `VQ`, `VS`\>(`nameQuery`, `nameSubscribe`, `queryObject`, `uniqueKeyForCompareItem`, `variables?`, `paramOptions?`): `Observable`<`T`[]\>
 
 **`method`** queryAndSubscribe
 Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
@@ -643,7 +660,7 @@ ___
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> | объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка в виде обьекта, реализующего тип ValuesOrBoolean<T>. |
 | `uniqueKeyForCompareItem` | keyof `T` | наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id'). Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки. |
 | `variables?` | `VQ` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
-| `optionalFields?` | keyof `VQ`[] | необязательный - массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип    (например у параметра указан тип String!, а не String). |
+| `paramOptions?` | `ParamSettings`<`VQ`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 
 #### Returns
 
@@ -653,7 +670,7 @@ ___
 Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
 Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
 
-▸ **queryAndSubscribe**<`T`, `NQuery`, `NSubscribe`, `VQ`, `VS`\>(`nameQuery`, `nameSubscribe`, `queryObject`, `uniqueKeyForCompareItem`, `variables?`, `optionalFields?`): `Observable`<`T`[]\>
+▸ **queryAndSubscribe**<`T`, `NQuery`, `NSubscribe`, `VQ`, `VS`\>(`nameQuery`, `nameSubscribe`, `queryObject`, `uniqueKeyForCompareItem`, `variables?`, `paramOptions?`): `Observable`<`T`[]\>
 
 #### Type parameters
 
@@ -676,9 +693,9 @@ ___
 | `variables?` | `Object` |
 | `variables.query?` | `VQ` |
 | `variables.subscribe?` | `VS` |
-| `optionalFields?` | `Object` |
-| `optionalFields.query?` | keyof `VQ`[] |
-| `optionalFields.subscribe?` | keyof `VS`[] |
+| `paramOptions?` | `Object` |
+| `paramOptions.query?` | `ParamSettings`<`VQ`\> |
+| `paramOptions.subscribe?` | `ParamSettings`<`VS`\> |
 
 #### Returns
 
