@@ -13,13 +13,13 @@ export class EventMessage {
 }
 
 export interface Message {
-  title: String;
-  type: String;
-  message: String;
+  title: string;
+  type: string;
+  message: string;
 }
 
 export interface Action {
-  type: String;
+  type: string;
   data: any;
 }
 
