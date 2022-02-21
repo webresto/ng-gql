@@ -483,7 +483,7 @@ ___
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
 | `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:    1. Обьекта, реализующего тип ValuesOrBoolean<T>.    2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения. |
 | `variables?` | `V` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
-| `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
+| `paramOptions?` | [`ParamSettings`](../README.md#paramsettings)<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 
 #### Returns
 
@@ -509,7 +509,7 @@ ___
 | `name` | `N` |
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |
 | `variables?` | `V` |
-| `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`V`\> |
+| `paramOptions?` | [`ParamSettings`](../README.md#paramsettings)<`V`\> |
 
 #### Returns
 
@@ -538,7 +538,7 @@ ___
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
 | `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
 | `variables` | `V` | обязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
-| `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
+| `paramOptions?` | [`ParamSettings`](../README.md#paramsettings)<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 
 #### Returns
 
@@ -563,7 +563,7 @@ ___
 | `name` | `N` |
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |
 | `variables` | `V` |
-| `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`V`\> |
+| `paramOptions?` | [`ParamSettings`](../README.md#paramsettings)<`V`\> |
 
 #### Returns
 
@@ -595,6 +595,7 @@ ___
 | `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре данных, на которые происходит подписка.   Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
 | `variables?` | `V` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
 | `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
+| `paramOptions?` | [`ParamSettings`](../README.md#paramsettings)<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 | `extra?` | `ExtraSubscriptionOptions` | - |
 
 #### Returns
@@ -623,7 +624,7 @@ ___
 | `name` | `N` |
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |
 | `variables?` | `V` |
-| `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`V`\> |
+| `paramOptions?` | [`ParamSettings`](../README.md#paramsettings)<`V`\> |
 | `extra?` | `ExtraSubscriptionOptions` |
 
 #### Returns
@@ -660,7 +661,7 @@ ___
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> | объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка в виде обьекта, реализующего тип ValuesOrBoolean<T>. |
 | `uniqueKeyForCompareItem` | keyof `T` | наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id'). Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки. |
 | `variables?` | `VQ` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
-| `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`VQ`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
+| `paramOptions?` | [`ParamSettings`](../README.md#paramsettings)<`VQ`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 
 #### Returns
 
@@ -694,8 +695,8 @@ ___
 | `variables.query?` | `VQ` |
 | `variables.subscribe?` | `VS` |
 | `paramOptions?` | `Object` |
-| `paramOptions.query?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`VQ`\> |
-| `paramOptions.subscribe?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`VS`\> |
+| `paramOptions.query?` | [`ParamSettings`](../README.md#paramsettings)<`VQ`\> |
+| `paramOptions.subscribe?` | [`ParamSettings`](../README.md#paramsettings)<`VS`\> |
 
 #### Returns
 

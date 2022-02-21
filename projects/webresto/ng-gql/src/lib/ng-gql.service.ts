@@ -2,7 +2,7 @@ import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular/types';
 import { BehaviorSubject, of } from 'rxjs';
-import { filter, map, switchMap, shareReplay, startWith, distinctUntilChanged, concatMap, catchError, distinctUntilKeyChanged } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, startWith, concatMap, catchError, distinctUntilKeyChanged } from 'rxjs/operators';
 import type { Observable, Subscription } from 'rxjs';
 import { CartBusEvent, Action, Message, GQLRequestVariables, Group, ValuesOrBoolean, Dish, Order, Phone, CheckResponse, CheckPhoneResponse, PaymentMethod, Navigation, AddToOrderInput, OrderInput, CheckPhoneCodeInput, RemoveFromOrderInput, SetDishAmountInput, SetDishCommentInput, VCriteria, OrderForm, Modifier, MessageOrActionGql } from './models';
 import { OrderFragments, isValue, NavigationFragments, GroupFragments, DishFragments, generateQueryString, PaymentMethodFragments } from './models';
@@ -10,10 +10,24 @@ import { ApolloService } from './services/apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
 import type { NgGqlConfig } from './ng-gql.module';
 
-export interface QueryGenerationParam<V> {
+/**
+ * Объект настройки генерации части строки запроса с описанием типов параметров операции.
+ */
+export type QueryGenerationParam<V> = {
+  /**
+   * Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+   * (например у параметра указан тип String!, а не String).
+   * ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`.
+   */
   optionalFields?: ( keyof V )[];
+
+  /**
+   * Необязательный объект Map, в качестве ключей содержащий названия параметров запроса, 
+   * а в качестве значения - строки-названия соответствующих им типов, определенных в схеме сервера GraphQL.
+   * ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+   */
   fieldsTypeMap?: Map<keyof V, string>;
-}
+};
 
 @Injectable( {
   providedIn: 'root'
@@ -365,7 +379,7 @@ export class NgGqlService {
               } )
             );
           case 'check':
-            return this.checkOrder$( this.makeOrderData( busEvent.order ) ).pipe(
+            return this.checkOrder$( this.makeOrderData( busEvent.order, 'check' ) ).pipe(
               map( res => {
                 if ( busEvent.successCb ) {
                   busEvent.successCb( res );
@@ -491,7 +505,7 @@ export class NgGqlService {
     } );
   }
 
-  private makeOrderData( orderForm: OrderForm, operation: 'check' | 'send' = 'check' ): OrderInput {
+  private makeOrderData( orderForm: OrderForm, operation: 'check' | 'send' ): OrderInput {
     const result = {
       orderId: orderForm.id,
       paymentMethodId: orderForm.paymentMethod?.id,
@@ -499,10 +513,12 @@ export class NgGqlService {
       address: orderForm.address,
       customer: orderForm.customer,
       customData: orderForm.customData,
-      pickupAddressId: orderForm.pickupAddressId
     };
     return operation == 'send' ? result : {
       comment: orderForm.comment ?? undefined,
+      pickupAddressId: orderForm.pickupAddressId,
+      locationId: orderForm.locationId,
+      date: orderForm.deliveryTimeInfo?.deliveryDate ? `${ orderForm.deliveryTimeInfo.deliveryDate } ${ orderForm.deliveryTimeInfo.deliveryTime }` : undefined,
       ...result
     };
   }
@@ -560,7 +576,7 @@ export class NgGqlService {
     );
   };
 
-  sendOrder$( data: OrderInput ): Observable<CheckResponse> {
+  sendOrder$( data: Exclude<OrderInput, 'comment' | 'pickupAddressId' | 'locationId' | 'date'> ): Observable<CheckResponse> {
     return this.customMutation$<CheckResponse, 'sendOrder', OrderInput>( 'sendOrder', {
       order: OrderFragments.vOb,
       message: MessageOrActionGql.messageVob,

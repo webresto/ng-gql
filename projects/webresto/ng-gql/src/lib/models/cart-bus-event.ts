@@ -1,6 +1,6 @@
-import type {BehaviorSubject} from 'rxjs';
-import type {Dish} from './dish/dish.gql';
-import type {AddToOrderInput, Order, RemoveFromOrderInput, OrderForm, CheckResponse} from './order/order.gql';
+import type { BehaviorSubject } from 'rxjs';
+import type { Dish } from './dish/dish.gql';
+import type { AddToOrderInput, Order, RemoveFromOrderInput, OrderForm, CheckResponse } from './order/order.gql';
 
 /**
  * @alias CartBusEvent
@@ -9,9 +9,8 @@ import type {AddToOrderInput, Order, RemoveFromOrderInput, OrderForm, CheckRespo
 export type CartBusEvent = CartBusEventAdd | CartBusEventRemove | CartBusEventCheckSend;
 
 /** 
- * @interface CartBusEventAdd
  *  Добавление в заказ (корзину). */
-export interface CartBusEventAdd {
+export type CartBusEventAdd = {
   event: 'add';
   /** Данные для операции */
   data: AddToOrderInput;
@@ -26,12 +25,11 @@ export interface CartBusEventAdd {
 }
 
 /** 
- * @interface CartBusEventRemove
  * Удаление блюда из заказа (корзины). */
-export interface CartBusEventRemove {
+export type CartBusEventRemove = {
   event: 'remove';
   /** Данные для операции */
-  data: RemoveFromOrderInput & {dish: Dish;};
+  data: RemoveFromOrderInput & { dish: Dish; };
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
   loading: BehaviorSubject<boolean>;
   /** Заказ, с которым выполнется операция */
@@ -43,9 +41,8 @@ export interface CartBusEventRemove {
 }
 
 /** 
- * @interface CartBusEventCheckSend
  * Отправка заказа на проверку перед оформлением или непосредственно оформление. */
-export interface CartBusEventCheckSend {
+export type CartBusEventCheckSend = {
   event: 'check' | 'order';
   /** Данные формы чекаута */
   order: OrderForm;
