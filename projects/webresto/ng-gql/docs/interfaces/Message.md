@@ -12,16 +12,16 @@
 
 ### title
 
-• **title**: `String`
+• **title**: `string`
 
 ___
 
 ### type
 
-• **type**: `String`
+• **type**: `string`
 
 ___
 
 ### message
 
-• **message**: `String`
+• **message**: `string`

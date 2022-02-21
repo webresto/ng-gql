@@ -56,6 +56,7 @@
 - [CheckResponse](interfaces/CheckResponse.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
 - [NgGqlConfig](interfaces/NgGqlConfig.md)
+- [QueryGenerationParam](interfaces/QueryGenerationParam.md)
 
 ### Variables
 
@@ -248,7 +249,7 @@ ___
 
 ### DishFragments
 
-• **DishFragments**: `Object`
+• `Const` **DishFragments**: `Object`
 
 #### Type declaration
 
@@ -260,7 +261,7 @@ ___
 
 ### MessageOrActionGql
 
-• **MessageOrActionGql**: `Object`
+• `Const` **MessageOrActionGql**: `Object`
 
 #### Type declaration
 
@@ -273,7 +274,7 @@ ___
 
 ### GroupModifierFragments
 
-• **GroupModifierFragments**: `Object`
+• `Const` **GroupModifierFragments**: `Object`
 
 #### Type declaration
 
@@ -285,7 +286,7 @@ ___
 
 ### GroupFragments
 
-• **GroupFragments**: `Object`
+• `Const` **GroupFragments**: `Object`
 
 #### Type declaration
 
@@ -297,7 +298,7 @@ ___
 
 ### ImageFragments
 
-• **ImageFragments**: `Object`
+• `Const` **ImageFragments**: `Object`
 
 #### Type declaration
 
@@ -309,7 +310,7 @@ ___
 
 ### ModifierFragments
 
-• **ModifierFragments**: `Object`
+• `Const` **ModifierFragments**: `Object`
 
 #### Type declaration
 
@@ -321,7 +322,7 @@ ___
 
 ### NavigationFragments
 
-• **NavigationFragments**: `Object`
+• `Const` **NavigationFragments**: `Object`
 
 #### Type declaration
 
@@ -333,7 +334,7 @@ ___
 
 ### OrderDishFragments
 
-• **OrderDishFragments**: `Object`
+• `Const` **OrderDishFragments**: `Object`
 
 #### Type declaration
 
@@ -345,7 +346,7 @@ ___
 
 ### OrderFragments
 
-• **OrderFragments**: `Object`
+• `Const` **OrderFragments**: `Object`
 
 #### Type declaration
 
@@ -357,7 +358,7 @@ ___
 
 ### PaymentMethodFragments
 
-• **PaymentMethodFragments**: `Object`
+• `Const` **PaymentMethodFragments**: `Object`
 
 #### Type declaration
 

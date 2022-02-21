@@ -11,7 +11,7 @@
 
 ### type
 
-• **type**: `String`
+• **type**: `string`
 
 ___
 
