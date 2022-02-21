@@ -29,7 +29,7 @@
 - [OrderAdditionalFields](README.md#orderadditionalfields)
 - [OrderForm](README.md#orderform)
 - [ValuesOrBoolean](README.md#valuesorboolean)
-- [ParamSettings](README.md#paramsettings)
+- [QueryGenerationParam](README.md#querygenerationparam)
 
 ### Interfaces
 
@@ -57,7 +57,6 @@
 - [CheckResponse](interfaces/CheckResponse.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
 - [NgGqlConfig](interfaces/NgGqlConfig.md)
-- [QueryGenerationParam](interfaces/QueryGenerationParam.md)
 
 ### Variables
 
@@ -304,9 +303,9 @@ ___
 
 ___
 
-### ParamSettings
+### QueryGenerationParam
 
-Ƭ **ParamSettings**<`V`\>: `Object`
+Ƭ **QueryGenerationParam**<`V`\>: `Object`
 
 Объект настройки генерации части строки запроса с описанием типов параметров операции.
 
