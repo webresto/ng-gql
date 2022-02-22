@@ -38,13 +38,13 @@
 
 ### order
 
-• **order**: `undefined` \| ``null`` \| [`Order`](../interfaces/Order.md)
+• **order**: `undefined` \| [`Order`](../interfaces/Order.md)
 
 ___
 
 ### modifiers
 
-• **modifiers**: [`OrderModifier`](../interfaces/OrderModifier.md)[] = `[]`
+• **modifiers**: [`Modifier`](../interfaces/Modifier.md)[] = `[]`
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 ### loading
 
-• **loading**: `EventEmitter`<`boolean`\>
+• **loading**: `BehaviorSubject`<`boolean`\>
 
 ___
 

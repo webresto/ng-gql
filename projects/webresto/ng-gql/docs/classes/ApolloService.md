@@ -75,7 +75,7 @@ ___
 
 ### mutate
 
-▸ **mutate**<`T`, `V`\>(`options`): `Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
+▸ **mutate**<`T`, `V`\>(`options`): `Observable`<`MutationResult`<`T`\>\>
 
 #### Type parameters
 
@@ -88,11 +88,11 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `MutationOptions`<`T`, `V`, `DefaultContext`, `ApolloCache`<`any`\>\> |
+| `options` | `MutationOptions`<`T`, `V`\> |
 
 #### Returns
 
-`Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
+`Observable`<`MutationResult`<`T`\>\>
 
 ___
 

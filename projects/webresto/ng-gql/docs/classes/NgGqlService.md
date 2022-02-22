@@ -10,10 +10,7 @@
 
 - [customFields](NgGqlService.md#customfields)
 - [rootGroups$](NgGqlService.md#rootgroups$)
-- [order$](NgGqlService.md#order$)
-- [actions$](NgGqlService.md#actions$)
-- [messages$](NgGqlService.md#messages$)
-- [orderBus$](NgGqlService.md#orderbus$)
+- [dishes$](NgGqlService.md#dishes$)
 
 ### Methods
 
@@ -21,23 +18,10 @@
 - [getNavigation$](NgGqlService.md#getnavigation$)
 - [getMenu$](NgGqlService.md#getmenu$)
 - [getDishes$](NgGqlService.md#getdishes$)
-- [loadOrder$](NgGqlService.md#loadorder$)
-- [getOrder](NgGqlService.md#getorder)
 - [getPaymentMethods$](NgGqlService.md#getpaymentmethods$)
-- [loadOrderAsCart](NgGqlService.md#loadorderascart)
-- [addToOrder](NgGqlService.md#addtoorder)
-- [removeFromOrder](NgGqlService.md#removefromorder)
-- [checkOrder](NgGqlService.md#checkorder)
-- [sendOrder](NgGqlService.md#sendorder)
-- [addDishToOrder$](NgGqlService.md#adddishtoorder$)
-- [removeDishFromOrder$](NgGqlService.md#removedishfromorder$)
-- [sendOrder$](NgGqlService.md#sendorder$)
-- [checkOrder$](NgGqlService.md#checkorder$)
 - [getPhone$](NgGqlService.md#getphone$)
 - [checkPhone$](NgGqlService.md#checkphone$)
 - [checkPhoneCode$](NgGqlService.md#checkphonecode$)
-- [setDishAmount$](NgGqlService.md#setdishamount$)
-- [setDishComment$](NgGqlService.md#setdishcomment$)
 - [customQuery$](NgGqlService.md#customquery$)
 - [customMutation$](NgGqlService.md#custommutation$)
 - [customSubscribe$](NgGqlService.md#customsubscribe$)
@@ -75,27 +59,9 @@ ___
 
 ___
 
-### order$
+### dishes$
 
-• **order$**: `Observable`<[`Order`](../interfaces/Order.md)\>
-
-___
-
-### actions$
-
-• **actions$**: `Observable`<[`Action`](../interfaces/Action.md)\>
-
-___
-
-### messages$
-
-• **messages$**: `Observable`<[`Message`](../interfaces/Message.md)\>
-
-___
-
-### orderBus$
-
-• **orderBus$**: `Observable`<`void` \| () => `void`\>
+• **dishes$**: `BehaviorSubject`<``null`` \| [`Dish`](../interfaces/Dish.md)[]\>
 
 ## Methods
 
@@ -158,38 +124,6 @@ ___
 
 ___
 
-### loadOrder$
-
-▸ **loadOrder$**(`orderId`): `Observable`<[`Order`](../interfaces/Order.md)\>
-
-**`method`** loadOrder$
-
-Метод загружает заказ и делает подписку для получения по нему обновлений.
-Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
-(например, данные для страницы "Спасибо за заказ").
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `orderId` | `undefined` \| `string` | id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему. |
-
-#### Returns
-
-`Observable`<[`Order`](../interfaces/Order.md)\>
-
-___
-
-### getOrder
-
-▸ **getOrder**(): `Observable`<[`Order`](../interfaces/Order.md)\>
-
-#### Returns
-
-`Observable`<[`Order`](../interfaces/Order.md)\>
-
-___
-
 ### getPaymentMethods$
 
 ▸ **getPaymentMethods$**(`orderId`): `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
@@ -203,180 +137,6 @@ ___
 #### Returns
 
 `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
-
-___
-
-### loadOrderAsCart
-
-▸ **loadOrderAsCart**(`orderId`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `undefined` \| `string` |
-
-#### Returns
-
-`void`
-
-___
-
-### addToOrder
-
-▸ **addToOrder**(`order`, `loading`, `dish`, `amount?`, `dishModifiers?`, `successCb?`, `errorCb?`): `void`
-
-**`method`** addToOrder
-Используется для отправки в шину события добавления блюда.
-
-#### Parameters
-
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `order` | [`Order`](../interfaces/Order.md) | `undefined` | Заказ, с которым выполнется операция |
-| `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
-| `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | добавляемое блюдо |
-| `amount` | `number` | `1` | количество |
-| `dishModifiers` | [`Modifier`](../interfaces/Modifier.md)[] | `[]` | выбранные пользователем модификаторы блюда |
-| `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
-
-#### Returns
-
-`void`
-
-___
-
-### removeFromOrder
-
-▸ **removeFromOrder**(`loading`, `dish`, `amount?`, `orderDishId`, `order`, `successCb?`, `errorCb?`): `void`
-
-**`method`** removeFromOrder
-Используется для отправки в шину события удаления блюда из корзины
-
-#### Parameters
-
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
-| `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | добавляемое блюдо |
-| `amount` | `number` | `1` | количество |
-| `orderDishId` | `undefined` \| `number` | `undefined` | id блюда в корзине |
-| `order` | [`Order`](../interfaces/Order.md) | `undefined` | Заказ, с которым выполнется операция |
-| `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
-
-#### Returns
-
-`void`
-
-___
-
-### checkOrder
-
-▸ **checkOrder**(`order`, `successCb?`, `errorCb?`): `void`
-
-**`method`** checkOrder
-Используется для отправки в шину события обязательной проверки заказа перед оформлением.
-Метод необходимо вызывать после того, как пользователь полностью заполнил в заказе все необходимые данные и далее после каждого вносимого в форму изменения, при условии, что в форме все необходимые данные заполнены.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `order` | [`OrderForm`](../README.md#orderform) | Проверяемый заказ |
-| `successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
-
-#### Returns
-
-`void`
-
-___
-
-### sendOrder
-
-▸ **sendOrder**(`order`, `successCb?`, `errorCb?`): `void`
-
-**`method`** sendOrder
-Используется для отправки в шину события оформления заказа.
-Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `order` | [`OrderForm`](../README.md#orderform) | Оформляемый заказ |
-| `successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
-
-#### Returns
-
-`void`
-
-___
-
-### addDishToOrder$
-
-▸ **addDishToOrder$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data` | [`AddToOrderInput`](../README.md#addtoorderinput) |
-
-#### Returns
-
-`Observable`<[`Order`](../interfaces/Order.md)\>
-
-___
-
-### removeDishFromOrder$
-
-▸ **removeDishFromOrder$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data` | [`RemoveFromOrderInput`](../README.md#removefromorderinput) |
-
-#### Returns
-
-`Observable`<[`Order`](../interfaces/Order.md)\>
-
-___
-
-### sendOrder$
-
-▸ **sendOrder$**(`data`): `Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data` | [`OrderInput`](../README.md#orderinput) |
-
-#### Returns
-
-`Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
-
-___
-
-### checkOrder$
-
-▸ **checkOrder$**(`data`): `Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data` | [`OrderInput`](../README.md#orderinput) |
-
-#### Returns
-
-`Observable`<[`CheckResponse`](../interfaces/CheckResponse.md)\>
 
 ___
 
@@ -425,38 +185,6 @@ ___
 #### Returns
 
 `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)\>
-
-___
-
-### setDishAmount$
-
-▸ **setDishAmount$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data` | [`SetDishAmountInput`](../README.md#setdishamountinput) |
-
-#### Returns
-
-`Observable`<[`Order`](../interfaces/Order.md)\>
-
-___
-
-### setDishComment$
-
-▸ **setDishComment$**(`data`): `Observable`<[`Order`](../interfaces/Order.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data` | [`SetDishCommentInput`](../README.md#setdishcommentinput) |
-
-#### Returns
-
-`Observable`<[`Order`](../interfaces/Order.md)\>
 
 ___
 

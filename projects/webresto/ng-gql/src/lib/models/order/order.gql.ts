@@ -1,9 +1,9 @@
-import type {PaymentMethod} from '../payment-method/payment-method.gql';
-import type {OrderDish} from '../order-dish/order-dish.gql';
-import {OrderDishFragments} from '../order-dish/order-dish.gql';
-import type {OrderModifier} from '../modifier/modifier.gql';
-import type {Message, Action} from '../event-message/event-message';
-import {ValuesOrBoolean} from '../values-or-boolean';
+import type { PaymentMethod } from '../payment-method/payment-method.gql';
+import type { OrderDish } from '../order-dish/order-dish.gql';
+import { OrderDishFragments } from '../order-dish/order-dish.gql';
+import type { OrderModifier } from '../modifier/modifier.gql';
+import type { Message, Action } from '../event-message/event-message';
+import { ValuesOrBoolean } from '../values-or-boolean';
 
 export interface Order {
 	id: string;
@@ -27,7 +27,7 @@ export interface Order {
 	paid?: boolean;
 	paymentMethod?: PaymentMethod;
 	customData?: {
-		[key: string]: string | any;
+		[ key: string ]: string | any;
 	} | null;
 }
 
@@ -67,13 +67,7 @@ export type AddToOrderInput = {
 	orderDishId?: string;
 };
 
-export type RemoveFromOrderInput = {
-	id?: string,
-	orderDishId?: number,
-	amount?: number;
-};
-
-export type SetDishAmountInput = {
+export type RemoveOrSetAmountToDish = {
 	id?: string,
 	orderDishId?: number,
 	amount?: number;
@@ -84,11 +78,10 @@ export type SetDishCommentInput = {
 	orderDishId?: number,
 	comment?: string;
 };
-
 export type OrderInput = {
 	orderId: string,
 	paymentMethodId?: string,
-	selfService?: boolean,
+	selfService: boolean,
 	pickupAddressId?: string,
 	locationId?: string,
 	date?: string,

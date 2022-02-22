@@ -1,8 +1,10 @@
-import {Directive, Input, Output, HostListener, EventEmitter} from '@angular/core';
-import type {SimpleChanges} from '@angular/core';
-import {filter, debounceTime} from 'rxjs/operators';
-import type {Order, OrderInput, PaymentMethod, CheckResponse} from '../models';
-import {NgOrderService} from '../services/ng-order.service';
+import { Directive, Input, Output, HostListener, EventEmitter } from '@angular/core';
+import type { SimpleChanges } from '@angular/core';
+import { filter, debounceTime } from 'rxjs/operators';
+import type { Order, OrderInput, PaymentMethod, CheckResponse } from '../models';
+import { isValue } from '../models';
+import { NgOrderService } from '../services/ng-order.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Directive({
   selector: '[checkout]'
@@ -16,7 +18,7 @@ export class CheckoutDirective {
   @Input() phone: string | undefined;
   @Input() phonePaymentSmsCode: string | undefined;
   @Input() delivery: any;
-  @Input() selfService: boolean | undefined;
+  @Input() selfService: boolean = false;
   @Input() locationId: string | undefined;
   @Input() street: string | undefined;
   @Input() streetId: string | undefined;
@@ -33,22 +35,22 @@ export class CheckoutDirective {
   @Input() callback: string | undefined;
   @Input() date: string | undefined;
   @Input() notifyMethodId: string | undefined;
+  @Input() order: Order | undefined;
+
   @Output() success = new EventEmitter<string>();
   @Output() paymentRedirect = new EventEmitter<string>();
-  @Output() error = new EventEmitter<string>();
+  @Output() error = new EventEmitter<unknown>();
   @Output() isChecking = new EventEmitter<boolean>();
 
-  order: Order | null | undefined;
   lastFormChangeKey: string | undefined;
+  OrderFormChange = new BehaviorSubject<SimpleChanges | null>(null);
 
-  constructor (
+  constructor(
     private orderService: NgOrderService
   ) {
 
-    this.orderService
-      .userOrder$()
-      .subscribe(order => this.order = order);
-    this.orderService.OrderFormChange
+
+    this.OrderFormChange
       .pipe(
         filter(value => {
           //if((this.locationId || this.streetId) && this.home && this.phone && this.preparePhone(this.phone).length > 11) {
@@ -74,6 +76,7 @@ export class CheckoutDirective {
     } else {
       let data: OrderInput = {
         orderId: this.order.id,
+        selfService: this.selfService,
         customer: {
           phone: this.preparePhone(this.phone),
           mail: this.email,
@@ -85,7 +88,6 @@ export class CheckoutDirective {
         data.paymentMethodId = this.paymentMethodId;
       }
 
-      data.selfService = this.selfService;
       if (this.locationId) {
         data.locationId = this.locationId;
       } else {
@@ -104,27 +106,22 @@ export class CheckoutDirective {
       const orderId = this.order.id;
       const onSuccess = (result: CheckResponse) => {
         if (result?.action?.data?.redirectLink) {
-          this.paymentRedirect.emit(result.action.data['redirectLink']);
+          this.paymentRedirect.emit(result.action.data[ 'redirectLink' ]);
         } else {
           console.log('Emit orderId', orderId);
           this.success.emit(orderId);
         }
       };
       if (this.phonePaymentSmsCode && this.phone) {
-        this.orderService.paymentLink$(this.phonePaymentSmsCode, this.phone).subscribe({
+        this.orderService.paymentLink$(this.phonePaymentSmsCode, this.phone, orderId).subscribe({
           next: res => onSuccess(res),
           error: err => this.error.emit(err),
-          complete: () => {}
+          complete: () => { }
         });
       } else {
-        this.orderService.orderCart$(data).subscribe({
-          next: res => onSuccess(res),
-          error: err => this.error.emit(err),
-          complete: () => {}
-        }
-
-
-        );
+        this.orderService.sendOrder({
+          ... this.order, ...data
+        }, res => onSuccess(res), err => this.error.emit(err));
       }
     }
 
@@ -135,7 +132,7 @@ export class CheckoutDirective {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.orderService.OrderFormChange.next(changes);
+    this.OrderFormChange.next(changes);
   }
 
   checkStreet() {
@@ -145,6 +142,7 @@ export class CheckoutDirective {
         personsCount: number;
       } = {
         orderId: this.order.id,
+        selfService: this.selfService,
         comment: comment,
         customer: {
           phone: this.phone ? this.preparePhone(this.phone) : '',
@@ -154,15 +152,14 @@ export class CheckoutDirective {
         personsCount: +this.personsCount
       };
 
-      data.selfService = this.selfService;
 
       if (this.paymentMethodId) {
         data.paymentMethodId = this.paymentMethodId;
       }
 
       if (this.callback) {
-        data.customData = {callback: true};
-        data.comment = 'Позвоните мне для уточнения деталей. ' + data["comment"];
+        data.customData = { callback: true };
+        data.comment = 'Позвоните мне для уточнения деталей. ' + data[ "comment" ];
       }
 
       if (this.date) {
@@ -188,15 +185,11 @@ export class CheckoutDirective {
         };
       }
       if (this.callback) {
-        data.customData = {callback: true};
+        data.customData = { callback: true };
       }
       this.isChecking.emit(true);
       this.orderService
-        .checkOrder$(data)
-        .subscribe(
-          () => this.isChecking.emit(true),
-          () => this.isChecking.emit(false)
-        );
+        .checkOrder({ ... this.order, ...data }, () => this.isChecking.emit(true), () => this.isChecking.emit(false));
     } else {
       return;
     };

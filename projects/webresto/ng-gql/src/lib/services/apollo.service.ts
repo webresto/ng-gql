@@ -1,15 +1,15 @@
-import {Injectable} from '@angular/core';
-import type {ApolloQueryResult, QueryOptions, MutationOptions, FetchResult, SubscriptionOptions} from '@apollo/client/core';
-import {Apollo} from 'apollo-angular';
-import type {ExtraSubscriptionOptions, WatchQueryOptions, EmptyObject} from 'apollo-angular/types';
-import {catchError, filter, of} from 'rxjs';
+import { Injectable } from '@angular/core';
+import type { ApolloQueryResult, QueryOptions, FetchResult, SubscriptionOptions } from '@apollo/client/core';
+import { Apollo } from 'apollo-angular';
+import { catchError, filter, of } from 'rxjs';
+import { EmptyObject, MutationResult, ExtraSubscriptionOptions, WatchQueryOptions, MutationOptions } from 'apollo-angular/build/types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApolloService {
 
-  constructor (private apollo: Apollo) {}
+  constructor(private apollo: Apollo) { }
 
   watchQuery<TData, TVariables = EmptyObject>(options: WatchQueryOptions<TVariables, TData>) {
     return this.apollo.watchQuery<TData, TVariables>(options).valueChanges.pipe(
@@ -34,7 +34,7 @@ export class ApolloService {
       catchError(
         error => of(null)
       ),
-      filter((value): value is FetchResult<T> => !!value),
+      filter((value): value is MutationResult<T> => !!value),
     );
   };
 

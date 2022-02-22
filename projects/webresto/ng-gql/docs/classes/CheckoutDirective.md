@@ -32,12 +32,13 @@
 - [callback](CheckoutDirective.md#callback)
 - [date](CheckoutDirective.md#date)
 - [notifyMethodId](CheckoutDirective.md#notifymethodid)
+- [order](CheckoutDirective.md#order)
 - [success](CheckoutDirective.md#success)
 - [paymentRedirect](CheckoutDirective.md#paymentredirect)
 - [error](CheckoutDirective.md#error)
 - [isChecking](CheckoutDirective.md#ischecking)
-- [order](CheckoutDirective.md#order)
 - [lastFormChangeKey](CheckoutDirective.md#lastformchangekey)
+- [OrderFormChange](CheckoutDirective.md#orderformchange)
 
 ### Methods
 
@@ -104,7 +105,7 @@ ___
 
 ### selfService
 
-• **selfService**: `undefined` \| `boolean`
+• **selfService**: `boolean` = `false`
 
 ___
 
@@ -204,6 +205,12 @@ ___
 
 ___
 
+### order
+
+• **order**: `undefined` \| [`Order`](../interfaces/Order.md)
+
+___
+
 ### success
 
 • **success**: `EventEmitter`<`string`\>
@@ -218,7 +225,7 @@ ___
 
 ### error
 
-• **error**: `EventEmitter`<`string`\>
+• **error**: `EventEmitter`<`unknown`\>
 
 ___
 
@@ -228,15 +235,15 @@ ___
 
 ___
 
-### order
-
-• **order**: `undefined` \| ``null`` \| [`Order`](../interfaces/Order.md)
-
-___
-
 ### lastFormChangeKey
 
 • **lastFormChangeKey**: `undefined` \| `string`
+
+___
+
+### OrderFormChange
+
+• **OrderFormChange**: `BehaviorSubject`<``null`` \| `SimpleChanges`\>
 
 ## Methods
 
