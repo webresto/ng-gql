@@ -81,7 +81,12 @@ export class NgOrderService {
     filter((value): value is string | undefined => value !== ''),
     switchMap(
       orderId => {
-        return this.loadOrder$(orderId);
+        return this.loadOrder$(orderId).pipe(
+          switchMap(
+            order => order.state === "ORDER" ? this.loadOrder$(undefined) : of(order)
+          ),
+          shareReplay(1)
+        );
       }),
     switchMap(
       order => this.ngGqlService.dishes$.pipe(
