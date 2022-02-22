@@ -20,6 +20,7 @@
 - [rmsId](Order.md#rmsid)
 - [rmsOrderNumber](Order.md#rmsordernumber)
 - [rmsDeliveryDate](Order.md#rmsdeliverydate)
+- [rmsDelivered](Order.md#rmsdelivered)
 - [customer](Order.md#customer)
 - [address](Order.md#address)
 - [paid](Order.md#paid)
@@ -54,7 +55,7 @@ ___
 
 ### comment
 
-• **comment**: ``null`` \| `string`
+• **comment**: `string`
 
 ___
 
@@ -102,7 +103,7 @@ ___
 
 ### state
 
-• **state**: `string`
+• **state**: [`OrderState`](../README.md#orderstate)
 
 ___
 
@@ -124,15 +125,21 @@ ___
 
 ___
 
+### rmsDelivered
+
+• `Optional` **rmsDelivered**: `boolean`
+
+___
+
 ### customer
 
-• `Optional` **customer**: [`Customer`](Customer.md)
+• **customer**: ``null`` \| [`Customer`](Customer.md)
 
 ___
 
 ### address
 
-• `Optional` **address**: [`Address`](Address.md)
+• **address**: ``null`` \| [`Address`](Address.md)
 
 ___
 
@@ -144,10 +151,10 @@ ___
 
 ### paymentMethod
 
-• `Optional` **paymentMethod**: [`PaymentMethod`](PaymentMethod.md)
+• **paymentMethod**: ``null`` \| [`PaymentMethod`](PaymentMethod.md)
 
 ___
 
 ### customData
 
-• `Optional` **customData**: ``null`` \| { `[key: string]`: `string` \| `any`;  }
+• **customData**: ``null`` \| { `[key: string]`: `string` \| `any`;  }

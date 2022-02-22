@@ -83,7 +83,7 @@ export class NgOrderService {
       orderId => {
         return this.loadOrder$(orderId).pipe(
           switchMap(
-            order => order.state === "ORDER" ? this.loadOrder$(undefined) : of(order)
+            order => order.state === 'ORDER' ? this.loadOrder$(undefined) : of(order)
           ),
           shareReplay(1)
         );
@@ -422,7 +422,7 @@ export class NgOrderService {
       customData: orderForm.customData,
     };
     return operation == 'send' ? result : {
-      comment: orderForm.comment ?? undefined,
+      comment: orderForm.comment,
       pickupAddressId: orderForm.pickupAddressId,
       locationId: orderForm.locationId,
       date: orderForm.deliveryTimeInfo?.deliveryDate ? `${ orderForm.deliveryTimeInfo.deliveryDate } ${ orderForm.deliveryTimeInfo.deliveryTime }` : undefined,

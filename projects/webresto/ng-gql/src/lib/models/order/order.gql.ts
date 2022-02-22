@@ -5,12 +5,26 @@ import type { OrderModifier } from '../modifier/modifier.gql';
 import type { Message, Action } from '../event-message/event-message';
 import { ValuesOrBoolean } from '../values-or-boolean';
 
+/**
+ * @alias OrderState
+ * Возможные состояния заказа.
+ *  `CART` - начальное состояние заказа
+ *  `CHECKOUT` - заказ проверен и готов к оформлению.
+ * В заказе еще возможны изменения, но после любых изменений требуется повторно выполнять проверку.
+ * @see 'NgOrderService.checkOrder'
+ *  `PAYMENT` - заказ переходит в это состояние при выборе онлайн оплаты или через внутреннюю платежную систему (бонусами и т.п.),
+		Состояние сохраняется, пока оплата не будет завершена, после чего заказ перейдет в состояние `ORDER`.
+ *  `ORDER` - заказ успешно оформлен. Это финальный статус и он не подразумевает, что заказ также был доставлен.
+		Данные о выполненной доставке могут быть получены от RMS (`Order.rmsDelivered`).
+ */
+export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER';
+
 export interface Order {
 	id: string;
 	shortId: string;
 	dishes: OrderDish[];
 	dishesCount: number;
-	comment: string | null;
+	comment: string;
 	deliveryDescription: string;
 	message: string | null;
 	deliveryCost: number;
@@ -18,15 +32,16 @@ export interface Order {
 	total: number;
 	orderTotal: number;
 	discountTotal: number;
-	state: string;
+	state: OrderState;
 	rmsId?: string;
 	rmsOrderNumber?: string;
 	rmsDeliveryDate?: string;
-	customer?: Customer;
-	address?: Address;
+	rmsDelivered?: boolean;
+	customer: Customer | null;
+	address: Address | null;
 	paid?: boolean;
-	paymentMethod?: PaymentMethod;
-	customData?: {
+	paymentMethod: PaymentMethod | null;
+	customData: {
 		[ key: string ]: string | any;
 	} | null;
 }
@@ -85,11 +100,11 @@ export type OrderInput = {
 	pickupAddressId?: string,
 	locationId?: string,
 	date?: string,
-	address?: Address,
-	customer?: Customer,
-	comment?: string | null,
+	address: Address | null,
+	customer: Customer | null,
+	comment?: string,
 	notifyMethodId?: string,
-	customData?: any;
+	customData: any | null;
 };
 
 export interface Phone {
@@ -141,8 +156,12 @@ export const OrderFragments = {
 		rmsId: true,
 		rmsOrderNumber: true,
 		rmsDeliveryDate: true,
-		dishesIds: true,
-		dishes: OrderDishFragments.vOb
+		dishes: OrderDishFragments.vOb,
+		rmsDelivered: true,
+		paymentMethod: {
+			id: true,
+			title: true
+		}
 	}
 };
 

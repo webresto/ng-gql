@@ -5,6 +5,7 @@
     "start": "ng build --watch",
     "updatePackageVersion": "node updatePackageVersion.js",
     "build": "ng build",
+    "build:local": "npm run build && npm run gen-doc",
     "watch": "ng build --watch --configuration axrl",
     "gen-doc": "typedoc --tsconfig projects/webresto/ng-gql/tsconfig.lib.prod.json"
   },

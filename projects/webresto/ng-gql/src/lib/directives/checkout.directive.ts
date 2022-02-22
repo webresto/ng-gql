@@ -77,6 +77,9 @@ export class CheckoutDirective {
       let data: OrderInput = {
         orderId: this.order.id,
         selfService: this.selfService,
+        address: null,
+        comment: '',
+        customData: null,
         customer: {
           phone: this.preparePhone(this.phone),
           mail: this.email,
@@ -144,6 +147,8 @@ export class CheckoutDirective {
         orderId: this.order.id,
         selfService: this.selfService,
         comment: comment,
+        address: null,
+        customData: null,
         customer: {
           phone: this.phone ? this.preparePhone(this.phone) : '',
           mail: this.email,

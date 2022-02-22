@@ -1,6 +1,6 @@
-/** 
+/**
  * @alias ValuesOrBoolean<T>
- * 
+ *
  * Тип, описывающий объект-конфигуратор запроса к серверу GraphQL для данных типа T.
  * Данный обьект будет использоваться в качестве источника информации о требуемых данных при генерации строки-запроса.
  * Сервер вернет данные только для полей, присутсвующих в этом обьекте, с сохранением структуры по всем уровням вложенности.
@@ -9,14 +9,14 @@
  * В качестве значений:
  *   1. true или T[K] - в случае, если T[K] принадлежит примитивным типам, undefined или null.
  *   2. Если значение T[K] - "сложный" тип обьекта (НО НЕ МАССИВ!) - вложенный объект, формируемый по аналогичной схеме.
- *   3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.   
+ *   3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.
  */
 export type ValuesOrBoolean<T> = {
-  [K in keyof Partial<T>]: boolean | (
-    T[K] extends string | number | bigint | symbol | boolean | undefined | null ?
-    boolean :
-    T[K] extends (Array<infer U> | undefined | null) ?
+  [ K in keyof Partial<T> ]: true | (
+    T[ K ] extends string | number | bigint | symbol | boolean | undefined | null ?
+    true :
+    T[ K ] extends (Array<infer U> | undefined | null) ?
     ValuesOrBoolean<U> :
-    ValuesOrBoolean<T[K]>
+    ValuesOrBoolean<T[ K ]>
   )
 };

@@ -67,6 +67,7 @@
 
 - [VCriteria](README.md#vcriteria)
 - [GQLRequestVariables](README.md#gqlrequestvariables)
+- [OrderState](README.md#orderstate)
 - [AddToOrderInput](README.md#addtoorderinput)
 - [RemoveOrSetAmountToDish](README.md#removeorsetamounttodish)
 - [SetDishCommentInput](README.md#setdishcommentinput)
@@ -290,6 +291,24 @@ ___
 
 ___
 
+### OrderState
+
+Ƭ **OrderState**: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"``
+
+**`alias`** OrderState
+Возможные состояния заказа.
+ `CART` - начальное состояние заказа
+ `CHECKOUT` - заказ проверен и готов к оформлению.
+В заказе еще возможны изменения, но после любых изменений требуется повторно выполнять проверку.
+
+**`see`** 'NgOrderService.checkOrder'
+ `PAYMENT` - заказ переходит в это состояние при выборе онлайн оплаты или через внутреннюю платежную систему (бонусами и т.п.),
+Состояние сохраняется, пока оплата не будет завершена, после чего заказ перейдет в состояние `ORDER`.
+ `ORDER` - заказ успешно оформлен. Это финальный статус и он не подразумевает, что заказ также был доставлен.
+Данные о выполненной доставке могут быть получены от RMS (`Order.rmsDelivered`).
+
+___
+
 ### AddToOrderInput
 
 Ƭ **AddToOrderInput**: `Object`
@@ -351,11 +370,11 @@ ___
 | `pickupAddressId?` | `string` |
 | `locationId?` | `string` |
 | `date?` | `string` |
-| `address?` | [`Address`](interfaces/Address.md) |
-| `customer?` | [`Customer`](interfaces/Customer.md) |
-| `comment?` | `string` \| ``null`` |
+| `address` | [`Address`](interfaces/Address.md) \| ``null`` |
+| `customer` | [`Customer`](interfaces/Customer.md) \| ``null`` |
+| `comment?` | `string` |
 | `notifyMethodId?` | `string` |
-| `customData?` | `any` |
+| `customData` | `any` \| ``null`` |
 
 ___
 
@@ -386,7 +405,7 @@ ___
 
 ### ValuesOrBoolean
 
-Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof Partial<T\>]: boolean \| (T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? boolean : T[K] extends infer U[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
+Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends infer U[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
 
 **`alias`** ValuesOrBoolean<T>
 
