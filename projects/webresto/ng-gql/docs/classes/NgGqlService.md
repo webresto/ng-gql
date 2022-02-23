@@ -6,16 +6,10 @@
 
 - [constructor](NgGqlService.md#constructor)
 
-### Properties
-
-- [customFields](NgGqlService.md#customfields)
-- [rootGroups$](NgGqlService.md#rootgroups$)
-- [dishes$](NgGqlService.md#dishes$)
-
 ### Methods
 
-- [addCustomField](NgGqlService.md#addcustomfield)
 - [getNavigation$](NgGqlService.md#getnavigation$)
+- [getMaintenance$](NgGqlService.md#getmaintenance$)
 - [getMenu$](NgGqlService.md#getmenu$)
 - [getDishes$](NgGqlService.md#getdishes$)
 - [getPaymentMethods$](NgGqlService.md#getpaymentmethods$)
@@ -27,6 +21,11 @@
 - [customSubscribe$](NgGqlService.md#customsubscribe$)
 - [queryAndSubscribe](NgGqlService.md#queryandsubscribe)
 - [destroy](NgGqlService.md#destroy)
+
+### Properties
+
+- [rootGroups$](NgGqlService.md#rootgroups$)
+- [dishes$](NgGqlService.md#dishes$)
 
 ## Constructors
 
@@ -41,46 +40,7 @@
 | `apollo` | [`ApolloService`](ApolloService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 
-## Properties
-
-### customFields
-
-• **customFields**: `Object` = `{}`
-
-#### Index signature
-
-▪ [modelName: `string`]: `string`[]
-
-___
-
-### rootGroups$
-
-• **rootGroups$**: `Observable`<{ `slug`: `string` ; `id`: ``null`` \| `string`  }[]\>
-
-___
-
-### dishes$
-
-• **dishes$**: `BehaviorSubject`<``null`` \| [`Dish`](../interfaces/Dish.md)[]\>
-
 ## Methods
-
-### addCustomField
-
-▸ **addCustomField**(`modelName`, `field`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `modelName` | `string` |
-| `field` | `string` |
-
-#### Returns
-
-`void`
-
-___
 
 ### getNavigation$
 
@@ -89,6 +49,16 @@ ___
 #### Returns
 
 `Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
+
+___
+
+### getMaintenance$
+
+▸ **getMaintenance$**(): `Observable`<[`Maintenance`](../interfaces/Maintenance.md)\>
+
+#### Returns
+
+`Observable`<[`Maintenance`](../interfaces/Maintenance.md)\>
 
 ___
 
@@ -438,3 +408,15 @@ ___
 #### Returns
 
 `void`
+
+## Properties
+
+### rootGroups$
+
+• **rootGroups$**: `Observable`<{ `slug`: `string` ; `id`: ``null`` \| `string`  }[]\>
+
+___
+
+### dishes$
+
+• **dishes$**: `BehaviorSubject`<``null`` \| [`Dish`](../interfaces/Dish.md)[]\>

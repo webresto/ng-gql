@@ -9,6 +9,7 @@
 - [url](NgGqlConfig.md#url)
 - [nesting](NgGqlConfig.md#nesting)
 - [busSubscribeMode](NgGqlConfig.md#bussubscribemode)
+- [customDataFields](NgGqlConfig.md#customdatafields)
 
 ## Properties
 
@@ -16,7 +17,7 @@
 
 • **url**: `string`
 
-URL API сервера GraphQL
+ URL API сервера GraphQL
 
 ___
 
@@ -35,3 +36,18 @@ ___
 Способ подписки на события шины.
 При выборе параметра 'subscribe' - библиотека будет автоматически подписываться на события в шине и также автоматически отпишется от нее при завершении работы.
 В случае выбора параметра 'custom' - подписка на события и управление ею производится на стороне проекта разработчиком самостоятельно, к примеру, используя asyncPipe.
+
+___
+
+### customDataFields
+
+• `Optional` **customDataFields**: `Object`
+
+Необязательный объект с дополнительной пользовательской информацией о структуре свойства customData в базовых моделях? если такие свойства объявлены в схеме GraphQL на сервере.
+В качестве ключей указывается название модели, в качестве значений - объект типа `ValuesOrBoolean` для свойства customData этой модели.
+
+**`see`** ValuesOrBoolean
+
+#### Index signature
+
+▪ [modelName: `string`]: [`ValuesOrBoolean`](../README.md#valuesorboolean)<{ `customData`: `unknown` \| ``null``  }[``"customData"``]\>

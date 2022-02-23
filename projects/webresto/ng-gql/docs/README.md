@@ -8,9 +8,9 @@
 - [CheckoutDirective](classes/CheckoutDirective.md)
 - [EventMessage](classes/EventMessage.md)
 - [NgGqlModule](classes/NgGqlModule.md)
-- [NgGqlService](classes/NgGqlService.md)
 - [ApolloService](classes/ApolloService.md)
 - [EventerService](classes/EventerService.md)
+- [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
 
 ### Events
@@ -33,6 +33,7 @@
 - [Group](interfaces/Group.md)
 - [Image](interfaces/Image.md)
 - [ImageItem](interfaces/ImageItem.md)
+- [Maintenance](interfaces/Maintenance.md)
 - [OrderModifier](interfaces/OrderModifier.md)
 - [Modifier](interfaces/Modifier.md)
 - [Navigation](interfaces/Navigation.md)
@@ -57,6 +58,7 @@
 - [GroupModifierFragments](README.md#groupmodifierfragments)
 - [GroupFragments](README.md#groupfragments)
 - [ImageFragments](README.md#imagefragments)
+- [maintenanceFragment](README.md#maintenancefragment)
 - [ModifierFragments](README.md#modifierfragments)
 - [NavigationFragments](README.md#navigationfragments)
 - [OrderDishFragments](README.md#orderdishfragments)
@@ -200,6 +202,18 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\> |
+
+___
+
+### maintenanceFragment
+
+• `Const` **maintenanceFragment**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\> |
 
 ___
 

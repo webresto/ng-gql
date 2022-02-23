@@ -8,6 +8,7 @@ export * from './order';
 export * from './order-dish/order-dish.gql';;
 export * from './payment-method/payment-method.gql';
 export * from './event-message/event-message';
+export * from './maintenance/maintenance';
 export {isValue} from './is-value';
 export type {ValuesOrBoolean} from './values-or-boolean';
 export {generateQueryString} from './generate-query-string';

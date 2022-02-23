@@ -7,33 +7,50 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import type { OperationDefinitionNode } from 'graphql';
 import { AddDishToOrderDirective, CheckoutDirective } from './directives';
+import { ValuesOrBoolean } from './models';
 
 const DIRECTIVES = [
   AddDishToOrderDirective,
   CheckoutDirective,
 ];
 
-/** Обьект с параметрами настройки библиотеки для определенного сервера-API */
+/** 
+ * Обьект с параметрами настройки библиотеки для определенного сервера-API 
+ * */
 export interface NgGqlConfig {
-
-  /** URL API сервера GraphQL */
+  /**
+   *  URL API сервера GraphQL 
+   * */
   url: string;
 
-  /** Уровень вложенности групп с блюдами друг в друга.   */
+  /** 
+   * Уровень вложенности групп с блюдами друг в друга.   
+   * */
   nesting: number;
-  /** Способ подписки на события шины.
+
+  /** 
+   * Способ подписки на события шины.
    * При выборе параметра 'subscribe' - библиотека будет автоматически подписываться на события в шине и также автоматически отпишется от нее при завершении работы.
    * В случае выбора параметра 'custom' - подписка на события и управление ею производится на стороне проекта разработчиком самостоятельно, к примеру, используя asyncPipe.
    * */
   busSubscribeMode: 'subscribe' | 'custom';
+  
+  /** 
+   * Необязательный объект с дополнительной пользовательской информацией о структуре свойства customData в базовых моделях? если такие свойства объявлены в схеме GraphQL на сервере.
+   * В качестве ключей указывается название модели, в качестве значений - объект типа `ValuesOrBoolean` для свойства customData этой модели.
+   * @see ValuesOrBoolean
+   * */
+  customDataFields?: {
+    [modelName: string]: ValuesOrBoolean<{ customData: unknown | null }['customData']>
+  };
 }
 
 @NgModule({
   imports: [
     ApolloModule
   ],
-  exports: [ DIRECTIVES ],
-  declarations: [ DIRECTIVES ]
+  exports: [DIRECTIVES],
+  declarations: [DIRECTIVES]
 })
 export class NgGqlModule {
 
@@ -62,7 +79,7 @@ export class NgGqlModule {
     const link = split(
       // split based on operation type
       ({ query }) => {
-        const { kind, operation } = <OperationDefinitionNode> getMainDefinition(query);
+        const { kind, operation } = <OperationDefinitionNode>getMainDefinition(query);
         return (
           kind === 'OperationDefinition' && operation === 'subscription'
         );

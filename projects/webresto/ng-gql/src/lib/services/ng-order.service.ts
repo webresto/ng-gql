@@ -4,7 +4,7 @@ import type { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged } from 'rxjs/operators';
 import type { Action, Message, OrderInput, Order, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm } from '../models';
 import { isValue, MessageOrActionGql, OrderFragments } from '../models';
-import { NgGqlService } from '../ng-gql.service';
+import { NgGqlService } from './ng-gql.service';
 import { EventerService } from './eventer.service';
 import type { NgGqlConfig } from '../ng-gql.module';
 

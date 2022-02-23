@@ -4,11 +4,11 @@ import type { ExtraSubscriptionOptions } from 'apollo-angular/build/types';
 import { BehaviorSubject, of } from 'rxjs';
 import { filter, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
-import type { GQLRequestVariables, Group, ValuesOrBoolean, Dish, Phone, CheckPhoneResponse, PaymentMethod, Navigation, CheckPhoneCodeInput, VCriteria } from './models';
-import { isValue, NavigationFragments, GroupFragments, DishFragments, generateQueryString, PaymentMethodFragments } from './models';
-import { ApolloService } from './services/apollo.service';
+import type { GQLRequestVariables, Group, ValuesOrBoolean, Dish, Phone, CheckPhoneResponse, PaymentMethod, Navigation, CheckPhoneCodeInput, VCriteria, Maintenance } from '../models';
+import { isValue, NavigationFragments, maintenanceFragment, GroupFragments, DishFragments, generateQueryString, PaymentMethodFragments } from '../models';
+import { ApolloService } from './apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
-import type { NgGqlConfig } from './ng-gql.module';
+import type { NgGqlConfig } from '../ng-gql.module';
 
 /**
  * Объект настройки генерации части строки запроса с описанием типов параметров операции.
@@ -35,21 +35,10 @@ export type QueryGenerationParam<V> = {
 /** Основной сервис для работы с библиотекой. Содержит все необходимые методы для управления сайтом. */
 export class NgGqlService {
 
-  customFields: { [ modelName: string ]: string[]; } = {};
-
   constructor(
     private apollo: ApolloService,
     @Inject('config') private config: NgGqlConfig) {
 
-  }
-
-  addCustomField(modelName: string, field: string) {
-    if (!this.customFields[ modelName ]) {
-      this.customFields[ modelName ] = [];
-    }
-    if (this.customFields[ modelName ].indexOf(field) == -1) {
-      this.customFields[ modelName ].push(field);
-    }
   }
 
   private _navigationData$: Observable<Navigation[]> = this.queryAndSubscribe(
@@ -58,6 +47,15 @@ export class NgGqlService {
 
   getNavigation$(): Observable<Navigation[]> {
     return this._navigationData$;
+  }
+
+  getMaintenance$(): Observable<Maintenance> {
+    return this.queryAndSubscribe('maintenance', 'maintenance', maintenanceFragment.vOb, 'id').pipe(
+      filter(result => result.length > 0),
+      map(
+        res => res[0]
+      )
+    );
   }
 
   rootGroups$: Observable<{
@@ -84,8 +82,8 @@ export class NgGqlService {
                 id: string;
                 slug: string;
               }[];
-            }[]> group.groups);
-            return array.length == 0 ? [] : array[ 0 ].childGroups;
+            }[]>group.groups);
+            return array.length == 0 ? [] : array[0].childGroups;
           }
           ),
           shareReplay(1)
@@ -107,7 +105,7 @@ export class NgGqlService {
             return item;
           }, { ...GroupFragments.vOb, childGroups: { ...GroupFragments.vOb } }
         );
-        const criteria = !!rootGroups[ 0 ]?.id ? {
+        const criteria = !!rootGroups[0]?.id ? {
           id: rootGroups.map(rootGroup => rootGroup.id)
         } : {
           slug: rootGroups.map(rootGroup => rootGroup.slug)
@@ -145,7 +143,7 @@ export class NgGqlService {
           map(dishes => {
             this.dishes$.next(dishes);
             const groupsById = allNestingsGroups.reduce<{
-              [ key: string ]: Group;
+              [key: string]: Group;
             }>(
               (accumulator, current) => {
                 if (!current.childGroups) {
@@ -154,34 +152,34 @@ export class NgGqlService {
                 if (!current.dishes) {
                   current.dishes = [];
                 };
-                accumulator[ current.id ] = current;
+                accumulator[current.id] = current;
                 return accumulator;
               }, {}
             );
             const groupIdsBySlug: {
-              [ key: string ]: string;
+              [key: string]: string;
             } = {};
 
             // Inserting dishes by groups
             for (let dish of dishes) {
               const groupId = dish.parentGroup?.id || dish.groupId;
               if (!groupId) continue;
-              if (!groupsById[ groupId ]) continue;
-              if (groupsById[ groupId ].dishes) {
-                groupsById[ groupId ].dishes?.push(dish);
+              if (!groupsById[groupId]) continue;
+              if (groupsById[groupId].dishes) {
+                groupsById[groupId].dishes?.push(dish);
               } else {
-                groupsById[ groupId ].dishes = [ dish ];
+                groupsById[groupId].dishes = [dish];
               }
             }
             // Create groups hierarchy
             for (let groupId in groupsById) {
-              const group = groupsById[ groupId ];
+              const group = groupsById[groupId];
               const parentGroupId = group.parentGroup?.id;
-              groupIdsBySlug[ group.slug! ] = groupId;
+              groupIdsBySlug[group.slug!] = groupId;
               if (!parentGroupId) continue;
-              if (!groupsById[ parentGroupId ]) continue;
-              if (groupsById[ parentGroupId ].childGroups.find(chGroup => chGroup.id === group.id)) continue;
-              groupsById[ parentGroupId ].childGroups.push(group);
+              if (!groupsById[parentGroupId]) continue;
+              if (groupsById[parentGroupId].childGroups.find(chGroup => chGroup.id === group.id)) continue;
+              groupsById[parentGroupId].childGroups.push(group);
             }
             return { groupsById, groupIdsBySlug };
           }),
@@ -198,16 +196,16 @@ export class NgGqlService {
         if (slug) {
           switch (typeof slug) {
             case 'string':
-              if (!groupIdsBySlug[ slug ]) {
+              if (!groupIdsBySlug[slug]) {
                 return [];
               } else {
-                return groupsById[ groupIdsBySlug[ slug ] ].childGroups;
+                return groupsById[groupIdsBySlug[slug]].childGroups;
               };
             default:
               if (!slug.length) {
                 return [];
               } else {
-                return slug.map(s => groupsById[ groupIdsBySlug[ s ] ]);
+                return slug.map(s => groupsById[groupIdsBySlug[s]]);
               };
           }
         } else {
@@ -221,7 +219,7 @@ export class NgGqlService {
   getDishes$(id?: string | string[]): Observable<Dish[]> {
     const dishes = this.dishes$.value;
     if (dishes) {
-      const ids = typeof id === 'string' ? [ id ] : id;
+      const ids = typeof id === 'string' ? [id] : id;
       const dishesInStock = dishes.filter(item => typeof id === 'string' ? item.id === id : id?.includes(item.id));
       if (!ids) {
         return of(dishes);
@@ -236,10 +234,10 @@ export class NgGqlService {
             }
           }).pipe(
             map(loadedDishes => {
-              const result = Array.isArray(loadedDishes.dishes) ? loadedDishes.dishes : [ loadedDishes.dishes ];
+              const result = Array.isArray(loadedDishes.dishes) ? loadedDishes.dishes : [loadedDishes.dishes];
               dishes.push(...result);
               this.dishes$.next(dishes);
-              return [ ...dishesInStock, ...result ];
+              return [...dishesInStock, ...result];
             })
           );
         }
@@ -256,9 +254,9 @@ export class NgGqlService {
       orderId: string;
     }>('paymentMethod', PaymentMethodFragments.vOb, {
       orderId
-    }, { optionalFields: [ 'orderId' ] }).pipe(
+    }, { optionalFields: ['orderId'] }).pipe(
       map(
-        data => Array.isArray(data.paymentMethod) ? data.paymentMethod : [ data.paymentMethod ]
+        data => Array.isArray(data.paymentMethod) ? data.paymentMethod : [data.paymentMethod]
       )
     );
   };
@@ -338,17 +336,17 @@ export class NgGqlService {
    * @returns - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
    *  в виде одиночного объекта либо массива.
    **/
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>>;
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>>;
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
+  customQuery$<T, N extends `${string}`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>>;
+  customQuery$<T, N extends `${string}`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>>;
+  customQuery$<T, N extends `${string}`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
-      query: gql`query ${ generateQueryString({
+      query: gql`query ${generateQueryString({
         name,
-        queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[ name ] : queryObject,
+        queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject,
         variables,
         optionalFields: paramOptions?.optionalFields,
         fieldsTypeMap: paramOptions?.fieldsTypeMap
-      }) }`,
+      })}`,
       variables,
     }).pipe(
       map(
@@ -383,17 +381,17 @@ export class NgGqlService {
  *
  * @returns - Observable поток с результатом выполнения операции в формате объекта с одним ключом N (название операции), значение которого - непосредственно результат операции.
  **/
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>>;
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>>;
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>> {
+  customMutation$<T, N extends `${string}`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>>;
+  customMutation$<T, N extends `${string}`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>>;
+  customMutation$<T, N extends `${string}`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>> {
     return this.apollo.mutate<Record<N, T>, V>({
-      mutation: gql`mutation ${ generateQueryString({
+      mutation: gql`mutation ${generateQueryString({
         name,
-        queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[ name ] : queryObject,
+        queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject,
         variables,
         optionalFields: paramOptions?.optionalFields,
         fieldsTypeMap: paramOptions?.fieldsTypeMap
-      }) }`,
+      })}`,
       variables
     }).pipe(
       map(result => isValue(result) ? result.data : null),
@@ -431,23 +429,23 @@ export class NgGqlService {
 * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
 * @see queryAndSubscribe
 **/
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]>;
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]>;
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]> {
+  customSubscribe$<T, N extends `${string}`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>;
+  customSubscribe$<T, N extends `${string}`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]>;
+  customSubscribe$<T, N extends `${string}`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[N]> {
     const q = generateQueryString({
       name,
-      queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[ name ] : queryObject,
+      queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>>queryObject)[name] : queryObject,
       variables,
       optionalFields: paramOptions?.optionalFields,
       fieldsTypeMap: paramOptions?.fieldsTypeMap
     });
     return this.apollo.subscribe<Record<N, T>, V>({
-      query: gql`subscription ${ q }`,
+      query: gql`subscription ${q}`,
       variables
     }, extra).pipe(
       map(result => result.data),
       filter((res): res is Record<N, T> => !!res),
-      map(res => res[ name ])
+      map(res => res[name])
     );
   };
 
@@ -478,7 +476,7 @@ export class NgGqlService {
   * Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
   * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
   **/
-  queryAndSubscribe<T, NQuery extends `${ string }`, NSubscribe extends `${ string }`, VQ = GQLRequestVariables, VS = VQ>(
+  queryAndSubscribe<T, NQuery extends `${string}`, NSubscribe extends `${string}`, VQ = GQLRequestVariables, VS = VQ>(
     nameQuery: NQuery,
     nameSubscribe: NSubscribe,
     queryObject: ValuesOrBoolean<T>,
@@ -486,7 +484,7 @@ export class NgGqlService {
     variables?: VQ,
     paramOptions?: QueryGenerationParam<VQ>): Observable<T[]>;
   queryAndSubscribe<
-    T, NQuery extends `${ string }`, NSubscribe extends `${ string }`,
+    T, NQuery extends `${string}`, NSubscribe extends `${string}`,
     VQ = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
     VS = Exclude<GQLRequestVariables, 'query' | 'subscribe'>>(
       nameQuery: NQuery,
@@ -501,7 +499,7 @@ export class NgGqlService {
         query?: QueryGenerationParam<VQ>,
         subscribe?: QueryGenerationParam<VS>;
       }): Observable<T[]>;
-  queryAndSubscribe<T, NQuery extends `${ string }`, NSubscribe extends `${ string }`, VQ = GQLRequestVariables, VS = GQLRequestVariables | VQ>(
+  queryAndSubscribe<T, NQuery extends `${string}`, NSubscribe extends `${string}`, VQ = GQLRequestVariables, VS = GQLRequestVariables | VQ>(
     nameQuery: NQuery,
     nameSubscribe: NSubscribe,
     queryObject: ValuesOrBoolean<T>,
@@ -515,40 +513,40 @@ export class NgGqlService {
       subscribe?: QueryGenerationParam<VS>;
     } | QueryGenerationParam<VQ>): Observable<T[]> {
     const updateFn: (store: T | T[], subscribeValue: T) => T[] = (store, newValue) => {
-      const array = (Array.isArray(store) ? store : [ store ]);
+      const array = (Array.isArray(store) ? store : [store]);
       const findItem = array.find(
-        item => newValue[ uniqueKeyForCompareItem ] === item[ uniqueKeyForCompareItem ]
+        item => newValue[uniqueKeyForCompareItem] === item[uniqueKeyForCompareItem]
       );
       if (findItem) {
         Object.assign(findItem, newValue);
         return array;
       } else {
-        return [ ...array, newValue ];
+        return [...array, newValue];
       };
     };
     return this.customQuery$(
       nameQuery, queryObject,
-      isValue(variables) && 'query' in variables ? variables.query : <VQ> variables,
-      isValue(paramOptions) && 'query' in paramOptions ? paramOptions.query : <QueryGenerationParam<VQ>> paramOptions
+      isValue(variables) && 'query' in variables ? variables.query : <VQ>variables,
+      isValue(paramOptions) && 'query' in paramOptions ? paramOptions.query : <QueryGenerationParam<VQ>>paramOptions
     ).pipe(
       switchMap(
         result => this.customSubscribe$<T, NSubscribe, VS>(
           nameSubscribe, queryObject,
           isValue(variables) && ('subscribe' in variables) ?
-            variables.subscribe : <VS> variables,
+            variables.subscribe : <VS>variables,
           isValue(paramOptions) && ('subscribe' in paramOptions) ?
             paramOptions.subscribe :
-            <QueryGenerationParam<VS>> paramOptions).pipe(
+            <QueryGenerationParam<VS>>paramOptions).pipe(
               startWith(null),
               map(
                 updatedValue => {
-                  const store: T | T[] = makeForm(result[ nameQuery ]).value;
+                  const store: T | T[] = makeForm(result[nameQuery]).value;
                   const copyedUpdatedValue: T = makeForm(updatedValue).value;
                   return isValue(updatedValue) ?
                     updateFn(store, copyedUpdatedValue) :
                     Array.isArray(store) ?
                       store :
-                      <T[]>[ store ];
+                      <T[]>[store];
                 }),
               shareReplay(1)
             )
