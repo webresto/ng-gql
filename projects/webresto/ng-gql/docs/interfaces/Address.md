@@ -20,13 +20,13 @@
 
 ### streetId
 
-• `Optional` **streetId**: `string`
+• **streetId**: ``null`` \| `string`
 
 ___
 
 ### home
 
-• **home**: `string`
+• **home**: ``null`` \| `string`
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 ### street
 
-• **street**: `string`
+• **street**: ``null`` \| `string`
 
 ___
 

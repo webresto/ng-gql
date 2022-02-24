@@ -1,7 +1,7 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
-import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged } from 'rxjs/operators';
 import type { NgGqlConfig, Action, Message, OrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm } from '../models';
 import { isValue, MessageOrActionGql, OrderFragments } from '../models';
 import { NgGqlService } from './ng-gql.service';
@@ -19,16 +19,16 @@ export class NgOrderService {
     @Inject('config') private config: NgGqlConfig
   ) {
     if (this.config.busSubscribeMode === 'subscribe') {
-      this._cartBusSubscription$ = this.orderBus$.subscribe({
+      this._orderBusSubscription$ = this.orderBus$.subscribe({
         next: () => { },
         error: () => { },
-        complete: () => this._cartBusSubscription$?.unsubscribe()
+        complete: () => this._orderBusSubscription$?.unsubscribe()
       });
     }
   }
 
   /**
-   * @method getOrderId.
+   * @method getOrderId
    *  @returns Возвращает orderId, сохраненный ранее в localStorage с ключом '${ window.location.host }-orderId'.
    * Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
    * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
@@ -39,14 +39,14 @@ export class NgOrderService {
       const cartString = localStorage.getItem(`${ window.location.host }-orderId`);
       if (cartString) {
         const cartData: {
-          cartId: string;
+          orderId: string;
           dt: number;
         } = JSON.parse(cartString);
         const idObsolescence = (43200000 * (isValue(this.config.obsolescence) ? this.config.obsolescence : 14));
         if ((Date.now() - cartData.dt) > idObsolescence) {
           return undefined;
         } else {
-          return cartData.cartId;
+          return cartData.orderId;
         };
       } else {
         return undefined;
@@ -56,10 +56,20 @@ export class NgOrderService {
     };
   }
 
+  /**
+   * @method setOrderId
+   * @param orderId - id Заказа, который требуется сохранить в localStorage с ключом '${ window.location.host }-orderId'.
+   * Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
+   * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
+   * Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
+   */
   setOrderId(orderId: string) {
-    if (isValue(orderId)) {
-      localStorage.setItem(`${ window.location.host }-orderId`, orderId);
-    }
+    const storageOrderId = this.getOrderId();
+    if (isValue(orderId) && (!storageOrderId || orderId !== storageOrderId)) {
+      localStorage.setItem(`${ window.location.host }-orderId`, JSON.stringify({
+        orderId: orderId, dt: Date.now()
+      }));
+    };
   }
 
   removeOrderId() {
@@ -91,55 +101,45 @@ export class NgOrderService {
       );
   }
 
-  private _cartBusSubscription$: Subscription | undefined;
+  private _orderBusSubscription$: Subscription | undefined;
 
-  private _orderLoader$ = new BehaviorSubject<string | undefined>('');
-  private orderLoader$ = this._orderLoader$.pipe(
-    shareReplay(1)
-  );
+  private _orderLoader$ = new BehaviorSubject<string | undefined>(this.getOrderId());
 
-  private orderAndPaymentMethods$ = this.orderLoader$.pipe(
-    filter((value): value is string | undefined => value !== ''),
+  private orderAndPaymentMethods$: Observable<{
+    order: Order,
+    methods: PaymentMethod[];
+  }> = this._orderLoader$.asObservable().pipe(
+    distinctUntilChanged(),
     switchMap(
-      orderId => {
-        return this.loadOrder$(orderId).pipe(
-          switchMap(
-            order => order.state === 'ORDER' ? this.loadOrder$(undefined) : of(order)
-          ),
-          shareReplay(1)
-        );
-      }),
-    switchMap(
-      order => this.ngGqlService.dishes$.pipe(
+      orderId => this.ngGqlService.getPaymentMethods$(orderId).pipe(
         map(
-          dishes => {
-            if (!order.dishes) {
-              order.dishes = [];
-            };
-            order.dishes.forEach(
-              orderDish => {
-                if (!orderDish.dish && orderDish.dishId) {
-                  orderDish.dish = dishes?.find(dish => orderDish.dishId === dish.id)!;
-                };
-              });
-            return order;
-          }),
+          methods => ({
+            methods, orderId
+          })
+        ),
         shareReplay(1)
       )
     ),
     switchMap(
-      order => this.ngGqlService.getPaymentMethods$(order.id).pipe(
+      methodsAndId => this.loadOrder$(methodsAndId.orderId).pipe(
+        switchMap(
+          order => order.state === 'ORDER' ? this.loadOrder$(undefined) : of(order)
+        ),
         map(
-          methods => {
+          order => {
+            this.setOrderId(order.id);
             return {
+              methods: methodsAndId.methods,
               order: {
-                ...order, paymentMethod: !order.paymentMethod && methods.length > 0 ? {
-                  id: methods[ 0 ].id,
-                  title: methods[ 0 ].title
+                ...order,
+                paymentMethod: !order.paymentMethod && methodsAndId.methods.length > 0 ? {
+                  id: methodsAndId.methods[ 0 ].id,
+                  title: methodsAndId.methods[ 0 ].title
                 } : order.paymentMethod
-              }, methods
+              }
             };
-          }),
+          }
+        ),
         shareReplay(1)
       )
     ),
@@ -159,7 +159,7 @@ export class NgOrderService {
     methods: PaymentMethod[];
   }> {
     return this.orderAndPaymentMethods$;
-  }
+  };
 
   /**
    * @method  getOrder
@@ -172,7 +172,7 @@ export class NgOrderService {
       ),
       shareReplay(1)
     );
-  }
+  };
 
   /**
    * Поток Observable, в который будут поступать события по текущему заказу в процессе оформления, подразумевающие совершение каких-либо действий на стороне фронта и выполняемых пользователем
@@ -209,23 +209,59 @@ export class NgOrderService {
    * */
   loadOrderAsCart(orderId: string | undefined): void {
     this._orderLoader$.next(orderId);
-  }
+  };
 
   /**
- * @method loadOrder$
- *
- * Метод загружает заказ и делает подписку для получения по нему обновлений.
- * Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
- * (например, данные для страницы "Спасибо за заказ").
- *
- * @param orderId - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
- *  */
+  * @method loadOrder$
+  *
+  * Метод загружает заказ и делает подписку для получения по нему обновлений.
+  * Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
+  * (например, данные для страницы "Спасибо за заказ").
+  *
+  * @param orderId - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
+  *  */
   loadOrder$(orderId: string | undefined): Observable<Order> {
     return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | undefined>('order', 'order', OrderFragments.vOb, 'id', orderId ? {
       orderId
     } : undefined).pipe(
       map(values => values[ 0 ] ? values[ 0 ] : null),
-      filter((order): order is Order => isValue(order))
+      filter((order): order is Order => isValue(order)),
+      switchMap(
+        order => this.ngGqlService.dishes$.pipe(
+          map(
+            dishes => ({
+              ...order,
+              customer: order.customer ?? {
+                name: null,
+                phone: null
+              },
+              address: order.address ?? {
+                streetId: null,
+                home: null,
+                street: null,
+                comment: undefined,
+                city: undefined,
+                housing: undefined,
+                index: undefined,
+                entrance: undefined,
+                floor: undefined,
+                apartment: undefined,
+                doorphone: undefined
+              },
+              dishes: !order.dishes ? [] : order.dishes.map(
+                orderDish => ({
+                  ...orderDish,
+                  dish: dishes?.find(dish => orderDish.dishId === dish.id) ?? orderDish.dish ?
+                    this.ngGqlService.addAmountToDish(orderDish.dish) :
+                    orderDish.dish
+                })
+              )
+            })
+          ),
+          shareReplay(1)
+        )
+      ),
+      shareReplay(1)
     );
   }
 
@@ -379,13 +415,13 @@ export class NgOrderService {
   }
 
   /**
- * @method sendOrder
- * Используется для отправки в шину события оформления заказа.
- * Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
- * @param order - Оформляемый заказ
- * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
- * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
- */
+  * @method sendOrder
+  * Используется для отправки в шину события оформления заказа.
+  * Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
+  * @param order - Оформляемый заказ
+  * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+  * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+  */
   sendOrder(order: OrderForm,
     successCb?: (order: CheckResponse) => void,
     errorCb?: (err: unknown) => void
@@ -540,8 +576,8 @@ export class NgOrderService {
   };
 
   destroy() {
-    if (this._cartBusSubscription$ && !this._cartBusSubscription$.closed) {
-      this._cartBusSubscription$.unsubscribe();
+    if (this._orderBusSubscription$ && !this._orderBusSubscription$.closed) {
+      this._orderBusSubscription$.unsubscribe();
     };
     Object.values(this).filter(
       (property): property is EventEmitter<unknown> | BehaviorSubject<unknown> => property instanceof EventEmitter || property instanceof BehaviorSubject

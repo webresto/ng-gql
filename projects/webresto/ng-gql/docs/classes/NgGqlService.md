@@ -10,6 +10,7 @@
 
 - [getNavigation$](NgGqlService.md#getnavigation$)
 - [getMaintenance$](NgGqlService.md#getmaintenance$)
+- [addAmountToDish](NgGqlService.md#addamounttodish)
 - [getMenu$](NgGqlService.md#getmenu$)
 - [getDishes$](NgGqlService.md#getdishes$)
 - [getPaymentMethods$](NgGqlService.md#getpaymentmethods$)
@@ -62,6 +63,27 @@ ___
 
 ___
 
+### addAmountToDish
+
+▸ **addAmountToDish**(`sourceDish`): [`Dish`](../interfaces/Dish.md)
+
+**`method`** addAmountToDish
+Метод-хелпер, используемый для добавления модификаторам блюда параметра amount и установки ему значения, в случае, если они у него имеются.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `sourceDish` | [`Dish`](../interfaces/Dish.md) | объект с исходными данными блюда. |
+
+#### Returns
+
+[`Dish`](../interfaces/Dish.md)
+
+новый, дополненный объект с данными блюда.
+
+___
+
 ### getMenu$
 
 ▸ **getMenu$**(`slug`): `Observable`<``null`` \| [`Group`](../interfaces/Group.md)[]\>
@@ -102,7 +124,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `orderId` | `string` |
+| `orderId` | `undefined` \| `string` |
 
 #### Returns
 
@@ -419,4 +441,4 @@ ___
 
 ### dishes$
 
-• **dishes$**: `BehaviorSubject`<``null`` \| [`Dish`](../interfaces/Dish.md)[]\>
+• **dishes$**: `Observable`<[`Dish`](../interfaces/Dish.md)[]\>

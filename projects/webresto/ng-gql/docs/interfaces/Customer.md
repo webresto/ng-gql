@@ -12,7 +12,7 @@
 
 ### phone
 
-• **phone**: `string`
+• **phone**: ``null`` \| `string`
 
 ___
 
@@ -24,4 +24,4 @@ ___
 
 ### name
 
-• **name**: `string`
+• **name**: ``null`` \| `string`

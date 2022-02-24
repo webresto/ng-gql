@@ -1,9 +1,9 @@
-import {DishFragments} from '../dish/dish.gql';
-import type {OrderModifier} from '../modifier/modifier.gql';
-import type {ValuesOrBoolean} from '../values-or-boolean';
-import type {Dish} from '../dish/dish.gql';
-import {ImageFragments} from '../image/image.gql';
-import {GroupModifierFragments} from '../group-modifier/group-modifier.gql';
+import { DishFragments } from '../dish/dish.gql';
+import type { OrderModifier } from '../modifier/modifier.gql';
+import type { ValuesOrBoolean } from '../values-or-boolean';
+import type { Dish } from '../dish/dish.gql';
+import { ImageFragments } from '../image/image.gql';
+import { GroupModifierFragments } from '../group-modifier/group-modifier.gql';
 
 export interface OrderDish {
 	id: number;
@@ -24,6 +24,7 @@ export const OrderDishFragments = {
 	vOb: <ValuesOrBoolean<OrderDish>> {
 		id: true,
 		amount: true,
+		dishId: true,
 		dish: {
 			id: true,
 			balance: true,

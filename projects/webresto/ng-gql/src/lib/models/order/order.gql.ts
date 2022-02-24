@@ -47,17 +47,17 @@ export interface Order {
 }
 
 export interface Customer {
-	phone: string;
+	phone: string | null;
 	mail?: string;
-	name: string;
+	name: string | null;
 }
 
 export interface Address {
-	streetId?: string;
-	home: string;
+	streetId: string | null;
+	home: string | null;
 	comment?: string;
 	city?: string;
-	street: string;
+	street: string | null;
 	housing?: string;
 	index?: string;
 	entrance?: string;

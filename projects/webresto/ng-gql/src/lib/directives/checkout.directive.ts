@@ -2,7 +2,6 @@ import { Directive, Input, Output, HostListener, EventEmitter } from '@angular/c
 import type { SimpleChanges } from '@angular/core';
 import { filter, debounceTime } from 'rxjs/operators';
 import type { Order, OrderInput, PaymentMethod, CheckResponse } from '../models';
-import { isValue } from '../models';
 import { NgOrderService } from '../services/ng-order.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -21,7 +20,7 @@ export class CheckoutDirective {
   @Input() selfService: boolean = false;
   @Input() locationId: string | undefined;
   @Input() street: string | undefined;
-  @Input() streetId: string | undefined;
+  @Input() streetId: string | null = null;
   @Input() home: string | undefined;
   @Input() housing: string | undefined;
   @Input() apartment: string | undefined;

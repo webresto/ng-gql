@@ -98,7 +98,30 @@ export class NgGqlService {
     shareReplay(1)
   );
 
-  dishes$ = new BehaviorSubject<Dish[] | null>(null);
+  private _dishes$ = new BehaviorSubject<Dish[] | null>(null);
+  dishes$ = this._dishes$.asObservable().pipe(
+    filter((data): data is Dish[] => !!data)
+  );
+
+  /**
+   * @method addAmountToDish
+   * Метод-хелпер, используемый для добавления модификаторам блюда параметра amount и установки ему значения, в случае, если они у него имеются.
+   * @param sourceDish - объект с исходными данными блюда.
+   * @returns новый, дополненный объект с данными блюда.
+   */
+  addAmountToDish(sourceDish: Dish): Dish {
+    return {
+      ...sourceDish, modifiers: sourceDish.modifiers ? sourceDish.modifiers.map(
+        (groupModifier, groupIndex) => ({
+          ...groupModifier, childModifiers: groupModifier.childModifiers.map(
+            (childModifier, childIndex) => ({
+              ...childModifier,
+              amount: groupIndex === 0 && childIndex === 0 && groupModifier.childModifiers.length === 2 && groupModifier.minAmount === 1 && groupModifier.maxAmount === 1 ? 1 : childModifier.defaultAmount ?? 0
+            }))
+        })
+      ) : []
+    };
+  }
 
   private loadedMenu$ = this.rootGroups$.pipe(
     switchMap(
@@ -146,8 +169,9 @@ export class NgGqlService {
             parentGroup: allNestingsIds
           }
         }).pipe(
-          map(dishes => {
-            this.dishes$.next(dishes);
+          map(data => {
+            const dishes = data.map(dataDish => this.addAmountToDish(dataDish));
+            this._dishes$.next(dishes);
             const groupsById = allNestingsGroups.reduce<{
               [ key: string ]: Group;
             }>(
@@ -223,7 +247,7 @@ export class NgGqlService {
   }
 
   getDishes$(id?: string | string[]): Observable<Dish[]> {
-    const dishes = this.dishes$.value;
+    const dishes = this._dishes$.value;
     if (dishes) {
       const ids = typeof id === 'string' ? [ id ] : id;
       const dishesInStock = dishes.filter(item => typeof id === 'string' ? item.id === id : id?.includes(item.id));
@@ -242,25 +266,25 @@ export class NgGqlService {
             map(loadedDishes => {
               const result = Array.isArray(loadedDishes.dishes) ? loadedDishes.dishes : [ loadedDishes.dishes ];
               dishes.push(...result);
-              this.dishes$.next(dishes);
+              this._dishes$.next(dishes);
               return [ ...dishesInStock, ...result ];
             })
           );
         }
       }
     } else {
-      return this.dishes$.asObservable().pipe(
-        filter((data): data is Dish[] => !!data)
-      );
+      return this.dishes$;
     }
   }
 
-  getPaymentMethods$(orderId: string): Observable<PaymentMethod[]> {
-    return this.customQuery$<PaymentMethod, 'paymentMethod', {
-      orderId: string;
-    }>('paymentMethod', PaymentMethodFragments.vOb, {
-      orderId
-    }, { optionalFields: [ 'orderId' ] }).pipe(
+  getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
+    return this.customQuery$<PaymentMethod, 'paymentMethod', { orderId: string; }>(
+      'paymentMethod', PaymentMethodFragments.vOb, { orderId: orderId ?? '' }, {
+      fieldsTypeMap: new Map([
+        [ 'orderId', 'String!' ]
+      ])
+    }
+    ).pipe(
       map(
         data => (
           Array.isArray(data.paymentMethod) ? data.paymentMethod : [ data.paymentMethod ]

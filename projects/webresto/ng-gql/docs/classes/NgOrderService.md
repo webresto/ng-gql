@@ -50,7 +50,7 @@
 
 ▸ **getOrderId**(): `undefined` \| `string`
 
-**`method`** getOrderId.
+**`method`** getOrderId
 
 #### Returns
 
@@ -59,7 +59,7 @@
 Возвращает orderId, сохраненный ранее в localStorage с ключом '${ window.location.host }-orderId'.
 Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
 Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
-Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig` (по умолчанию - 14 дней).
+Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
 
 ___
 
@@ -67,11 +67,13 @@ ___
 
 ▸ **setOrderId**(`orderId`): `void`
 
+**`method`** setOrderId
+
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `string` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `orderId` | `string` | id Заказа, который требуется сохранить в localStorage с ключом '${ window.location.host }-orderId'. Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp). Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся. Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней). |
 
 #### Returns
 
