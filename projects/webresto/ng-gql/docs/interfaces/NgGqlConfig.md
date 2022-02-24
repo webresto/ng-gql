@@ -8,6 +8,7 @@
 
 - [url](NgGqlConfig.md#url)
 - [nesting](NgGqlConfig.md#nesting)
+- [obsolescence](NgGqlConfig.md#obsolescence)
 - [busSubscribeMode](NgGqlConfig.md#bussubscribemode)
 - [customDataFields](NgGqlConfig.md#customdatafields)
 
@@ -26,6 +27,15 @@ ___
 • **nesting**: `number`
 
 Уровень вложенности групп с блюдами друг в друга.
+
+___
+
+### obsolescence
+
+• `Optional` **obsolescence**: `number`
+
+Необязательный параметр.
+Определяет период времени (в днях), по истечении которого orderId, сохраненный в localStorage, будет считаться старым и не будет использоваться.
 
 ___
 

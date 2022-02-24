@@ -12,6 +12,7 @@
 - [setOrderId](NgOrderService.md#setorderid)
 - [removeOrderId](NgOrderService.md#removeorderid)
 - [paymentLink$](NgOrderService.md#paymentlink$)
+- [getOrderAndPaymentMethods$](NgOrderService.md#getorderandpaymentmethods$)
 - [getOrder](NgOrderService.md#getorder)
 - [loadOrderAsCart](NgOrderService.md#loadorderascart)
 - [loadOrder$](NgOrderService.md#loadorder$)
@@ -49,9 +50,16 @@
 
 ▸ **getOrderId**(): `undefined` \| `string`
 
+**`method`** getOrderId.
+
 #### Returns
 
 `undefined` \| `string`
+
+Возвращает orderId, сохраненный ранее в localStorage с ключом '${ window.location.host }-orderId'.
+Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
+Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
+Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig` (по умолчанию - 14 дней).
 
 ___
 
@@ -96,6 +104,25 @@ ___
 #### Returns
 
 `Observable`<`any`\>
+
+___
+
+### getOrderAndPaymentMethods$
+
+▸ **getOrderAndPaymentMethods$**(): `Observable`<{ `order`: [`Order`](../interfaces/Order.md) ; `methods`: [`PaymentMethod`](../interfaces/PaymentMethod.md)[]  }\>
+
+**`method`** getOrderAndPaymentMethods$
+
+**`see`** getOrder()
+
+#### Returns
+
+`Observable`<{ `order`: [`Order`](../interfaces/Order.md) ; `methods`: [`PaymentMethod`](../interfaces/PaymentMethod.md)[]  }\>
+
+Возвращает поток Observable с объектом, содержащим:
+ 1. В свойстве order - данные текущего заказа `Order`.
+ 2. В свойстве methods - массив доступных для этого заказа способов оплаты `PaymentMethod`.
+ Для получения данных только о заказе, без информации о способах оплаты используйте метод `getOrder()`;
 
 ___
 

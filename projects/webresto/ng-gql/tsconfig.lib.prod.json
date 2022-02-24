@@ -16,6 +16,10 @@
       "typedoc-plugin-markdown"
     ],
     "excludePrivate": true,
+    "categorizeByGroup": false,
+    "exclude": [
+      "**/*+(.spec|.module|.directive).ts"
+    ],
     "disableSources": true,
     "readme": "none",
     "emit": "both",

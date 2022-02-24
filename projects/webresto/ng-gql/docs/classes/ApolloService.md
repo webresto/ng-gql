@@ -88,7 +88,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `MutationOptions`<`T`, `V`\> |
+| `options` | `MutationOptions`<`T`, `V`, `DefaultContext`, `ApolloCache`<`any`\>\> |
 
 #### Returns
 

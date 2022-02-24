@@ -151,7 +151,7 @@ ___
 
 ### paymentMethod
 
-• **paymentMethod**: ``null`` \| [`PaymentMethod`](PaymentMethod.md)
+• **paymentMethod**: ``null`` \| `Pick`<[`PaymentMethod`](PaymentMethod.md), ``"id"`` \| ``"title"``\> & `Partial`<`Omit`<[`PaymentMethod`](PaymentMethod.md), ``"id"`` \| ``"title"``\>\>
 
 ___
 

@@ -2,17 +2,6 @@
 
 ## Table of contents
 
-### Classes
-
-- [AddDishToOrderDirective](classes/AddDishToOrderDirective.md)
-- [CheckoutDirective](classes/CheckoutDirective.md)
-- [EventMessage](classes/EventMessage.md)
-- [NgGqlModule](classes/NgGqlModule.md)
-- [ApolloService](classes/ApolloService.md)
-- [EventerService](classes/EventerService.md)
-- [NgGqlService](classes/NgGqlService.md)
-- [NgOrderService](classes/NgOrderService.md)
-
 ### Events
 
 - [CartBusEvent](README.md#cartbusevent)
@@ -39,6 +28,7 @@
 - [Navigation](interfaces/Navigation.md)
 - [NavigationsMenuItem](interfaces/NavigationsMenuItem.md)
 - [NavigationsOptions](interfaces/NavigationsOptions.md)
+- [NgGqlConfig](interfaces/NgGqlConfig.md)
 - [OrderDish](interfaces/OrderDish.md)
 - [Order](interfaces/Order.md)
 - [Customer](interfaces/Customer.md)
@@ -49,7 +39,6 @@
 - [CheckPhoneResponse](interfaces/CheckPhoneResponse.md)
 - [CheckResponse](interfaces/CheckResponse.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
-- [NgGqlConfig](interfaces/NgGqlConfig.md)
 
 ### Variables
 
@@ -64,6 +53,14 @@
 - [OrderDishFragments](README.md#orderdishfragments)
 - [OrderFragments](README.md#orderfragments)
 - [PaymentMethodFragments](README.md#paymentmethodfragments)
+
+### Classes
+
+- [EventMessage](classes/EventMessage.md)
+- [ApolloService](classes/ApolloService.md)
+- [EventerService](classes/EventerService.md)
+- [NgGqlService](classes/NgGqlService.md)
+- [NgOrderService](classes/NgOrderService.md)
 
 ### Type aliases
 

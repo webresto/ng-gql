@@ -2,14 +2,10 @@ import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged } from 'rxjs/operators';
-import type { Action, Message, OrderInput, Order, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm } from '../models';
+import type { NgGqlConfig, Action, Message, OrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm } from '../models';
 import { isValue, MessageOrActionGql, OrderFragments } from '../models';
 import { NgGqlService } from './ng-gql.service';
 import { EventerService } from './eventer.service';
-import type { NgGqlConfig } from '../ng-gql.module';
-
-const LS_NAME = 'orderId';
-
 
 @Injectable({
   providedIn: 'root'
@@ -31,18 +27,43 @@ export class NgOrderService {
     }
   }
 
-  getOrderId(): string | undefined {
-    return localStorage.getItem(LS_NAME) ?? undefined;
+  /**
+   * @method getOrderId.
+   *  @returns Возвращает orderId, сохраненный ранее в localStorage с ключом '${ window.location.host }-orderId'.
+   * Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
+   * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
+   * Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
+   */
+  getOrderId() {
+    try {
+      const cartString = localStorage.getItem(`${ window.location.host }-orderId`);
+      if (cartString) {
+        const cartData: {
+          cartId: string;
+          dt: number;
+        } = JSON.parse(cartString);
+        const idObsolescence = (43200000 * (isValue(this.config.obsolescence) ? this.config.obsolescence : 14));
+        if ((Date.now() - cartData.dt) > idObsolescence) {
+          return undefined;
+        } else {
+          return cartData.cartId;
+        };
+      } else {
+        return undefined;
+      };
+    } catch (error) {
+      return undefined;
+    };
   }
 
   setOrderId(orderId: string) {
-    if (orderId) {
-      localStorage.setItem(LS_NAME, orderId);
+    if (isValue(orderId)) {
+      localStorage.setItem(`${ window.location.host }-orderId`, orderId);
     }
   }
 
   removeOrderId() {
-    localStorage.removeItem(LS_NAME);
+    localStorage.removeItem(`${ window.location.host }-orderId`);
   }
 
   paymentLink$(phone: string, fromPhone: string, orderId: string): Observable<any> {
@@ -77,7 +98,7 @@ export class NgOrderService {
     shareReplay(1)
   );
 
-  private order$ = this.orderLoader$.pipe(
+  private orderAndPaymentMethods$ = this.orderLoader$.pipe(
     filter((value): value is string | undefined => value !== ''),
     switchMap(
       orderId => {
@@ -106,22 +127,58 @@ export class NgOrderService {
         shareReplay(1)
       )
     ),
+    switchMap(
+      order => this.ngGqlService.getPaymentMethods$(order.id).pipe(
+        map(
+          methods => {
+            return {
+              order: {
+                ...order, paymentMethod: !order.paymentMethod && methods.length > 0 ? {
+                  id: methods[ 0 ].id,
+                  title: methods[ 0 ].title
+                } : order.paymentMethod
+              }, methods
+            };
+          }),
+        shareReplay(1)
+      )
+    ),
     shareReplay(1)
   );
+
+  /**
+   * @method getOrderAndPaymentMethods$
+   * @returns Возвращает поток Observable с объектом, содержащим:
+   *  1. В свойстве order - данные текущего заказа `Order`.
+   *  2. В свойстве methods - массив доступных для этого заказа способов оплаты `PaymentMethod`.
+   *  Для получения данных только о заказе, без информации о способах оплаты используйте метод `getOrder()`;
+   *  @see getOrder()
+   */
+  getOrderAndPaymentMethods$(): Observable<{
+    order: Order,
+    methods: PaymentMethod[];
+  }> {
+    return this.orderAndPaymentMethods$;
+  }
 
   /**
    * @method  getOrder
    * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
    */
   getOrder(): Observable<Order> {
-    return this.order$;
+    return this.orderAndPaymentMethods$.pipe(
+      map(
+        orderAndPaymentMethods => orderAndPaymentMethods.order
+      ),
+      shareReplay(1)
+    );
   }
 
   /**
    * Поток Observable, в который будут поступать события по текущему заказу в процессе оформления, подразумевающие совершение каких-либо действий на стороне фронта и выполняемых пользователем
    * (переход на страницу оплаты или, к примеру, открытие диалогового окна с предложением блюда по акции, акции и т.п. )
    */
-  actions$ = this.order$.pipe(
+  actions$ = this.getOrder().pipe(
     distinctUntilKeyChanged('id'),
     switchMap(
       order => this.ngGqlService.customSubscribe$<Action, 'action', {
@@ -134,7 +191,7 @@ export class NgOrderService {
   /**
    * Поток Observable, в который будут поступать информационные сообщения по текущему заказу (блюдо добавлено/удалено/заказ оформлен).
    */
-  messages$ = this.order$.pipe(
+  messages$ = this.getOrder().pipe(
     distinctUntilKeyChanged('id'),
     switchMap(
       order => this.ngGqlService.customSubscribe$<Message, 'message', {

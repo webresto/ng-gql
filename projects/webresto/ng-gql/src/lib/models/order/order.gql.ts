@@ -40,7 +40,7 @@ export interface Order {
 	customer: Customer | null;
 	address: Address | null;
 	paid?: boolean;
-	paymentMethod: PaymentMethod | null;
+	paymentMethod: Pick<PaymentMethod, 'id' | 'title'> & Partial<Omit<PaymentMethod, 'id' | 'title'>> | null;
 	customData: {
 		[ key: string ]: string | any;
 	} | null;
