@@ -10,7 +10,7 @@
 - [nesting](NgGqlConfig.md#nesting)
 - [obsolescence](NgGqlConfig.md#obsolescence)
 - [busSubscribeMode](NgGqlConfig.md#bussubscribemode)
-- [customDataFields](NgGqlConfig.md#customdatafields)
+- [customFields](NgGqlConfig.md#customfields)
 
 ## Properties
 
@@ -49,15 +49,17 @@ ___
 
 ___
 
-### customDataFields
+### customFields
 
-• `Optional` **customDataFields**: `Object`
+• `Optional` **customFields**: `Object`
 
-Необязательный объект с дополнительной пользовательской информацией о структуре свойства customData в базовых моделях? если такие свойства объявлены в схеме GraphQL на сервере.
-В качестве ключей указывается название модели, в качестве значений - объект типа `ValuesOrBoolean` для свойства customData этой модели.
+Необязательный объект с дополнительной пользовательской информацией о пользовательских свойствах,
+добавленных в базовые модели на стороне конкретного сервера и объявленные в схеме GraphQL на сервере.
+В качестве ключей указывается название модели, в качестве значений - объекты,
+содержащие часть конфигурации `ValuesOrBoolean` этой модели, отражающую отличия с базовой моделью.
 
 **`see`** ValuesOrBoolean
 
 #### Index signature
 
-▪ [modelName: `string`]: [`ValuesOrBoolean`](../README.md#valuesorboolean)<{ `customData`: `unknown` \| ``null``  }[``"customData"``]\>
+▪ [modelName: `string`]: [`ValuesOrBoolean`](../README.md#valuesorboolean)<`unknown`\>

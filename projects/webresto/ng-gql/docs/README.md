@@ -103,41 +103,40 @@ ___
 
 #### Type declaration
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `order` | `T` | Заказ, с которым выполнется операция |
-| `successCb?` | (`result`: `T` extends [`OrderForm`](README.md#orderform) ? [`CheckResponse`](interfaces/CheckResponse.md) : [`Order`](interfaces/Order.md)) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
+| Name | Type |
+| :------ | :------ |
+| `successCb?` | (`result`: `T` extends [`OrderForm`](README.md#orderform) ? [`CheckResponse`](interfaces/CheckResponse.md) : [`Order`](interfaces/Order.md)) => `void` |
+| `errorCb?` | (`err`: `unknown`) => `void` |
 
 ___
 
 ### CartBusEventAdd
 
-• **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: [`AddToOrderInput`](README.md#addtoorderinput) ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)
+• **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: `Omit`<[`AddToOrderInput`](README.md#addtoorderinput), ``"orderId"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
 ### CartBusEventRemove
 
-• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: [`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish) ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)
+• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
 ### CartBusEventSetAmountToDish
 
-• **CartBusEventSetAmountToDish**: { `event`: ``"setDishAmount"`` ; `data`: [`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish) ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)
+• **CartBusEventSetAmountToDish**: { `event`: ``"setDishAmount"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
 ### CartBusEventSetCommentToDish
 
-• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: [`SetDishCommentInput`](README.md#setdishcommentinput) ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)
+• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
 ### CartBusEventCheckSend
 
-• **CartBusEventCheckSend**: { `event`: ``"check"`` \| ``"order"`` ; `ordered?`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`OrderForm`](README.md#orderform)\>
+• **CartBusEventCheckSend**: { `event`: ``"check"`` \| ``"order"`` ; `ordered?`: `BehaviorSubject`<`boolean`\> ; `orderForm`: [`OrderForm`](README.md#orderform)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`OrderForm`](README.md#orderform)\>
 
 ## Variables
 
@@ -328,42 +327,37 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `orderId?` | `string` |
+| `orderId` | `string` |
 | `dishId?` | `string` |
 | `amount?` | `number` |
 | `modifiers?` | [`OrderModifier`](interfaces/OrderModifier.md)[] |
 | `comment?` | `string` |
 | `from?` | `string` |
 | `replace?` | `boolean` |
-| `orderDishId?` | `string` |
 
 ___
 
 ### RemoveOrSetAmountToDish
 
-Ƭ **RemoveOrSetAmountToDish**: `Object`
+Ƭ **RemoveOrSetAmountToDish**<`T`\>: `T` extends [`Dish`](interfaces/Dish.md) ? { `dish`: [`Dish`](interfaces/Dish.md) ; `amount?`: `number` ; `id`: `string`  } : { `orderDishId?`: `number` ; `amount?`: `number` ; `id`: `string`  }
 
-#### Type declaration
+#### Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `id?` | `string` |
-| `orderDishId?` | `number` |
-| `amount?` | `number` |
+| `T` | extends [`Dish`](interfaces/Dish.md) \| `number` |
 
 ___
 
 ### SetDishCommentInput
 
-Ƭ **SetDishCommentInput**: `Object`
+Ƭ **SetDishCommentInput**<`T`\>: `T` extends [`Dish`](interfaces/Dish.md) ? { `id?`: `string` ; `comment?`: `string` ; `dish`: [`Dish`](interfaces/Dish.md)  } : { `id?`: `string` ; `comment?`: `string` ; `orderDishId?`: `number`  }
 
-#### Type declaration
+#### Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `id?` | `string` |
-| `orderDishId?` | `number` |
-| `comment?` | `string` |
+| `T` | extends [`Dish`](interfaces/Dish.md) \| `number` |
 
 ___
 
