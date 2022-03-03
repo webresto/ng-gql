@@ -6,12 +6,12 @@ import { filter, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
 import type {
   NgGqlConfig, GQLRequestVariables, Group, ValuesOrBoolean,
-  Dish, Phone, CheckPhoneResponse, PaymentMethod, Navigation,
+  Dish, Phone, CheckPhoneResponse, Navigation,
   CheckPhoneCodeInput, VCriteria, Maintenance
 } from '../models';
 import {
   isValue, NavigationFragments, maintenanceFragment, GroupFragments,
-  DishFragments, generateQueryString, PaymentMethodFragments
+  DishFragments, generateQueryString
 } from '../models';
 import { ApolloService } from './apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
@@ -276,24 +276,6 @@ export class NgGqlService {
       return this.dishes$;
     }
   }
-
-  getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
-    return this.customQuery$<PaymentMethod, 'paymentMethod', { orderId: string; }>(
-      'paymentMethod', PaymentMethodFragments.vOb, { orderId: orderId ?? '' }, {
-      fieldsTypeMap: new Map([
-        [ 'orderId', 'String!' ]
-      ])
-    }
-    ).pipe(
-      map(
-        data => (
-          Array.isArray(data.paymentMethod) ? data.paymentMethod : [ data.paymentMethod ]
-        ).filter(
-          method => method.enable
-        )
-      )
-    );
-  };
 
   getPhone$(phone: string): Observable<Phone | Phone[]> {
     return this.customQuery$<Phone, 'phone', {

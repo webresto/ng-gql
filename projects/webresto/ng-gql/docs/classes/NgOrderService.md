@@ -12,6 +12,7 @@
 - [setOrderId](NgOrderService.md#setorderid)
 - [removeOrderId](NgOrderService.md#removeorderid)
 - [paymentLink$](NgOrderService.md#paymentlink$)
+- [getPaymentMethods$](NgOrderService.md#getpaymentmethods$)
 - [getOrderAndPaymentMethods$](NgOrderService.md#getorderandpaymentmethods$)
 - [getOrder](NgOrderService.md#getorder)
 - [loadOrderAsCart](NgOrderService.md#loadorderascart)
@@ -109,6 +110,22 @@ ___
 
 ___
 
+### getPaymentMethods$
+
+▸ **getPaymentMethods$**(`orderId`): `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `orderId` | `undefined` \| `string` |
+
+#### Returns
+
+`Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
+
+___
+
 ### getOrderAndPaymentMethods$
 
 ▸ **getOrderAndPaymentMethods$**(): `Observable`<{ `order`: [`Order`](../interfaces/Order.md) ; `methods`: [`PaymentMethod`](../interfaces/PaymentMethod.md)[]  }\>
@@ -185,7 +202,7 @@ ___
 
 ### addToOrder
 
-▸ **addToOrder**(`order`, `loading`, `dish`, `amount?`, `dishModifiers?`, `successCb?`, `errorCb?`): `void`
+▸ **addToOrder**(`loading`, `dish`, `amount?`, `dishModifiers?`, `successCb?`, `errorCb?`): `void`
 
 **`method`** addToOrder
 Используется для отправки в шину события добавления блюда.
@@ -194,7 +211,6 @@ ___
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `order` | [`Order`](../interfaces/Order.md) | `undefined` | Заказ, с которым выполнется операция |
 | `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | добавляемое блюдо |
 | `amount` | `number` | `1` | количество |
@@ -210,7 +226,7 @@ ___
 
 ### removeFromOrder
 
-▸ **removeFromOrder**(`loading`, `dish`, `amount?`, `order`, `successCb?`, `errorCb?`): `void`
+▸ **removeFromOrder**(`loading`, `dish`, `amount?`, `successCb?`, `errorCb?`): `void`
 
 **`method`** removeFromOrder
 Используется для отправки в шину события удаления блюда из корзины
@@ -222,7 +238,6 @@ ___
 | `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | добавляемое блюдо |
 | `amount` | `number` | `1` | количество |
-| `order` | [`Order`](../interfaces/Order.md) | `undefined` | Заказ, с которым выполнется операция |
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
@@ -234,7 +249,7 @@ ___
 
 ### checkOrder
 
-▸ **checkOrder**(`order`, `successCb?`, `errorCb?`): `void`
+▸ **checkOrder**(`orderForm`, `successCb?`, `errorCb?`): `void`
 
 **`method`** checkOrder
 Используется для отправки в шину события обязательной проверки заказа перед оформлением.
@@ -244,7 +259,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `order` | [`OrderForm`](../README.md#orderform) | Проверяемый заказ |
+| `orderForm` | [`OrderForm`](../README.md#orderform) | Форма чекаута с данными проверяемого заказа |
 | `successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
@@ -256,7 +271,7 @@ ___
 
 ### sendOrder
 
-▸ **sendOrder**(`order`, `successCb?`, `errorCb?`): `void`
+▸ **sendOrder**(`orderForm`, `successCb?`, `errorCb?`): `void`
 
 **`method`** sendOrder
 Используется для отправки в шину события оформления заказа.
@@ -266,7 +281,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `order` | [`OrderForm`](../README.md#orderform) | Оформляемый заказ |
+| `orderForm` | [`OrderForm`](../README.md#orderform) | Форма чекаута с данными оформляемего заказа |
 | `successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
@@ -278,7 +293,7 @@ ___
 
 ### setDishAmount
 
-▸ **setDishAmount**(`loading`, `dish`, `amount?`, `order`, `successCb?`, `errorCb?`): `void`
+▸ **setDishAmount**(`loading`, `dish`, `amount?`, `successCb?`, `errorCb?`): `void`
 
 **`method`** setDishAmount
 Устанавливает для блюда dish в заказе количество amount.
@@ -290,7 +305,6 @@ ___
 | `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | блюдо, для которого изменяется количество заказываемых порций |
 | `amount` | `number` | `1` | необходимое количество порций |
-| `order` | [`Order`](../interfaces/Order.md) | `undefined` | Заказ, с которым выполнется операция |
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
@@ -302,7 +316,7 @@ ___
 
 ### setDishComment
 
-▸ **setDishComment**(`loading`, `dish`, `comment`, `order`, `successCb?`, `errorCb?`): `void`
+▸ **setDishComment**(`loading`, `dish`, `comment`, `successCb?`, `errorCb?`): `void`
 
 **`method`** setDishComment
 Добавляет к заказываемому блюду комментарий.
@@ -312,9 +326,8 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
-| `dish` | [`Dish`](../interfaces/Dish.md) | id добавляемого блюда в корзине |
+| `dish` | [`Dish`](../interfaces/Dish.md) | блюдо, которому добавляется комментарий в корзине |
 | `comment` | `string` | добавляемый комментарий |
-| `order` | [`Order`](../interfaces/Order.md) | Заказ, с которым выполнется операция |
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 

@@ -3,7 +3,8 @@ import type { OrderDish } from '../order-dish/order-dish.gql';
 import { OrderDishFragments } from '../order-dish/order-dish.gql';
 import type { OrderModifier } from '../modifier/modifier.gql';
 import type { Message, Action } from '../event-message/event-message';
-import { ValuesOrBoolean } from '../values-or-boolean';
+import type { ValuesOrBoolean } from '../values-or-boolean';
+import type { Dish } from '../dish/dish.gql';
 
 /**
  * @alias OrderState
@@ -72,27 +73,35 @@ export interface OrderData {
 }
 
 export type AddToOrderInput = {
-	orderId?: string,
+	orderId: string,
 	dishId?: string,
 	amount?: number,
 	modifiers?: OrderModifier[],
 	comment?: string,
 	from?: string,
 	replace?: boolean,
-	orderDishId?: string;
 };
 
-export type RemoveOrSetAmountToDish = {
-	id?: string,
-	orderDishId?: number,
+export type RemoveOrSetAmountToDish<T extends (Dish | number)> = T extends Dish ? {
+	dish: Dish;
 	amount?: number;
+	id: string;
+} : {
+	orderDishId?: number;
+	amount?: number;
+	id: string;
 };
 
-export type SetDishCommentInput = {
+export type SetDishCommentInput<T extends (Dish | number)> = T extends Dish ? {
 	id?: string,
-	orderDishId?: number,
 	comment?: string;
+	dish: Dish;
+} : {
+	id?: string,
+	comment?: string;
+	orderDishId?: number;
 };
+
 export type OrderInput = {
 	orderId: string,
 	paymentMethodId?: string,

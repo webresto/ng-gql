@@ -1,4 +1,5 @@
 import type { BehaviorSubject } from 'rxjs';
+import type { Dish } from './dish/dish.gql';
 import type { Order, OrderForm, AddToOrderInput, RemoveOrSetAmountToDish, SetDishCommentInput, CheckResponse } from './order/order.gql';
 
 /**
@@ -12,8 +13,6 @@ export type CartBusEvent = CartBusEventAdd | CartBusEventRemove | CartBusEventSe
  * @event CartBusEventBase Базовый интерфейс событий в шине событий
  */
 export type CartBusEventBase<T extends (Order | OrderForm) = Order> = {
-  /** Заказ, с которым выполнется операция */
-  order: T;
   /** Пользовательский callback, который дополнительно будет выполнен в случае успешной операции */
   successCb?: (result: T extends OrderForm ? CheckResponse : Order) => void;
   /** Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции */
@@ -26,11 +25,11 @@ export type CartBusEventBase<T extends (Order | OrderForm) = Order> = {
 export type CartBusEventAdd = {
   event: 'add';
   /** Данные для операции */
-  data: AddToOrderInput;
+  data: Omit<AddToOrderInput, 'orderId'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
   loading: BehaviorSubject<boolean>;
 
-} & CartBusEventBase;
+} & CartBusEventBase<Order>;
 
 /**
  * @event CartBusEventRemove
@@ -38,10 +37,10 @@ export type CartBusEventAdd = {
 export type CartBusEventRemove = {
   event: 'remove';
   /** Данные для операции */
-  data: RemoveOrSetAmountToDish;
+  data: Omit<RemoveOrSetAmountToDish<Dish>, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
   loading: BehaviorSubject<boolean>;
-} & CartBusEventBase;
+} & CartBusEventBase<Order>;
 
 /**
  * @event CartBusEventSetToDish
@@ -50,11 +49,11 @@ export type CartBusEventRemove = {
 export type CartBusEventSetAmountToDish = {
   event: 'setDishAmount';
   /** Данные для операции */
-  data: RemoveOrSetAmountToDish;
+  data: Omit<RemoveOrSetAmountToDish<Dish>, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
   loading: BehaviorSubject<boolean>;
   /** Заказ, с которым выполнется операция */
-} & CartBusEventBase;
+} & CartBusEventBase<Order>;
 
 /**
  * @event CartBusEventSetToDish
@@ -63,11 +62,11 @@ export type CartBusEventSetAmountToDish = {
 export type CartBusEventSetCommentToDish = {
   event: 'setCommentToDish';
   /** Данные для операции */
-  data: SetDishCommentInput;
+  data: Omit<SetDishCommentInput<Dish>, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
   loading: BehaviorSubject<boolean>;
   /** Заказ, с которым выполнется операция */
-} & CartBusEventBase;
+} & CartBusEventBase<Order>;
 
 /**
  * @event CartBusEventCheckSend
@@ -76,4 +75,6 @@ export type CartBusEventCheckSend = {
   event: 'check' | 'order';
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
   ordered?: BehaviorSubject<boolean>;
+
+  orderForm: OrderForm;
 } & CartBusEventBase<OrderForm>;

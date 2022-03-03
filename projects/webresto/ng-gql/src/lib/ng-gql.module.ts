@@ -60,7 +60,19 @@ export class NgGqlModule {
     if (!apollo.client) {
       apollo.create({
         link,
-        cache: new InMemoryCache()
+        cache: new InMemoryCache({
+          typePolicies: {
+            "Order": {
+              fields: {
+                "dishes": {
+                  merge(existing, incoming) {
+                    return [ ...incoming ];
+                  }
+                }
+              }
+            }
+          }
+        })
       });
     };
   }

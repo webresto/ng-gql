@@ -30,7 +30,7 @@ export class AddDishToOrderDirective {
   private addDishToOrder() {
     if (this.order && this.dish && this.modifiers) {
       this.orderService
-        .addToOrder(this.order, this.loading, this.dish, this.amountDish, this.modifiers, () => this.success.emit(true), e => this.error.emit(e));
+        .addToOrder(this.loading, this.dish, this.amountDish, this.modifiers, () => this.success.emit(true), e => this.error.emit(e));
     }
 
   }

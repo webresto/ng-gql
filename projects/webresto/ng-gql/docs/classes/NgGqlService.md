@@ -13,7 +13,6 @@
 - [addAmountToDish](NgGqlService.md#addamounttodish)
 - [getMenu$](NgGqlService.md#getmenu$)
 - [getDishes$](NgGqlService.md#getdishes$)
-- [getPaymentMethods$](NgGqlService.md#getpaymentmethods$)
 - [getPhone$](NgGqlService.md#getphone$)
 - [checkPhone$](NgGqlService.md#checkphone$)
 - [checkPhoneCode$](NgGqlService.md#checkphonecode$)
@@ -113,22 +112,6 @@ ___
 #### Returns
 
 `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
-
-___
-
-### getPaymentMethods$
-
-▸ **getPaymentMethods$**(`orderId`): `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `undefined` \| `string` |
-
-#### Returns
-
-`Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
 ___
 

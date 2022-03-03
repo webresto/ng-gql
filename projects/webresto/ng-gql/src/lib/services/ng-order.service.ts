@@ -2,8 +2,8 @@ import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged } from 'rxjs/operators';
-import type { NgGqlConfig, Action, Message, OrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm } from '../models';
-import { isValue, MessageOrActionGql, OrderFragments } from '../models';
+import type { NgGqlConfig, Action, Message, OrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput } from '../models';
+import { isValue, MessageOrActionGql, OrderFragments, PaymentMethodFragments } from '../models';
 import { NgGqlService } from './ng-gql.service';
 import { EventerService } from './eventer.service';
 
@@ -101,6 +101,24 @@ export class NgOrderService {
       );
   }
 
+  getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
+    return this.ngGqlService.customQuery$<PaymentMethod, 'paymentMethod', { orderId: string; }>(
+      'paymentMethod', PaymentMethodFragments.vOb, { orderId: orderId ?? '' }, {
+      fieldsTypeMap: new Map([
+        [ 'orderId', 'String!' ]
+      ])
+    }
+    ).pipe(
+      map(
+        data => (
+          Array.isArray(data.paymentMethod) ? data.paymentMethod : [ data.paymentMethod ]
+        ).filter(
+          method => method.enable
+        )
+      )
+    );
+  };
+
   private _orderBusSubscription$: Subscription | undefined;
 
   private _orderLoader$ = new BehaviorSubject<string | undefined>(this.getOrderId());
@@ -111,7 +129,7 @@ export class NgOrderService {
   }> = this._orderLoader$.asObservable().pipe(
     distinctUntilChanged(),
     switchMap(
-      orderId => this.ngGqlService.getPaymentMethods$(orderId).pipe(
+      orderId => this.getPaymentMethods$(orderId).pipe(
         map(
           methods => ({
             methods, orderId
@@ -279,54 +297,68 @@ export class NgOrderService {
   * @see setDishAmount
   * @see setDishComment
   */
-  orderBus$ = this._orderBus$.asObservable().pipe(
-    concatMap(
-      busEvent => {
-        const reducer = () => {
-          switch (busEvent.event) {
-            case 'add': return this.addDishToOrder$({
-              ...busEvent.data, orderId: busEvent.order.id
-            });
-            case 'remove': return this.removeDishFromOrder$({
-              id: busEvent.order.id,
-              orderDishId: busEvent.data.orderDishId,
-              amount: busEvent.data.amount
-            });
-            case 'check': return this.checkOrder$(this.makeOrderData(busEvent.order, 'check'));
-            case 'order': return this.sendOrder$(this.makeOrderData(busEvent.order, 'send'));
-            case 'setDishAmount': return this.setDishAmount$(busEvent.data);
-            case 'setCommentToDish': return this.setDishComment$(busEvent.data);
-          };
-        };
-        return (<Observable<Order | CheckResponse>> reducer()).pipe(
-          map(
-            result => {
-              if ('loading' in busEvent) {
-                busEvent.loading.next(false);
-                if (busEvent.successCb) {
-                  busEvent.successCb(<Order> result);
-                };
-              } else {
-                busEvent.ordered?.next(true);
-                if (busEvent.successCb) {
-                  busEvent.successCb(<CheckResponse> result);
-                };
+  orderBus$ = this.orderAndPaymentMethods$.pipe(
+    map(
+      data => data.order
+    ),
+    distinctUntilKeyChanged('id'),
+    switchMap(
+      order => this._orderBus$.asObservable().pipe(
+        concatMap(
+          busEvent => {
+            const reducer = () => {
+              switch (busEvent.event) {
+                case 'add': return this.addDishToOrder$({
+                  ...busEvent.data,
+                  orderId: order.id,
+                });
+                case 'remove': return this.removeDishFromOrder$({
+                  id: order.id,
+                  orderDishId: order.dishes.find(orderDish => orderDish.dish.id === busEvent.data.dish.id)?.id,
+                  amount: busEvent.data.amount
+                });
+                case 'check': return this.checkOrder$(this.makeOrderData(busEvent.orderForm, 'check'));
+                case 'order': return this.sendOrder$(this.makeOrderData(busEvent.orderForm, 'send'));
+                case 'setDishAmount': return this.setDishAmount$({
+                  ...busEvent.data, id: order.id
+                });
+                case 'setCommentToDish': return this.setDishComment$({
+                  ...busEvent.data, id: order.id
+                });
               };
-            }),
-          catchError((err: unknown) => {
-            if ('loading' in busEvent) {
-              busEvent.loading.next(false);
-            } else {
-              busEvent.ordered?.next(false);
             };
-            if (busEvent.errorCb) {
-              busEvent.errorCb(err);
-            };
-            console.log(err);
-            return of(() => { });
-          })
-        );
-      }),
+            return (<Observable<Order | CheckResponse>> reducer()).pipe(
+              map(
+                result => {
+                  if ('loading' in busEvent) {
+                    busEvent.loading.next(false);
+                    if (busEvent.successCb) {
+                      busEvent.successCb(<Order> result);
+                    };
+                  } else {
+                    busEvent.ordered?.next(true);
+                    if (busEvent.successCb) {
+                      busEvent.successCb(<CheckResponse> result);
+                    };
+                  };
+                }),
+              catchError((err: unknown) => {
+                if ('loading' in busEvent) {
+                  busEvent.loading.next(false);
+                } else {
+                  busEvent.ordered?.next(false);
+                };
+                if (busEvent.errorCb) {
+                  busEvent.errorCb(err);
+                };
+                console.log(err);
+                return of(() => { });
+              })
+            );
+          }),
+        shareReplay(1)
+      )
+    ),
     shareReplay(1)
   );
 
@@ -334,7 +366,6 @@ export class NgOrderService {
   /**
    * @method addToOrder
    * Используется для отправки в шину события добавления блюда.
-   * @param order - Заказ, с которым выполнется операция
    * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
    * @param dish - добавляемое блюдо
    * @param amount - количество
@@ -343,7 +374,6 @@ export class NgOrderService {
    * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
   addToOrder(
-    order: Order,
     loading: BehaviorSubject<boolean>,
     dish: Dish,
     amount: number = 1,
@@ -353,7 +383,7 @@ export class NgOrderService {
   ) {
     loading.next(true);
     this._orderBus$.emit({
-      event: 'add', loading, order, successCb, errorCb, data: {
+      event: 'add', loading, successCb, errorCb, data: {
         dishId: dish.id,
         modifiers: dishModifiers.map(
           dishModifier => ({
@@ -363,7 +393,7 @@ export class NgOrderService {
             groupId: dishModifier.dish.parentGroup?.id ?? dishModifier.dish.groupId
           })
         ),
-        amount,
+        amount
       }
     });
   }
@@ -383,15 +413,12 @@ export class NgOrderService {
     loading: BehaviorSubject<boolean>,
     dish: Dish,
     amount: number = 1,
-    order: Order,
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void) {
     loading.next(true);
-    const orderDishId = order.dishes.find(orderDish => orderDish.dish.id === dish.id)?.id;
     this._orderBus$.emit({
-      event: 'remove', loading, order, successCb, errorCb, data: {
-        id: order.id,
-        orderDishId,
+      event: 'remove', loading, successCb, errorCb, data: {
+        dish,
         amount
       }
     });
@@ -401,16 +428,16 @@ export class NgOrderService {
    * @method checkOrder
    * Используется для отправки в шину события обязательной проверки заказа перед оформлением.
    * Метод необходимо вызывать после того, как пользователь полностью заполнил в заказе все необходимые данные и далее после каждого вносимого в форму изменения, при условии, что в форме все необходимые данные заполнены.
-   * @param order - Проверяемый заказ
+  * @param orderForm - Форма чекаута с данными проверяемого заказа
    * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
    * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
-  checkOrder(order: OrderForm,
+  checkOrder(orderForm: OrderForm,
     successCb?: (order: CheckResponse) => void,
     errorCb?: (err: unknown) => void
   ) {
     this._orderBus$.emit({
-      event: 'check', successCb, errorCb, order,
+      event: 'check', successCb, errorCb, orderForm,
     });
   }
 
@@ -418,23 +445,22 @@ export class NgOrderService {
   * @method sendOrder
   * Используется для отправки в шину события оформления заказа.
   * Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
-  * @param order - Оформляемый заказ
+  * @param orderForm - Форма чекаута с данными оформляемего заказа
   * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
   * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
-  sendOrder(order: OrderForm,
+  sendOrder(orderForm: OrderForm,
     successCb?: (order: CheckResponse) => void,
     errorCb?: (err: unknown) => void
   ) {
     this._orderBus$.emit({
-      event: 'order', successCb, errorCb, order
+      event: 'order', successCb, errorCb, orderForm
     });
   }
 
   /**
   * @method setDishAmount
   * Устанавливает для блюда dish в заказе количество amount.
-  * @param order - Заказ, с которым выполнется операция
   * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
   * @param dish - блюдо, для которого изменяется количество заказываемых порций
   * @param amount - необходимое количество порций
@@ -445,15 +471,13 @@ export class NgOrderService {
     loading: BehaviorSubject<boolean>,
     dish: Dish,
     amount: number = 1,
-    order: Order,
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void
   ) {
     loading.next(true);
-    const orderDishId = order.dishes.find(orderDish => orderDish.dish.id === dish.id)?.id;
     this._orderBus$.emit({
-      event: 'setDishAmount', loading, order, successCb, errorCb, data: {
-        orderDishId,
+      event: 'setDishAmount', loading, successCb, errorCb, data: {
+        dish,
         amount
       }
     });
@@ -462,9 +486,8 @@ export class NgOrderService {
   /**
   * @method setDishComment
   * Добавляет к заказываемому блюду комментарий.
-  * @param order - Заказ, с которым выполнется операция
   * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
-  * @param dish - id добавляемого блюда в корзине
+  * @param dish - блюдо, которому добавляется комментарий в корзине
   * @param comment - добавляемый комментарий
   * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
   * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
@@ -473,15 +496,13 @@ export class NgOrderService {
     loading: BehaviorSubject<boolean>,
     dish: Dish,
     comment: string,
-    order: Order,
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void
   ) {
     loading.next(true);
-    const orderDishId = order.dishes.find(orderDish => orderDish.dish.id === dish.id)?.id;
     this._orderBus$.emit({
-      event: 'setCommentToDish', loading, order, successCb, errorCb, data: {
-        orderDishId,
+      event: 'setCommentToDish', loading, successCb, errorCb, data: {
+        dish,
         comment
       }
     });
@@ -497,8 +518,8 @@ export class NgOrderService {
     );
   };
 
-  private removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>('orderRemoveDish', OrderFragments.vOb, data, { optionalFields: [ 'id', 'orderDishId' ] }).pipe(
+  private removeDishFromOrder$(data: RemoveOrSetAmountToDish<number>): Observable<Order> {
+    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish<number>>('orderRemoveDish', OrderFragments.vOb, data, { optionalFields: [ 'orderDishId', 'id' ] }).pipe(
       map(
         data => data.orderRemoveDish
       )
@@ -523,7 +544,7 @@ export class NgOrderService {
     };
   }
 
-  private sendOrder$(data: Exclude<OrderInput, 'comment' | 'pickupAddressId' | 'locationId' | 'date'>): Observable<CheckResponse> {
+  private sendOrder$(data: Omit<OrderInput, 'comment' | 'pickupAddressId' | 'locationId' | 'date'>): Observable<CheckResponse> {
     return this.ngGqlService.customMutation$<CheckResponse, 'sendOrder', OrderInput>('sendOrder', {
       order: OrderFragments.vOb,
       message: MessageOrActionGql.messageVob,
@@ -559,16 +580,16 @@ export class NgOrderService {
     );
   };
 
-  private setDishAmount$(data: RemoveOrSetAmountToDish): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderSetDishAmount', RemoveOrSetAmountToDish>('orderSetDishAmount', OrderFragments.vOb, data).pipe(
+  private setDishAmount$(data: RemoveOrSetAmountToDish<number>): Observable<Order> {
+    return this.ngGqlService.customMutation$<Order, 'orderSetDishAmount', RemoveOrSetAmountToDish<number>>('orderSetDishAmount', OrderFragments.vOb, data).pipe(
       map(
         data => data.orderSetDishAmount
       )
     );
   };
 
-  private setDishComment$(data: RemoveOrSetAmountToDish): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderSetDishComment', RemoveOrSetAmountToDish>('orderSetDishComment', OrderFragments.vOb, data).pipe(
+  private setDishComment$(data: SetDishCommentInput<number>): Observable<Order> {
+    return this.ngGqlService.customMutation$<Order, 'orderSetDishComment', SetDishCommentInput<number>>('orderSetDishComment', OrderFragments.vOb, data).pipe(
       map(
         data => data.orderSetDishComment
       )
