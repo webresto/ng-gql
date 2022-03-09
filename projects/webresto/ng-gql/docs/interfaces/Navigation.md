@@ -1,20 +1,30 @@
 # Interface: Navigation
 
+## Hierarchy
+
+- [`NavigationBase`](NavigationBase.md)
+
+  ↳ **`Navigation`**
+
 ## Table of contents
 
 ### Properties
 
-- [mnemonicId](Navigation.md#mnemonicid)
-- [description](Navigation.md#description)
-- [options](Navigation.md#options)
 - [id](Navigation.md#id)
+- [description](Navigation.md#description)
+- [mnemonicId](Navigation.md#mnemonicid)
+- [options](Navigation.md#options)
 - [navigation\_menu](Navigation.md#navigation_menu)
 
 ## Properties
 
-### mnemonicId
+### id
 
-• **mnemonicId**: `string`
+• **id**: `number`
+
+#### Inherited from
+
+[NavigationBase](NavigationBase.md).[id](NavigationBase.md#id)
 
 ___
 
@@ -22,17 +32,21 @@ ___
 
 • **description**: `string`
 
+#### Inherited from
+
+[NavigationBase](NavigationBase.md).[description](NavigationBase.md#description)
+
+___
+
+### mnemonicId
+
+• **mnemonicId**: `string`
+
 ___
 
 ### options
 
 • **options**: [`NavigationsOptions`](NavigationsOptions.md)
-
-___
-
-### id
-
-• **id**: `number`
 
 ___
 

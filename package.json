@@ -6,7 +6,8 @@
     "updatePackageVersion": "node updatePackageVersion.js",
     "build": "ng build",
     "build:local": "npm run build && npm run gen-doc",
-    "watch": "ng build --watch --configuration axrl",
+    "watch:axrl": "ng build --watch --configuration axrl",
+    "watch:axrl:nadym": "ng build --watch --configuration axrl-nadym",
     "gen-doc": "typedoc --tsconfig projects/webresto/ng-gql/tsconfig.lib.prod.json"
   },
   "private": true,
@@ -18,7 +19,7 @@
     "@axrl/ngx-extended-form-builder": "^1.0.9",
     "apollo-angular": "^3.0.0",
     "graphql": "^16.3.0",
-    "rxjs": "^7.5.4",
+    "rxjs": "^7.5.5",
     "subscriptions-transport-ws": "^0.11.0",
     "tslib": "^2.3.1",
     "zone.js": "^0.11.5"
@@ -29,7 +30,7 @@
     "@angular/compiler-cli": "^13.2.5",
     "@types/node": "^17.0.21",
     "ng-packagr": "^13.2.1",
-    "typedoc": "^0.22.12",
+    "typedoc": "^0.22.13",
     "typedoc-plugin-markdown": "^3.11.14",
     "typescript": "^4.6.2"
   }

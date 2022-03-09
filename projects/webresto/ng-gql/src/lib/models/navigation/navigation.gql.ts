@@ -1,10 +1,33 @@
 import { ValuesOrBoolean } from '../values-or-boolean';
 
-export interface Navigation {
-	mnemonicId: string;
-	description: string;
-	options: NavigationsOptions;
+/**
+ * @interface NavigationBase
+ * Базовый интерфейс для объектов, содержащих информацию о навигации внутри приложения.
+ */
+export interface NavigationBase {
 	id: number;
+	description: string;
+}
+
+/**
+ * @interface NavigationLoader<T>
+ * Интерфейс объекта для потока, в котором происходит загрузка массива обьъектов навигации для прилоржения.
+ * @property options.queryObject -  Объект ValuesOrBoolean для загрузки навигации
+ * @property options.uniqueKeyForCompareItem - наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id').
+ * Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки.
+ */
+export interface NavigationLoader<T> {
+	nameQuery: string;
+	nameSubscribe: string;
+	queryObject: ValuesOrBoolean<T>;
+	uniqueKeyForCompareItem: keyof {
+		[ K in keyof T ]: K extends string ? K : never
+	};
+}
+
+export interface Navigation extends NavigationBase {
+	mnemonicId: string;
+	options: NavigationsOptions;
 	navigation_menu: NavigationsMenuItem[];
 }
 

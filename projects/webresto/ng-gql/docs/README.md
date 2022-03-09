@@ -25,6 +25,8 @@
 - [Maintenance](interfaces/Maintenance.md)
 - [OrderModifier](interfaces/OrderModifier.md)
 - [Modifier](interfaces/Modifier.md)
+- [NavigationBase](interfaces/NavigationBase.md)
+- [NavigationLoader](interfaces/NavigationLoader.md)
 - [Navigation](interfaces/Navigation.md)
 - [NavigationsMenuItem](interfaces/NavigationsMenuItem.md)
 - [NavigationsOptions](interfaces/NavigationsOptions.md)

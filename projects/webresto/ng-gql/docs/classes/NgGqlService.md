@@ -8,6 +8,7 @@
 
 ### Methods
 
+- [updateInitGroupSlug](NgGqlService.md#updateinitgroupslug)
 - [getNavigation$](NgGqlService.md#getnavigation$)
 - [getMaintenance$](NgGqlService.md#getmaintenance$)
 - [addAmountToDish](NgGqlService.md#addamounttodish)
@@ -42,9 +43,52 @@
 
 ## Methods
 
+### updateInitGroupSlug
+
+▸ **updateInitGroupSlug**(`initGroupSlug`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `initGroupSlug` | `string` |
+
+#### Returns
+
+`void`
+
+___
+
 ### getNavigation$
 
+▸ **getNavigation$**<`T`\>(`options`): `Observable`<`T`[]\>
+
+**`method`** getNavigation$
+Используется для получения массива обьектов навигации для различных компонентов приложения.
+
+**`see`** NavigationLoader<T>
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`NavigationBase`](../interfaces/NavigationBase.md) |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | [`NavigationLoader`](../interfaces/NavigationLoader.md)<`T`\> | объект NavigationLoader. Обязателен, при использовании нестандартной схемы навигации в приложении. |
+
+#### Returns
+
+`Observable`<`T`[]\>
+
 ▸ **getNavigation$**(): `Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
+
+**`method`** getNavigation$
+Используется для получения массива обьектов навигации для различных компонентов приложения.
+Если приложение использует стандартную механику навигации, параметр `options` - не требуется.
 
 #### Returns
 

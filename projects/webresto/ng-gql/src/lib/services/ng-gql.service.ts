@@ -2,11 +2,11 @@ import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular';
 import { BehaviorSubject, of } from 'rxjs';
-import { filter, map, switchMap, shareReplay, startWith } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, startWith, mergeWith, distinctUntilChanged } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
 import type {
   NgGqlConfig, GQLRequestVariables, Group, ValuesOrBoolean,
-  Dish, Phone, CheckPhoneResponse, Navigation,
+  Dish, Phone, CheckPhoneResponse, Navigation, NavigationBase, NavigationLoader,
   CheckPhoneCodeInput, VCriteria, Maintenance
 } from '../models';
 import {
@@ -47,13 +47,61 @@ export class NgGqlService {
 
   }
 
-  private _navigationData$: Observable<Navigation[]> = this.queryAndSubscribe(
-    'navigations', 'navigation', NavigationFragments.vOb, 'mnemonicId'
+  private _navigationLoader$ = new BehaviorSubject<NavigationLoader<NavigationBase> | null>(null);
+  private _navigationData$ = this._navigationLoader$.pipe(
+    filter((data): data is NavigationLoader<NavigationBase> => !!data),
+    switchMap(
+      data => this.queryAndSubscribe(data.nameQuery, data.nameSubscribe, {
+        ...data.queryObject, ... this.config.customFields?.[ 'navigation' ]
+      }, data.uniqueKeyForCompareItem)
+    ),
+    shareReplay(1)
   );
 
-  getNavigation$(): Observable<Navigation[]> {
-    return this._navigationData$;
+  private _initGroupSlug$ = new EventEmitter<string>();
+
+  updateInitGroupSlug(initGroupSlug: string) {
+    this._initGroupSlug$.emit(initGroupSlug);
   }
+
+  /**
+   * @method getNavigation$
+   * Используется для получения массива обьектов навигации для различных компонентов приложения.
+   * @param options - объект NavigationLoader. Обязателен, при использовании нестандартной схемы навигации в приложении.
+   * @see NavigationLoader<T>
+   */
+  getNavigation$<T extends NavigationBase>(options: NavigationLoader<T>): Observable<T[]>;
+
+  /**
+   * @method getNavigation$
+   * Используется для получения массива обьектов навигации для различных компонентов приложения.
+   * Если приложение использует стандартную механику навигации, параметр `options` - не требуется.
+   */
+  getNavigation$(): Observable<Navigation[]>;
+
+  /**
+ * @method getNavigation$
+ * Используется для получения массива обьектов навигации для различных компонентов приложения.
+ * Если приложение использует стандартную механику навигации, параметр `options` - не требуется.
+ * Если приложение использует нестандартную механику навигации, параметр `options` - обязательный.
+ * @param options - объект NavigationLoader.
+ * Обязателен, при использовании нестандартной схемы навигации в приложении.
+ * @see NavigationLoader<T>
+ */
+  getNavigation$<T extends NavigationBase = Navigation>(options?: NavigationLoader<T>): Observable<T[]> {
+    if (options) {
+      (<BehaviorSubject<NavigationLoader<T>>> this._navigationLoader$).next(options);
+    } else {
+      (<BehaviorSubject<NavigationLoader<Navigation>>> this._navigationLoader$).next({
+        nameQuery: 'navigations',
+        nameSubscribe: 'navigation',
+        queryObject: NavigationFragments.vOb,
+        uniqueKeyForCompareItem: 'mnemonicId'
+      });
+    };
+    return <Observable<T[]>> this._navigationData$;
+  }
+
 
   getMaintenance$(): Observable<Maintenance> {
     return this.queryAndSubscribe('maintenance', 'maintenance', maintenanceFragment.vOb, 'id').pipe(
@@ -64,37 +112,54 @@ export class NgGqlService {
     );
   }
 
+  /**
+   * Внутренний метод, используемый для загрузки основного - "корневого" списка групп.
+   * @param slug - init- slug.
+   * Либо принимается извне через внутренний поток `initGroupSlug$`, либо формируется на основании данных в массиве Navigation[], загруженном на старте приложения.
+   * Чтобы обновлять значение в `initGroupSlug$` используется метод `updateInitGroupSlug`
+   * @returns
+   */
+  private _loadGroups(slug: string) {
+    return this.customQuery$<{ childGroups: { slug: string; id: string; }[]; }, 'groups', VCriteria>('groups', {
+      childGroups: {
+        slug: true,
+        id: true
+      }
+    }, {
+      criteria: {
+        slug
+      }
+    }).pipe(
+      map(group => {
+        const array = (<{
+          childGroups: {
+            id: string;
+            slug: string;
+          }[];
+        }[]> group.groups);
+        return array.length == 0 ? [] : array[ 0 ].childGroups;
+      }
+      ),
+      shareReplay(1)
+    );
+  }
+
   rootGroups$: Observable<{
     slug: string;
     id: string | null;
   }[]> = this._navigationData$.pipe(
+    filter((navigationData): navigationData is Navigation[] => !!navigationData && Array.isArray(navigationData) && !!navigationData[ 0 ] && 'mnemonicId' in navigationData[ 0 ]),
     switchMap(navigationData => {
       const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
       return menuItem.options.behavior?.includes('navigationmenu') ?
-        of(menuItem.navigation_menu.map(item => ({ slug: item.groupSlug, id: null }))) :
-        this.customQuery$<{ childGroups: { slug: string; id: string; }[]; }, 'groups', VCriteria>('groups', {
-          childGroups: {
-            slug: true,
-            id: true
-          }
-        }, {
-          criteria: {
-            slug: menuItem.options.initGroupSlug
-          }
-        }).pipe(
-          map(group => {
-            const array = (<{
-              childGroups: {
-                id: string;
-                slug: string;
-              }[];
-            }[]> group.groups);
-            return array.length == 0 ? [] : array[ 0 ].childGroups;
-          }
-          ),
-          shareReplay(1)
-        );
+        of(menuItem.navigation_menu.map(item => ({ slug: item.groupSlug, id: null }))) : this._loadGroups(menuItem.options.initGroupSlug);
     }),
+    mergeWith(
+      this._initGroupSlug$.asObservable().pipe(
+        distinctUntilChanged(),
+        switchMap(slug => this._loadGroups(slug))
+      )
+    ),
     shareReplay(1)
   );
 
