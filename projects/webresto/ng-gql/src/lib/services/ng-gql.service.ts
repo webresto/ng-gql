@@ -1,4 +1,4 @@
-import { EventEmitter, Inject, Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular';
 import { BehaviorSubject, of } from 'rxjs';
@@ -58,10 +58,10 @@ export class NgGqlService {
     shareReplay(1)
   );
 
-  private _initGroupSlug$ = new EventEmitter<string>();
+  private _initGroupSlug$ = new BehaviorSubject<string | null>(null);
 
   updateInitGroupSlug(initGroupSlug: string) {
-    this._initGroupSlug$.emit(initGroupSlug);
+    this._initGroupSlug$.next(initGroupSlug);
   }
 
   /**
@@ -156,6 +156,7 @@ export class NgGqlService {
     }),
     mergeWith(
       this._initGroupSlug$.asObservable().pipe(
+        filter((slug): slug is string => !!slug),
         distinctUntilChanged(),
         switchMap(slug => this._loadGroups(slug))
       )
@@ -638,7 +639,7 @@ export class NgGqlService {
 
   destroy() {
     Object.values(this).filter(
-      (property): property is EventEmitter<unknown> | BehaviorSubject<unknown> => property instanceof EventEmitter || property instanceof BehaviorSubject
+      (property): property is BehaviorSubject<unknown> => property instanceof BehaviorSubject
     ).forEach(
       property => property.complete()
     );
