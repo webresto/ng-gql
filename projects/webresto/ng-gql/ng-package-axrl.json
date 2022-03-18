@@ -3,5 +3,8 @@
   "dest": "../../../../base_layouts/project/node_modules/@webresto/ng-gql",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "@axrl/ngx-extended-form-builder"
+  ]
 }

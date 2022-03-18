@@ -93,7 +93,7 @@ export class NgGqlService {
       (<BehaviorSubject<NavigationLoader<T>>> this._navigationLoader$).next(options);
     } else {
       (<BehaviorSubject<NavigationLoader<Navigation>>> this._navigationLoader$).next({
-        nameQuery: 'navigations',
+        nameQuery: 'navigation',
         nameSubscribe: 'navigation',
         queryObject: NavigationFragments.vOb,
         uniqueKeyForCompareItem: 'mnemonicId'
@@ -120,7 +120,7 @@ export class NgGqlService {
    * @returns
    */
   private _loadGroups(slug: string) {
-    return this.customQuery$<{ childGroups: { slug: string; id: string; }[]; }, 'groups', VCriteria>('groups', {
+    return this.customQuery$<{ childGroups: { slug: string; id: string; }[]; }, 'group', VCriteria>('group', {
       childGroups: {
         slug: true,
         id: true
@@ -136,7 +136,7 @@ export class NgGqlService {
             id: string;
             slug: string;
           }[];
-        }[]> group.groups);
+        }[]> group.group);
         return array.length == 0 ? [] : array[ 0 ].childGroups;
       }
       ),
@@ -205,7 +205,7 @@ export class NgGqlService {
         } : {
           slug: rootGroups.map(rootGroup => rootGroup.slug)
         };
-        return this.queryAndSubscribe<Group, 'groups', 'group', VCriteria>('groups', 'group', queryObject, 'id', {
+        return this.queryAndSubscribe<Group, 'group', 'group', VCriteria>('group', 'group', queryObject, 'id', {
           criteria
         });
       }),
@@ -230,7 +230,7 @@ export class NgGqlService {
         const allNestingsGroups = getGroups(groups);
         const allNestingsIds = allNestingsGroups.map(group => group.id);
         console.log(allNestingsGroups);
-        return this.queryAndSubscribe<Dish, 'dishes', 'dish', VCriteria>('dishes', 'dish', DishFragments.vOb, 'id', {
+        return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', DishFragments.vOb, 'id', {
           criteria: {
             parentGroup: allNestingsIds
           }
@@ -324,13 +324,13 @@ export class NgGqlService {
           return of(dishesInStock);
         } else {
           const dishesNotInStock = ids.filter(dishId => !dishes.find(dish => dish.id === dishId));
-          return this.customQuery$<Dish, 'dishes', VCriteria>('dishes', DishFragments.vOb, {
+          return this.customQuery$<Dish, 'dish', VCriteria>('dish', DishFragments.vOb, {
             criteria: {
               id: dishesNotInStock
             }
           }).pipe(
             map(loadedDishes => {
-              const result = Array.isArray(loadedDishes.dishes) ? loadedDishes.dishes : [ loadedDishes.dishes ];
+              const result = Array.isArray(loadedDishes.dish) ? loadedDishes.dish : [ loadedDishes.dish ];
               dishes.push(...result);
               this._dishes$.next(dishes);
               return [ ...dishesInStock, ...result ];

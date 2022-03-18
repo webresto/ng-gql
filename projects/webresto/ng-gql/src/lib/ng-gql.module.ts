@@ -71,36 +71,6 @@ export class NgGqlModule {
                 }
               }
             },
-            "Group": {
-              merge(existing, incoming) {
-                return [ ...incoming ];
-              }
-            },
-            "Navigation": {
-              merge(existing, incoming) {
-                return [ ...incoming ];
-              }
-            },
-            "Promotion": {
-              merge(existing, incoming) {
-                return [ ...incoming ];
-              }
-            },
-            "Dish": {
-              merge(existing, incoming) {
-                return [ ...incoming ];
-              }
-            },
-            "Street": {
-              merge(existing, incoming) {
-                return [ ...incoming ];
-              }
-            },
-            "PaymentMethod": {
-              merge(existing, incoming) {
-                return [ ...incoming ];
-              }
-            },
           }
         })
       });
