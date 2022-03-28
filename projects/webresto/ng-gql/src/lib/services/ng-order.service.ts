@@ -239,7 +239,9 @@ export class NgOrderService {
   * @param orderId - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
   *  */
   loadOrder$(orderId: string | undefined): Observable<Order> {
-    return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | undefined>('order', 'order', OrderFragments.vOb, 'id', orderId ? {
+    const customvOb = this.config.customFields?.[ 'Order' ];
+    const vOb = customvOb ? { ...OrderFragments.vOb, ...customvOb } : OrderFragments.vOb;
+    return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | undefined>('order', 'order', vOb, 'id', orderId ? {
       orderId
     } : undefined).pipe(
       map(values => values[ 0 ] ? values[ 0 ] : null),
@@ -301,65 +303,70 @@ export class NgOrderService {
     map(
       data => data.order
     ),
-    distinctUntilKeyChanged('id'),
     switchMap(
       order => this._orderBus$.asObservable().pipe(
-        concatMap(
-          busEvent => {
-            const reducer = () => {
-              switch (busEvent.event) {
-                case 'add': return this.addDishToOrder$({
-                  ...busEvent.data,
-                  orderId: order.id,
-                });
-                case 'remove': return this.removeDishFromOrder$({
-                  id: order.id,
-                  orderDishId: order.dishes.find(orderDish => orderDish.dish.id === busEvent.data.dish.id)?.id,
-                  amount: busEvent.data.amount
-                });
-                case 'check': return this.checkOrder$(this.makeOrderData(busEvent.orderForm, 'check'));
-                case 'order': return this.sendOrder$(this.makeOrderData(busEvent.orderForm, 'send'));
-                case 'setDishAmount': return this.setDishAmount$({
-                  ...busEvent.data, id: order.id
-                });
-                case 'setCommentToDish': return this.setDishComment$({
-                  ...busEvent.data, id: order.id
-                });
-              };
-            };
-            return (<Observable<Order | CheckResponse>> reducer()).pipe(
-              map(
-                result => {
-                  if ('loading' in busEvent) {
-                    busEvent.loading.next(false);
-                    if (busEvent.successCb) {
-                      busEvent.successCb(<Order> result);
-                    };
-                  } else {
-                    busEvent.ordered?.next(true);
-                    if (busEvent.successCb) {
-                      busEvent.successCb(<CheckResponse> result);
-                    };
-                  };
-                }),
-              catchError((err: unknown) => {
-                if ('loading' in busEvent) {
-                  busEvent.loading.next(false);
-                } else {
-                  busEvent.ordered?.next(false);
-                };
-                if (busEvent.errorCb) {
-                  busEvent.errorCb(err);
-                };
-                console.log(err);
-                return of(() => { });
-              })
-            );
-          }),
-        shareReplay(1)
-      )
+        map(
+          busEvent => ({ busEvent, order })
+        ))
     ),
+    concatMap(
+      ({ busEvent, order }) => {
+        const reducer = () => {
+          switch (busEvent.event) {
+            case 'add': return this.addDishToOrder$({
+              ...busEvent.data,
+              orderId: order.id,
+            });
+            case 'remove':
+              const orderDishId = 'orderDishId' in busEvent.data ?
+                busEvent.data.orderDishId :
+                order.dishes.find(orderDish => orderDish.dish.id === (<RemoveOrSetAmountToDish<Dish>> busEvent.data).dish.id)?.id;
+              return this.removeDishFromOrder$({
+                id: order.id,
+                orderDishId,
+                amount: busEvent.data.amount
+              });
+            case 'check': return this.checkOrder$(this.makeOrderData(busEvent.orderForm, 'check'));
+            case 'order': return this.sendOrder$(this.makeOrderData(busEvent.orderForm, 'send'));
+            case 'setDishAmount': return this.setDishAmount$({
+              ...busEvent.data, id: order.id
+            });
+            case 'setCommentToDish': return this.setDishComment$({
+              ...busEvent.data, id: order.id
+            });
+          };
+        };
+        return (<Observable<Order | CheckResponse>> reducer()).pipe(
+          map(
+            result => {
+              if ('loading' in busEvent) {
+                busEvent.loading.next(false);
+                if (busEvent.successCb) {
+                  busEvent.successCb(<Order> result);
+                };
+              } else {
+                busEvent.ordered?.next(true);
+                if (busEvent.successCb) {
+                  busEvent.successCb(<CheckResponse> result);
+                };
+              };
+            }),
+          catchError((err: unknown) => {
+            if ('loading' in busEvent) {
+              busEvent.loading.next(false);
+            } else {
+              busEvent.ordered?.next(false);
+            };
+            if (busEvent.errorCb) {
+              busEvent.errorCb(err);
+            };
+            console.log(err);
+            return of(() => { });
+          })
+        );
+      }),
     shareReplay(1)
+
   );
 
 
@@ -379,7 +386,9 @@ export class NgOrderService {
     amount: number = 1,
     dishModifiers: Modifier[] = [],
     successCb?: (order: Order) => void,
-    errorCb?: (err: unknown) => void
+    errorCb?: (err: unknown) => void,
+    comment?: string,
+    replacedOrderDishId?: number,
   ) {
     loading.next(true);
     this._orderBus$.emit({
@@ -393,7 +402,10 @@ export class NgOrderService {
             groupId: dishModifier.dish.parentGroup?.id ?? dishModifier.dish.groupId
           })
         ),
-        amount
+        amount,
+        comment,
+        replace: isValue(replacedOrderDishId),
+        orderDishId: replacedOrderDishId
       }
     });
   }
@@ -414,10 +426,14 @@ export class NgOrderService {
     dish: Dish,
     amount: number = 1,
     successCb?: (order: Order) => void,
-    errorCb?: (err: unknown) => void) {
+    errorCb?: (err: unknown) => void,
+    orderDishId?: number
+  ) {
     loading.next(true);
     this._orderBus$.emit({
-      event: 'remove', loading, successCb, errorCb, data: {
+      event: 'remove', loading, successCb, errorCb, data: isValue(orderDishId) ? {
+        orderDishId, amount
+      } : {
         dish,
         amount
       }

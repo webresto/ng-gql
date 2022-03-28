@@ -202,7 +202,7 @@ ___
 
 ### addToOrder
 
-▸ **addToOrder**(`loading`, `dish`, `amount?`, `dishModifiers?`, `successCb?`, `errorCb?`): `void`
+▸ **addToOrder**(`loading`, `dish`, `amount?`, `dishModifiers?`, `successCb?`, `errorCb?`, `comment?`, `replacedOrderDishId?`): `void`
 
 **`method`** addToOrder
 Используется для отправки в шину события добавления блюда.
@@ -217,6 +217,8 @@ ___
 | `dishModifiers` | [`Modifier`](../interfaces/Modifier.md)[] | `[]` | выбранные пользователем модификаторы блюда |
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
+| `comment?` | `string` | `undefined` | - |
+| `replacedOrderDishId?` | `number` | `undefined` | - |
 
 #### Returns
 
@@ -226,7 +228,7 @@ ___
 
 ### removeFromOrder
 
-▸ **removeFromOrder**(`loading`, `dish`, `amount?`, `successCb?`, `errorCb?`): `void`
+▸ **removeFromOrder**(`loading`, `dish`, `amount?`, `successCb?`, `errorCb?`, `orderDishId?`): `void`
 
 **`method`** removeFromOrder
 Используется для отправки в шину события удаления блюда из корзины
@@ -240,6 +242,7 @@ ___
 | `amount` | `number` | `1` | количество |
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
+| `orderDishId?` | `number` | `undefined` | id блюда в корзине |
 
 #### Returns
 

@@ -10,7 +10,7 @@ import type {
   CheckPhoneCodeInput, VCriteria, Maintenance
 } from '../models';
 import {
-  isValue, NavigationFragments, maintenanceFragment, GroupFragments,
+  isValue, NavigationFragments, MaintenanceFragment, GroupFragments,
   DishFragments, generateQueryString
 } from '../models';
 import { ApolloService } from './apollo.service';
@@ -52,7 +52,7 @@ export class NgGqlService {
     filter((data): data is NavigationLoader<NavigationBase> => !!data),
     switchMap(
       data => this.queryAndSubscribe(data.nameQuery, data.nameSubscribe, {
-        ...data.queryObject, ... this.config.customFields?.[ 'navigation' ]
+        ...data.queryObject, ... this.config.customFields?.[ 'Navigation' ]
       }, data.uniqueKeyForCompareItem)
     ),
     shareReplay(1)
@@ -89,13 +89,14 @@ export class NgGqlService {
  * @see NavigationLoader<T>
  */
   getNavigation$<T extends NavigationBase = Navigation>(options?: NavigationLoader<T>): Observable<T[]> {
+    const customvOb = this.config.customFields?.[ 'Navigation' ];
     if (options) {
       (<BehaviorSubject<NavigationLoader<T>>> this._navigationLoader$).next(options);
     } else {
       (<BehaviorSubject<NavigationLoader<Navigation>>> this._navigationLoader$).next({
         nameQuery: 'navigation',
         nameSubscribe: 'navigation',
-        queryObject: NavigationFragments.vOb,
+        queryObject: customvOb ? { ...NavigationFragments.vOb, ...customvOb } : NavigationFragments.vOb,
         uniqueKeyForCompareItem: 'mnemonicId'
       });
     };
@@ -104,7 +105,9 @@ export class NgGqlService {
 
 
   getMaintenance$(): Observable<Maintenance> {
-    return this.queryAndSubscribe('maintenance', 'maintenance', maintenanceFragment.vOb, 'id').pipe(
+    const customvOb = this.config.customFields?.[ 'Maintenance' ];
+    const vOb = customvOb ? { ...MaintenanceFragment.vOb, ...customvOb } : MaintenanceFragment.vOb;
+    return this.queryAndSubscribe('maintenance', 'maintenance', vOb, 'id').pipe(
       filter(result => result.length > 0),
       map(
         res => res[ 0 ]
@@ -193,12 +196,14 @@ export class NgGqlService {
     switchMap(
       rootGroups => {
         const nesting = this.config.nesting ?? 2;
+        const customvOb = this.config.customFields?.[ 'Group' ];
+        const vOb = customvOb ? { ...GroupFragments.vOb, ...customvOb } : GroupFragments.vOb;
         const queryObject: ValuesOrBoolean<Group> = new Array(nesting).fill(nesting).reduce(
           (accumulator: ValuesOrBoolean<Group>) => {
-            const item = { ...GroupFragments.vOb };
+            const item = { ...vOb };
             item.childGroups = accumulator;
             return item;
-          }, { ...GroupFragments.vOb, childGroups: { ...GroupFragments.vOb } }
+          }, { ...vOb, childGroups: { ...vOb } }
         );
         const criteria = !!rootGroups[ 0 ]?.id ? {
           id: rootGroups.map(rootGroup => rootGroup.id)
@@ -230,7 +235,9 @@ export class NgGqlService {
         const allNestingsGroups = getGroups(groups);
         const allNestingsIds = allNestingsGroups.map(group => group.id);
         console.log(allNestingsGroups);
-        return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', DishFragments.vOb, 'id', {
+        const customvObDish = this.config.customFields?.[ 'Dish' ];
+        const vOb = customvObDish ? { ...DishFragments.vOb, ...customvObDish } : DishFragments.vOb;
+        return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', vOb, 'id', {
           criteria: {
             parentGroup: allNestingsIds
           }
@@ -324,7 +331,9 @@ export class NgGqlService {
           return of(dishesInStock);
         } else {
           const dishesNotInStock = ids.filter(dishId => !dishes.find(dish => dish.id === dishId));
-          return this.customQuery$<Dish, 'dish', VCriteria>('dish', DishFragments.vOb, {
+          const customvObDish = this.config.customFields?.[ 'Dish' ];
+          const vOb = customvObDish ? { ...DishFragments.vOb, ...customvObDish } : DishFragments.vOb;
+          return this.customQuery$<Dish, 'dish', VCriteria>('dish', vOb, {
             criteria: {
               id: dishesNotInStock
             }
@@ -344,16 +353,19 @@ export class NgGqlService {
   }
 
   getPhone$(phone: string): Observable<Phone | Phone[]> {
-    return this.customQuery$<Phone, 'phone', {
-      phone: string;
-    }>('phone', {
+    const customvOb = this.config.customFields?.[ 'Phone' ];
+    const phonevOb: ValuesOrBoolean<Phone> = {
       id: true,
       phone: true,
       isFirst: true,
       isConfirm: true,
       codeTime: true,
       confirmCode: true
-    }, {
+    };
+    const vOb = customvOb ? { ...phonevOb, ...customvOb } : phonevOb;
+    return this.customQuery$<Phone, 'phone', {
+      phone: string;
+    }>('phone', vOb, {
       phone
     }).pipe(
       map(

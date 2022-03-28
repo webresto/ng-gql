@@ -74,12 +74,12 @@ export interface OrderData {
 
 export type AddToOrderInput = {
 	orderId: string,
-	dishId?: string,
+	dishId: string,
 	amount?: number,
 	modifiers?: OrderModifier[],
 	comment?: string,
-	from?: string,
 	replace?: boolean,
+	orderDishId?: number;
 };
 
 export type RemoveOrSetAmountToDish<T extends (Dish | number)> = T extends Dish ? {

@@ -49,7 +49,7 @@
 - [GroupModifierFragments](README.md#groupmodifierfragments)
 - [GroupFragments](README.md#groupfragments)
 - [ImageFragments](README.md#imagefragments)
-- [maintenanceFragment](README.md#maintenancefragment)
+- [MaintenanceFragment](README.md#maintenancefragment)
 - [ModifierFragments](README.md#modifierfragments)
 - [NavigationFragments](README.md#navigationfragments)
 - [OrderDishFragments](README.md#orderdishfragments)
@@ -120,7 +120,7 @@ ___
 
 ### CartBusEventRemove
 
-• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\> \| `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish)<`number`\>, ``"id"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
@@ -203,9 +203,9 @@ ___
 
 ___
 
-### maintenanceFragment
+### MaintenanceFragment
 
-• `Const` **maintenanceFragment**: `Object`
+• `Const` **MaintenanceFragment**: `Object`
 
 #### Type declaration
 
@@ -330,12 +330,12 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `orderId` | `string` |
-| `dishId?` | `string` |
+| `dishId` | `string` |
 | `amount?` | `number` |
 | `modifiers?` | [`OrderModifier`](interfaces/OrderModifier.md)[] |
 | `comment?` | `string` |
-| `from?` | `string` |
 | `replace?` | `boolean` |
+| `orderDishId?` | `number` |
 
 ___
 

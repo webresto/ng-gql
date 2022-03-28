@@ -37,7 +37,7 @@ export type CartBusEventAdd = {
 export type CartBusEventRemove = {
   event: 'remove';
   /** Данные для операции */
-  data: Omit<RemoveOrSetAmountToDish<Dish>, 'id'>;
+  data: Omit<RemoveOrSetAmountToDish<Dish>, 'id'> | Omit<RemoveOrSetAmountToDish<number>, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
   loading: BehaviorSubject<boolean>;
 } & CartBusEventBase<Order>;
