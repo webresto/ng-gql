@@ -1,9 +1,10 @@
+import type { BaseModelWithCustomData } from "../base/base-model-with-custom-data";
 import type { ValuesOrBoolean } from "../values-or-boolean";
 
 /**
  * Данные для отображения на странице сайта в период его отключения/недоступности.
  */
-export interface Maintenance {
+export interface Maintenance extends BaseModelWithCustomData {
   id: string;
   title: string;
   description: string;
@@ -11,9 +12,6 @@ export interface Maintenance {
   worktime: any;
   startDate: string;
   stopDate: string;
-  customData: {
-    [ key: string ]: unknown;
-  } | null;
 }
 
 export const MaintenanceFragment = {

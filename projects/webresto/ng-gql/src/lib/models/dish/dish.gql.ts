@@ -3,8 +3,9 @@ import {GroupModifier, GroupModifierFragments} from '../group-modifier/group-mod
 import type {ValuesOrBoolean} from '../values-or-boolean';
 import type {Image} from "../image/image.gql";
 import type {Group} from '../group/group.gql';
+import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 
-export interface Dish {
+export interface Dish extends BaseModelWithCustomData {
 	id: string;
 	name: string;
 	description: string;
@@ -34,6 +35,7 @@ export interface DishTag {
 
 export const DishFragments = {
 	vOb: <ValuesOrBoolean<Dish>> {
+		customData:true,
 		id: true,
 		name: true,
 		description: true,

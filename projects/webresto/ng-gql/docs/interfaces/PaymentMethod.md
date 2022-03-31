@@ -1,9 +1,16 @@
 # Interface: PaymentMethod
 
+## Hierarchy
+
+- [`BaseModelWithCustomData`](BaseModelWithCustomData.md)
+
+  ↳ **`PaymentMethod`**
+
 ## Table of contents
 
 ### Properties
 
+- [customData](PaymentMethod.md#customdata)
 - [id](PaymentMethod.md#id)
 - [type](PaymentMethod.md#type)
 - [title](PaymentMethod.md#title)
@@ -11,9 +18,18 @@
 - [adapter](PaymentMethod.md#adapter)
 - [order](PaymentMethod.md#order)
 - [enable](PaymentMethod.md#enable)
-- [customData](PaymentMethod.md#customdata)
 
 ## Properties
+
+### customData
+
+• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+
+#### Inherited from
+
+[BaseModelWithCustomData](BaseModelWithCustomData.md).[customData](BaseModelWithCustomData.md#customdata)
+
+___
 
 ### id
 
@@ -54,9 +70,3 @@ ___
 ### enable
 
 • **enable**: `boolean`
-
-___
-
-### customData
-
-• **customData**: `any`

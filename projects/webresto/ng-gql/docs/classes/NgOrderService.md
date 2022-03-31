@@ -19,6 +19,7 @@
 - [loadOrder$](NgOrderService.md#loadorder$)
 - [addToOrder](NgOrderService.md#addtoorder)
 - [removeFromOrder](NgOrderService.md#removefromorder)
+- [updateOrder](NgOrderService.md#updateorder)
 - [checkOrder](NgOrderService.md#checkorder)
 - [sendOrder](NgOrderService.md#sendorder)
 - [setDishAmount](NgOrderService.md#setdishamount)
@@ -243,6 +244,31 @@ ___
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 | `orderDishId?` | `number` | `undefined` | id блюда в корзине |
+
+#### Returns
+
+`void`
+
+___
+
+### updateOrder
+
+▸ **updateOrder**(`__namedParameters`): `void`
+
+**`method`** updateOrder
+Используется для отправки в шину события обновления данных в заказе, не связанных с блюдами.
+Может использоваться ТОЛЬКО ДО того, как заказ отправлен через @method sendOrder
+Также, заказ нужно повторно проверять методом @method checkOrder, если такая проверка уже проводилась ранее.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `__namedParameters` | `Object` |
+| `__namedParameters.data` | `Partial`<[`Order`](../interfaces/Order.md)\> |
+| `__namedParameters.loading` | `BehaviorSubject`<`boolean`\> |
+| `__namedParameters.successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` |
+| `__namedParameters.errorCb?` | (`err`: `unknown`) => `void` |
 
 #### Returns
 

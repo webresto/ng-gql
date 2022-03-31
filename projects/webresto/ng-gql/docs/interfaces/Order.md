@@ -1,9 +1,16 @@
 # Interface: Order
 
+## Hierarchy
+
+- [`BaseModelWithCustomData`](BaseModelWithCustomData.md)
+
+  ↳ **`Order`**
+
 ## Table of contents
 
 ### Properties
 
+- [customData](Order.md#customdata)
 - [id](Order.md#id)
 - [shortId](Order.md#shortid)
 - [dishes](Order.md#dishes)
@@ -13,6 +20,7 @@
 - [message](Order.md#message)
 - [deliveryCost](Order.md#deliverycost)
 - [totalWeight](Order.md#totalweight)
+- [trifleFrom](Order.md#triflefrom)
 - [total](Order.md#total)
 - [orderTotal](Order.md#ordertotal)
 - [discountTotal](Order.md#discounttotal)
@@ -25,9 +33,18 @@
 - [address](Order.md#address)
 - [paid](Order.md#paid)
 - [paymentMethod](Order.md#paymentmethod)
-- [customData](Order.md#customdata)
 
 ## Properties
+
+### customData
+
+• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+
+#### Inherited from
+
+[BaseModelWithCustomData](BaseModelWithCustomData.md).[customData](BaseModelWithCustomData.md#customdata)
+
+___
 
 ### id
 
@@ -80,6 +97,12 @@ ___
 ### totalWeight
 
 • **totalWeight**: `number`
+
+___
+
+### trifleFrom
+
+• **trifleFrom**: `number`
 
 ___
 
@@ -152,9 +175,3 @@ ___
 ### paymentMethod
 
 • **paymentMethod**: ``null`` \| `Pick`<[`PaymentMethod`](PaymentMethod.md), ``"id"`` \| ``"title"``\> & `Partial`<`Omit`<[`PaymentMethod`](PaymentMethod.md), ``"id"`` \| ``"title"``\>\>
-
-___
-
-### customData
-
-• **customData**: ``null`` \| { `[key: string]`: `string` \| `any`;  }

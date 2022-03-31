@@ -15,3 +15,4 @@ export type { ValuesOrBoolean } from './values-or-boolean';
 export { generateQueryString } from './generate-query-string';
 export type { VCriteria, GQLRequestVariables } from './generate-query-string';
 export * from './cart-bus-event';
+export {BaseModelWithCustomData} from './base/base-model-with-custom-data';

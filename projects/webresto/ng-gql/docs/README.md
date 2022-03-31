@@ -2,18 +2,9 @@
 
 ## Table of contents
 
-### Events
-
-- [CartBusEvent](README.md#cartbusevent)
-- [CartBusEventBase](README.md#cartbuseventbase)
-- [CartBusEventAdd](README.md#cartbuseventadd)
-- [CartBusEventRemove](README.md#cartbuseventremove)
-- [CartBusEventSetAmountToDish](README.md#cartbuseventsetamounttodish)
-- [CartBusEventSetCommentToDish](README.md#cartbuseventsetcommenttodish)
-- [CartBusEventCheckSend](README.md#cartbuseventchecksend)
-
 ### Interfaces
 
+- [BaseModelWithCustomData](interfaces/BaseModelWithCustomData.md)
 - [Dish](interfaces/Dish.md)
 - [DishTag](interfaces/DishTag.md)
 - [Message](interfaces/Message.md)
@@ -35,12 +26,22 @@
 - [Order](interfaces/Order.md)
 - [Customer](interfaces/Customer.md)
 - [Address](interfaces/Address.md)
-- [OrderData](interfaces/OrderData.md)
 - [Phone](interfaces/Phone.md)
 - [CheckPhoneCodeInput](interfaces/CheckPhoneCodeInput.md)
 - [CheckPhoneResponse](interfaces/CheckPhoneResponse.md)
 - [CheckResponse](interfaces/CheckResponse.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
+
+### Events
+
+- [CartBusEvent](README.md#cartbusevent)
+- [CartBusEventBase](README.md#cartbuseventbase)
+- [CartBusEventAdd](README.md#cartbuseventadd)
+- [CartBusEventUpdate](README.md#cartbuseventupdate)
+- [CartBusEventRemove](README.md#cartbuseventremove)
+- [CartBusEventSetAmountToDish](README.md#cartbuseventsetamounttodish)
+- [CartBusEventSetCommentToDish](README.md#cartbuseventsetcommenttodish)
+- [CartBusEventCheckSend](README.md#cartbuseventchecksend)
 
 ### Variables
 
@@ -87,7 +88,7 @@
 
 ### CartBusEvent
 
-• **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheckSend`](README.md#cartbuseventchecksend)
+• **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheckSend`](README.md#cartbuseventchecksend)
 
 **`alias`** CartBusEvent
 
@@ -115,6 +116,12 @@ ___
 ### CartBusEventAdd
 
 • **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: `Omit`<[`AddToOrderInput`](README.md#addtoorderinput), ``"orderId"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventUpdate
+
+• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: [`Order`](interfaces/Order.md) ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
@@ -365,23 +372,7 @@ ___
 
 ### OrderInput
 
-Ƭ **OrderInput**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `string` |
-| `paymentMethodId?` | `string` |
-| `selfService` | `boolean` |
-| `pickupAddressId?` | `string` |
-| `locationId?` | `string` |
-| `date?` | `string` |
-| `address` | [`Address`](interfaces/Address.md) \| ``null`` |
-| `customer` | [`Customer`](interfaces/Customer.md) \| ``null`` |
-| `comment?` | `string` |
-| `notifyMethodId?` | `string` |
-| `customData` | `any` \| ``null`` |
+Ƭ **OrderInput**: { `orderId`: `string` ; `paymentMethodId?`: `string` ; `selfService`: `boolean` ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `date?`: `string` ; `address`: [`Address`](interfaces/Address.md) \| ``null`` ; `customer`: [`Customer`](interfaces/Customer.md) \| ``null`` ; `comment?`: `string` ; `notifyMethodId?`: `string`  } & [`BaseModelWithCustomData`](interfaces/BaseModelWithCustomData.md)
 
 ___
 

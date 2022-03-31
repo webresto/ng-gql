@@ -5,6 +5,7 @@ import type { OrderModifier } from '../modifier/modifier.gql';
 import type { Message, Action } from '../event-message/event-message';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from '../dish/dish.gql';
+import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 
 /**
  * @alias OrderState
@@ -20,7 +21,7 @@ import type { Dish } from '../dish/dish.gql';
  */
 export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER';
 
-export interface Order {
+export interface Order  extends BaseModelWithCustomData {
 	id: string;
 	shortId: string;
 	dishes: OrderDish[];
@@ -30,6 +31,7 @@ export interface Order {
 	message: string | null;
 	deliveryCost: number;
 	totalWeight: number;
+	trifleFrom:number;
 	total: number;
 	orderTotal: number;
 	discountTotal: number;
@@ -42,9 +44,6 @@ export interface Order {
 	address: Address | null;
 	paid?: boolean;
 	paymentMethod: Pick<PaymentMethod, 'id' | 'title'> & Partial<Omit<PaymentMethod, 'id' | 'title'>> | null;
-	customData: {
-		[ key: string ]: string | any;
-	} | null;
 }
 
 export interface Customer {
@@ -65,11 +64,6 @@ export interface Address {
 	floor?: string;
 	apartment?: string;
 	doorphone?: string;
-}
-
-export interface OrderData {
-	order: Order;
-	customData: any;
 }
 
 export type AddToOrderInput = {
@@ -113,17 +107,15 @@ export type OrderInput = {
 	customer: Customer | null,
 	comment?: string,
 	notifyMethodId?: string,
-	customData: any | null;
-};
+} & BaseModelWithCustomData;
 
-export interface Phone {
+export interface Phone  extends BaseModelWithCustomData {
 	id: number;
 	phone: string;
 	isFirst: boolean;
 	isConfirm: boolean;
 	codeTime: string;
 	confirmCode: string;
-	customData: any;
 }
 
 export interface CheckPhoneCodeInput {
@@ -159,6 +151,7 @@ export const OrderFragments = {
 		orderTotal: true,
 		discountTotal: true,
 		state: true,
+		triffleFrom:true,
 		customData: true,
 		customer: true,
 		address: true,

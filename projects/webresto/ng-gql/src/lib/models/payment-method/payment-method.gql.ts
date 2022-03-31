@@ -1,6 +1,7 @@
+import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
-export interface PaymentMethod {
+export interface PaymentMethod  extends BaseModelWithCustomData {
 	id: string;
 	type: string;
 	title: string;
@@ -8,7 +9,6 @@ export interface PaymentMethod {
 	adapter: string;
 	order: number;
 	enable: boolean;
-	customData: any;
 }
 
 export const PaymentMethodFragments = {

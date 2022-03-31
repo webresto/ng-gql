@@ -7,7 +7,7 @@ import type { Order, OrderForm, AddToOrderInput, RemoveOrSetAmountToDish, SetDis
  * @event
  * Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
  */
-export type CartBusEvent = CartBusEventAdd | CartBusEventRemove | CartBusEventSetAmountToDish | CartBusEventSetCommentToDish | CartBusEventCheckSend;
+export type CartBusEvent = CartBusEventAdd | CartBusEventUpdate| CartBusEventRemove | CartBusEventSetAmountToDish | CartBusEventSetCommentToDish | CartBusEventCheckSend;
 
 /**
  * @event CartBusEventBase Базовый интерфейс событий в шине событий
@@ -26,6 +26,18 @@ export type CartBusEventAdd = {
   event: 'add';
   /** Данные для операции */
   data: Omit<AddToOrderInput, 'orderId'>;
+  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
+  loading: BehaviorSubject<boolean>;
+
+} & CartBusEventBase<Order>;
+
+/**
+ *  @event CartBusEventUpdate
+ * Обновление данных в заказе? НЕ связанных с блюдами. */
+ export type CartBusEventUpdate = {
+  event: 'update';
+  /** Данные для операции */
+  data: Order;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
   loading: BehaviorSubject<boolean>;
 

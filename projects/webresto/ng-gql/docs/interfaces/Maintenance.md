@@ -2,10 +2,17 @@
 
 Данные для отображения на странице сайта в период его отключения/недоступности.
 
+## Hierarchy
+
+- [`BaseModelWithCustomData`](BaseModelWithCustomData.md)
+
+  ↳ **`Maintenance`**
+
 ## Table of contents
 
 ### Properties
 
+- [customData](Maintenance.md#customdata)
 - [id](Maintenance.md#id)
 - [title](Maintenance.md#title)
 - [description](Maintenance.md#description)
@@ -13,9 +20,18 @@
 - [worktime](Maintenance.md#worktime)
 - [startDate](Maintenance.md#startdate)
 - [stopDate](Maintenance.md#stopdate)
-- [customData](Maintenance.md#customdata)
 
 ## Properties
+
+### customData
+
+• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+
+#### Inherited from
+
+[BaseModelWithCustomData](BaseModelWithCustomData.md).[customData](BaseModelWithCustomData.md#customdata)
+
+___
 
 ### id
 
@@ -56,9 +72,3 @@ ___
 ### stopDate
 
 • **stopDate**: `string`
-
-___
-
-### customData
-
-• **customData**: ``null`` \| { `[key: string]`: `unknown`;  }

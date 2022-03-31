@@ -1,9 +1,16 @@
 # Interface: Dish
 
+## Hierarchy
+
+- [`BaseModelWithCustomData`](BaseModelWithCustomData.md)
+
+  ↳ **`Dish`**
+
 ## Table of contents
 
 ### Properties
 
+- [customData](Dish.md#customdata)
 - [id](Dish.md#id)
 - [name](Dish.md#name)
 - [description](Dish.md#description)
@@ -27,6 +34,16 @@
 - [measureUnit](Dish.md#measureunit)
 
 ## Properties
+
+### customData
+
+• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+
+#### Inherited from
+
+[BaseModelWithCustomData](BaseModelWithCustomData.md).[customData](BaseModelWithCustomData.md#customdata)
+
+___
 
 ### id
 
