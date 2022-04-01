@@ -21,7 +21,7 @@ import type { BaseModelWithCustomData } from '../base/base-model-with-custom-dat
  */
 export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER';
 
-export interface Order  extends BaseModelWithCustomData {
+export interface Order extends BaseModelWithCustomData {
 	id: string;
 	shortId: string;
 	dishes: OrderDish[];
@@ -31,7 +31,7 @@ export interface Order  extends BaseModelWithCustomData {
 	message: string | null;
 	deliveryCost: number;
 	totalWeight: number;
-	trifleFrom:number;
+	trifleFrom: number;
 	total: number;
 	orderTotal: number;
 	discountTotal: number;
@@ -109,7 +109,7 @@ export type OrderInput = {
 	notifyMethodId?: string,
 } & BaseModelWithCustomData;
 
-export interface Phone  extends BaseModelWithCustomData {
+export interface Phone extends BaseModelWithCustomData {
 	id: number;
 	phone: string;
 	isFirst: boolean;
@@ -151,7 +151,7 @@ export const OrderFragments = {
 		orderTotal: true,
 		discountTotal: true,
 		state: true,
-		triffleFrom:true,
+		trifleFrom: true,
 		customData: true,
 		customer: true,
 		address: true,
