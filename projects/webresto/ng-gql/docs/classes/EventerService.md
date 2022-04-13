@@ -2,14 +2,14 @@
 
 ## Table of contents
 
-### Constructors
-
-- [constructor](EventerService.md#constructor)
-
 ### Properties
 
 - [eventMessage](EventerService.md#eventmessage)
 - [eventAction](EventerService.md#eventaction)
+
+### Constructors
+
+- [constructor](EventerService.md#constructor)
 
 ### Methods
 
@@ -17,12 +17,6 @@
 - [emitActionEvent](EventerService.md#emitactionevent)
 - [getMessageEmitter](EventerService.md#getmessageemitter)
 - [getActionEmitter](EventerService.md#getactionemitter)
-
-## Constructors
-
-### constructor
-
-• **new EventerService**()
 
 ## Properties
 
@@ -35,6 +29,12 @@ ___
 ### eventAction
 
 • **eventAction**: `EventEmitter`<`any`\>
+
+## Constructors
+
+### constructor
+
+• **new EventerService**()
 
 ## Methods
 

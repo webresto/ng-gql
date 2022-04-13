@@ -161,7 +161,7 @@ ___
 
 ### getPhone$
 
-▸ **getPhone$**(`phone`): `Observable`<[`Phone`](../interfaces/Phone.md) \| [`Phone`](../interfaces/Phone.md)[]\>
+▸ **getPhone$**(`phone`): `Observable`<[`Phone`](../interfaces/Phone.md)[]\>
 
 #### Parameters
 
@@ -171,13 +171,13 @@ ___
 
 #### Returns
 
-`Observable`<[`Phone`](../interfaces/Phone.md) \| [`Phone`](../interfaces/Phone.md)[]\>
+`Observable`<[`Phone`](../interfaces/Phone.md)[]\>
 
 ___
 
 ### checkPhone$
 
-▸ **checkPhone$**(`phone`): `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
+▸ **checkPhone$**(`phone`): `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
 
 #### Parameters
 
@@ -187,7 +187,7 @@ ___
 
 #### Returns
 
-`Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md) \| [`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
+`Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
 
 ___
 

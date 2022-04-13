@@ -352,7 +352,7 @@ export class NgGqlService {
     }
   }
 
-  getPhone$(phone: string): Observable<Phone | Phone[]> {
+  getPhone$(phone: string): Observable<Phone[]> {
     const customvOb = this.config.customFields?.[ 'Phone' ];
     const phonevOb: ValuesOrBoolean<Phone> = {
       id: true,
@@ -367,15 +367,19 @@ export class NgGqlService {
       phone: string;
     }>('phone', vOb, {
       phone
+    }, {
+      optionalFields: [ 'phone' ]
     }).pipe(
       map(
-        data => data.phone
+        data => Array.isArray(data.phone) ? data.phone : [ data.phone ]
       )
     );
   };
 
-  checkPhone$(phone: string): Observable<CheckPhoneResponse | CheckPhoneResponse[]> {
-    return this.customQuery$<CheckPhoneResponse, 'checkPhone'>('checkPhone', {
+  checkPhone$(phone: string): Observable<CheckPhoneResponse[]> {
+    return this.customQuery$<CheckPhoneResponse, 'checkPhone', {
+      phone: string;
+    }>('checkPhone', {
       type: true,
       title: true,
       message: true,
@@ -383,9 +387,11 @@ export class NgGqlService {
       firstbuy: true
     }, {
       phone
+    }, {
+      optionalFields: [ 'phone' ]
     }).pipe(
       map(
-        data => data.checkPhone
+        data => Array.isArray(data.checkPhone) ? data.checkPhone : [ data.checkPhone ]
       )
     );
   };
@@ -396,7 +402,9 @@ export class NgGqlService {
       message: true,
       confirmed: true,
       firstbuy: true
-    }, data).pipe(
+    }, data, {
+      optionalFields: [ 'phone', 'code' ]
+    }).pipe(
       map(
         result => result.setPhoneCode
       )

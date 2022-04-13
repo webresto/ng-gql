@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import type { ExtraSubscriptionOptions, MutationResult, WatchQueryOptions } from 'apollo-angular';
 import type { ApolloQueryResult, FetchResult, QueryOptions, SubscriptionOptions, MutationOptions } from '@apollo/client/core';
-import type { EmptyObject } from 'apollo-angular/build/types';
 import { catchError, filter, of } from 'rxjs';
+import { EmptyObject } from 'apollo-angular/types';
 
 @Injectable({
   providedIn: 'root'
