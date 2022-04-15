@@ -256,7 +256,7 @@ export class NgOrderService {
               customer: order.customer ?? {
                 name: null,
                 phone: null,
-                code: null
+                code: this.config.phoneCode
               },
               address: order.address ?? {
                 streetId: null,

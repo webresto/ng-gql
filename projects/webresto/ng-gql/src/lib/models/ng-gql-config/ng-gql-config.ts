@@ -45,5 +45,11 @@ export interface NgGqlConfig {
    * Если не задан - используется токен по умолчанию -'${ window.location.host }-orderId'.
    */
   orderIdStorageToken?: string;
+
+  /**
+   * Телефонный код страны
+   */
+  phoneCode: string | null;
+
 }
 

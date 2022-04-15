@@ -12,6 +12,7 @@
 - [busSubscribeMode](NgGqlConfig.md#bussubscribemode)
 - [customFields](NgGqlConfig.md#customfields)
 - [orderIdStorageToken](NgGqlConfig.md#orderidstoragetoken)
+- [phoneCode](NgGqlConfig.md#phonecode)
 
 ## Properties
 
@@ -73,3 +74,11 @@ ___
 
 Токен, с которым в localStorage будут храниться id заказов.
 Если не задан - используется токен по умолчанию -'${ window.location.host }-orderId'.
+
+___
+
+### phoneCode
+
+• **phoneCode**: ``null`` \| `string`
+
+Телефонный код страны
