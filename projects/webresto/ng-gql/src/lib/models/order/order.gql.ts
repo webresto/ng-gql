@@ -48,6 +48,7 @@ export interface Order extends BaseModelWithCustomData {
 
 export interface Customer {
 	phone: string | null;
+	code: string | null;
 	mail?: string;
 	name: string | null;
 }
