@@ -586,8 +586,10 @@ export class NgOrderService {
     };
   }
 
-  private updateOrder$(data: Partial<Order>): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderUpdate', Partial<Order>>('orderUpdate', OrderFragments.vOb, data).pipe(
+  private updateOrder$(order: Partial<Order>): Observable<Order> {
+    return this.ngGqlService.customMutation$<Order, 'orderUpdate', {
+      order: Partial<Order>;
+    }>('orderUpdate', OrderFragments.vOb, { order }).pipe(
       map(
         data => data.orderUpdate
       )
