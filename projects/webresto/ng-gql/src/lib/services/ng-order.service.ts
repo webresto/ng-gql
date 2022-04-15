@@ -27,16 +27,18 @@ export class NgOrderService {
     }
   }
 
+  private storageOrderIdToken = this.config.orderIdStorageToken ?? `${ window.location.host }-orderId`;
+
   /**
    * @method getOrderId
-   *  @returns Возвращает orderId, сохраненный ранее в localStorage с ключом '${ window.location.host }-orderId'.
+   *  @returns Возвращает orderId, сохраненный ранее в localStorage с ключом @interface `NgGqlConfig.orderIdStorageToken` (по умолчанию -'${ window.location.host }-orderId').
    * Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
    * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
    * Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
    */
   getOrderId() {
     try {
-      const cartString = localStorage.getItem(`${window.location.host}-orderId`);
+      const cartString = localStorage.getItem(this.storageOrderIdToken);
       if (cartString) {
         const cartData: {
           orderId: string;
@@ -58,7 +60,7 @@ export class NgOrderService {
 
   /**
    * @method setOrderId
-   * @param orderId - id Заказа, который требуется сохранить в localStorage с ключом '${ window.location.host }-orderId'.
+   * @param orderId - id Заказа, который требуется сохранить в localStorage с ключом @interface `NgGqlConfig.orderIdStorageToken` (по умолчанию -'${ window.location.host }-orderId').
    * Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
    * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
    * Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
@@ -66,14 +68,14 @@ export class NgOrderService {
   setOrderId(orderId: string) {
     const storageOrderId = this.getOrderId();
     if (isValue(orderId) && (!storageOrderId || orderId !== storageOrderId)) {
-      localStorage.setItem(`${window.location.host}-orderId`, JSON.stringify({
+      localStorage.setItem(this.storageOrderIdToken, JSON.stringify({
         orderId: orderId, dt: Date.now()
       }));
     };
   }
 
   removeOrderId() {
-    localStorage.removeItem(`${window.location.host}-orderId`);
+    localStorage.removeItem(this.storageOrderIdToken);
   }
 
   paymentLink$(phone: string, fromPhone: string, orderId: string): Observable<any> {
@@ -105,13 +107,13 @@ export class NgOrderService {
     return this.ngGqlService.customQuery$<PaymentMethod, 'paymentMethod', { orderId: string; }>(
       'paymentMethod', PaymentMethodFragments.vOb, { orderId: orderId ?? '' }, {
       fieldsTypeMap: new Map([
-        ['orderId', 'String!']
+        [ 'orderId', 'String!' ]
       ])
     }
     ).pipe(
       map(
         data => (
-          Array.isArray(data.paymentMethod) ? data.paymentMethod : [data.paymentMethod]
+          Array.isArray(data.paymentMethod) ? data.paymentMethod : [ data.paymentMethod ]
         ).filter(
           method => method.enable
         )
@@ -151,8 +153,8 @@ export class NgOrderService {
               order: {
                 ...order,
                 paymentMethod: !order.paymentMethod && methodsAndId.methods.length > 0 ? {
-                  id: methodsAndId.methods[0].id,
-                  title: methodsAndId.methods[0].title
+                  id: methodsAndId.methods[ 0 ].id,
+                  title: methodsAndId.methods[ 0 ].title
                 } : order.paymentMethod
               }
             };
@@ -239,12 +241,12 @@ export class NgOrderService {
   * @param orderId - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
   *  */
   loadOrder$(orderId: string | undefined): Observable<Order> {
-    const customvOb = this.config.customFields?.['Order'];
+    const customvOb = this.config.customFields?.[ 'Order' ];
     const vOb = customvOb ? { ...OrderFragments.vOb, ...customvOb } : OrderFragments.vOb;
     return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | undefined>('order', 'order', vOb, 'id', orderId ? {
       orderId
     } : undefined).pipe(
-      map(values => values[0] ? values[0] : null),
+      map(values => values[ 0 ] ? values[ 0 ] : null),
       filter((order): order is Order => isValue(order)),
       switchMap(
         order => this.ngGqlService.dishes$.pipe(
@@ -320,7 +322,7 @@ export class NgOrderService {
             case 'remove':
               const orderDishId = 'orderDishId' in busEvent.data ?
                 busEvent.data.orderDishId :
-                order.dishes.find(orderDish => orderDish.dish.id === (<RemoveOrSetAmountToDish<Dish>>busEvent.data).dish.id)?.id;
+                order.dishes.find(orderDish => orderDish.dish.id === (<RemoveOrSetAmountToDish<Dish>> busEvent.data).dish.id)?.id;
               return this.removeDishFromOrder$({
                 id: order.id,
                 orderDishId,
@@ -337,18 +339,18 @@ export class NgOrderService {
             });
           };
         };
-        return (<Observable<Order | CheckResponse>>reducer()).pipe(
+        return (<Observable<Order | CheckResponse>> reducer()).pipe(
           map(
             result => {
               if ('loading' in busEvent) {
                 busEvent.loading.next(false);
                 if (busEvent.successCb) {
-                  busEvent.successCb(<Order>result);
+                  busEvent.successCb(<Order> result);
                 };
               } else {
                 busEvent.ordered?.next(true);
                 if (busEvent.successCb) {
-                  busEvent.successCb(<CheckResponse>result);
+                  busEvent.successCb(<CheckResponse> result);
                 };
               };
             }),
@@ -443,7 +445,7 @@ export class NgOrderService {
 
   /**
   * @method updateOrder
-  * Используется для отправки в шину события обновления данных в заказе, не связанных с блюдами. 
+  * Используется для отправки в шину события обновления данных в заказе, не связанных с блюдами.
   * Может использоваться ТОЛЬКО ДО того, как заказ отправлен через @method sendOrder
   * Также, заказ нужно повторно проверять методом @method checkOrder, если такая проверка уже проводилась ранее.
   * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
@@ -453,15 +455,15 @@ export class NgOrderService {
   * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
   * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
-  updateOrder({data,loading,successCb,errorCb}:{
-    data:Partial<Order>,
+  updateOrder({ data, loading, successCb, errorCb }: {
+    data: Partial<Order>,
     loading: BehaviorSubject<boolean>,
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void,
   }) {
-    this._orderBus$.emit(<CartBusEventUpdate>{
-      event:'update', data,loading,errorCb,successCb
-    })
+    this._orderBus$.emit(<CartBusEventUpdate> {
+      event: 'update', data, loading, errorCb, successCb
+    });
   }
 
   /**
@@ -559,7 +561,7 @@ export class NgOrderService {
   };
 
   private removeDishFromOrder$(data: RemoveOrSetAmountToDish<number>): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish<number>>('orderRemoveDish', OrderFragments.vOb, data, { optionalFields: ['orderDishId', 'id'] }).pipe(
+    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish<number>>('orderRemoveDish', OrderFragments.vOb, data, { optionalFields: [ 'orderDishId', 'id' ] }).pipe(
       map(
         data => data.orderRemoveDish
       )
@@ -572,19 +574,19 @@ export class NgOrderService {
       paymentMethodId: orderForm.paymentMethod?.id,
       selfService: orderForm.selfService,
       address: orderForm.address,
-      customer: orderForm.customer,
-      customData: orderForm.customData,
+      customer: orderForm.customer
     };
     return operation == 'send' ? result : {
       comment: orderForm.comment,
       pickupAddressId: orderForm.pickupAddressId,
       locationId: orderForm.locationId,
-      date: orderForm.deliveryTimeInfo?.deliveryDate ? `${orderForm.deliveryTimeInfo.deliveryDate} ${orderForm.deliveryTimeInfo.deliveryTime}` : undefined,
+      customData: orderForm.customData,
+      date: orderForm.deliveryTimeInfo?.deliveryDate ? `${ orderForm.deliveryTimeInfo.deliveryDate } ${ orderForm.deliveryTimeInfo.deliveryTime }` : undefined,
       ...result
     };
   }
 
-  private updateOrder$(data: Partial<Order>):Observable<Order> {
+  private updateOrder$(data: Partial<Order>): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'updateOrder', Partial<Order>>('updateOrder', OrderFragments.vOb, data).pipe(
       map(
         data => data.updateOrder
@@ -598,10 +600,10 @@ export class NgOrderService {
       message: MessageOrActionGql.messageVob,
       action: MessageOrActionGql.actionVob
     }, data, {
-      optionalFields: ['orderId', 'paymentMethodId'],
+      optionalFields: [ 'orderId', 'paymentMethodId' ],
       fieldsTypeMap: new Map([
-        ['address', 'Address'],
-        ['customer', 'Customer!']
+        [ 'address', 'Address' ],
+        [ 'customer', 'Customer!' ]
       ])
     }).pipe(
       map(
@@ -616,10 +618,10 @@ export class NgOrderService {
       message: MessageOrActionGql.messageVob,
       action: MessageOrActionGql.actionVob
     }, data, {
-      optionalFields: ['orderId', 'paymentMethodId', 'customer'],
+      optionalFields: [ 'orderId', 'paymentMethodId', 'customer' ],
       fieldsTypeMap: new Map([
-        ['address', 'Address'],
-        ['customer', 'Customer!']
+        [ 'address', 'Address' ],
+        [ 'customer', 'Customer!' ]
       ])
     }).pipe(
       map(

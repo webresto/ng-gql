@@ -11,6 +11,7 @@
 - [obsolescence](NgGqlConfig.md#obsolescence)
 - [busSubscribeMode](NgGqlConfig.md#bussubscribemode)
 - [customFields](NgGqlConfig.md#customfields)
+- [orderIdStorageToken](NgGqlConfig.md#orderidstoragetoken)
 
 ## Properties
 
@@ -63,3 +64,12 @@ ___
 #### Index signature
 
 ▪ [modelName: `string`]: [`ValuesOrBoolean`](../README.md#valuesorboolean)<`unknown`\>
+
+___
+
+### orderIdStorageToken
+
+• `Optional` **orderIdStorageToken**: `string`
+
+Токен, с которым в localStorage будут храниться id заказов.
+Если не задан - используется токен по умолчанию -'${ window.location.host }-orderId'.

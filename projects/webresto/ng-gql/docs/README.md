@@ -372,7 +372,7 @@ ___
 
 ### OrderInput
 
-Ƭ **OrderInput**: { `orderId`: `string` ; `paymentMethodId?`: `string` ; `selfService`: `boolean` ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `date?`: `string` ; `address`: [`Address`](interfaces/Address.md) \| ``null`` ; `customer`: [`Customer`](interfaces/Customer.md) \| ``null`` ; `comment?`: `string` ; `notifyMethodId?`: `string`  } & [`BaseModelWithCustomData`](interfaces/BaseModelWithCustomData.md)
+Ƭ **OrderInput**: { `orderId`: `string` ; `paymentMethodId?`: `string` ; `selfService`: `boolean` ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `date?`: `string` ; `address`: [`Address`](interfaces/Address.md) \| ``null`` ; `customer`: [`Customer`](interfaces/Customer.md) \| ``null`` ; `comment?`: `string` ; `notifyMethodId?`: `string`  } & `Partial`<[`BaseModelWithCustomData`](interfaces/BaseModelWithCustomData.md)\>
 
 ___
 

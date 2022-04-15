@@ -107,7 +107,7 @@ export type OrderInput = {
 	customer: Customer | null,
 	comment?: string,
 	notifyMethodId?: string,
-} & BaseModelWithCustomData;
+} & Partial<BaseModelWithCustomData>;
 
 export interface Phone extends BaseModelWithCustomData {
 	id: number;

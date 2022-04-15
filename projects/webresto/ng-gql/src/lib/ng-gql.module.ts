@@ -5,21 +5,15 @@ import { HttpLink } from 'apollo-angular/http';
 import { split, InMemoryCache } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { AddDishToOrderDirective, CheckoutDirective } from './directives';
 import type { NgGqlConfig } from './models';
 import type { OperationDefinitionNode } from 'graphql';
-
-const DIRECTIVES = [
-  AddDishToOrderDirective,
-  CheckoutDirective,
-];
 
 @NgModule({
   imports: [
     ApolloModule
   ],
-  exports: [ DIRECTIVES ],
-  declarations: [ DIRECTIVES ]
+  exports: [],
+  declarations: []
 })
 export class NgGqlModule {
 

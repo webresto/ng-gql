@@ -39,5 +39,11 @@ export interface NgGqlConfig {
   customFields?: {
     [ modelName: string ]: ValuesOrBoolean<unknown>;
   };
+
+  /**
+   * Токен, с которым в localStorage будут храниться id заказов.
+   * Если не задан - используется токен по умолчанию -'${ window.location.host }-orderId'.
+   */
+  orderIdStorageToken?: string;
 }
 
