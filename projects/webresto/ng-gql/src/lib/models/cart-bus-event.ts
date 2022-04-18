@@ -7,16 +7,20 @@ import type { Order, OrderForm, AddToOrderInput, RemoveOrSetAmountToDish, SetDis
  * @event
  * Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
  */
-export type CartBusEvent = CartBusEventAdd | CartBusEventUpdate| CartBusEventRemove | CartBusEventSetAmountToDish | CartBusEventSetCommentToDish | CartBusEventCheckSend;
+export type CartBusEvent = CartBusEventAdd | CartBusEventUpdate | CartBusEventRemove | CartBusEventSetAmountToDish | CartBusEventSetCommentToDish | CartBusEventCheck | CartBusEventSend;
 
 /**
  * @event CartBusEventBase Базовый интерфейс событий в шине событий
  */
-export type CartBusEventBase<T extends (Order | OrderForm) = Order> = {
+export type CartBusEventBase<T> = {
   /** Пользовательский callback, который дополнительно будет выполнен в случае успешной операции */
-  successCb?: (result: T extends OrderForm ? CheckResponse : Order) => void;
+  successCb?: (result: T) => void;
+
   /** Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции */
   errorCb?: (err: unknown) => void;
+
+  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
+  loading?: BehaviorSubject<boolean>;
 };
 
 /**
@@ -26,21 +30,15 @@ export type CartBusEventAdd = {
   event: 'add';
   /** Данные для операции */
   data: Omit<AddToOrderInput, 'orderId'>;
-  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  loading: BehaviorSubject<boolean>;
-
 } & CartBusEventBase<Order>;
 
 /**
  *  @event CartBusEventUpdate
  * Обновление данных в заказе? НЕ связанных с блюдами. */
- export type CartBusEventUpdate = {
+export type CartBusEventUpdate = {
   event: 'update';
   /** Данные для операции */
   data: Order;
-  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  loading: BehaviorSubject<boolean>;
-
 } & CartBusEventBase<Order>;
 
 /**
@@ -49,9 +47,7 @@ export type CartBusEventAdd = {
 export type CartBusEventRemove = {
   event: 'remove';
   /** Данные для операции */
-  data: Omit<RemoveOrSetAmountToDish<Dish>, 'id'> | Omit<RemoveOrSetAmountToDish<number>, 'id'>;
-  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  loading: BehaviorSubject<boolean>;
+  data: Omit<RemoveOrSetAmountToDish, 'id'>;
 } & CartBusEventBase<Order>;
 
 /**
@@ -61,10 +57,8 @@ export type CartBusEventRemove = {
 export type CartBusEventSetAmountToDish = {
   event: 'setDishAmount';
   /** Данные для операции */
-  data: Omit<RemoveOrSetAmountToDish<Dish>, 'id'>;
+  data: Omit<RemoveOrSetAmountToDish, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  loading: BehaviorSubject<boolean>;
-  /** Заказ, с которым выполнется операция */
 } & CartBusEventBase<Order>;
 
 /**
@@ -76,17 +70,22 @@ export type CartBusEventSetCommentToDish = {
   /** Данные для операции */
   data: Omit<SetDishCommentInput<Dish>, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  loading: BehaviorSubject<boolean>;
-  /** Заказ, с которым выполнется операция */
 } & CartBusEventBase<Order>;
 
 /**
- * @event CartBusEventCheckSend
- * Отправка заказа на проверку перед оформлением или непосредственно оформление. */
-export type CartBusEventCheckSend = {
-  event: 'check' | 'order';
-  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  ordered?: BehaviorSubject<boolean>;
+ * @event CartBusEventCheck
+ * Отправка заказа на проверку перед оформлением. */
+export type CartBusEventCheck = {
+  event: 'check';
+  data: OrderForm;
+} & CartBusEventBase<CheckResponse>;
 
-  orderForm: OrderForm;
-} & CartBusEventBase<OrderForm>;
+/**
+ * @event CartBusEventSend
+ * Отправка заказа на оформление */
+export type CartBusEventSend = {
+  event: 'order';
+  data: string;
+} & CartBusEventBase<CheckResponse>;
+
+

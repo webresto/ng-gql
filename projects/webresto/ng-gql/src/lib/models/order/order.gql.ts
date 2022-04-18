@@ -6,6 +6,7 @@ import type { Message, Action } from '../event-message/event-message';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from '../dish/dish.gql';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
+import type { Customer } from '../customer/customer';
 
 /**
  * @alias OrderState
@@ -46,13 +47,6 @@ export interface Order extends BaseModelWithCustomData {
 	paymentMethod: Pick<PaymentMethod, 'id' | 'title'> & Partial<Omit<PaymentMethod, 'id' | 'title'>> | null;
 }
 
-export interface Customer {
-	phone: string | null;
-	code: string | null;
-	mail?: string;
-	name: string | null;
-}
-
 export interface Address {
 	streetId: string | null;
 	home: string | null;
@@ -77,11 +71,7 @@ export type AddToOrderInput = {
 	orderDishId?: number;
 };
 
-export type RemoveOrSetAmountToDish<T extends (Dish | number)> = T extends Dish ? {
-	dish: Dish;
-	amount?: number;
-	id: string;
-} : {
+export type RemoveOrSetAmountToDish = {
 	orderDishId?: number;
 	amount?: number;
 	id: string;
@@ -97,7 +87,7 @@ export type SetDishCommentInput<T extends (Dish | number)> = T extends Dish ? {
 	orderDishId?: number;
 };
 
-export type OrderInput = {
+export type CheckOrderInput = {
 	orderId: string,
 	paymentMethodId?: string,
 	selfService: boolean,
@@ -110,27 +100,9 @@ export type OrderInput = {
 	notifyMethodId?: string,
 } & Partial<BaseModelWithCustomData>;
 
-export interface Phone extends BaseModelWithCustomData {
-	id: number;
-	phone: string;
-	isFirst: boolean;
-	isConfirm: boolean;
-	codeTime: string;
-	confirmCode: string;
-}
-
-export interface CheckPhoneCodeInput {
-	phone: string;
-	code: string;
+export type OrderInput = {
+	orderId: string,
 };
-
-export interface CheckPhoneResponse {
-	type: string;
-	title: string;
-	message: string;
-	confirmed: boolean;
-	firstbuy: boolean;
-}
 
 export interface CheckResponse {
 	order: Order;

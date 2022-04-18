@@ -5,6 +5,11 @@
 ### Interfaces
 
 - [BaseModelWithCustomData](interfaces/BaseModelWithCustomData.md)
+- [Customer](interfaces/Customer.md)
+- [Phone](interfaces/Phone.md)
+- [PhoneKnowledge](interfaces/PhoneKnowledge.md)
+- [CheckPhoneCodeInput](interfaces/CheckPhoneCodeInput.md)
+- [CheckPhoneResponse](interfaces/CheckPhoneResponse.md)
 - [Dish](interfaces/Dish.md)
 - [DishTag](interfaces/DishTag.md)
 - [Message](interfaces/Message.md)
@@ -24,11 +29,7 @@
 - [NgGqlConfig](interfaces/NgGqlConfig.md)
 - [OrderDish](interfaces/OrderDish.md)
 - [Order](interfaces/Order.md)
-- [Customer](interfaces/Customer.md)
 - [Address](interfaces/Address.md)
-- [Phone](interfaces/Phone.md)
-- [CheckPhoneCodeInput](interfaces/CheckPhoneCodeInput.md)
-- [CheckPhoneResponse](interfaces/CheckPhoneResponse.md)
 - [CheckResponse](interfaces/CheckResponse.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
 
@@ -41,7 +42,8 @@
 - [CartBusEventRemove](README.md#cartbuseventremove)
 - [CartBusEventSetAmountToDish](README.md#cartbuseventsetamounttodish)
 - [CartBusEventSetCommentToDish](README.md#cartbuseventsetcommenttodish)
-- [CartBusEventCheckSend](README.md#cartbuseventchecksend)
+- [CartBusEventCheck](README.md#cartbuseventcheck)
+- [CartBusEventSend](README.md#cartbuseventsend)
 
 ### Variables
 
@@ -73,6 +75,7 @@
 - [AddToOrderInput](README.md#addtoorderinput)
 - [RemoveOrSetAmountToDish](README.md#removeorsetamounttodish)
 - [SetDishCommentInput](README.md#setdishcommentinput)
+- [CheckOrderInput](README.md#checkorderinput)
 - [OrderInput](README.md#orderinput)
 - [OrderAdditionalFields](README.md#orderadditionalfields)
 - [OrderForm](README.md#orderform)
@@ -88,7 +91,7 @@
 
 ### CartBusEvent
 
-• **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheckSend`](README.md#cartbuseventchecksend)
+• **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheck`](README.md#cartbuseventcheck) \| [`CartBusEventSend`](README.md#cartbuseventsend)
 
 **`alias`** CartBusEvent
 
@@ -100,52 +103,59 @@ ___
 
 #### Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends [`Order`](interfaces/Order.md) \| [`OrderForm`](README.md#orderform) = [`Order`](interfaces/Order.md) |
+| Name |
+| :------ |
+| `T` |
 
 #### Type declaration
 
-| Name | Type |
-| :------ | :------ |
-| `successCb?` | (`result`: `T` extends [`OrderForm`](README.md#orderform) ? [`CheckResponse`](interfaces/CheckResponse.md) : [`Order`](interfaces/Order.md)) => `void` |
-| `errorCb?` | (`err`: `unknown`) => `void` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `successCb?` | (`result`: `T`) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
+| `loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 
 ___
 
 ### CartBusEventAdd
 
-• **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: `Omit`<[`AddToOrderInput`](README.md#addtoorderinput), ``"orderId"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: `Omit`<[`AddToOrderInput`](README.md#addtoorderinput), ``"orderId"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
 ### CartBusEventUpdate
 
-• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: [`Order`](interfaces/Order.md) ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: [`Order`](interfaces/Order.md)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
 ### CartBusEventRemove
 
-• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\> \| `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish)<`number`\>, ``"id"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
 ### CartBusEventSetAmountToDish
 
-• **CartBusEventSetAmountToDish**: { `event`: ``"setDishAmount"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventSetAmountToDish**: { `event`: ``"setDishAmount"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
 ### CartBusEventSetCommentToDish
 
-• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\> ; `loading`: `BehaviorSubject`<`boolean`\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
-### CartBusEventCheckSend
+### CartBusEventCheck
 
-• **CartBusEventCheckSend**: { `event`: ``"check"`` \| ``"order"`` ; `ordered?`: `BehaviorSubject`<`boolean`\> ; `orderForm`: [`OrderForm`](README.md#orderform)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`OrderForm`](README.md#orderform)\>
+• **CartBusEventCheck**: { `event`: ``"check"`` ; `data`: [`OrderForm`](README.md#orderform)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
+
+___
+
+### CartBusEventSend
+
+• **CartBusEventSend**: { `event`: ``"order"`` ; `data`: `string`  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
 
 ## Variables
 
@@ -304,7 +314,7 @@ ___
 Ƭ **GQLRequestVariables**: `undefined` \| [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
 
 **`alias`** GQLRequestVariables
-Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описанным для запроса в схеме GraphQL сервера с соответствующими им значениями.
+Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описаны для запроса в схеме GraphQL сервера, с соответствующими им значениями.
 В качестве ключей выступают строки, соответствующие названиям параметров.
 Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
 
@@ -348,13 +358,15 @@ ___
 
 ### RemoveOrSetAmountToDish
 
-Ƭ **RemoveOrSetAmountToDish**<`T`\>: `T` extends [`Dish`](interfaces/Dish.md) ? { `dish`: [`Dish`](interfaces/Dish.md) ; `amount?`: `number` ; `id`: `string`  } : { `orderDishId?`: `number` ; `amount?`: `number` ; `id`: `string`  }
+Ƭ **RemoveOrSetAmountToDish**: `Object`
 
-#### Type parameters
+#### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`Dish`](interfaces/Dish.md) \| `number` |
+| `orderDishId?` | `number` |
+| `amount?` | `number` |
+| `id` | `string` |
 
 ___
 
@@ -370,9 +382,21 @@ ___
 
 ___
 
+### CheckOrderInput
+
+Ƭ **CheckOrderInput**: { `orderId`: `string` ; `paymentMethodId?`: `string` ; `selfService`: `boolean` ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `date?`: `string` ; `address`: [`Address`](interfaces/Address.md) \| ``null`` ; `customer`: [`Customer`](interfaces/Customer.md) \| ``null`` ; `comment?`: `string` ; `notifyMethodId?`: `string`  } & `Partial`<[`BaseModelWithCustomData`](interfaces/BaseModelWithCustomData.md)\>
+
+___
+
 ### OrderInput
 
-Ƭ **OrderInput**: { `orderId`: `string` ; `paymentMethodId?`: `string` ; `selfService`: `boolean` ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `date?`: `string` ; `address`: [`Address`](interfaces/Address.md) \| ``null`` ; `customer`: [`Customer`](interfaces/Customer.md) \| ``null`` ; `comment?`: `string` ; `notifyMethodId?`: `string`  } & `Partial`<[`BaseModelWithCustomData`](interfaces/BaseModelWithCustomData.md)\>
+Ƭ **OrderInput**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `orderId` | `string` |
 
 ___
 
@@ -441,8 +465,8 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `optionalFields?` | keyof `V`[] | Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип (например у параметра указан тип String!, а не String). ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`. |
-| `fieldsTypeMap?` | `Map`<keyof `V`, `string`\> | Необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строки-названия соответствующих им типов, определенных в схеме сервера GraphQL. ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как необязательный. |
+| `requiredFields?` | keyof `V`[] | Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип (например у параметра указан тип String!, а не String). ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`. |
+| `fieldsTypeMap?` | `Map`<keyof `V`, `string`\> | Необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строки-названия соответствующих им типов, определенных в схеме сервера GraphQL. ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
 
 ## Functions
 
@@ -469,8 +493,8 @@ ___
 | `options.name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
 | `options.queryObject` | `T` | объект-источник информации о структуре запрашиваемых данных |
 | `options.variables?` | `V` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа    параметров допустимо использовать типы - number, string, object или boolean. |
-| `options.optionalFields?` | keyof `V`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.    (например у параметра указан тип String!, а не String). |
-| `options.fieldsTypeMap?` | `Map`<keyof `V`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL. ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный. |
+| `options.requiredFields?` | keyof `V`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.    (например у параметра указан тип String!, а не String). |
+| `options.fieldsTypeMap?` | `Map`<keyof `V`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL. ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
 
 #### Returns
 

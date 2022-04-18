@@ -229,7 +229,7 @@ ___
 
 ### removeFromOrder
 
-▸ **removeFromOrder**(`loading`, `dish`, `amount?`, `successCb?`, `errorCb?`, `orderDishId?`): `void`
+▸ **removeFromOrder**(`loading`, `amount?`, `successCb?`, `errorCb?`, `orderDishId?`): `void`
 
 **`method`** removeFromOrder
 Используется для отправки в шину события удаления блюда из корзины
@@ -239,7 +239,6 @@ ___
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
 | `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
-| `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | добавляемое блюдо |
 | `amount` | `number` | `1` | количество |
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
@@ -300,7 +299,7 @@ ___
 
 ### sendOrder
 
-▸ **sendOrder**(`orderForm`, `successCb?`, `errorCb?`): `void`
+▸ **sendOrder**(`orderId`, `successCb?`, `errorCb?`): `void`
 
 **`method`** sendOrder
 Используется для отправки в шину события оформления заказа.
@@ -310,7 +309,7 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `orderForm` | [`OrderForm`](../README.md#orderform) | Форма чекаута с данными оформляемего заказа |
+| `orderId` | `string` | - |
 | `successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 
@@ -322,7 +321,7 @@ ___
 
 ### setDishAmount
 
-▸ **setDishAmount**(`loading`, `dish`, `amount?`, `successCb?`, `errorCb?`): `void`
+▸ **setDishAmount**(`loading`, `orderDishId`, `amount?`, `successCb?`, `errorCb?`): `void`
 
 **`method`** setDishAmount
 Устанавливает для блюда dish в заказе количество amount.
@@ -332,7 +331,7 @@ ___
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
 | `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
-| `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | блюдо, для которого изменяется количество заказываемых порций |
+| `orderDishId` | `number` | `undefined` | - |
 | `amount` | `number` | `1` | необходимое количество порций |
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |

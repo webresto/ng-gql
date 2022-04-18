@@ -11,11 +11,11 @@
 
   ↳ [`Order`](Order.md)
 
-  ↳ [`Phone`](Phone.md)
-
   ↳ [`PaymentMethod`](PaymentMethod.md)
 
   ↳ [`Maintenance`](Maintenance.md)
+
+  ↳ [`PhoneKnowledge`](PhoneKnowledge.md)
 
 ## Table of contents
 

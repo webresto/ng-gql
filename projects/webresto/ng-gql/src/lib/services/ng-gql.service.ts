@@ -6,8 +6,8 @@ import { filter, map, switchMap, shareReplay, startWith, mergeWith, distinctUnti
 import type { Observable } from 'rxjs';
 import type {
   NgGqlConfig, GQLRequestVariables, Group, ValuesOrBoolean,
-  Dish, Phone, CheckPhoneResponse, Navigation, NavigationBase, NavigationLoader,
-  CheckPhoneCodeInput, VCriteria, Maintenance
+  Dish, PhoneKnowledge, CheckPhoneResponse, Navigation, NavigationBase, NavigationLoader,
+  CheckPhoneCodeInput, VCriteria, Maintenance, Phone
 } from '../models';
 import {
   isValue, NavigationFragments, MaintenanceFragment, GroupFragments,
@@ -21,16 +21,16 @@ import { makeForm } from '@axrl/ngx-extended-form-builder';
  */
 export type QueryGenerationParam<V> = {
   /**
-   * Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+   * Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
    * (например у параметра указан тип String!, а не String).
    * ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`.
    */
-  optionalFields?: (keyof V)[];
+  requiredFields?: (keyof V)[];
 
   /**
    * Необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
    * а в качестве значения - строки-названия соответствующих им типов, определенных в схеме сервера GraphQL.
-   * ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+   * ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как обязательный.
    */
   fieldsTypeMap?: Map<keyof V, string>;
 };
@@ -352,9 +352,15 @@ export class NgGqlService {
     }
   }
 
-  getPhone$(phone: string): Observable<Phone[]> {
+  /**
+   * @method isKnownPhone$
+   * Проверяет переданный номер телефона на "знакомость".
+   * @param phone - Объект с данными номера телефона.
+   * @returns
+   */
+  isKnownPhone$(phone: Phone): Observable<PhoneKnowledge[]> {
     const customvOb = this.config.customFields?.[ 'Phone' ];
-    const phonevOb: ValuesOrBoolean<Phone> = {
+    const phonevOb: ValuesOrBoolean<PhoneKnowledge> = {
       id: true,
       phone: true,
       isFirst: true,
@@ -363,23 +369,25 @@ export class NgGqlService {
       confirmCode: true
     };
     const vOb = customvOb ? { ...phonevOb, ...customvOb } : phonevOb;
-    return this.customQuery$<Phone, 'phone', {
-      phone: string;
-    }>('phone', vOb, {
+    return this.customQuery$<PhoneKnowledge, 'isKnownPhone', {
+      phone: Phone;
+    }>('isKnownPhone', vOb, {
       phone
     }, {
-      optionalFields: [ 'phone' ]
+      fieldsTypeMap: new Map([
+        [ 'phone', 'Phone!' ]
+      ])
     }).pipe(
       map(
-        data => Array.isArray(data.phone) ? data.phone : [ data.phone ]
+        data => Array.isArray(data.isKnownPhone) ? data.isKnownPhone : [ data.isKnownPhone ]
       )
     );
   };
 
-  checkPhone$(phone: string): Observable<CheckPhoneResponse[]> {
-    return this.customQuery$<CheckPhoneResponse, 'checkPhone', {
-      phone: string;
-    }>('checkPhone', {
+  phoneKnowledgeGetCode$(phone: Phone): Observable<CheckPhoneResponse[]> {
+    return this.customQuery$<CheckPhoneResponse, 'phoneKnowledgeGetCode', {
+      phone: Phone;
+    }>('phoneKnowledgeGetCode', {
       type: true,
       title: true,
       message: true,
@@ -388,25 +396,30 @@ export class NgGqlService {
     }, {
       phone
     }, {
-      optionalFields: [ 'phone' ]
+      fieldsTypeMap: new Map([
+        [ 'phone', 'Phone!' ]
+      ])
     }).pipe(
       map(
-        data => Array.isArray(data.checkPhone) ? data.checkPhone : [ data.checkPhone ]
+        data => Array.isArray(data.phoneKnowledgeGetCode) ? data.phoneKnowledgeGetCode : [ data.phoneKnowledgeGetCode ]
       )
     );
   };
-  checkPhoneCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
-    return this.customMutation$<CheckPhoneResponse, 'setPhoneCode', CheckPhoneCodeInput>('setPhoneCode', {
+  phoneKnowledgeSetCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
+    return this.customMutation$<CheckPhoneResponse, 'phoneKnowledgeSetCode', CheckPhoneCodeInput>('phoneKnowledgeSetCode', {
       type: true,
       title: true,
       message: true,
       confirmed: true,
       firstbuy: true
     }, data, {
-      optionalFields: [ 'phone', 'code' ]
+      fieldsTypeMap: new Map([
+        [ 'phone', 'Phone!' ],
+        [ 'code', 'String!' ]
+      ])
     }).pipe(
       map(
-        result => result.setPhoneCode
+        result => result.phoneKnowledgeSetCode
       )
     );
   };
@@ -425,15 +438,15 @@ export class NgGqlService {
    * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
    *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
    *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
-   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,
+   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
    *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
    * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
-   * @param options.optionalFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+   * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
    * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
    *    (например у параметра указан тип String!, а не String).
    * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
    * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
-   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
    *
    * @returns - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
    *  в виде одиночного объекта либо массива.
@@ -446,7 +459,7 @@ export class NgGqlService {
         name,
         queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[ name ] : queryObject,
         variables,
-        optionalFields: paramOptions?.optionalFields,
+        requiredFields: paramOptions?.requiredFields,
         fieldsTypeMap: paramOptions?.fieldsTypeMap
       }) }`,
       variables,
@@ -471,27 +484,25 @@ export class NgGqlService {
  * @param variables - обязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
  *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
  *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
- *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,
+ *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
  *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
  * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
- * @param options.optionalFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+ * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
  * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
  *    (например у параметра указан тип String!, а не String).
  * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
  * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
- * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+ * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
  *
  * @returns - Observable поток с результатом выполнения операции в формате объекта с одним ключом N (название операции), значение которого - непосредственно результат операции.
  **/
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>>;
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>>;
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>> {
+  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>> {
     return this.apollo.mutate<Record<N, T>, V>({
       mutation: gql`mutation ${ generateQueryString({
         name,
-        queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[ name ] : queryObject,
+        queryObject: queryObject,
         variables,
-        optionalFields: paramOptions?.optionalFields,
+        requiredFields: paramOptions?.requiredFields,
         fieldsTypeMap: paramOptions?.fieldsTypeMap
       }) }`,
       variables
@@ -515,15 +526,15 @@ export class NgGqlService {
 * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
 *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
 *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
-*  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,
+*  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
 *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
 * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
-* @param options.optionalFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+* @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
 * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
 *    (например у параметра указан тип String!, а не String).
 * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
 * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
-* ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+* ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
 *
 * @returns - Observable поток с данными типа T, которые будут поступать в рамках сделанной подписки.
 * ВАЖНО! В потоке будут поступать только обновления для данных, на которые сделана подписка.
@@ -538,7 +549,7 @@ export class NgGqlService {
       name,
       queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[ name ] : queryObject,
       variables,
-      optionalFields: paramOptions?.optionalFields,
+      requiredFields: paramOptions?.requiredFields,
       fieldsTypeMap: paramOptions?.fieldsTypeMap
     });
     return this.apollo.subscribe<Record<N, T>, V>({
@@ -565,15 +576,15 @@ export class NgGqlService {
   * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
-  *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в optionalFields,
+  *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
-  * @param options.optionalFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен необязательный тип
+  * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
   *    (например у параметра указан тип String!, а не String).
   * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
-  * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как необязательный.
+  * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
   * @returns - Observable поток с данными, которые будут поступать в рамках сделанной подписки.
   * Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
   * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).

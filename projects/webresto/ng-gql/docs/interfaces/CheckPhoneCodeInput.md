@@ -11,7 +11,7 @@
 
 ### phone
 
-• **phone**: `string`
+• **phone**: [`Phone`](Phone.md)
 
 ___
 

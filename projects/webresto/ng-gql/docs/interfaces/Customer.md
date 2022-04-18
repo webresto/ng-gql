@@ -5,7 +5,6 @@
 ### Properties
 
 - [phone](Customer.md#phone)
-- [code](Customer.md#code)
 - [mail](Customer.md#mail)
 - [name](Customer.md#name)
 
@@ -13,13 +12,7 @@
 
 ### phone
 
-• **phone**: ``null`` \| `string`
-
-___
-
-### code
-
-• **code**: ``null`` \| `string`
+• **phone**: ``null`` \| [`Phone`](Phone.md)
 
 ___
 
