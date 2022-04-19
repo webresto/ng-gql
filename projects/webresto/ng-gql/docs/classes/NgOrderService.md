@@ -8,6 +8,7 @@
 
 ### Methods
 
+- [updateStorageOrderIdToken](NgOrderService.md#updatestorageorderidtoken)
 - [getOrderId](NgOrderService.md#getorderid)
 - [setOrderId](NgOrderService.md#setorderid)
 - [removeOrderId](NgOrderService.md#removeorderid)
@@ -15,7 +16,6 @@
 - [getPaymentMethods$](NgOrderService.md#getpaymentmethods$)
 - [getOrderAndPaymentMethods$](NgOrderService.md#getorderandpaymentmethods$)
 - [getOrder](NgOrderService.md#getorder)
-- [loadOrderAsCart](NgOrderService.md#loadorderascart)
 - [loadOrder$](NgOrderService.md#loadorder$)
 - [addToOrder](NgOrderService.md#addtoorder)
 - [removeFromOrder](NgOrderService.md#removefromorder)
@@ -48,11 +48,38 @@
 
 ## Methods
 
+### updateStorageOrderIdToken
+
+▸ **updateStorageOrderIdToken**(`newToken`): `void`
+
+**`method`** updateStorageOrderIdToken
+Реализация "мульткорзины".
+Предназначен для переключения между корзинами, каждая из которых хранятся в localStorage со своим токеном.
+Предназначен для переключения потоков с
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `newToken` | `string` |
+
+#### Returns
+
+`void`
+
+___
+
 ### getOrderId
 
-▸ **getOrderId**(): `undefined` \| `string`
+▸ **getOrderId**(`storageOrderIdToken`): `undefined` \| `string`
 
 **`method`** getOrderId
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `storageOrderIdToken` | `string` |
 
 #### Returns
 
@@ -67,7 +94,7 @@ ___
 
 ### setOrderId
 
-▸ **setOrderId**(`orderId`): `void`
+▸ **setOrderId**(`orderId`, `storageOrderIdToken?`): `void`
 
 **`method`** setOrderId
 
@@ -76,6 +103,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `orderId` | `string` | id Заказа, который требуется сохранить в localStorage с ключом @interface `NgGqlConfig.orderIdStorageToken` (по умолчанию -'${ window.location.host }-orderId'). Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp). Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся. Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней). |
+| `storageOrderIdToken?` | `string` | необязательный альтернативный токен для сохранения orderId в localstorage. Также все последующие операции в localStorage данными заказа начнут использовать этот токен, т.к. обновится внутренняя подписка информации об используемом токене. |
 
 #### Returns
 
@@ -86,6 +114,9 @@ ___
 ### removeOrderId
 
 ▸ **removeOrderId**(): `void`
+
+**`method`** removeOrderId
+Удаляет сохраненный в localStorage id заказа.
 
 #### Returns
 
@@ -157,25 +188,6 @@ ___
 `Observable`<[`Order`](../interfaces/Order.md)\>
 
 Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
-
-___
-
-### loadOrderAsCart
-
-▸ **loadOrderAsCart**(`orderId`): `void`
-
-**`method`** loadOrderAsCart
-Метод, иницирующий в потоке @this order$` данные нового заказ.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `orderId` | `undefined` \| `string` | необязательный id заказа. В поток загружается заказ с указанным orderId либо, eсли orderId отсутствует - новый заказ. |
-
-#### Returns
-
-`void`
 
 ___
 

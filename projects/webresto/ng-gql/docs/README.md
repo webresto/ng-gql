@@ -45,6 +45,24 @@
 - [CartBusEventCheck](README.md#cartbuseventcheck)
 - [CartBusEventSend](README.md#cartbuseventsend)
 
+### Type aliases
+
+- [StorageOrderTokenEvent](README.md#storageordertokenevent)
+- [StorageOrderTokenSetOrderId](README.md#storageordertokensetorderid)
+- [StorageOrderTokenRemoveOrderId](README.md#storageordertokenremoveorderid)
+- [VCriteria](README.md#vcriteria)
+- [GQLRequestVariables](README.md#gqlrequestvariables)
+- [OrderState](README.md#orderstate)
+- [AddToOrderInput](README.md#addtoorderinput)
+- [RemoveOrSetAmountToDish](README.md#removeorsetamounttodish)
+- [SetDishCommentInput](README.md#setdishcommentinput)
+- [CheckOrderInput](README.md#checkorderinput)
+- [OrderInput](README.md#orderinput)
+- [OrderAdditionalFields](README.md#orderadditionalfields)
+- [OrderForm](README.md#orderform)
+- [ValuesOrBoolean](README.md#valuesorboolean)
+- [QueryGenerationParam](README.md#querygenerationparam)
+
 ### Variables
 
 - [DishFragments](README.md#dishfragments)
@@ -66,21 +84,6 @@
 - [EventerService](classes/EventerService.md)
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
-
-### Type aliases
-
-- [VCriteria](README.md#vcriteria)
-- [GQLRequestVariables](README.md#gqlrequestvariables)
-- [OrderState](README.md#orderstate)
-- [AddToOrderInput](README.md#addtoorderinput)
-- [RemoveOrSetAmountToDish](README.md#removeorsetamounttodish)
-- [SetDishCommentInput](README.md#setdishcommentinput)
-- [CheckOrderInput](README.md#checkorderinput)
-- [OrderInput](README.md#orderinput)
-- [OrderAdditionalFields](README.md#orderadditionalfields)
-- [OrderForm](README.md#orderform)
-- [ValuesOrBoolean](README.md#valuesorboolean)
-- [QueryGenerationParam](README.md#querygenerationparam)
 
 ### Functions
 
@@ -157,140 +160,40 @@ ___
 
 • **CartBusEventSend**: { `event`: ``"order"`` ; `data`: `string`  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
 
-## Variables
-
-### DishFragments
-
-• `Const` **DishFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\> |
-
-___
-
-### MessageOrActionGql
-
-• `Const` **MessageOrActionGql**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `messageVob` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\> |
-| `actionVob` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\> |
-
-___
-
-### GroupModifierFragments
-
-• `Const` **GroupModifierFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\> |
-
-___
-
-### GroupFragments
-
-• `Const` **GroupFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\> |
-
-___
-
-### ImageFragments
-
-• `Const` **ImageFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\> |
-
-___
-
-### MaintenanceFragment
-
-• `Const` **MaintenanceFragment**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\> |
-
-___
-
-### ModifierFragments
-
-• `Const` **ModifierFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\> |
-
-___
-
-### NavigationFragments
-
-• `Const` **NavigationFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\> |
-
-___
-
-### OrderDishFragments
-
-• `Const` **OrderDishFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> |
-
-___
-
-### OrderFragments
-
-• `Const` **OrderFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\> |
-
-___
-
-### PaymentMethodFragments
-
-• `Const` **PaymentMethodFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\> |
-
 ## Type aliases
+
+### StorageOrderTokenEvent
+
+Ƭ **StorageOrderTokenEvent**: [`StorageOrderTokenSetOrderId`](README.md#storageordertokensetorderid) \| [`StorageOrderTokenRemoveOrderId`](README.md#storageordertokenremoveorderid)
+
+___
+
+### StorageOrderTokenSetOrderId
+
+Ƭ **StorageOrderTokenSetOrderId**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `event` | ``"setOrderId"`` |
+| `data` | { `orderId`: `string` ; `alternativeToken?`: `string`  } |
+| `data.orderId` | `string` |
+| `data.alternativeToken?` | `string` |
+
+___
+
+### StorageOrderTokenRemoveOrderId
+
+Ƭ **StorageOrderTokenRemoveOrderId**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `event` | ``"removeOrderId"`` |
+
+___
 
 ### VCriteria
 
@@ -467,6 +370,139 @@ ___
 | :------ | :------ | :------ |
 | `requiredFields?` | keyof `V`[] | Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип (например у параметра указан тип String!, а не String). ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`. |
 | `fieldsTypeMap?` | `Map`<keyof `V`, `string`\> | Необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строки-названия соответствующих им типов, определенных в схеме сервера GraphQL. ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
+
+## Variables
+
+### DishFragments
+
+• `Const` **DishFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\> |
+
+___
+
+### MessageOrActionGql
+
+• `Const` **MessageOrActionGql**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `messageVob` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\> |
+| `actionVob` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\> |
+
+___
+
+### GroupModifierFragments
+
+• `Const` **GroupModifierFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\> |
+
+___
+
+### GroupFragments
+
+• `Const` **GroupFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\> |
+
+___
+
+### ImageFragments
+
+• `Const` **ImageFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\> |
+
+___
+
+### MaintenanceFragment
+
+• `Const` **MaintenanceFragment**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\> |
+
+___
+
+### ModifierFragments
+
+• `Const` **ModifierFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\> |
+
+___
+
+### NavigationFragments
+
+• `Const` **NavigationFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\> |
+
+___
+
+### OrderDishFragments
+
+• `Const` **OrderDishFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> |
+
+___
+
+### OrderFragments
+
+• `Const` **OrderFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\> |
+
+___
+
+### PaymentMethodFragments
+
+• `Const` **PaymentMethodFragments**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\> |
 
 ## Functions
 
