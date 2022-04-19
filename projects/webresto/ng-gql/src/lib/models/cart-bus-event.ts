@@ -88,4 +88,18 @@ export type CartBusEventSend = {
   data: string;
 } & CartBusEventBase<CheckResponse>;
 
+export type StorageOrderTokenEvent = StorageOrderTokenSetOrderId | StorageOrderTokenRemoveOrderId;
+
+export type StorageOrderTokenSetOrderId = {
+  event: 'setOrderId';
+  data: {
+    orderId: string;
+    alternativeToken?: string;
+  };
+};
+
+export type StorageOrderTokenRemoveOrderId = {
+  event: 'removeOrderId';
+};
+
 

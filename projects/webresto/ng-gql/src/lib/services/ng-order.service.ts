@@ -1,8 +1,8 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
-import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged } from 'rxjs/operators';
-import type { NgGqlConfig, Action, Message, OrderInput, CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean } from '../models';
+import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
+import type { NgGqlConfig, Action, Message, OrderInput, CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent } from '../models';
 import { isValue, MessageOrActionGql, OrderFragments, PaymentMethodFragments } from '../models';
 import { NgGqlService } from './ng-gql.service';
 import { EventerService } from './eventer.service';
@@ -12,22 +12,38 @@ import { EventerService } from './eventer.service';
 })
 export class NgOrderService {
 
-
   constructor(
     private ngGqlService: NgGqlService,
     private eventer: EventerService,
     @Inject('config') private config: NgGqlConfig
-  ) {
-    if (this.config.busSubscribeMode === 'subscribe') {
-      this._orderBusSubscription$ = this.orderBus$.subscribe({
-        next: () => { },
-        error: () => { },
-        complete: () => this._orderBusSubscription$?.unsubscribe()
-      });
-    }
-  }
+  ) { }
 
-  private storageOrderIdToken = this.config.orderIdStorageToken ?? `${ window.location.host }-orderId`;
+  /**
+   * Поток для изменения "на лету" токена, с которым в localStorage сохраняется id заказа.
+   * Необходим для реализации на сайте "мультикорзины" - нескольких параллельных корзин, между которыми пользователь может переключаться при переходе по страницам сайта.
+   */
+  private _storageOrderIdToken$ = new BehaviorSubject<string | null>(
+    this.config.orderIdStorageToken !== undefined ?
+      this.config.orderIdStorageToken :
+      `${ window.location.host }-orderId
+     `);
+
+  private storageOrderIdToken$ = this._storageOrderIdToken$.pipe(
+    filter((storageOrderIdToken): storageOrderIdToken is string => !!storageOrderIdToken),
+    distinctUntilChanged(),
+    shareReplay(1)
+  );
+
+  /**
+   * @method updateStorageOrderIdToken
+   * Реализация "мульткорзины".
+   * Предназначен для переключения между корзинами, каждая из которых хранятся в localStorage со своим токеном.
+   * Предназначен для переключения потоков с
+   * @param newToken
+   */
+  updateStorageOrderIdToken(newToken: string) {
+    this._storageOrderIdToken$.next(newToken);
+  }
 
   /**
    * @method getOrderId
@@ -36,9 +52,9 @@ export class NgOrderService {
    * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
    * Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
    */
-  getOrderId() {
+  getOrderId(storageOrderIdToken: string): string | undefined {
     try {
-      const cartString = localStorage.getItem(this.storageOrderIdToken);
+      const cartString = localStorage.getItem(storageOrderIdToken);
       if (cartString) {
         const cartData: {
           orderId: string;
@@ -64,18 +80,27 @@ export class NgOrderService {
    * Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
    * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
    * Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
+   * @param storageOrderIdToken - необязательный альтернативный токен для сохранения orderId в localstorage.
+   * Также все последующие операции в localStorage данными заказа начнут использовать этот токен, т.к. обновится внутренняя подписка информации об используемом токене.
    */
-  setOrderId(orderId: string) {
-    const storageOrderId = this.getOrderId();
-    if (isValue(orderId) && (!storageOrderId || orderId !== storageOrderId)) {
-      localStorage.setItem(this.storageOrderIdToken, JSON.stringify({
-        orderId: orderId, dt: Date.now()
-      }));
-    };
+  setOrderId(orderId: string, storageOrderIdToken?: string) {
+    this._storageActionBus$.emit({
+      event: 'setOrderId',
+      data: {
+        orderId,
+        alternativeToken: storageOrderIdToken
+      }
+    });
   }
 
+  /**
+   * @method removeOrderId
+   * Удаляет сохраненный в localStorage id заказа.
+   */
   removeOrderId() {
-    localStorage.removeItem(this.storageOrderIdToken);
+    this._storageActionBus$.emit({
+      event: 'removeOrderId'
+    });
   }
 
   paymentLink$(phone: string, fromPhone: string, orderId: string): Observable<any> {
@@ -121,48 +146,48 @@ export class NgOrderService {
     );
   };
 
-  private _orderBusSubscription$: Subscription | undefined;
-
-  private _orderLoader$ = new BehaviorSubject<string | undefined>(this.getOrderId());
-
   private orderAndPaymentMethods$: Observable<{
     order: Order,
     methods: PaymentMethod[];
-  }> = this._orderLoader$.asObservable().pipe(
-    distinctUntilChanged(),
+  }> = this.storageOrderIdToken$.pipe(
     switchMap(
-      orderId => this.getPaymentMethods$(orderId).pipe(
-        map(
-          methods => ({
-            methods, orderId
-          })
-        ),
-        shareReplay(1)
-      )
-    ),
-    switchMap(
-      methodsAndId => this.loadOrder$(methodsAndId.orderId).pipe(
-        switchMap(
-          order => order.state === 'ORDER' ? this.loadOrder$(undefined) : of(order)
-        ),
-        map(
-          order => {
-            this.setOrderId(order.id);
-            return {
-              methods: methodsAndId.methods,
-              order: {
-                ...order,
-                paymentMethod: !order.paymentMethod && methodsAndId.methods.length > 0 ? {
-                  id: methodsAndId.methods[ 0 ].id,
-                  title: methodsAndId.methods[ 0 ].title
-                } : order.paymentMethod
-              }
-            };
-          }
-        ),
-        shareReplay(1)
-      )
-    ),
+      storageOrderIdToken => {
+        const orderId = this.getOrderId(storageOrderIdToken);
+        return this.getPaymentMethods$(orderId).pipe(
+          map(
+            methods => ({
+              methods, orderId
+            })
+          ),
+          switchMap(
+            methodsAndId => this.loadOrder$(methodsAndId.orderId).pipe(
+              switchMap(
+                order => order.state === 'ORDER' ? this.loadOrder$(undefined) : of(order)
+              ),
+              map(
+                order => {
+                  const storageOrderId = this.getOrderId(storageOrderIdToken);
+                  if (!storageOrderId || storageOrderId !== order.id) {
+                    this.setOrderId(order.id);
+                  };
+                  return {
+                    methods: methodsAndId.methods,
+                    order: {
+                      ...order,
+                      paymentMethod: !order.paymentMethod && methodsAndId.methods.length > 0 ? {
+                        id: methodsAndId.methods[ 0 ].id,
+                        title: methodsAndId.methods[ 0 ].title
+                      } : order.paymentMethod
+                    }
+                  };
+                }
+              ),
+              shareReplay(1)
+            )
+          ),
+          shareReplay(1)
+        );
+      }),
     shareReplay(1)
   );
 
@@ -222,16 +247,6 @@ export class NgOrderService {
   );
 
   /**
-   * @method loadOrderAsCart
-   * Метод, иницирующий в потоке @this order$` данные нового заказ.
-   * @param orderId - необязательный id заказа.
-   * В поток загружается заказ с указанным orderId либо, eсли orderId отсутствует - новый заказ.
-   * */
-  loadOrderAsCart(orderId: string | undefined): void {
-    this._orderLoader$.next(orderId);
-  };
-
-  /**
   * @method loadOrder$
   *
   * Метод загружает заказ и делает подписку для получения по нему обновлений.
@@ -289,6 +304,44 @@ export class NgOrderService {
       shareReplay(1)
     );
   }
+
+  private _storageActionBus$ = new EventEmitter<StorageOrderTokenEvent>();
+  private storageActionBus$ = this._storageActionBus$.pipe(
+    switchMap(
+      busEvent => {
+        const setStgorage = (token: string, orderId: string) => {
+          const storageOrderId = this.getOrderId(token);
+          if (!storageOrderId || orderId !== storageOrderId) {
+            localStorage.setItem(
+              token, JSON.stringify({ orderId: orderId, dt: Date.now() })
+            );
+          };
+        };
+        if (busEvent.event == 'setOrderId' && isValue(busEvent.data.alternativeToken)) {
+          setStgorage(busEvent.data.alternativeToken, busEvent.data.orderId);
+          this.updateStorageOrderIdToken(busEvent.data.alternativeToken);
+          return of(() => { });
+        } else {
+          return this.storageOrderIdToken$.pipe(
+            map(
+              storageOrderIdToken => {
+                switch (busEvent.event) {
+                  case 'removeOrderId':
+                    localStorage.removeItem(storageOrderIdToken);
+                    break;
+                  case 'setOrderId':
+                    setStgorage(storageOrderIdToken, busEvent.data.orderId);
+                    break;
+                };
+              }),
+          );
+        }
+
+      }
+
+
+    ),
+  );
 
   private _orderBus$ = new EventEmitter<CartBusEvent>();
 
@@ -372,8 +425,19 @@ export class NgOrderService {
         );
       }),
     shareReplay(1)
-
   );
+
+  private _orderBusSubscription$: Subscription | undefined = this.config.busSubscribeMode === 'subscribe' ? this.orderBus$.subscribe({
+    next: () => { },
+    error: () => { },
+    complete: () => this._orderBusSubscription$?.unsubscribe()
+  }) : undefined;
+
+  private _storageActionBusSubscription$: Subscription = this.storageActionBus$.subscribe({
+    next: () => { },
+    error: () => { },
+    complete: () => this._storageActionBusSubscription$?.unsubscribe()
+  });
 
 
   /**
@@ -633,10 +697,12 @@ export class NgOrderService {
     if (this._orderBusSubscription$ && !this._orderBusSubscription$.closed) {
       this._orderBusSubscription$.unsubscribe();
     };
+    this._storageActionBusSubscription$.unsubscribe();
     Object.values(this).filter(
       (property): property is EventEmitter<unknown> | BehaviorSubject<unknown> => property instanceof EventEmitter || property instanceof BehaviorSubject
     ).forEach(
       property => property.complete()
     );
   }
+
 }
