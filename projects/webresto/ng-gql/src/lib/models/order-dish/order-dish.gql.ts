@@ -25,28 +25,7 @@ export const OrderDishFragments = {
 		id: true,
 		amount: true,
 		dishId: true,
-		dish: {
-			id: true,
-			balance: true,
-			description: true,
-			modifiers: GroupModifierFragments.vOb,
-			name: true,
-			price: true,
-			weight: true,
-			carbohydrateAmount: true,
-			carbohydrateFullAmount: true,
-			energyAmount: true,
-			energyFullAmount: true,
-			fatAmount: true,
-			fatFullAmount: true,
-			fiberAmount: true,
-			fiberFullAmount: true,
-			images: ImageFragments.vOb,
-			parentGroup: {
-				id: true,
-				dishesPlaceholder: ImageFragments.vOb
-			}
-		},
+		dish: DishFragments.vOb,
 		modifiers: {
 			id: true,
 			dish: DishFragments.vOb,
