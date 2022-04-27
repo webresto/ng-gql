@@ -562,6 +562,25 @@ export class NgGqlService {
     );
   };
 
+  private _customSimpleQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>>;
+  private _customSimpleQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>>;
+  private _customSimpleQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
+    return this.apollo.query<Record<N, T | T[]>, V>({
+      query: gql`query ${ generateQueryString({
+        name,
+        queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[ name ] : queryObject,
+        variables,
+        requiredFields: paramOptions?.requiredFields,
+        fieldsTypeMap: paramOptions?.fieldsTypeMap
+      }) }`,
+      variables,
+    }).pipe(
+      map(
+        res => res.error || res.errors ? null : res.data),
+      filter((data): data is Record<N, T | T[]> => !!data)
+    );
+  };
+
   /**
   * @method queryAndSubscribe
   * Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
@@ -637,7 +656,7 @@ export class NgGqlService {
         return [ ...array, newValue ];
       };
     };
-    return this.customQuery$(
+    return this._customSimpleQuery$(
       nameQuery, queryObject,
       isValue(variables) && 'query' in variables ? variables.query : <VQ> variables,
       isValue(paramOptions) && 'query' in paramOptions ? paramOptions.query : <QueryGenerationParam<VQ>> paramOptions
