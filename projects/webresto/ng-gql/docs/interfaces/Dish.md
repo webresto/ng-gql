@@ -32,6 +32,8 @@
 - [fiberAmount](Dish.md#fiberamount)
 - [fiberFullAmount](Dish.md#fiberfullamount)
 - [measureUnit](Dish.md#measureunit)
+- [discountAmount](Dish.md#discountamount)
+- [discountType](Dish.md#discounttype)
 
 ## Properties
 
@@ -168,3 +170,15 @@ ___
 ### measureUnit
 
 • `Optional` **measureUnit**: `string`
+
+___
+
+### discountAmount
+
+• **discountAmount**: ``null`` \| `number`
+
+___
+
+### discountType
+
+• **discountType**: ``null`` \| `string`
