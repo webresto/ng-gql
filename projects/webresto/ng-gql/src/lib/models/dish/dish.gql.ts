@@ -1,8 +1,8 @@
-import {ImageFragments} from '../image/image.gql';
-import {GroupModifier, GroupModifierFragments} from '../group-modifier/group-modifier.gql';
-import type {ValuesOrBoolean} from '../values-or-boolean';
-import type {Image} from "../image/image.gql";
-import type {Group} from '../group/group.gql';
+import { ImageFragments } from '../image/image.gql';
+import { GroupModifier, GroupModifierFragments } from '../group-modifier/group-modifier.gql';
+import type { ValuesOrBoolean } from '../values-or-boolean';
+import type { Image } from "../image/image.gql";
+import type { Group } from '../group/group.gql';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 
 export interface Dish extends BaseModelWithCustomData {
@@ -13,7 +13,7 @@ export interface Dish extends BaseModelWithCustomData {
 	weight: number;
 	balance: number;
 	tags?: DishTag[];
-	additionalInfo?: string | number | {[key: string]: string | any;} | null;
+	additionalInfo?: string | number | { [ key: string ]: string | any; } | null;
 	images: Image[];
 	groupId?: string;
 	parentGroup: Pick<Group, 'id' | 'dishesPlaceholder'>;
@@ -27,6 +27,8 @@ export interface Dish extends BaseModelWithCustomData {
 	fiberAmount?: number;
 	fiberFullAmount?: number;
 	measureUnit?: string;
+	discountAmount: number | null;
+	discountType: string | null;
 }
 
 export interface DishTag {
@@ -35,7 +37,7 @@ export interface DishTag {
 
 export const DishFragments = {
 	vOb: <ValuesOrBoolean<Dish>> {
-		customData:true,
+		customData: true,
 		id: true,
 		name: true,
 		description: true,
@@ -47,6 +49,8 @@ export const DishFragments = {
 		carbohydrateAmount: true,
 		carbohydrateFullAmount: true,
 		energyAmount: true,
+		discountAmount: true,
+		discountType: true,
 		energyFullAmount: true,
 		fatAmount: true,
 		fatFullAmount: true,
