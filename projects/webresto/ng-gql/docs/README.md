@@ -50,6 +50,7 @@
 - [StorageOrderTokenEvent](README.md#storageordertokenevent)
 - [StorageOrderTokenSetOrderId](README.md#storageordertokensetorderid)
 - [StorageOrderTokenRemoveOrderId](README.md#storageordertokenremoveorderid)
+- [DiscountType](README.md#discounttype)
 - [VCriteria](README.md#vcriteria)
 - [GQLRequestVariables](README.md#gqlrequestvariables)
 - [OrderState](README.md#orderstate)
@@ -192,6 +193,12 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `event` | ``"removeOrderId"`` |
+
+___
+
+### DiscountType
+
+Ƭ **DiscountType**: ``"FIXED"`` \| ``"PERCENT"``
 
 ___
 

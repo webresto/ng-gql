@@ -5,6 +5,8 @@ import type { Image } from "../image/image.gql";
 import type { Group } from '../group/group.gql';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 
+export type DiscountType = 'FIXED' | 'PERCENT';
+
 export interface Dish extends BaseModelWithCustomData {
 	id: string;
 	name: string;
@@ -28,7 +30,7 @@ export interface Dish extends BaseModelWithCustomData {
 	fiberFullAmount?: number;
 	measureUnit?: string;
 	discountAmount: number | null;
-	discountType: string | null;
+	discountType: DiscountType | null;
 }
 
 export interface DishTag {

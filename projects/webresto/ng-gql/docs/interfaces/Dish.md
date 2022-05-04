@@ -181,4 +181,4 @@ ___
 
 ### discountType
 
-• **discountType**: ``null`` \| `string`
+• **discountType**: ``null`` \| [`DiscountType`](../README.md#discounttype)
