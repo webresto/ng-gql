@@ -12,6 +12,7 @@ export * from './maintenance/maintenance';
 export * from './customer';
 export { NgGqlConfig } from './ng-gql-config/ng-gql-config';
 export { isValue } from './is-value';
+export { isEqualItems } from './isEqualItems';
 export type { ValuesOrBoolean } from './values-or-boolean';
 export { generateQueryString } from './generate-query-string';
 export type { VCriteria, GQLRequestVariables } from './generate-query-string';

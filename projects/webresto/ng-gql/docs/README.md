@@ -90,6 +90,7 @@
 
 - [generateQueryString](README.md#generatequerystring)
 - [isValue](README.md#isvalue)
+- [isEqualItems](README.md#isequalitems)
 
 ## Events
 
@@ -591,3 +592,31 @@ ___
 #### Returns
 
 value is NonNullable<T\>
+
+___
+
+### isEqualItems
+
+▸ **isEqualItems**<`T`\>(`a`, `b`): `boolean`
+
+Функция для сравнения двух переменных.
+Осуществляет "глубокое" сравнение для непримитивных типов по значениям их свойств, а не по ссылке на объект.
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `a` | `T` | @param b - сравниваемые объекты. |
+| `b` | `T` | - |
+
+#### Returns
+
+`boolean`
+
+true, если объекты идентичны и false, если объекты различаются.
