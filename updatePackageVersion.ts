@@ -12,33 +12,38 @@ async function main() {
       await readFile(mainPackageJsonPath, { encoding: 'utf-8' })
     );
     const versionArray = libraryPackageJson?.version?.split('.');
-    const libraryDependencies = libraryPackageJson.peerDependencies;
+    const libraryPeerDependencies = libraryPackageJson.peerDependencies;
+    const libraryDependencies = libraryPackageJson.dependencies;
     let haveChanges: boolean = false;
-    Object.keys(libraryDependencies).forEach(
-      key => {
-        if (mainPackageJson.dependencies[key] && mainPackageJson.dependencies[key] !== libraryDependencies[key]) {
-          libraryDependencies[key] = mainPackageJson.dependencies[key];
-          if (!haveChanges) {
-            haveChanges = true;
-          };
-        } else {
-          if (mainPackageJson.devDependencies[key] && mainPackageJson.devDependencies[key] !== libraryDependencies[key]) {
-            libraryDependencies[key] = mainPackageJson.devDependencies[key];
-            if (!haveChanges) {
-              haveChanges = true;
+    [ libraryPeerDependencies, libraryDependencies ].forEach(
+      libDeps => {
+        Object.keys(libDeps).forEach(
+          key => {
+            if (mainPackageJson.dependencies[ key ] && mainPackageJson.dependencies[ key ] !== libDeps[ key ]) {
+              libDeps[ key ] = mainPackageJson.dependencies[ key ];
+              if (!haveChanges) {
+                haveChanges = true;
+              };
+            } else {
+              if (mainPackageJson.devDependencies[ key ] && mainPackageJson.devDependencies[ key ] !== libDeps[ key ]) {
+                libDeps[ key ] = mainPackageJson.devDependencies[ key ];
+                if (!haveChanges) {
+                  haveChanges = true;
+                };
+              };
             };
-          };
-        };
+          });
       });
-    if (haveChanges || (versionArray && versionArray?.[2])) {
-      if ((versionArray && versionArray?.[2])) {
-        versionArray[2] = String(+versionArray[2] + 1);
+
+    if (haveChanges || (versionArray && versionArray?.[ 2 ])) {
+      if ((versionArray && versionArray?.[ 2 ])) {
+        versionArray[ 2 ] = String(+versionArray[ 2 ] + 1);
         libraryPackageJson.version = versionArray.join('.');
       };
       await writeFile(libraryPackageJsonPath, JSON.stringify(libraryPackageJson, null, 2));
       console.log(`Successfully update library package.json file!.`);
     } else {
-      throw new Error(`Error on update version in package.json file!. Current value (need fix) = ${libraryPackageJson.version}.`);
+      throw new Error(`Error on update version in package.json file!. Current value (need fix) = ${ libraryPackageJson.version }.`);
     };
   } catch (message) {
     console.log(message);

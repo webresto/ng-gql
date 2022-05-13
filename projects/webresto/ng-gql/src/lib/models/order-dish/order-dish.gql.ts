@@ -1,9 +1,7 @@
 import { DishFragments } from '../dish/dish.gql';
 import type { OrderModifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
-import type { Dish } from '../dish/dish.gql';
-import { ImageFragments } from '../image/image.gql';
-import { GroupModifierFragments } from '../group-modifier/group-modifier.gql';
+import type { Dish, DiscountType } from '../dish/dish.gql';
 
 export interface OrderDish {
 	id: number;
@@ -13,7 +11,9 @@ export interface OrderDish {
 	itemTotal: number;
 	itemTotalBeforeDiscount?: number;
 	discountTotal: number | null;
-	discountType: string | null;
+	discountType: DiscountType | null;
+	discountMessage: string | null;
+	discountAmount: number | null;
 	comment: string | null;
 	totalWeight: number;
 	total?: number;
@@ -34,6 +34,8 @@ export const OrderDishFragments = {
 		},
 		discountTotal: true,
 		discountType: true,
+		discountAmount: true,
+		discountMessage: true,
 		comment: true,
 		totalWeight: true,
 		itemTotal: true,

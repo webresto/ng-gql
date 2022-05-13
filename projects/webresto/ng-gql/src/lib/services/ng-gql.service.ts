@@ -211,7 +211,12 @@ export class NgGqlService {
           slug: rootGroups.map(rootGroup => rootGroup.slug)
         };
         return this.queryAndSubscribe<Group, 'group', 'group', VCriteria>('group', 'group', queryObject, 'id', {
-          criteria
+          query: {
+            criteria
+          },
+          subscribe: {
+            criteria
+          }
         });
       }),
     switchMap(
@@ -238,8 +243,15 @@ export class NgGqlService {
         const customvObDish = this.config.customFields?.[ 'Dish' ];
         const vOb = customvObDish ? { ...DishFragments.vOb, ...customvObDish } : DishFragments.vOb;
         return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', vOb, 'id', {
-          criteria: {
-            parentGroup: allNestingsIds
+          query: {
+            criteria: {
+              parentGroup: allNestingsIds
+            }
+          },
+          subscribe: {
+            criteria: {
+              parentGroup: allNestingsIds
+            }
           }
         }).pipe(
           map(data => {
@@ -269,7 +281,10 @@ export class NgGqlService {
               if (!groupId) continue;
               if (!groupsById[ groupId ]) continue;
               if (groupsById[ groupId ].dishes) {
-                groupsById[ groupId ].dishes?.push(dish);
+                const checkDish = groupsById[ groupId ].dishes?.find(item => item.id === dish.id);
+                if (!checkDish) {
+                  groupsById[ groupId ].dishes?.push(dish);
+                };
               } else {
                 groupsById[ groupId ].dishes = [ dish ];
               }
@@ -430,10 +445,7 @@ export class NgGqlService {
    * @typeParam N Строка-название операции из схемы сервера GraphQL.
    * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
    * @param name - название операции, объвленное в схеме сервера GraphQL.
-   * @param queryObject - объект-источник информации о структуре запрашиваемых данных.
-   *  Для совместимости может передаваться в виде:
-   *    1. Обьекта, реализующего тип ValuesOrBoolean<T>.
-   *    2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.
+   * @param queryObject - объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>.
    *    @see ValuesOrBoolean<T>
    * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
    *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
@@ -451,13 +463,11 @@ export class NgGqlService {
    * @returns - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
    *  в виде одиночного объекта либо массива.
    **/
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>>;
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>>;
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
+  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
       query: gql`query ${ generateQueryString({
         name,
-        queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[ name ] : queryObject,
+        queryObject,
         variables,
         requiredFields: paramOptions?.requiredFields,
         fieldsTypeMap: paramOptions?.fieldsTypeMap
@@ -476,10 +486,7 @@ export class NgGqlService {
  * @typeParam N Строка-название операции из схемы сервера GraphQL.
  * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
  * @param name - название операции, объвленное в схеме сервера GraphQL.
- * @param queryObject - объект-источник информации о структуре запрашиваемых данных.
- *  Для совместимости может передаваться в виде:
- *     1. Обьекта, реализующего тип ValuesOrBoolean<T>.
- *     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.
+ * @param queryObject - объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>.
  *     @see ValuesOrBoolean<T>
  * @param variables - обязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
  *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
@@ -500,7 +507,7 @@ export class NgGqlService {
     return this.apollo.mutate<Record<N, T>, V>({
       mutation: gql`mutation ${ generateQueryString({
         name,
-        queryObject: queryObject,
+        queryObject,
         variables,
         requiredFields: paramOptions?.requiredFields,
         fieldsTypeMap: paramOptions?.fieldsTypeMap
@@ -518,10 +525,7 @@ export class NgGqlService {
 * @typeParam N Строка-название операции из схемы сервера GraphQL.
 * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
 * @param name - название операции, объвленное в схеме сервера GraphQL.
-* @param queryObject - объект-источник информации о структуре данных, на которые происходит подписка.
-*   Для совместимости может передаваться в виде:
-*     1. Обьекта, реализующего тип ValuesOrBoolean<T>.
-*     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.
+* @param queryObject - объект-источник информации о структуре данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>.
 *     @see ValuesOrBoolean<T>
 * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
 *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
@@ -542,12 +546,10 @@ export class NgGqlService {
 * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
 * @see queryAndSubscribe
 **/
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]>;
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]>;
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: Record<N, ValuesOrBoolean<T>> | ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]> {
+  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]> {
     const q = generateQueryString({
       name,
-      queryObject: name in queryObject && Object.keys(queryObject).length == 1 ? (<Record<N, ValuesOrBoolean<T>>> queryObject)[ name ] : queryObject,
+      queryObject,
       variables,
       requiredFields: paramOptions?.requiredFields,
       fieldsTypeMap: paramOptions?.fieldsTypeMap
@@ -568,8 +570,7 @@ export class NgGqlService {
 
   * @param nameQuery - название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL.
   * @param nameSubscribe - название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных.
-  * @param queryObject - объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка
-  в виде обьекта, реализующего тип ValuesOrBoolean<T>.
+  * @param queryObject - объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>.
   *   @see ValuesOrBoolean<T>
   * @param uniqueKeyForCompareItem - наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id').
     Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки.
@@ -579,23 +580,16 @@ export class NgGqlService {
   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
-  * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
+  * @param paramOptions.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
   *    (например у параметра указан тип String!, а не String).
-  * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
+  * @param paramOptions.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
   * @returns - Observable поток с данными, которые будут поступать в рамках сделанной подписки.
   * Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
   * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
   **/
-  queryAndSubscribe<T, NQuery extends `${ string }`, NSubscribe extends `${ string }`, VQ = GQLRequestVariables, VS = VQ>(
-    nameQuery: NQuery,
-    nameSubscribe: NSubscribe,
-    queryObject: ValuesOrBoolean<T>,
-    uniqueKeyForCompareItem: keyof T,
-    variables?: VQ,
-    paramOptions?: QueryGenerationParam<VQ>): Observable<T[]>;
   queryAndSubscribe<
     T, NQuery extends `${ string }`, NSubscribe extends `${ string }`,
     VQ = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
@@ -611,20 +605,8 @@ export class NgGqlService {
       paramOptions?: {
         query?: QueryGenerationParam<VQ>,
         subscribe?: QueryGenerationParam<VS>;
-      }): Observable<T[]>;
-  queryAndSubscribe<T, NQuery extends `${ string }`, NSubscribe extends `${ string }`, VQ = GQLRequestVariables, VS = GQLRequestVariables | VQ>(
-    nameQuery: NQuery,
-    nameSubscribe: NSubscribe,
-    queryObject: ValuesOrBoolean<T>,
-    uniqueKeyForCompareItem: keyof T,
-    variables?: {
-      query?: VQ,
-      subscribe?: VS;
-    } | VQ,
-    paramOptions?: {
-      query?: QueryGenerationParam<VQ>,
-      subscribe?: QueryGenerationParam<VS>;
-    } | QueryGenerationParam<VQ>): Observable<T[]> {
+      },
+      simpleQuery: boolean = true): Observable<T[]> {
     const updateFn: (store: T | T[], subscribeValue: T) => T[] = (store, newValue) => {
       const array = (Array.isArray(store) ? store : [ store ]);
       const findItem = array.find(
@@ -637,35 +619,42 @@ export class NgGqlService {
         return [ ...array, newValue ];
       };
     };
-    return this.customQuery$(
-      nameQuery, queryObject,
-      isValue(variables) && 'query' in variables ? variables.query : <VQ> variables,
-      isValue(paramOptions) && 'query' in paramOptions ? paramOptions.query : <QueryGenerationParam<VQ>> paramOptions
-    ).pipe(
-      switchMap(
-        result => this.customSubscribe$<T, NSubscribe, VS>(
-          nameSubscribe, queryObject,
-          isValue(variables) && ('subscribe' in variables) ?
-            variables.subscribe : <VS> variables,
-          isValue(paramOptions) && ('subscribe' in paramOptions) ?
-            paramOptions.subscribe :
-            <QueryGenerationParam<VS>> paramOptions).pipe(
-              startWith(null),
-              map(
-                updatedValue => {
-                  const store: T | T[] = makeForm(result[ nameQuery ]).value;
-                  const copyedUpdatedValue: T = makeForm(updatedValue).value;
-                  return isValue(updatedValue) ?
-                    updateFn(store, copyedUpdatedValue) :
-                    Array.isArray(store) ?
-                      store :
-                      <T[]>[ store ];
-                }),
-              shareReplay(1)
-            )
-      ),
-      shareReplay(1)
-    );
+    const apolloQueryOptions = {
+      query: gql`query ${ generateQueryString<ValuesOrBoolean<T>, NQuery, VQ>({
+        name: nameQuery, queryObject,
+        variables: variables?.query,
+        requiredFields: paramOptions?.query?.requiredFields,
+        fieldsTypeMap: paramOptions?.query?.fieldsTypeMap
+      }) }`,
+      variables: variables?.query,
+      canonizeResults: true
+    };
+    return (simpleQuery ?
+      this.apollo.query<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions) :
+      this.apollo.watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions)).pipe(
+        map(
+          res => res.error || res.errors ? null : res.data),
+        filter((data): data is Record<NQuery, T | T[]> => !!data),
+        switchMap(
+          result => this.customSubscribe$<T, NSubscribe, VS>(
+            nameSubscribe, queryObject, variables?.subscribe, paramOptions?.subscribe
+          ).pipe(
+            startWith(null),
+            map(
+              updatedValue => {
+                const store: T | T[] = makeForm(result[ nameQuery ]).value;
+                const copyedUpdatedValue: T = makeForm(updatedValue).value;
+                return isValue(updatedValue) ?
+                  updateFn(store, copyedUpdatedValue) :
+                  Array.isArray(store) ?
+                    store :
+                    <T[]>[ store ];
+              }),
+            shareReplay(1)
+          )
+        ),
+        shareReplay(1)
+      );
   }
 
   destroy() {

@@ -227,7 +227,7 @@ ___
 | `loading` | `BehaviorSubject`<`boolean`\> | `undefined` | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` | добавляемое блюдо |
 | `amount` | `number` | `1` | количество |
-| `dishModifiers` | [`Modifier`](../interfaces/Modifier.md)[] | `[]` | выбранные пользователем модификаторы блюда |
+| `dishModifiers` | [`Modifier`](../interfaces/Modifier.md)[] \| [`OrderModifier`](../interfaces/OrderModifier.md)[] | `[]` | выбранные пользователем модификаторы блюда |
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
 | `comment?` | `string` | `undefined` | - |

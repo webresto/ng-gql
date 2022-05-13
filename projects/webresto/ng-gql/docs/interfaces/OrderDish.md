@@ -12,6 +12,8 @@
 - [itemTotalBeforeDiscount](OrderDish.md#itemtotalbeforediscount)
 - [discountTotal](OrderDish.md#discounttotal)
 - [discountType](OrderDish.md#discounttype)
+- [discountMessage](OrderDish.md#discountmessage)
+- [discountAmount](OrderDish.md#discountamount)
 - [comment](OrderDish.md#comment)
 - [totalWeight](OrderDish.md#totalweight)
 - [total](OrderDish.md#total)
@@ -63,7 +65,19 @@ ___
 
 ### discountType
 
-• **discountType**: ``null`` \| `string`
+• **discountType**: ``null`` \| [`DiscountType`](../README.md#discounttype)
+
+___
+
+### discountMessage
+
+• **discountMessage**: ``null`` \| `string`
+
+___
+
+### discountAmount
+
+• **discountAmount**: ``null`` \| `number`
 
 ___
 

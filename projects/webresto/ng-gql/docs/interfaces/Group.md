@@ -62,7 +62,7 @@ ___
 
 ### discount
 
-• `Optional` **discount**: `number`
+• `Optional` **discount**: ``null`` \| `string`
 
 ___
 

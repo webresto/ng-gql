@@ -33,25 +33,14 @@
 - [CheckResponse](interfaces/CheckResponse.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
 
-### Events
-
-- [CartBusEvent](README.md#cartbusevent)
-- [CartBusEventBase](README.md#cartbuseventbase)
-- [CartBusEventAdd](README.md#cartbuseventadd)
-- [CartBusEventUpdate](README.md#cartbuseventupdate)
-- [CartBusEventRemove](README.md#cartbuseventremove)
-- [CartBusEventSetAmountToDish](README.md#cartbuseventsetamounttodish)
-- [CartBusEventSetCommentToDish](README.md#cartbuseventsetcommenttodish)
-- [CartBusEventCheck](README.md#cartbuseventcheck)
-- [CartBusEventSend](README.md#cartbuseventsend)
-
 ### Type aliases
 
+- [DiscountType](README.md#discounttype)
+- [VCriteria](README.md#vcriteria)
+- [GQLRequestVariables](README.md#gqlrequestvariables)
 - [StorageOrderTokenEvent](README.md#storageordertokenevent)
 - [StorageOrderTokenSetOrderId](README.md#storageordertokensetorderid)
 - [StorageOrderTokenRemoveOrderId](README.md#storageordertokenremoveorderid)
-- [VCriteria](README.md#vcriteria)
-- [GQLRequestVariables](README.md#gqlrequestvariables)
 - [OrderState](README.md#orderstate)
 - [AddToOrderInput](README.md#addtoorderinput)
 - [RemoveOrSetAmountToDish](README.md#removeorsetamounttodish)
@@ -89,78 +78,55 @@
 
 - [generateQueryString](README.md#generatequerystring)
 - [isValue](README.md#isvalue)
+- [isEqualItems](README.md#isequalitems)
 
-## Events
+### Events
 
-### CartBusEvent
+- [CartBusEvent](README.md#cartbusevent)
+- [CartBusEventBase](README.md#cartbuseventbase)
+- [CartBusEventAdd](README.md#cartbuseventadd)
+- [CartBusEventUpdate](README.md#cartbuseventupdate)
+- [CartBusEventRemove](README.md#cartbuseventremove)
+- [CartBusEventSetAmountToDish](README.md#cartbuseventsetamounttodish)
+- [CartBusEventSetCommentToDish](README.md#cartbuseventsetcommenttodish)
+- [CartBusEventCheck](README.md#cartbuseventcheck)
+- [CartBusEventSend](README.md#cartbuseventsend)
 
-• **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheck`](README.md#cartbuseventcheck) \| [`CartBusEventSend`](README.md#cartbuseventsend)
+## Type aliases
 
-**`alias`** CartBusEvent
+### DiscountType
+
+Ƭ **DiscountType**: ``"FIXED"`` \| ``"PERCENT"``
 
 ___
 
-### CartBusEventBase
+### VCriteria
 
-• **CartBusEventBase**<`T`\>: `Object`
+Ƭ **VCriteria**: `Object`
 
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
+**`alias`** VCriteria
+Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
+Формируется по правилам Waterline query language.
+Подробнее: https://docs.webresto.org/docs/data/criteria/
 
 #### Type declaration
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `successCb?` | (`result`: `T`) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
-| `loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `criteria` | { `[key: string]`: `any`;  } | Объект Waterline query language |
 
 ___
 
-### CartBusEventAdd
+### GQLRequestVariables
 
-• **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: `Omit`<[`AddToOrderInput`](README.md#addtoorderinput), ``"orderId"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+Ƭ **GQLRequestVariables**: `undefined` \| [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
 
-___
-
-### CartBusEventUpdate
-
-• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: [`Order`](interfaces/Order.md)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### CartBusEventRemove
-
-• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+**`alias`** GQLRequestVariables
+Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описаны для запроса в схеме GraphQL сервера, с соответствующими им значениями.
+В качестве ключей выступают строки, соответствующие названиям параметров.
+Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
 
 ___
-
-### CartBusEventSetAmountToDish
-
-• **CartBusEventSetAmountToDish**: { `event`: ``"setDishAmount"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### CartBusEventSetCommentToDish
-
-• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### CartBusEventCheck
-
-• **CartBusEventCheck**: { `event`: ``"check"`` ; `data`: [`OrderForm`](README.md#orderform)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
-
-___
-
-### CartBusEventSend
-
-• **CartBusEventSend**: { `event`: ``"order"`` ; `data`: `string`  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
-
-## Type aliases
 
 ### StorageOrderTokenEvent
 
@@ -192,34 +158,6 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `event` | ``"removeOrderId"`` |
-
-___
-
-### VCriteria
-
-Ƭ **VCriteria**: `Object`
-
-**`alias`** VCriteria
-Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
-Формируется по правилам Waterline query language.
-Подробнее: https://docs.webresto.org/docs/data/criteria/
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `criteria` | { `[key: string]`: `any`;  } | Объект Waterline query language |
-
-___
-
-### GQLRequestVariables
-
-Ƭ **GQLRequestVariables**: `undefined` \| [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
-
-**`alias`** GQLRequestVariables
-Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описаны для запроса в схеме GraphQL сервера, с соответствующими им значениями.
-В качестве ключей выступают строки, соответствующие названиям параметров.
-Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
 
 ___
 
@@ -584,3 +522,101 @@ ___
 #### Returns
 
 value is NonNullable<T\>
+
+___
+
+### isEqualItems
+
+▸ **isEqualItems**<`T`\>(`a`, `b`): `boolean`
+
+Функция для сравнения двух переменных.
+Осуществляет "глубокое" сравнение для непримитивных типов по значениям их свойств, а не по ссылке на объект.
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `a` | `T` | @param b - сравниваемые объекты. |
+| `b` | `T` | - |
+
+#### Returns
+
+`boolean`
+
+true, если объекты идентичны и false, если объекты различаются.
+
+## Events
+
+### CartBusEvent
+
+• **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheck`](README.md#cartbuseventcheck) \| [`CartBusEventSend`](README.md#cartbuseventsend)
+
+**`alias`** CartBusEvent
+
+___
+
+### CartBusEventBase
+
+• **CartBusEventBase**<`T`\>: `Object`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `successCb?` | (`result`: `T`) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
+| `loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+
+___
+
+### CartBusEventAdd
+
+• **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: `Omit`<[`AddToOrderInput`](README.md#addtoorderinput), ``"orderId"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventUpdate
+
+• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: [`Order`](interfaces/Order.md)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventRemove
+
+• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventSetAmountToDish
+
+• **CartBusEventSetAmountToDish**: { `event`: ``"setDishAmount"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventSetCommentToDish
+
+• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventCheck
+
+• **CartBusEventCheck**: { `event`: ``"check"`` ; `data`: [`OrderForm`](README.md#orderform)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
+
+___
+
+### CartBusEventSend
+
+• **CartBusEventSend**: { `event`: ``"order"`` ; `data`: `string`  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>

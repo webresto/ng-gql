@@ -11,7 +11,7 @@ export interface Group {
 	visible: boolean;
 	order: number;
 	dishes?: Dish[];
-	discount?: number;
+	discount?: string | null;
 	parentGroup?: Pick<Group, 'id' | 'dishesPlaceholder'>;
 	childGroups: Group[];
 	dishesPlaceholder: Image | null;
@@ -25,6 +25,7 @@ export const GroupFragments = {
 		order: true,
 		visible: true,
 		slug: true,
+		discount: true,
 		dishesPlaceholder: ImageFragments.vOb,
 		parentGroup: {
 			id: true,
