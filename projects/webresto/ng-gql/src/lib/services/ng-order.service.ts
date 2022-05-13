@@ -121,7 +121,7 @@ export class NgOrderService {
           this.eventer.emitMessageEvent({
             type: 'info',
             title: 'Не удалось отправить ссылку для оплаты.',
-            body: error.message
+            message: error.message
           });
           return of(null);
         })

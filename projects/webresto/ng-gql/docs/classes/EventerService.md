@@ -17,24 +17,31 @@
 - [emitActionEvent](EventerService.md#emitactionevent)
 - [getMessageEmitter](EventerService.md#getmessageemitter)
 - [getActionEmitter](EventerService.md#getactionemitter)
+- [destroy](EventerService.md#destroy)
 
 ## Properties
 
 ### eventMessage
 
-• **eventMessage**: `EventEmitter`<`any`\>
+• **eventMessage**: `EventEmitter`<[`Message`](../interfaces/Message.md)\>
 
 ___
 
 ### eventAction
 
-• **eventAction**: `EventEmitter`<`any`\>
+• **eventAction**: `EventEmitter`<[`Action`](../interfaces/Action.md)\>
 
 ## Constructors
 
 ### constructor
 
-• **new EventerService**()
+• **new EventerService**(`ngGql`)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ngGql` | [`NgGqlService`](NgGqlService.md) |
 
 ## Methods
 
@@ -46,7 +53,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `message` | [`EventMessage`](EventMessage.md) |
+| `message` | [`Message`](../interfaces/Message.md) |
 
 #### Returns
 
@@ -62,7 +69,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `action` | [`EventMessage`](EventMessage.md) |
+| `action` | [`Action`](../interfaces/Action.md) |
 
 #### Returns
 
@@ -72,18 +79,40 @@ ___
 
 ### getMessageEmitter
 
-▸ **getMessageEmitter**(): `EventEmitter`<`any`\>
+▸ **getMessageEmitter**(`orderId`): `Observable`<[`Message`](../interfaces/Message.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `orderId` | `string` |
 
 #### Returns
 
-`EventEmitter`<`any`\>
+`Observable`<[`Message`](../interfaces/Message.md)\>
 
 ___
 
 ### getActionEmitter
 
-▸ **getActionEmitter**(): `EventEmitter`<`any`\>
+▸ **getActionEmitter**(`orderId`): `Observable`<[`Action`](../interfaces/Action.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `orderId` | `string` |
 
 #### Returns
 
-`EventEmitter`<`any`\>
+`Observable`<[`Action`](../interfaces/Action.md)\>
+
+___
+
+### destroy
+
+▸ **destroy**(): `void`
+
+#### Returns
+
+`void`
