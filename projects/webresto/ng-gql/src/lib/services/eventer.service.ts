@@ -1,26 +1,52 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import type { EventMessage } from '../models';
+import { mergeWith } from 'rxjs/operators';
+import type { Action, Message } from '../models';
+import { NgGqlService } from './ng-gql.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventerService {
-  eventMessage: EventEmitter<any> = new EventEmitter();
-  eventAction: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }
+  eventMessage: EventEmitter<Message> = new EventEmitter();
+  eventAction: EventEmitter<Action> = new EventEmitter();
 
-  emitMessageEvent(message:EventMessage) {
+  constructor(private ngGql: NgGqlService) { }
+
+  emitMessageEvent(message: Message) {
     this.eventMessage.emit(message);
   }
-  emitActionEvent(action:EventMessage) {
+  emitActionEvent(action: Action) {
     this.eventAction.emit(action);
   }
 
-  getMessageEmitter() {
-    return this.eventMessage;
+  getMessageEmitter(orderId: string) {
+    return this.ngGql.customSubscribe$<Message, 'message'>('message', {
+      title: true,
+      type: true,
+      message: true
+    }, {
+      orderId
+    }).pipe(
+      mergeWith(this.eventMessage.asObservable())
+    );
   }
-  getActionEmitter() {
-    return this.eventAction;
+
+  getActionEmitter(orderId: string) {
+    return this.ngGql.customSubscribe$<Action, 'action'>('action', {
+      type: true,
+      data: true
+    }, {
+      orderId
+    }).pipe(
+      mergeWith(this.eventAction.asObservable())
+    );
   }
+
+  destroy() {
+    [this.eventAction, this.eventMessage].forEach(
+      eventEmitter => eventEmitter.complete()
+    );
+  }
+
 }
