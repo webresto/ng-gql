@@ -1,5 +1,6 @@
 import { ImageFragments } from '../image/image.gql';
-import { GroupModifier, GroupModifierFragments } from '../group-modifier/group-modifier.gql';
+import { GroupModifierFragments } from '../group-modifier/group-modifier.gql';
+import type { GroupModifier } from '../group-modifier/group-modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Image } from "../image/image.gql";
 import type { Group } from '../group/group.gql';

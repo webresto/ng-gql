@@ -1,5 +1,3 @@
-import { InjectionToken } from '@angular/core';
-import { type } from 'os';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
 /**

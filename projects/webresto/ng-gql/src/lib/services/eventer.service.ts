@@ -10,10 +10,10 @@ export class EventerService {
 
   constructor() { }
 
-  emitMessageEvent(message:EventMessage) {
+  emitMessageEvent(message: EventMessage) {
     this.eventMessage.emit(message);
   }
-  emitActionEvent(action:EventMessage) {
+  emitActionEvent(action: EventMessage) {
     this.eventAction.emit(action);
   }
 

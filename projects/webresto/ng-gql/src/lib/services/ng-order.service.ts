@@ -1,7 +1,7 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
-import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged } from 'rxjs/operators';
 import type { NgGqlConfig, Action, Message, OrderInput, CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier } from '../models';
 import { isValue, MessageOrActionGql, OrderFragments, PaymentMethodFragments } from '../models';
 import { NgGqlService } from './ng-gql.service';
@@ -259,47 +259,42 @@ export class NgOrderService {
     const customvOb = this.config.customFields?.[ 'Order' ];
     const vOb = customvOb ? { ...OrderFragments.vOb, ...customvOb } : OrderFragments.vOb;
     return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | undefined>('order', 'order', vOb, 'id', orderId ? {
-      orderId
-    } : undefined).pipe(
+      query: {
+        orderId
+      },
+      subscribe: {
+        orderId
+      }
+    } : undefined, undefined, false).pipe(
       map(values => values[ 0 ] ? values[ 0 ] : null),
       filter((order): order is Order => isValue(order)),
-      switchMap(
-        order => this.ngGqlService.dishes$.pipe(
-          map(
-            dishes => ({
-              ...order,
-              customer: {
-                name: order.customer?.name ?? null,
-                phone: order.customer?.phone ?? {
-                  code: this.config.phoneCode,
-                  number: null,
-                }
-              },
-              address: order.address ?? {
-                streetId: null,
-                home: null,
-                street: null,
-                comment: undefined,
-                city: undefined,
-                housing: undefined,
-                index: undefined,
-                entrance: undefined,
-                floor: undefined,
-                apartment: undefined,
-                doorphone: undefined
-              },
-              dishes: !order.dishes ? [] : order.dishes.map(
-                orderDish => ({
-                  ...orderDish,
-                  dish: dishes?.find(dish => orderDish.dishId === dish.id) ?? orderDish.dish ?
-                    this.ngGqlService.addAmountToDish(orderDish.dish) :
-                    orderDish.dish
-                })
-              )
-            })
-          ),
-          shareReplay(1)
-        )
+      map(
+        order => {
+          return {
+            ...order,
+            customer: {
+              name: order.customer?.name ?? null,
+              phone: order.customer?.phone ?? {
+                code: this.config.phoneCode,
+                number: null,
+              }
+            },
+            address: order.address ?? {
+              streetId: null,
+              home: null,
+              street: null,
+              comment: undefined,
+              city: undefined,
+              housing: undefined,
+              index: undefined,
+              entrance: undefined,
+              floor: undefined,
+              apartment: undefined,
+              doorphone: undefined
+            },
+            dishes: order.dishes ?? []
+          };
+        }
       ),
       shareReplay(1)
     );

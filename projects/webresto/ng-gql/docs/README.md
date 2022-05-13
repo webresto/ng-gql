@@ -33,26 +33,14 @@
 - [CheckResponse](interfaces/CheckResponse.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
 
-### Events
-
-- [CartBusEvent](README.md#cartbusevent)
-- [CartBusEventBase](README.md#cartbuseventbase)
-- [CartBusEventAdd](README.md#cartbuseventadd)
-- [CartBusEventUpdate](README.md#cartbuseventupdate)
-- [CartBusEventRemove](README.md#cartbuseventremove)
-- [CartBusEventSetAmountToDish](README.md#cartbuseventsetamounttodish)
-- [CartBusEventSetCommentToDish](README.md#cartbuseventsetcommenttodish)
-- [CartBusEventCheck](README.md#cartbuseventcheck)
-- [CartBusEventSend](README.md#cartbuseventsend)
-
 ### Type aliases
 
-- [StorageOrderTokenEvent](README.md#storageordertokenevent)
-- [StorageOrderTokenSetOrderId](README.md#storageordertokensetorderid)
-- [StorageOrderTokenRemoveOrderId](README.md#storageordertokenremoveorderid)
 - [DiscountType](README.md#discounttype)
 - [VCriteria](README.md#vcriteria)
 - [GQLRequestVariables](README.md#gqlrequestvariables)
+- [StorageOrderTokenEvent](README.md#storageordertokenevent)
+- [StorageOrderTokenSetOrderId](README.md#storageordertokensetorderid)
+- [StorageOrderTokenRemoveOrderId](README.md#storageordertokenremoveorderid)
 - [OrderState](README.md#orderstate)
 - [AddToOrderInput](README.md#addtoorderinput)
 - [RemoveOrSetAmountToDish](README.md#removeorsetamounttodish)
@@ -92,110 +80,19 @@
 - [isValue](README.md#isvalue)
 - [isEqualItems](README.md#isequalitems)
 
-## Events
+### Events
 
-### CartBusEvent
-
-• **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheck`](README.md#cartbuseventcheck) \| [`CartBusEventSend`](README.md#cartbuseventsend)
-
-**`alias`** CartBusEvent
-
-___
-
-### CartBusEventBase
-
-• **CartBusEventBase**<`T`\>: `Object`
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `successCb?` | (`result`: `T`) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
-| `loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
-
-___
-
-### CartBusEventAdd
-
-• **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: `Omit`<[`AddToOrderInput`](README.md#addtoorderinput), ``"orderId"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### CartBusEventUpdate
-
-• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: [`Order`](interfaces/Order.md)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### CartBusEventRemove
-
-• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### CartBusEventSetAmountToDish
-
-• **CartBusEventSetAmountToDish**: { `event`: ``"setDishAmount"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### CartBusEventSetCommentToDish
-
-• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### CartBusEventCheck
-
-• **CartBusEventCheck**: { `event`: ``"check"`` ; `data`: [`OrderForm`](README.md#orderform)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
-
-___
-
-### CartBusEventSend
-
-• **CartBusEventSend**: { `event`: ``"order"`` ; `data`: `string`  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
+- [CartBusEvent](README.md#cartbusevent)
+- [CartBusEventBase](README.md#cartbuseventbase)
+- [CartBusEventAdd](README.md#cartbuseventadd)
+- [CartBusEventUpdate](README.md#cartbuseventupdate)
+- [CartBusEventRemove](README.md#cartbuseventremove)
+- [CartBusEventSetAmountToDish](README.md#cartbuseventsetamounttodish)
+- [CartBusEventSetCommentToDish](README.md#cartbuseventsetcommenttodish)
+- [CartBusEventCheck](README.md#cartbuseventcheck)
+- [CartBusEventSend](README.md#cartbuseventsend)
 
 ## Type aliases
-
-### StorageOrderTokenEvent
-
-Ƭ **StorageOrderTokenEvent**: [`StorageOrderTokenSetOrderId`](README.md#storageordertokensetorderid) \| [`StorageOrderTokenRemoveOrderId`](README.md#storageordertokenremoveorderid)
-
-___
-
-### StorageOrderTokenSetOrderId
-
-Ƭ **StorageOrderTokenSetOrderId**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `event` | ``"setOrderId"`` |
-| `data` | { `orderId`: `string` ; `alternativeToken?`: `string`  } |
-| `data.orderId` | `string` |
-| `data.alternativeToken?` | `string` |
-
-___
-
-### StorageOrderTokenRemoveOrderId
-
-Ƭ **StorageOrderTokenRemoveOrderId**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `event` | ``"removeOrderId"`` |
-
-___
 
 ### DiscountType
 
@@ -228,6 +125,39 @@ ___
 Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описаны для запроса в схеме GraphQL сервера, с соответствующими им значениями.
 В качестве ключей выступают строки, соответствующие названиям параметров.
 Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
+
+___
+
+### StorageOrderTokenEvent
+
+Ƭ **StorageOrderTokenEvent**: [`StorageOrderTokenSetOrderId`](README.md#storageordertokensetorderid) \| [`StorageOrderTokenRemoveOrderId`](README.md#storageordertokenremoveorderid)
+
+___
+
+### StorageOrderTokenSetOrderId
+
+Ƭ **StorageOrderTokenSetOrderId**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `event` | ``"setOrderId"`` |
+| `data` | { `orderId`: `string` ; `alternativeToken?`: `string`  } |
+| `data.orderId` | `string` |
+| `data.alternativeToken?` | `string` |
+
+___
+
+### StorageOrderTokenRemoveOrderId
+
+Ƭ **StorageOrderTokenRemoveOrderId**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `event` | ``"removeOrderId"`` |
 
 ___
 
@@ -620,3 +550,73 @@ ___
 `boolean`
 
 true, если объекты идентичны и false, если объекты различаются.
+
+## Events
+
+### CartBusEvent
+
+• **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheck`](README.md#cartbuseventcheck) \| [`CartBusEventSend`](README.md#cartbuseventsend)
+
+**`alias`** CartBusEvent
+
+___
+
+### CartBusEventBase
+
+• **CartBusEventBase**<`T`\>: `Object`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `successCb?` | (`result`: `T`) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
+| `loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+
+___
+
+### CartBusEventAdd
+
+• **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: `Omit`<[`AddToOrderInput`](README.md#addtoorderinput), ``"orderId"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventUpdate
+
+• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: [`Order`](interfaces/Order.md)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventRemove
+
+• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventSetAmountToDish
+
+• **CartBusEventSetAmountToDish**: { `event`: ``"setDishAmount"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventSetCommentToDish
+
+• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### CartBusEventCheck
+
+• **CartBusEventCheck**: { `event`: ``"check"`` ; `data`: [`OrderForm`](README.md#orderform)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
+
+___
+
+### CartBusEventSend
+
+• **CartBusEventSend**: { `event`: ``"order"`` ; `data`: `string`  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>

@@ -13,15 +13,16 @@ export function isEqualItems<T>(a: T, b: T): boolean {
   } else {
     if (Array.isArray(a)) {
       if (Array.isArray(b)) {
-        return a.every((aItem, index) => isEqualItems(aItem, b[ index ]));
+        return a.length === b.length && a.every((aItem, index) => isEqualItems(aItem, b[ index ]));
       } else {
         return false;
       };
     } else {
       if (typeof a == 'object') {
         if (typeof b == 'object') {
-          const keys = <(keyof T)[]> Object.keys(a);
-          return keys.every(key => isEqualItems(a[ key ], b[ key ]));
+          const keysA = <(keyof T)[]> Object.keys(a);
+          const keysB = <(keyof T)[]> Object.keys(b);
+          return keysA.length === keysB.length && keysA.every(key => isEqualItems(a[ key ], b[ key ]));
         } else {
           return false;
         };

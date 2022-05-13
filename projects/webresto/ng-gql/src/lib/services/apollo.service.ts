@@ -40,7 +40,7 @@ export class ApolloService {
   };
 
   subscribe<T, V = EmptyObject>(options: SubscriptionOptions<V, T>, extra?: ExtraSubscriptionOptions) {
-    return this.apollo.subscribe<T, V>(options, extra).pipe(
+    return this.apollo.subscribe<T, V>(options, extra ? extra : { useZone: true }).pipe(
       catchError(
         error => of(null)
       ),

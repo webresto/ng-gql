@@ -43,7 +43,7 @@ export type GQLRequestVariables = undefined | VCriteria | {
  * @returns часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V.
  *  НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription
  */
-export function generateQueryString<T, N extends `${ string }`, V = GQLRequestVariables>(options: {
+export function generateQueryString<T, N extends `${ string }`, V = (GQLRequestVariables | undefined)>(options: {
   name: N,
   queryObject: T,
   variables?: V,

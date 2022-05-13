@@ -20,10 +20,6 @@
     "module": "es2020",
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "lib": [
-      "es2020",
-      "dom"
-    ]
   },
   "angularCompilerOptions": {
     "disableTypeScriptVersionCheck": true,

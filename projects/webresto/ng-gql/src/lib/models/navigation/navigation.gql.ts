@@ -1,4 +1,4 @@
-import { ValuesOrBoolean } from '../values-or-boolean';
+import type { ValuesOrBoolean } from '../values-or-boolean';
 
 /**
  * @interface NavigationBase

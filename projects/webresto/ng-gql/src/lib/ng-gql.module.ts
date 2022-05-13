@@ -33,7 +33,6 @@ export class NgGqlModule {
       uri: config.url.replace('http', 'ws'),
       options: {
         reconnect: true,
-        lazy: true
       }
     });
 

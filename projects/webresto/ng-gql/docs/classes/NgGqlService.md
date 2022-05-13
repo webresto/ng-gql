@@ -231,7 +231,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
-| `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:    1. Обьекта, реализующего тип ValuesOrBoolean<T>.    2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения. |
+| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> | объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>. |
 | `variables?` | `V` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в requiredFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
 | `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 
@@ -241,29 +241,6 @@ ___
 
 - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
  в виде одиночного объекта либо массива.
-
-▸ **customQuery$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `paramOptions?`): `Observable`<`Record`<`N`, `T` \| `T`[]\>\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | `T` |
-| `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `name` | `N` |
-| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |
-| `variables?` | `V` |
-| `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> |
-
-#### Returns
-
-`Observable`<`Record`<`N`, `T` \| `T`[]\>\>
 
 ___
 
@@ -286,7 +263,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
-| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> | объект-источник информации о структуре запрашиваемых данных.  Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
+| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> | объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>.     @see ValuesOrBoolean<T> |
 | `variables` | `V` | обязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
 | `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 
@@ -319,7 +296,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
-| `queryObject` | `Record`<`N`, [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>\> | объект-источник информации о структуре данных, на которые происходит подписка.   Для совместимости может передаваться в виде:     1. Обьекта, реализующего тип ValuesOrBoolean<T>.     2. Обьекта с ключом, соответствующим названию выполняемой операции N и объектом, реализующим тип ValuesOrBoolean<T>, в качестве значения.     @see ValuesOrBoolean<T> |
+| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> | объект-источник информации о структуре данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>.     @see ValuesOrBoolean<T> |
 | `variables?` | `V` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
 | `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
 | `extra?` | `ExtraSubscriptionOptions` | - |
@@ -333,35 +310,11 @@ ___
 Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
 В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
 
-▸ **customSubscribe$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `paramOptions?`, `extra?`): `Observable`<`Record`<`N`, `T`\>[`N`]\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | `T` |
-| `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `name` | `N` |
-| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |
-| `variables?` | `V` |
-| `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> |
-| `extra?` | `ExtraSubscriptionOptions` |
-
-#### Returns
-
-`Observable`<`Record`<`N`, `T`\>[`N`]\>
-
 ___
 
 ### queryAndSubscribe
 
-▸ **queryAndSubscribe**<`T`, `NQuery`, `NSubscribe`, `VQ`, `VS`\>(`nameQuery`, `nameSubscribe`, `queryObject`, `uniqueKeyForCompareItem`, `variables?`, `paramOptions?`): `Observable`<`T`[]\>
+▸ **queryAndSubscribe**<`T`, `NQuery`, `NSubscribe`, `VQ`, `VS`\>(`nameQuery`, `nameSubscribe`, `queryObject`, `uniqueKeyForCompareItem`, `variables?`, `paramOptions?`, `simpleQuery?`): `Observable`<`T`[]\>
 
 **`method`** queryAndSubscribe
 Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
@@ -376,18 +329,23 @@ ___
 | `NQuery` | extends `string` |
 | `NSubscribe` | extends `string` |
 | `VQ` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |
-| `VS` | `VQ` |
+| `VS` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `nameQuery` | `NQuery` | название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL. |
-| `nameSubscribe` | `NSubscribe` | название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных. |
-| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> | объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка в виде обьекта, реализующего тип ValuesOrBoolean<T>. |
-| `uniqueKeyForCompareItem` | keyof `T` | наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id'). Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки. |
-| `variables?` | `VQ` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
-| `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`VQ`\> | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `nameQuery` | `NQuery` | `undefined` | название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL. |
+| `nameSubscribe` | `NSubscribe` | `undefined` | название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных. |
+| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> | `undefined` | объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>. |
+| `uniqueKeyForCompareItem` | keyof `T` | `undefined` | наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id'). Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки. |
+| `variables?` | `Object` | `undefined` | необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса. |
+| `variables.query?` | `VQ` | `undefined` | - |
+| `variables.subscribe?` | `VS` | `undefined` | - |
+| `paramOptions?` | `Object` | `undefined` | необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции. |
+| `paramOptions.query?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`VQ`\> | `undefined` | - |
+| `paramOptions.subscribe?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`VS`\> | `undefined` | - |
+| `simpleQuery` | `boolean` | `true` | - |
 
 #### Returns
 
@@ -396,37 +354,6 @@ ___
 - Observable поток с данными, которые будут поступать в рамках сделанной подписки.
 Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
 Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
-
-▸ **queryAndSubscribe**<`T`, `NQuery`, `NSubscribe`, `VQ`, `VS`\>(`nameQuery`, `nameSubscribe`, `queryObject`, `uniqueKeyForCompareItem`, `variables?`, `paramOptions?`): `Observable`<`T`[]\>
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | `T` |
-| `NQuery` | extends `string` |
-| `NSubscribe` | extends `string` |
-| `VQ` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |
-| `VS` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `nameQuery` | `NQuery` |
-| `nameSubscribe` | `NSubscribe` |
-| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |
-| `uniqueKeyForCompareItem` | keyof `T` |
-| `variables?` | `Object` |
-| `variables.query?` | `VQ` |
-| `variables.subscribe?` | `VS` |
-| `paramOptions?` | `Object` |
-| `paramOptions.query?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`VQ`\> |
-| `paramOptions.subscribe?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`VS`\> |
-
-#### Returns
-
-`Observable`<`T`[]\>
 
 ___
 
