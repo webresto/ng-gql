@@ -25,25 +25,26 @@
 - [setDishAmount](NgOrderService.md#setdishamount)
 - [setDishComment](NgOrderService.md#setdishcomment)
 - [destroy](NgOrderService.md#destroy)
+- [emitMessageEvent](NgOrderService.md#emitmessageevent)
+- [emitActionEvent](NgOrderService.md#emitactionevent)
+- [getMessageEmitter](NgOrderService.md#getmessageemitter)
+- [getActionEmitter](NgOrderService.md#getactionemitter)
 
 ### Properties
 
-- [actions$](NgOrderService.md#actions$)
-- [messages$](NgOrderService.md#messages$)
 - [orderBus$](NgOrderService.md#orderbus$)
 
 ## Constructors
 
 ### constructor
 
-• **new NgOrderService**(`ngGqlService`, `eventer`, `config`)
+• **new NgOrderService**(`ngGqlService`, `config`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
-| `eventer` | [`EventerService`](EventerService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 
 ## Methods
@@ -385,24 +386,59 @@ ___
 
 `void`
 
+___
+
+### emitMessageEvent
+
+▸ **emitMessageEvent**(`message`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `message` | [`Message`](../interfaces/Message.md) |
+
+#### Returns
+
+`void`
+
+___
+
+### emitActionEvent
+
+▸ **emitActionEvent**(`action`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `action` | [`Action`](../interfaces/Action.md) |
+
+#### Returns
+
+`void`
+
+___
+
+### getMessageEmitter
+
+▸ **getMessageEmitter**(): `Observable`<[`Message`](../interfaces/Message.md)\>
+
+#### Returns
+
+`Observable`<[`Message`](../interfaces/Message.md)\>
+
+___
+
+### getActionEmitter
+
+▸ **getActionEmitter**(): `Observable`<[`Action`](../interfaces/Action.md)\>
+
+#### Returns
+
+`Observable`<[`Action`](../interfaces/Action.md)\>
+
 ## Properties
-
-### actions$
-
-• **actions$**: `Observable`<[`Action`](../interfaces/Action.md)\>
-
-Поток Observable, в который будут поступать события по текущему заказу в процессе оформления, подразумевающие совершение каких-либо действий на стороне фронта и выполняемых пользователем
-(переход на страницу оплаты или, к примеру, открытие диалогового окна с предложением блюда по акции, акции и т.п. )
-
-___
-
-### messages$
-
-• **messages$**: `Observable`<[`Message`](../interfaces/Message.md)\>
-
-Поток Observable, в который будут поступать информационные сообщения по текущему заказу (блюдо добавлено/удалено/заказ оформлен).
-
-___
 
 ### orderBus$
 

@@ -70,7 +70,6 @@
 
 - [EventMessage](classes/EventMessage.md)
 - [ApolloService](classes/ApolloService.md)
-- [EventerService](classes/EventerService.md)
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
 

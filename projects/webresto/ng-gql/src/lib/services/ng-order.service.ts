@@ -1,11 +1,10 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
-import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
 import type { NgGqlConfig, Action, Message, OrderInput, CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier } from '../models';
 import { isValue, MessageOrActionGql, OrderFragments, PaymentMethodFragments } from '../models';
 import { NgGqlService } from './ng-gql.service';
-import { EventerService } from './eventer.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +13,6 @@ export class NgOrderService {
 
   constructor(
     private ngGqlService: NgGqlService,
-    private eventer: EventerService,
     @Inject('config') private config: NgGqlConfig
   ) { }
 
@@ -118,7 +116,7 @@ export class NgOrderService {
       .pipe(
         catchError(error => {
           console.log('error', error);
-          this.eventer.emitMessageEvent({
+          this.emitMessageEvent({
             type: 'info',
             title: 'Не удалось отправить ссылку для оплаты.',
             message: error.message
@@ -219,30 +217,40 @@ export class NgOrderService {
     );
   };
 
+
+  private _eventMessage: EventEmitter<Message> = new EventEmitter();
+  private _eventAction: EventEmitter<Action> = new EventEmitter();
+
   /**
    * Поток Observable, в который будут поступать события по текущему заказу в процессе оформления, подразумевающие совершение каких-либо действий на стороне фронта и выполняемых пользователем
    * (переход на страницу оплаты или, к примеру, открытие диалогового окна с предложением блюда по акции, акции и т.п. )
+   * Для получения потока используется метод @method getActionEmitter()
+   * Для отправки в поток кастомных сообщений испльзуется @method emitActionEvent()
    */
-  actions$ = this.getOrder().pipe(
+  private _actions$ = this.getOrder().pipe(
     distinctUntilKeyChanged('id'),
     switchMap(
       order => this.ngGqlService.customSubscribe$<Action, 'action', {
         orderId: string;
       }>('action', MessageOrActionGql.actionVob, { orderId: order.id })
     ),
+    mergeWith(this._eventAction.asObservable()),
     shareReplay(1)
   );
 
   /**
    * Поток Observable, в который будут поступать информационные сообщения по текущему заказу (блюдо добавлено/удалено/заказ оформлен).
+   * Для получения потока используется метод @method getMessageEmitter()
+   * Для отправки в поток кастомных сообщений испльзуется @method emitMessageEvent()
    */
-  messages$ = this.getOrder().pipe(
+  private _messages$ = this.getOrder().pipe(
     distinctUntilKeyChanged('id'),
     switchMap(
       order => this.ngGqlService.customSubscribe$<Message, 'message', {
         orderId: string;
       }>('message', MessageOrActionGql.messageVob, { orderId: order.id })
     ),
+    mergeWith(this._eventMessage.asObservable()),
     shareReplay(1)
   );
 
@@ -698,6 +706,21 @@ export class NgOrderService {
     ).forEach(
       property => property.complete()
     );
+  }
+
+  emitMessageEvent(message: Message) {
+    this._eventMessage.emit(message);
+  }
+  emitActionEvent(action: Action) {
+    this._eventAction.emit(action);
+  }
+
+  getMessageEmitter() {
+    return this._messages$;
+  }
+
+  getActionEmitter() {
+    return this._actions$;
   }
 
 }
