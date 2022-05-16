@@ -6,7 +6,6 @@ publish:
   only: [master] 
   script:
     - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-    - nvm install 16
     - nvm use 16
     - cp ./.ci/.npmrc ./.npmrc 
     - npm i 
