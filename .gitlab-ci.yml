@@ -5,5 +5,9 @@ publish:
   stage: publish
   only: [master] 
   script:
-    - cp ./.ci/.npmrc ./.npmrc && npm i && npm run build && cd ./dist && npm publish && cd .. && rm -rf ./.npmrc
-
+    - nvm install 16
+    - nvm use 16
+    - cp ./.ci/.npmrc ./.npmrc 
+    - npm i 
+    - npm run build 
+    - cd ./dist && npm publish && cd .. && rm -rf ./.npmrc
