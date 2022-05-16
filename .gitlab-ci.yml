@@ -5,8 +5,6 @@ publish:
   stage: publish
   only: [master] 
   script:
-    - $NVM_DIR/nvm install 16
-    - nvm use 16
     - cp ./.ci/.npmrc ./.npmrc 
     - npm i 
     - npm run build 
