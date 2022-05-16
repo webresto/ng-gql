@@ -14,7 +14,7 @@
 - [removeOrderId](NgOrderService.md#removeorderid)
 - [paymentLink$](NgOrderService.md#paymentlink$)
 - [getPaymentMethods$](NgOrderService.md#getpaymentmethods$)
-- [getOrderAndPaymentMethods$](NgOrderService.md#getorderandpaymentmethods$)
+- [getOrderPaymentMethods$](NgOrderService.md#getorderpaymentmethods$)
 - [getOrder](NgOrderService.md#getorder)
 - [loadOrder$](NgOrderService.md#loadorder$)
 - [addToOrder](NgOrderService.md#addtoorder)
@@ -159,22 +159,17 @@ ___
 
 ___
 
-### getOrderAndPaymentMethods$
+### getOrderPaymentMethods$
 
-▸ **getOrderAndPaymentMethods$**(): `Observable`<{ `order`: [`Order`](../interfaces/Order.md) ; `methods`: [`PaymentMethod`](../interfaces/PaymentMethod.md)[]  }\>
+▸ **getOrderPaymentMethods$**(): `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
-**`method`** getOrderAndPaymentMethods$
-
-**`see`** getOrder()
+**`method`** getOrderPaymentMethods$
 
 #### Returns
 
-`Observable`<{ `order`: [`Order`](../interfaces/Order.md) ; `methods`: [`PaymentMethod`](../interfaces/PaymentMethod.md)[]  }\>
+`Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
-Возвращает поток Observable с объектом, содержащим:
- 1. В свойстве order - данные текущего заказа `Order`.
- 2. В свойстве methods - массив доступных для этого заказа способов оплаты `PaymentMethod`.
- Для получения данных только о заказе, без информации о способах оплаты используйте метод `getOrder()`;
+Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
 
 ___
 
@@ -312,7 +307,7 @@ ___
 
 ### sendOrder
 
-▸ **sendOrder**(`orderId`, `successCb?`, `errorCb?`): `void`
+▸ **sendOrder**(`options`): `void`
 
 **`method`** sendOrder
 Используется для отправки в шину события оформления заказа.
@@ -320,11 +315,13 @@ ___
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `orderId` | `string` | - |
-| `successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
+| Name | Type |
+| :------ | :------ |
+| `options` | `Object` |
+| `options.orderId` | `string` |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> |
+| `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` |
+| `options.errorCb?` | (`err`: `unknown`) => `void` |
 
 #### Returns
 

@@ -3,7 +3,7 @@ import { BehaviorSubject, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
 import type { NgGqlConfig, Action, Message, OrderInput, CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier } from '../models';
-import { isValue, MessageOrActionGql, OrderFragments, PaymentMethodFragments } from '../models';
+import { isValue, isEqualItems, MessageOrActionGql, OrderFragments, PaymentMethodFragments } from '../models';
 import { NgGqlService } from './ng-gql.service';
 
 @Injectable({
@@ -140,7 +140,8 @@ export class NgOrderService {
         ).filter(
           method => method.enable
         )
-      )
+      ),
+      shareReplay(1)
     );
   };
 
@@ -152,6 +153,9 @@ export class NgOrderService {
       storageOrderIdToken => {
         const orderId = this.getOrderId(storageOrderIdToken);
         return this.getPaymentMethods$(orderId).pipe(
+          distinctUntilChanged((previous, current) => {
+            return isEqualItems(previous, current);
+          }),
           map(
             methods => ({
               methods, orderId
@@ -162,6 +166,9 @@ export class NgOrderService {
               switchMap(
                 order => order.state === 'ORDER' ? this.loadOrder$(undefined) : of(order)
               ),
+              distinctUntilChanged((previous, current) => {
+                return isEqualItems(previous, current);
+              }),
               map(
                 order => {
                   const storageOrderId = this.getOrderId(storageOrderIdToken);
@@ -189,32 +196,34 @@ export class NgOrderService {
     shareReplay(1)
   );
 
+  private _orderPaymentMethods$ = this.orderAndPaymentMethods$.pipe(
+    map(
+      orderAndPaymentMethods => orderAndPaymentMethods.methods
+    ),
+    shareReplay(1)
+  );
+
   /**
-   * @method getOrderAndPaymentMethods$
-   * @returns Возвращает поток Observable с объектом, содержащим:
-   *  1. В свойстве order - данные текущего заказа `Order`.
-   *  2. В свойстве methods - массив доступных для этого заказа способов оплаты `PaymentMethod`.
-   *  Для получения данных только о заказе, без информации о способах оплаты используйте метод `getOrder()`;
-   *  @see getOrder()
+   * @method getOrderPaymentMethods$
+   * @returns Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
    */
-  getOrderAndPaymentMethods$(): Observable<{
-    order: Order,
-    methods: PaymentMethod[];
-  }> {
-    return this.orderAndPaymentMethods$;
+  getOrderPaymentMethods$(): Observable<PaymentMethod[]> {
+    return this._orderPaymentMethods$;
   };
+
+  private _order$ = this.orderAndPaymentMethods$.pipe(
+    map(
+      orderAndPaymentMethods => orderAndPaymentMethods.order
+    ),
+    shareReplay(1)
+  );
 
   /**
    * @method  getOrder
    * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
    */
   getOrder(): Observable<Order> {
-    return this.orderAndPaymentMethods$.pipe(
-      map(
-        orderAndPaymentMethods => orderAndPaymentMethods.order
-      ),
-      shareReplay(1)
-    );
+    return this._order$;
   };
 
 
@@ -273,7 +282,7 @@ export class NgOrderService {
       subscribe: {
         orderId
       }
-    } : undefined, undefined, false).pipe(
+    } : undefined, undefined).pipe(
       map(values => values[ 0 ] ? values[ 0 ] : null),
       filter((order): order is Order => isValue(order)),
       map(
@@ -338,12 +347,8 @@ export class NgOrderService {
                 };
               }),
           );
-        }
-
-      }
-
-
-    ),
+        };
+      }),
   );
 
   private _orderBus$ = new EventEmitter<CartBusEvent>();
@@ -410,10 +415,10 @@ export class NgOrderService {
             result => {
               if (isValue(busEvent.loading)) {
                 busEvent.loading.next(false);
-                if (busEvent.successCb) {
-                  busEvent.successCb(<Order & CheckResponse> result);
-                };
-              }
+              };
+              if (isValue(busEvent.successCb)) {
+                busEvent.successCb(<Order & CheckResponse> result);
+              };
             }),
           catchError((err: unknown) => {
             if (isValue(busEvent.loading)) {
@@ -557,12 +562,18 @@ export class NgOrderService {
   * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
   * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
-  sendOrder(orderId: string,
+  sendOrder(options: {
+    orderId: string,
+    loading?: BehaviorSubject<boolean>,
     successCb?: (order: CheckResponse) => void,
-    errorCb?: (err: unknown) => void
-  ) {
+    errorCb?: (err: unknown) => void;
+  }) {
     this._orderBus$.emit({
-      event: 'order', successCb, errorCb, data: orderId
+      event: 'order',
+      loading: options.loading,
+      successCb: options.successCb,
+      errorCb: options.errorCb,
+      data: options.orderId
     });
   }
 

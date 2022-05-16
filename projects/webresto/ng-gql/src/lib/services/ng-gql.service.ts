@@ -605,8 +605,7 @@ export class NgGqlService {
       paramOptions?: {
         query?: QueryGenerationParam<VQ>,
         subscribe?: QueryGenerationParam<VS>;
-      },
-      simpleQuery: boolean = true): Observable<T[]> {
+      }): Observable<T[]> {
     const updateFn: (store: T | T[], subscribeValue: T) => T[] = (store, newValue) => {
       const array = (Array.isArray(store) ? store : [ store ]);
       const findItem = array.find(
@@ -626,35 +625,32 @@ export class NgGqlService {
         requiredFields: paramOptions?.query?.requiredFields,
         fieldsTypeMap: paramOptions?.query?.fieldsTypeMap
       }) }`,
-      variables: variables?.query,
-      canonizeResults: true
+      variables: variables?.query
     };
-    return (simpleQuery ?
-      this.apollo.query<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions) :
-      this.apollo.watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions)).pipe(
-        map(
-          res => res.error || res.errors ? null : res.data),
-        filter((data): data is Record<NQuery, T | T[]> => !!data),
-        switchMap(
-          result => this.customSubscribe$<T, NSubscribe, VS>(
-            nameSubscribe, queryObject, variables?.subscribe, paramOptions?.subscribe
-          ).pipe(
-            startWith(null),
-            map(
-              updatedValue => {
-                const store: T | T[] = makeForm(result[ nameQuery ]).value;
-                const copyedUpdatedValue: T = makeForm(updatedValue).value;
-                return isValue(updatedValue) ?
-                  updateFn(store, copyedUpdatedValue) :
-                  Array.isArray(store) ?
-                    store :
-                    <T[]>[ store ];
-              }),
-            shareReplay(1)
-          )
-        ),
-        shareReplay(1)
-      );
+    return this.apollo.watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions).pipe(
+      map(
+        res => res.error || res.errors ? null : res.data),
+      filter((data): data is Record<NQuery, T | T[]> => !!data),
+      switchMap(
+        result => this.customSubscribe$<T, NSubscribe, VS>(
+          nameSubscribe, queryObject, variables?.subscribe, paramOptions?.subscribe
+        ).pipe(
+          startWith(null),
+          map(
+            updatedValue => {
+              const store: T | T[] = makeForm(result[ nameQuery ]).value;
+              const copyedUpdatedValue: T = makeForm(updatedValue).value;
+              return isValue(updatedValue) ?
+                updateFn(store, copyedUpdatedValue) :
+                Array.isArray(store) ?
+                  store :
+                  <T[]>[ store ];
+            }),
+          shareReplay(1)
+        )
+      ),
+      shareReplay(1)
+    );
   }
 
   destroy() {

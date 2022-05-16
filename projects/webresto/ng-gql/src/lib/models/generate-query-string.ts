@@ -60,7 +60,7 @@ export function generateQueryString<T, N extends `${ string }`, V = (GQLRequestV
     ).join(',')
       })` : '' } {\n  ${ indentString }${ Object.entries(source).
         filter(
-          (entry): entry is [ string, FieldTypes ] => typeof entry[ 1 ] !== 'function'
+          (entry): entry is [ string, FieldTypes ] => typeof entry[ 1 ] !== 'function' && entry[ 0 ] !== '__typename'
         ).
         map(
           entry => typeof entry[ 1 ] === 'object' && entry[ 1 ] !== undefined && entry[ 1 ] !== null ?
