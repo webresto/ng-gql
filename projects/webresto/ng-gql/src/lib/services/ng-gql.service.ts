@@ -16,6 +16,10 @@ import {
 import { ApolloService } from './apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
 
+type PartialGroupNullable = Pick<Group, 'slug'> & {
+  id: string | null;
+};
+
 /**
  * Объект настройки генерации части строки запроса с описанием типов параметров операции.
  */
@@ -123,7 +127,7 @@ export class NgGqlService {
    * @returns
    */
   private _loadGroups(slug: string) {
-    return this.customQuery$<{ childGroups: Pick<Group, 'id' | 'slug'>[]; }, 'group', VCriteria>('group', {
+    return this.customQuery$<{ childGroups: PartialGroupNullable[]; }, 'group', VCriteria>('group', {
       childGroups: {
         slug: true,
         id: true
@@ -135,7 +139,7 @@ export class NgGqlService {
     }).pipe(
       map(group => {
         const array = (<{
-          childGroups: Pick<Group, 'id' | 'slug'>[];
+          childGroups: PartialGroupNullable[];
         }[]> group.group);
         return array.length == 0 ? [] : array[ 0 ].childGroups;
       }
@@ -144,12 +148,12 @@ export class NgGqlService {
     );
   }
 
-  rootGroups$: Observable<Pick<Group, 'id' | 'slug'>[]> = this._navigationData$.pipe(
+  rootGroups$: Observable<PartialGroupNullable[]> = this._navigationData$.pipe(
     filter((navigationData): navigationData is Navigation[] => !!navigationData && Array.isArray(navigationData) && !!navigationData[ 0 ] && 'mnemonicId' in navigationData[ 0 ]),
     switchMap(navigationData => {
       const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
       return menuItem.options.behavior?.includes('navigationmenu') ?
-        of(menuItem.navigation_menu.map(item => ({ slug: item.groupSlug, id: '' }))) : this._loadGroups(menuItem.options.initGroupSlug);
+        of(menuItem.navigation_menu.map(item => ({ slug: item.groupSlug, id: null }))) : this._loadGroups(menuItem.options.initGroupSlug);
     }),
     mergeWith(
       this._initGroupSlug$.asObservable().pipe(
@@ -261,7 +265,9 @@ export class NgGqlService {
                 if (!current.dishes) {
                   current.dishes = [];
                 };
-                accumulator[ current.id ] = current;
+                if (current.id) {
+                  accumulator[ current.id ] = current;
+                };
                 return accumulator;
               }, {}
             );
