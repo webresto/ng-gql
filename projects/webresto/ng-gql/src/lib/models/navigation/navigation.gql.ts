@@ -34,14 +34,14 @@ export interface Navigation extends NavigationBase {
 export interface NavigationsMenuItemBase {
 	label: string;
 	link: string;
-	concept: 'origin' | string | null;
+	concept: 'origin' | string;
 
 	active?: boolean;
-	visible?: boolean;
 }
 
 export interface NavigationsMenuItem extends NavigationsMenuItemBase {
 
+	visible?: boolean;
 	icon?: string;
 	groupSlug: string;
 }
