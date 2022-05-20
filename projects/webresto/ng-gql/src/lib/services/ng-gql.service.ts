@@ -16,8 +16,15 @@ import {
 import { ApolloService } from './apollo.service';
 import { makeForm } from '@axrl/ngx-extended-form-builder';
 
-type PartialGroupNullable = Pick<Group, 'slug'> & {
+interface SlugAndConcept {
+  slug: string,
+  concept: string | 'origin';
+}
+
+
+type PartialGroupNullableAndConcept = Pick<Group, 'slug'> & {
   id: string | null;
+  concept: string | 'origin';
 };
 
 /**
@@ -62,10 +69,12 @@ export class NgGqlService {
     shareReplay(1)
   );
 
-  private _initGroupSlug$ = new BehaviorSubject<string | null>(null);
+  private _initGroupSlug$ = new BehaviorSubject<SlugAndConcept | null>(null);
 
-  updateInitGroupSlug(initGroupSlug: string) {
-    this._initGroupSlug$.next(initGroupSlug);
+  updateInitGroupSlug(initGroupSlug: string, concept: string = 'origin') {
+    this._initGroupSlug$.next({
+      slug: initGroupSlug, concept
+    });
   }
 
   /**
@@ -126,21 +135,21 @@ export class NgGqlService {
    * Чтобы обновлять значение в `initGroupSlug$` используется метод `updateInitGroupSlug`
    * @returns
    */
-  private _loadGroups(slug: string) {
-    return this.customQuery$<{ childGroups: PartialGroupNullable[]; }, 'group', VCriteria>('group', {
+  private _loadGroups(slug: string, concept: string | 'origin' = 'origin') {
+    return this.customQuery$<{ childGroups: PartialGroupNullableAndConcept[]; }, 'group', VCriteria>('group', {
       childGroups: {
         slug: true,
         id: true
       }
     }, {
       criteria: {
-        slug
+        slug, concept
       }
     }).pipe(
       map(group => {
         const array = (<{
-          childGroups: PartialGroupNullable[];
-        }[]> group.group);
+          childGroups: PartialGroupNullableAndConcept[];
+        }[]> group.group).map(item => ({ ...item, concept }));
         return array.length == 0 ? [] : array[ 0 ].childGroups;
       }
       ),
@@ -148,27 +157,25 @@ export class NgGqlService {
     );
   }
 
-  rootGroups$: Observable<PartialGroupNullable[]> = this._navigationData$.pipe(
+  rootGroups$: Observable<PartialGroupNullableAndConcept[]> = this._navigationData$.pipe(
     filter((navigationData): navigationData is Navigation[] => !!navigationData && Array.isArray(navigationData) && !!navigationData[ 0 ] && 'mnemonicId' in navigationData[ 0 ]),
     switchMap(navigationData => {
       const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
       return menuItem.options.behavior?.includes('navigationmenu') ?
-        of(menuItem.navigation_menu.map(item => ({ slug: item.groupSlug, id: null }))) : this._loadGroups(menuItem.options.initGroupSlug);
+        of(menuItem.navigation_menu.map(item => ({ slug: item.groupSlug, concept: item.concept, id: null }))) : this._loadGroups(menuItem.options.initGroupSlug);
     }),
     mergeWith(
       this._initGroupSlug$.asObservable().pipe(
-        filter((slug): slug is string => !!slug),
+        filter((slugAndConcept): slugAndConcept is SlugAndConcept => !!slugAndConcept),
         distinctUntilChanged(),
-        switchMap(slug => this._loadGroups(slug))
+        switchMap(slugAndConcept => this._loadGroups(slugAndConcept.slug, slugAndConcept.concept))
       )
     ),
     shareReplay(1)
   );
 
   private _dishes$ = new BehaviorSubject<Dish[] | null>(null);
-  dishes$ = this._dishes$.asObservable().pipe(
-    filter((data): data is Dish[] => !!data)
-  );
+
 
   /**
    * @method addAmountToDish
@@ -206,7 +213,8 @@ export class NgGqlService {
         const criteria = !!rootGroups[ 0 ]?.id ? {
           id: rootGroups.map(rootGroup => rootGroup.id)
         } : {
-          slug: rootGroups.map(rootGroup => rootGroup.slug)
+          slug: rootGroups.map(rootGroup => rootGroup.slug),
+
         };
         return this.queryAndSubscribe<Group, 'group', 'group', VCriteria>('group', 'group', queryObject, 'id', {
           query: {
@@ -363,7 +371,9 @@ export class NgGqlService {
         }
       }
     } else {
-      return this.dishes$;
+      return this._dishes$.asObservable().pipe(
+        filter((data): data is Dish[] => !!data)
+      );
     }
   }
 

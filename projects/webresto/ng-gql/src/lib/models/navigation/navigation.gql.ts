@@ -31,13 +31,19 @@ export interface Navigation extends NavigationBase {
 	navigation_menu: NavigationsMenuItem[];
 }
 
-export interface NavigationsMenuItem {
+export interface NavigationsMenuItemBase {
 	label: string;
 	link: string;
+	concept: 'origin' | string;
+
+	active?: boolean;
+}
+
+export interface NavigationsMenuItem extends NavigationsMenuItemBase {
+
+	visible?: boolean;
 	icon?: string;
 	groupSlug: string;
-	active?: boolean;
-	visible?: boolean;
 }
 
 export interface NavigationsOptions {
