@@ -166,9 +166,7 @@ export class NgGqlService {
   );
 
   private _dishes$ = new BehaviorSubject<Dish[] | null>(null);
-  dishes$ = this._dishes$.asObservable().pipe(
-    filter((data): data is Dish[] => !!data)
-  );
+
 
   /**
    * @method addAmountToDish
@@ -363,7 +361,9 @@ export class NgGqlService {
         }
       }
     } else {
-      return this.dishes$;
+      return this._dishes$.asObservable().pipe(
+        filter((data): data is Dish[] => !!data)
+      );
     }
   }
 
