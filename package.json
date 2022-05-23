@@ -12,9 +12,9 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^13.3.8",
-    "@angular/compiler": "^13.3.8",
-    "@angular/core": "^13.3.8",
+    "@angular/common": "^13.3.9",
+    "@angular/compiler": "^13.3.9",
+    "@angular/core": "^13.3.9",
     "@apollo/client": "^3.6.4",
     "@axrl/ngx-extended-form-builder": "^1.0.9",
     "apollo-angular": "^3.0.1",

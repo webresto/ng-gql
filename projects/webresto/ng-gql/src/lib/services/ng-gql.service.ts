@@ -10,7 +10,7 @@ import type {
   CheckPhoneCodeInput, VCriteria, Maintenance, Phone
 } from '../models';
 import {
-  isValue, NavigationFragments, MaintenanceFragment, GroupFragments,
+  isValue, isEqualItems, NavigationFragments, MaintenanceFragment, GroupFragments,
   DishFragments, generateQueryString
 } from '../models';
 import { ApolloService } from './apollo.service';
@@ -22,9 +22,8 @@ interface SlugAndConcept {
 }
 
 
-type PartialGroupNullableAndConcept = Pick<Group, 'slug'> & {
+type PartialGroupNullable = Pick<Group, 'slug'> & {
   id: string | null;
-  concept: string | 'origin';
 };
 
 /**
@@ -71,7 +70,7 @@ export class NgGqlService {
 
   private _initGroupSlug$ = new BehaviorSubject<SlugAndConcept | null>(null);
 
-  updateInitGroupSlug(initGroupSlug: string, concept: string = 'origin') {
+  updateInitGroupSlug(initGroupSlug: string, concept: string | 'origin') {
     this._initGroupSlug$.next({
       slug: initGroupSlug, concept
     });
@@ -135,8 +134,8 @@ export class NgGqlService {
    * Чтобы обновлять значение в `initGroupSlug$` используется метод `updateInitGroupSlug`
    * @returns
    */
-  private _loadGroups(slug: string, concept: string | 'origin' = 'origin') {
-    return this.customQuery$<{ childGroups: PartialGroupNullableAndConcept[]; }, 'group', VCriteria>('group', {
+  private _loadGroups(slug: string, concept: string | 'origin') {
+    return this.customQuery$<{ childGroups: PartialGroupNullable[]; }, 'group', VCriteria>('group', {
       childGroups: {
         slug: true,
         id: true
@@ -148,28 +147,40 @@ export class NgGqlService {
     }).pipe(
       map(group => {
         const array = (<{
-          childGroups: PartialGroupNullableAndConcept[];
-        }[]> group.group).map(item => ({ ...item, concept }));
-        return array.length == 0 ? [] : array[ 0 ].childGroups;
-      }
-      ),
+          childGroups: PartialGroupNullable[];
+        }[]> group.group).map(item => ({ ...item }));
+        return {
+          concept,
+          groups: array.length == 0 ? [] : array[ 0 ].childGroups
+        };
+      }),
       shareReplay(1)
     );
   }
 
-  rootGroups$: Observable<PartialGroupNullableAndConcept[]> = this._navigationData$.pipe(
+  rootGroups$: Observable<{
+    concept: string | 'origin',
+    groups: PartialGroupNullable[];
+  }> = this._navigationData$.pipe(
     filter((navigationData): navigationData is Navigation[] => !!navigationData && Array.isArray(navigationData) && !!navigationData[ 0 ] && 'mnemonicId' in navigationData[ 0 ]),
     switchMap(navigationData => {
       const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
       return menuItem.options.behavior?.includes('navigationmenu') ?
-        of(menuItem.navigation_menu.map(item => ({ slug: item.groupSlug, concept: item.concept, id: null }))) : this._loadGroups(menuItem.options.initGroupSlug);
+        of({
+          concept: menuItem.options?.concept ?? 'origin',
+          groups: menuItem.navigation_menu.map(item => ({ slug: item.groupSlug, id: null }))
+        }) : this._loadGroups(menuItem.options.initGroupSlug, menuItem.options?.concept ?? 'origin');
     }),
     mergeWith(
       this._initGroupSlug$.asObservable().pipe(
         filter((slugAndConcept): slugAndConcept is SlugAndConcept => !!slugAndConcept),
-        distinctUntilChanged(),
+        distinctUntilChanged(
+          (previous, current) => isEqualItems(previous, current)
+        ),
         switchMap(slugAndConcept => this._loadGroups(slugAndConcept.slug, slugAndConcept.concept))
       )
+    ),
+    distinctUntilChanged((previous, current) => isEqualItems(previous, current),
     ),
     shareReplay(1)
   );
@@ -199,7 +210,8 @@ export class NgGqlService {
 
   private loadedMenu$ = this.rootGroups$.pipe(
     switchMap(
-      rootGroups => {
+      rootGroupsData => {
+        const rootGroups = rootGroupsData.groups;
         const nesting = this.config.nesting ?? 2;
         const customvOb = this.config.customFields?.[ 'Group' ];
         const vOb = customvOb ? { ...GroupFragments.vOb, ...customvOb } : GroupFragments.vOb;
@@ -211,10 +223,11 @@ export class NgGqlService {
           }, { ...vOb, childGroups: { ...vOb } }
         );
         const criteria = !!rootGroups[ 0 ]?.id ? {
-          id: rootGroups.map(rootGroup => rootGroup.id)
+          id: rootGroups.map(rootGroup => rootGroup.id),
+          concept: rootGroupsData.concept
         } : {
           slug: rootGroups.map(rootGroup => rootGroup.slug),
-
+          concept: rootGroupsData.concept
         };
         return this.queryAndSubscribe<Group, 'group', 'group', VCriteria>('group', 'group', queryObject, 'id', {
           query: {
@@ -223,10 +236,18 @@ export class NgGqlService {
           subscribe: {
             criteria
           }
-        });
+        }).pipe(
+          map(
+            groups => ({
+              concept: rootGroupsData.concept,
+              groups
+            })
+          )
+        );
       }),
     switchMap(
-      groups => {
+      groupsData => {
+        const groups = groupsData.groups;
         const addGroup = (items: Group[], item: Group) => {
           if (!items.find(value => value.id === item.id)) {
             items.push(item);
@@ -251,12 +272,14 @@ export class NgGqlService {
         return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', vOb, 'id', {
           query: {
             criteria: {
-              parentGroup: allNestingsIds
+              parentGroup: allNestingsIds,
+              concept: groupsData.concept
             }
           },
           subscribe: {
             criteria: {
-              parentGroup: allNestingsIds
+              parentGroup: allNestingsIds,
+              concept: groupsData.concept
             }
           }
         }).pipe(
@@ -309,10 +332,12 @@ export class NgGqlService {
             }
             return { groupsById, groupIdsBySlug };
           }),
+          distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
           shareReplay(1)
         );
       }
     ),
+    distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
     shareReplay(1)
   );
 

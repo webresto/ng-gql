@@ -26,7 +26,6 @@
 ### Properties
 
 - [rootGroups$](NgGqlService.md#rootgroups$)
-- [dishes$](NgGqlService.md#dishes$)
 
 ## Constructors
 
@@ -45,13 +44,14 @@
 
 ### updateInitGroupSlug
 
-▸ **updateInitGroupSlug**(`initGroupSlug`): `void`
+▸ **updateInitGroupSlug**(`initGroupSlug`, `concept`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `initGroupSlug` | `string` |
+| `concept` | `string` |
 
 #### Returns
 
@@ -368,10 +368,4 @@ ___
 
 ### rootGroups$
 
-• **rootGroups$**: `Observable`<{ `slug`: `string` ; `id`: ``null`` \| `string`  }[]\>
-
-___
-
-### dishes$
-
-• **dishes$**: `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+• **rootGroups$**: `Observable`<{ `concept`: `string` ; `groups`: `PartialGroupNullable`[]  }\>

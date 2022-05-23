@@ -48,6 +48,7 @@ export interface NavigationsMenuItem extends NavigationsMenuItemBase {
 
 export interface NavigationsOptions {
 	initGroupSlug: string;
+	concept: string | 'origin' | null | undefined;
 	behavior?: `newpagebyslug`  //Построение через initGroupSlug где каждый раздел создается на своей странице
 	| `onepagebyslug`  //Построение через initGroupSlug где все подразделы на одной страницы с навигацией по # (переход реализуется прокруткой)
 	| `newpagebynavigationmenu`   //Построение из меню которое пришло в navigation_menu где каждый раздел создается на своей странице

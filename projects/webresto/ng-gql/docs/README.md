@@ -24,6 +24,7 @@
 - [NavigationBase](interfaces/NavigationBase.md)
 - [NavigationLoader](interfaces/NavigationLoader.md)
 - [Navigation](interfaces/Navigation.md)
+- [NavigationsMenuItemBase](interfaces/NavigationsMenuItemBase.md)
 - [NavigationsMenuItem](interfaces/NavigationsMenuItem.md)
 - [NavigationsOptions](interfaces/NavigationsOptions.md)
 - [NgGqlConfig](interfaces/NgGqlConfig.md)
