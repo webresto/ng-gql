@@ -34,7 +34,7 @@
 - [CheckResponse](interfaces/CheckResponse.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
 
-### Type aliases
+### Type Aliases
 
 - [DiscountType](README.md#discounttype)
 - [VCriteria](README.md#vcriteria)
@@ -92,7 +92,7 @@
 - [CartBusEventCheck](README.md#cartbuseventcheck)
 - [CartBusEventSend](README.md#cartbuseventsend)
 
-## Type aliases
+## Type Aliases
 
 ### DiscountType
 
@@ -268,7 +268,7 @@ ___
 
 ### ValuesOrBoolean
 
-Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends infer U[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
+Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
 
 **`alias`** ValuesOrBoolean<T>
 

@@ -1,14 +1,14 @@
 {
   "name": "@webresto/ng-gql",
-  "version": "1.1.49",
+  "version": "1.1.50",
   "repository": {
     "type": "git",
     "url": "https://git.hm/webresto/ng-graphql.git"
   },
   "homepage": "https://git.hm/webresto/ng-graphql",
   "peerDependencies": {
-    "@angular/common": "^13.3.9",
-    "@angular/core": "^13.3.9"
+    "@angular/common": "^13.3.11",
+    "@angular/core": "^13.3.11"
   },
   "dependencies": {
     "tslib": "^2.4.0",

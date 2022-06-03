@@ -6,7 +6,6 @@ import type { Dish, DiscountType } from '../dish/dish.gql';
 export interface OrderDish {
 	id: number;
 	amount: number;
-	dishId: string;
 	dish: Dish,
 	itemTotal: number;
 	itemTotalBeforeDiscount?: number;
@@ -24,7 +23,6 @@ export const OrderDishFragments = {
 	vOb: <ValuesOrBoolean<OrderDish>> {
 		id: true,
 		amount: true,
-		dishId: true,
 		dish: DishFragments.vOb,
 		modifiers: {
 			id: true,

@@ -6,7 +6,6 @@
 
 - [id](OrderDish.md#id)
 - [amount](OrderDish.md#amount)
-- [dishId](OrderDish.md#dishid)
 - [dish](OrderDish.md#dish)
 - [itemTotal](OrderDish.md#itemtotal)
 - [itemTotalBeforeDiscount](OrderDish.md#itemtotalbeforediscount)
@@ -30,12 +29,6 @@ ___
 ### amount
 
 • **amount**: `number`
-
-___
-
-### dishId
-
-• **dishId**: `string`
 
 ___
 
