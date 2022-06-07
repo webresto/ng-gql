@@ -6,6 +6,7 @@ publish:
   only: [master] 
   script:
     - cp ./.ci/.npmrc ./.npmrc 
+    - nvm use 16
     - npm i 
     - npm run build 
     - cd ./dist && npm publish && cd .. && rm -rf ./.npmrc
