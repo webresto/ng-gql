@@ -56,7 +56,7 @@ export function generateQueryString<T, N extends `${ string }`, V = (GQLRequestV
     return `${ name }${ indent === 1 && variables ? `(${ (<(keyof V)[]> Object.keys(variables)).filter(
       key => isValue(variables[ key ])
     ).map(
-      key => `${ key }:$${ key }`
+      key => `${ String(key) }:$${ String(key) }`
     ).join(',')
       })` : '' } {\n  ${ indentString }${ Object.entries(source).
         filter(
@@ -89,7 +89,7 @@ export function generateQueryString<T, N extends `${ string }`, V = (GQLRequestV
   return ` load${ name[ 0 ].toUpperCase() + name.slice(1) } ${ variables ? `(${ (<(keyof V)[]> Object.keys(variables)).filter(
     key => isValue(variables[ key ])
   ).map(
-    key => `$${ key }:${ getGqlType(key, variables[ key ], options.requiredFields && options.requiredFields.includes(key), options.fieldsTypeMap) }`
+    key => `$${ String(key) }:${ getGqlType(key, variables[ key ], options.requiredFields && options.requiredFields.includes(key), options.fieldsTypeMap) }`
   ).join(',')
     })` : '' } {\n${ makeFieldList(queryObject, name, 1, variables) }\n}`;
 }

@@ -47,6 +47,5 @@
         }
       }
     }
-  },
-  "defaultProject": "@webresto/ng-gql"
+  }
 }
