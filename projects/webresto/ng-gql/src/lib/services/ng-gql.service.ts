@@ -499,7 +499,7 @@ export class NgGqlService {
    *  в виде одиночного объекта либо массива.
    **/
   customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
-    return this.apollo.watchQuery<Record<N, T | T[]>, V>({
+    return this.apollo.query<Record<N, T | T[]>, V>({
       query: gql`query ${ generateQueryString({
         name,
         queryObject,
@@ -662,7 +662,7 @@ export class NgGqlService {
       }) }`,
       variables: variables?.query
     };
-    return this.apollo.watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions).pipe(
+    return this.apollo.query<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions).pipe(
       map(
         res => res.error || res.errors ? null : res.data),
       filter((data): data is Record<NQuery, T | T[]> => !!data),

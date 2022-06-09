@@ -54,6 +54,8 @@ export class NgGqlModule {
       apollo.create({
         link,
         cache: new InMemoryCache({
+          addTypename:true,
+          resultCaching:true,
           typePolicies: {
             "Order": {
               fields: {
