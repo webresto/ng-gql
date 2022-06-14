@@ -15,6 +15,7 @@
 - [type](PaymentMethod.md#type)
 - [title](PaymentMethod.md#title)
 - [description](PaymentMethod.md#description)
+- [isCash](PaymentMethod.md#iscash)
 - [adapter](PaymentMethod.md#adapter)
 - [order](PaymentMethod.md#order)
 - [enable](PaymentMethod.md#enable)
@@ -52,6 +53,12 @@ ___
 ### description
 
 • **description**: `string`
+
+___
+
+### isCash
+
+• **isCash**: `boolean`
 
 ___
 

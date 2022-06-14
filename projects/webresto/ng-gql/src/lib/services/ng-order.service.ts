@@ -29,7 +29,6 @@ export class NgOrderService {
   private storageOrderIdToken$ = this._storageOrderIdToken$.pipe(
     filter((storageOrderIdToken): storageOrderIdToken is string => !!storageOrderIdToken),
     distinctUntilChanged(),
-    shareReplay(1)
   );
 
   /**
@@ -140,8 +139,7 @@ export class NgOrderService {
         ).filter(
           method => method.enable
         )
-      ),
-      shareReplay(1)
+      )
     );
   };
 
@@ -187,10 +185,8 @@ export class NgOrderService {
                   };
                 }
               ),
-              shareReplay(1)
             )
           ),
-          shareReplay(1)
         );
       }),
     shareReplay(1)
@@ -199,8 +195,7 @@ export class NgOrderService {
   private _orderPaymentMethods$ = this.orderAndPaymentMethods$.pipe(
     map(
       orderAndPaymentMethods => orderAndPaymentMethods.methods
-    ),
-    shareReplay(1)
+    )
   );
 
   /**
@@ -214,8 +209,7 @@ export class NgOrderService {
   private _order$ = this.orderAndPaymentMethods$.pipe(
     map(
       orderAndPaymentMethods => orderAndPaymentMethods.order
-    ),
-    shareReplay(1)
+    )
   );
 
   /**
@@ -312,8 +306,7 @@ export class NgOrderService {
             dishes: order.dishes ?? []
           };
         }
-      ),
-      shareReplay(1)
+      )
     );
   }
 
@@ -432,7 +425,6 @@ export class NgOrderService {
           })
         );
       }),
-    shareReplay(1)
   );
 
   private _orderBusSubscription$: Subscription | undefined = this.config.busSubscribeMode === 'subscribe' ? this.orderBus$.subscribe({

@@ -22,7 +22,7 @@
     ],
     "disableSources": true,
     "readme": "none",
-    "emit": "both",
+    "emit": "docs",
     "hideGenerator": true,
     "cleanOutputDir": true,
     "sort": "source-order",

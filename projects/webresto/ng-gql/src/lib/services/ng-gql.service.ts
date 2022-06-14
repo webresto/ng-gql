@@ -154,7 +154,6 @@ export class NgGqlService {
           groups: array.length == 0 ? [] : array[ 0 ].childGroups
         };
       }),
-      shareReplay(1)
     );
   }
 
@@ -180,9 +179,9 @@ export class NgGqlService {
         switchMap(slugAndConcept => this._loadGroups(slugAndConcept.slug, slugAndConcept.concept))
       )
     ),
+    shareReplay(1),
     distinctUntilChanged((previous, current) => isEqualItems(previous, current),
     ),
-    shareReplay(1)
   );
 
   private _dishes$ = new BehaviorSubject<Dish[] | null>(null);
@@ -333,12 +332,11 @@ export class NgGqlService {
             return { groupsById, groupIdsBySlug };
           }),
           distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
-          shareReplay(1)
         );
       }
     ),
-    distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
-    shareReplay(1)
+    shareReplay(1),
+    distinctUntilChanged((previous, current) => isEqualItems(previous, current))
   );
 
   getMenu$(slug: string | string[] | undefined): Observable<Group[] | null> {
@@ -362,8 +360,7 @@ export class NgGqlService {
         } else {
           return Object.values(groupsById) as Group[];
         }
-      }),
-      shareReplay(1)
+      })
     );
   }
 
@@ -455,6 +452,7 @@ export class NgGqlService {
       )
     );
   };
+
   phoneKnowledgeSetCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
     return this.customMutation$<CheckPhoneResponse, 'phoneKnowledgeSetCode', CheckPhoneCodeInput>('phoneKnowledgeSetCode', {
       type: true,
@@ -499,7 +497,7 @@ export class NgGqlService {
    *  в виде одиночного объекта либо массива.
    **/
   customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
-    return this.apollo.query<Record<N, T | T[]>, V>({
+    return this.apollo.watchQuery<Record<N, T | T[]>, V>({
       query: gql`query ${ generateQueryString({
         name,
         queryObject,
@@ -662,7 +660,7 @@ export class NgGqlService {
       }) }`,
       variables: variables?.query
     };
-    return this.apollo.query<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions).pipe(
+    return this.apollo.watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions).pipe(
       map(
         res => res.error || res.errors ? null : res.data),
       filter((data): data is Record<NQuery, T | T[]> => !!data),
@@ -681,10 +679,8 @@ export class NgGqlService {
                   store :
                   <T[]>[ store ];
             }),
-          shareReplay(1)
         )
-      ),
-      shareReplay(1)
+      )
     );
   }
 
