@@ -12,6 +12,7 @@ export * from './maintenance/maintenance';
 export * from './customer';
 export type { NgGqlConfig } from './ng-gql-config/ng-gql-config';
 export { isValue } from './is-value';
+export { deepClone } from './deep-clone';
 export { isEqualItems } from './isEqualItems';
 export type { ValuesOrBoolean } from './values-or-boolean';
 export { generateQueryString } from './generate-query-string';

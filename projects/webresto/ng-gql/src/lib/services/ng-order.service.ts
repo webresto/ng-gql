@@ -1,5 +1,5 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
 import type { NgGqlConfig, Action, Message, OrderInput, CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier } from '../models';
@@ -150,46 +150,42 @@ export class NgOrderService {
     switchMap(
       storageOrderIdToken => {
         const orderId = this.getOrderId(storageOrderIdToken);
-        return this.getPaymentMethods$(orderId).pipe(
-          distinctUntilChanged((previous, current) => {
-            return isEqualItems(previous, current);
-          }),
-          map(
-            methods => ({
-              methods, orderId
+        return combineLatest([
+          this.getPaymentMethods$(orderId),
+          this.loadOrder$(orderId).pipe(
+            switchMap(
+              order => order.state === 'ORDER' ? this.loadOrder$(undefined) : of(order)
+            ),
+            distinctUntilChanged((previous, current) => {
+              return isEqualItems(previous, current);
             })
-          ),
-          switchMap(
-            methodsAndId => this.loadOrder$(methodsAndId.orderId).pipe(
-              switchMap(
-                order => order.state === 'ORDER' ? this.loadOrder$(undefined) : of(order)
-              ),
-              distinctUntilChanged((previous, current) => {
-                return isEqualItems(previous, current);
-              }),
-              map(
-                order => {
-                  const storageOrderId = this.getOrderId(storageOrderIdToken);
-                  if (!storageOrderId || storageOrderId !== order.id) {
-                    this.setOrderId(order.id);
-                  };
-                  return {
-                    methods: methodsAndId.methods,
-                    order: {
-                      ...order,
-                      paymentMethod: !order.paymentMethod && methodsAndId.methods.length > 0 ? {
-                        id: methodsAndId.methods[ 0 ].id,
-                        title: methodsAndId.methods[ 0 ].title
-                      } : order.paymentMethod
-                    }
-                  };
+          )
+        ]).pipe(
+          map(
+            data => {
+              const storageOrderId = this.getOrderId(storageOrderIdToken);
+              const [ methods, order ] = data;
+              if (!storageOrderId || storageOrderId !== order.id) {
+                this.setOrderId(order.id);
+              };
+              return {
+                methods,
+                order: {
+                  ...order,
+                  paymentMethod: !order.paymentMethod && methods.length > 0 ? {
+                    id: methods[ 0 ].id,
+                    title: methods[ 0 ].title
+                  } : order.paymentMethod
                 }
-              ),
-            )
-          ),
+              };
+            })
         );
       }),
-    shareReplay(1)
+
+    shareReplay(1),
+    distinctUntilChanged((previous, current) => {
+      return isEqualItems(previous, current);
+    })
   );
 
   private _orderPaymentMethods$ = this.orderAndPaymentMethods$.pipe(
@@ -314,7 +310,7 @@ export class NgOrderService {
   private storageActionBus$ = this._storageActionBus$.pipe(
     switchMap(
       busEvent => {
-        const setStgorage = (token: string, orderId: string) => {
+        const setStorage = (token: string, orderId: string) => {
           const storageOrderId = this.getOrderId(token);
           if (!storageOrderId || orderId !== storageOrderId) {
             localStorage.setItem(
@@ -323,7 +319,7 @@ export class NgOrderService {
           };
         };
         if (busEvent.event == 'setOrderId' && isValue(busEvent.data.alternativeToken)) {
-          setStgorage(busEvent.data.alternativeToken, busEvent.data.orderId);
+          setStorage(busEvent.data.alternativeToken, busEvent.data.orderId);
           this.updateStorageOrderIdToken(busEvent.data.alternativeToken);
           return of(() => { });
         } else {
@@ -335,7 +331,7 @@ export class NgOrderService {
                     localStorage.removeItem(storageOrderIdToken);
                     break;
                   case 'setOrderId':
-                    setStgorage(storageOrderIdToken, busEvent.data.orderId);
+                    setStorage(storageOrderIdToken, busEvent.data.orderId);
                     break;
                 };
               }),
@@ -484,10 +480,8 @@ export class NgOrderService {
   * @method removeFromOrder
   * Используется для отправки в шину события удаления блюда из корзины
   * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
-  * @param dish - добавляемое блюдо
   * @param amount - количество
-  * @param orderDishId - id блюда в корзине
-  * @param order - Заказ, с которым выполнется операция
+  * @param orderDishId - id удаляемого блюда в корзине
   * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
   * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
@@ -511,21 +505,21 @@ export class NgOrderService {
   * Используется для отправки в шину события обновления данных в заказе, не связанных с блюдами.
   * Может использоваться ТОЛЬКО ДО того, как заказ отправлен через @method sendOrder
   * Также, заказ нужно повторно проверять методом @method checkOrder, если такая проверка уже проводилась ранее.
-  * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
-  * @param order - объект заказа, при этом не все данные из него будут приняты и, в результате, обновлены.
+  * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
+  * @param options.data - объект заказа, при этом не все данные из него будут приняты и, в результате, обновлены.
   * Большая часть будет данных будет проигнорирована и может изменяться только в рамках других методов согласно заложенной бизнес-логике.
   * В настоящее время из всего заказа учитываются изменения ТОЛЬКО в свойстве `Order.trifleFrom`.
-  * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
-  * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+  * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+  * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
-  updateOrder({ data, loading, successCb, errorCb }: {
+  updateOrder(options: {
     data: Partial<Order>,
     loading: BehaviorSubject<boolean>,
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void,
   }) {
     this._orderBus$.emit(<CartBusEventUpdate> {
-      event: 'update', data, loading, errorCb, successCb
+      event: 'update', data: options.data, loading: options.loading, errorCb: options.errorCb, successCb: options.successCb
     });
   }
 
@@ -533,7 +527,7 @@ export class NgOrderService {
    * @method checkOrder
    * Используется для отправки в шину события обязательной проверки заказа перед оформлением.
    * Метод необходимо вызывать после того, как пользователь полностью заполнил в заказе все необходимые данные и далее после каждого вносимого в форму изменения, при условии, что в форме все необходимые данные заполнены.
-  * @param orderForm - Форма чекаута с данными проверяемого заказа
+   * @param orderForm - Форма чекаута с данными проверяемого заказа
    * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
    * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
@@ -550,9 +544,9 @@ export class NgOrderService {
   * @method sendOrder
   * Используется для отправки в шину события оформления заказа.
   * Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
-  * @param orderForm - Форма чекаута с данными оформляемего заказа
-  * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
-  * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+  * @param option.orderId - Форма чекаута с данными оформляемего заказа
+  * @param option.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+  * @param option.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
   sendOrder(options: {
     orderId: string,
@@ -573,7 +567,7 @@ export class NgOrderService {
   * @method setDishAmount
   * Устанавливает для блюда dish в заказе количество amount.
   * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
-  * @param dish - блюдо, для которого изменяется количество заказываемых порций
+  * @param orderDishId - id блюда в корзине, для которого изменяется количество заказываемых порций
   * @param amount - необходимое количество порций
   * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
   * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции

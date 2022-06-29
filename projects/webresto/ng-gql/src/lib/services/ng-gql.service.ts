@@ -10,11 +10,10 @@ import type {
   CheckPhoneCodeInput, VCriteria, Maintenance, Phone
 } from '../models';
 import {
-  isValue, isEqualItems, NavigationFragments, MaintenanceFragment, GroupFragments,
+  isValue, isEqualItems, deepClone, NavigationFragments, MaintenanceFragment, GroupFragments,
   DishFragments, generateQueryString
 } from '../models';
 import { ApolloService } from './apollo.service';
-import { makeForm } from '@axrl/ngx-extended-form-builder';
 
 interface SlugAndConcept {
   slug: string,
@@ -179,7 +178,6 @@ export class NgGqlService {
         switchMap(slugAndConcept => this._loadGroups(slugAndConcept.slug, slugAndConcept.concept))
       )
     ),
-    shareReplay(1),
     distinctUntilChanged((previous, current) => isEqualItems(previous, current),
     ),
   );
@@ -671,10 +669,9 @@ export class NgGqlService {
           startWith(null),
           map(
             updatedValue => {
-              const store: T | T[] = makeForm(result[ nameQuery ]).value;
-              const copyedUpdatedValue: T = makeForm(updatedValue).value;
+              const store: T | T[] = deepClone(result[ nameQuery ]);
               return isValue(updatedValue) ?
-                updateFn(store, copyedUpdatedValue) :
+                updateFn(store, deepClone(updatedValue)) :
                 Array.isArray(store) ?
                   store :
                   <T[]>[ store ];

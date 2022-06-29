@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "tslib": "^2.4.0",
-    "@axrl/ngx-extended-form-builder": "^1.0.9",
     "@apollo/client": "^3.6.4",
     "apollo-angular": "^3.0.1",
     "graphql": "^16.5.0",
