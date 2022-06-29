@@ -34,6 +34,13 @@
 - [CheckResponse](interfaces/CheckResponse.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
 
+### Functions
+
+- [deepClone](README.md#deepclone)
+- [generateQueryString](README.md#generatequerystring)
+- [isValue](README.md#isvalue)
+- [isEqualItems](README.md#isequalitems)
+
 ### Type Aliases
 
 - [DiscountType](README.md#discounttype)
@@ -74,12 +81,6 @@
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
 
-### Functions
-
-- [generateQueryString](README.md#generatequerystring)
-- [isValue](README.md#isvalue)
-- [isEqualItems](README.md#isequalitems)
-
 ### Events
 
 - [CartBusEvent](README.md#cartbusevent)
@@ -91,6 +92,102 @@
 - [CartBusEventSetCommentToDish](README.md#cartbuseventsetcommenttodish)
 - [CartBusEventCheck](README.md#cartbuseventcheck)
 - [CartBusEventSend](README.md#cartbuseventsend)
+
+## Functions
+
+### deepClone
+
+▸ **deepClone**<`T`\>(`source`): `T`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `unknown` |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `source` | `T` |  |
+
+#### Returns
+
+`T`
+
+___
+
+### generateQueryString
+
+▸ **generateQueryString**<`T`, `N`, `V`\>(`options`): `string`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | `T` |
+| `N` | extends `string` |
+| `V` | [`GQLRequestVariables`](README.md#gqlrequestvariables) |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` |  |
+| `options.name` | `N` |  |
+| `options.queryObject` | `T` |  |
+| `options.variables?` | `V` |  |
+| `options.requiredFields?` | keyof `V`[] |  |
+| `options.fieldsTypeMap?` | `Map`<keyof `V`, `string`\> |  |
+
+#### Returns
+
+`string`
+
+___
+
+### isValue
+
+▸ **isValue**<`T`\>(`value`): value is NonNullable<T\>
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `unknown` |
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `value` | `undefined` \| ``null`` \| `T` |
+
+#### Returns
+
+value is NonNullable<T\>
+
+___
+
+### isEqualItems
+
+▸ **isEqualItems**<`T`\>(`a`, `b`): `boolean`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `a` | `T` |  |
+| `b` | `T` | - |
+
+#### Returns
+
+`boolean`
 
 ## Type Aliases
 
@@ -104,27 +201,17 @@ ___
 
 Ƭ **VCriteria**: `Object`
 
-**`alias`** VCriteria
-Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
-Формируется по правилам Waterline query language.
-Подробнее: https://docs.webresto.org/docs/data/criteria/
-
 #### Type declaration
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `criteria` | { `[key: string]`: `any`;  } | Объект Waterline query language |
+| `criteria` | { `[key: string]`: `any`;  } |  |
 
 ___
 
 ### GQLRequestVariables
 
 Ƭ **GQLRequestVariables**: `undefined` \| [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
-
-**`alias`** GQLRequestVariables
-Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описаны для запроса в схеме GraphQL сервера, с соответствующими им значениями.
-В качестве ключей выступают строки, соответствующие названиям параметров.
-Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
 
 ___
 
@@ -164,18 +251,6 @@ ___
 ### OrderState
 
 Ƭ **OrderState**: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"``
-
-**`alias`** OrderState
-Возможные состояния заказа.
- `CART` - начальное состояние заказа
- `CHECKOUT` - заказ проверен и готов к оформлению.
-В заказе еще возможны изменения, но после любых изменений требуется повторно выполнять проверку.
-
-**`see`** 'NgOrderService.checkOrder'
- `PAYMENT` - заказ переходит в это состояние при выборе онлайн оплаты или через внутреннюю платежную систему (бонусами и т.п.),
-Состояние сохраняется, пока оплата не будет завершена, после чего заказ перейдет в состояние `ORDER`.
- `ORDER` - заказ успешно оформлен. Это финальный статус и он не подразумевает, что заказ также был доставлен.
-Данные о выполненной доставке могут быть получены от RMS (`Order.rmsDelivered`).
 
 ___
 
@@ -270,18 +345,6 @@ ___
 
 Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
 
-**`alias`** ValuesOrBoolean<T>
-
-Тип, описывающий объект-конфигуратор запроса к серверу GraphQL для данных типа T.
-Данный обьект будет использоваться в качестве источника информации о требуемых данных при генерации строки-запроса.
-Сервер вернет данные только для полей, присутсвующих в этом обьекте, с сохранением структуры по всем уровням вложенности.
-В качестве ключей (K) необходимо указать ключи из типа T, данные для которых необходимо получить. Структура возвращаемых данных будет соответствовать структуре, переданной в данном объекте, а не типе Т.
-То есть, даже если некие ключи-свойства в типе T указаны как обязательные, их все равно можно не указывать в данном обьекте, но и в возвращаемых API данных эти данные будут отсутствовать.
-В качестве значений:
-  1. true или T[K] - в случае, если T[K] принадлежит примитивным типам, undefined или null.
-  2. Если значение T[K] - "сложный" тип обьекта (НО НЕ МАССИВ!) - вложенный объект, формируемый по аналогичной схеме.
-  3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.
-
 #### Type parameters
 
 | Name |
@@ -294,8 +357,6 @@ ___
 
 Ƭ **QueryGenerationParam**<`V`\>: `Object`
 
-Объект настройки генерации части строки запроса с описанием типов параметров операции.
-
 #### Type parameters
 
 | Name |
@@ -306,8 +367,8 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `requiredFields?` | keyof `V`[] | Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип (например у параметра указан тип String!, а не String). ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`. |
-| `fieldsTypeMap?` | `Map`<keyof `V`, `string`\> | Необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строки-названия соответствующих им типов, определенных в схеме сервера GraphQL. ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
+| `requiredFields?` | keyof `V`[] |  |
+| `fieldsTypeMap?` | `Map`<keyof `V`, `string`\> |  |
 
 ## Variables
 
@@ -442,122 +503,11 @@ ___
 | :------ | :------ |
 | `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\> |
 
-## Functions
-
-### generateQueryString
-
-▸ **generateQueryString**<`T`, `N`, `V`\>(`options`): `string`
-
-**`function`** generateQueryString
-Функция - генератор строки запроса к серверу GraphQL.
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | `T` |
-| `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](README.md#gqlrequestvariables) |
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `options` | `Object` | объект с данными, необходимыми для формирования запроса, где: |
-| `options.name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
-| `options.queryObject` | `T` | объект-источник информации о структуре запрашиваемых данных |
-| `options.variables?` | `V` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа    параметров допустимо использовать типы - number, string, object или boolean. |
-| `options.requiredFields?` | keyof `V`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.    (например у параметра указан тип String!, а не String). |
-| `options.fieldsTypeMap?` | `Map`<keyof `V`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL. ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
-
-#### Returns
-
-`string`
-
-часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V.
- НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription
-
-___
-
-### isValue
-
-▸ **isValue**<`T`\>(`value`): value is NonNullable<T\>
-
-**`function`** isValue
-
-Функция-хелпер для проверки, что переданное значение не является null или undefined.
-Может пригодиться в ситуациях, где требуется более сложная проверка, чем при использовании optional chaining (оператора "??"),
-либо защиты от ложно-положительных срабатываний при проверке наличия значения
-Например :
-
-```typescript
-   interface Foo {
-   value? :number | undefinded
-   }
-   const a:Foo = {
-     value: 0
-   };
-   if (a) {
-    <block_a>
-   } else {
-     <block_b>
-    };
-```
-
-В этом примере block_a не будет выполнен, поскольку приведение к типу boolean значения 0 в результате дает false.
-А проверка isValue(a) - вернет true.
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `unknown` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `undefined` \| ``null`` \| `T` |
-
-#### Returns
-
-value is NonNullable<T\>
-
-___
-
-### isEqualItems
-
-▸ **isEqualItems**<`T`\>(`a`, `b`): `boolean`
-
-Функция для сравнения двух переменных.
-Осуществляет "глубокое" сравнение для непримитивных типов по значениям их свойств, а не по ссылке на объект.
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `a` | `T` | @param b - сравниваемые объекты. |
-| `b` | `T` | - |
-
-#### Returns
-
-`boolean`
-
-true, если объекты идентичны и false, если объекты различаются.
-
 ## Events
 
 ### CartBusEvent
 
 • **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheck`](README.md#cartbuseventcheck) \| [`CartBusEventSend`](README.md#cartbuseventsend)
-
-**`alias`** CartBusEvent
 
 ___
 
@@ -575,9 +525,9 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `successCb?` | (`result`: `T`) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции |
-| `loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `successCb?` | (`result`: `T`) => `void` |  |
+| `errorCb?` | (`err`: `unknown`) => `void` |  |
+| `loading?` | `BehaviorSubject`<`boolean`\> |  |
 
 ___
 

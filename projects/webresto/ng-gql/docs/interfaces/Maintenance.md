@@ -1,7 +1,5 @@
 # Interface: Maintenance
 
-Данные для отображения на странице сайта в период его отключения/недоступности.
-
 ## Hierarchy
 
 - [`BaseModelWithCustomData`](BaseModelWithCustomData.md)

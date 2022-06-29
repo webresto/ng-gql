@@ -1,3 +1,4 @@
+import { isValue } from './is-value';
 
 type ArrayElement<T> = T extends Array<infer U> ? U : never;
 
@@ -12,14 +13,16 @@ export function deepClone<T extends unknown>(source: T): T {
     <T> source.map(
       (sourceItem: ArrayElement<T>) => deepClone<ArrayElement<T>>(sourceItem)
     ) :
-    typeof source === 'object' ?
-      (<(keyof T)[]> Object.keys(<Object> source)).reduce<T>(
-        (accumulator, current) => {
+    !isValue(source) ?
+      source :
+      typeof source === 'object' ?
+        (<(keyof T)[]> Object.keys(<Object> source)).reduce<T>(
+          (accumulator, current) => {
 
-          accumulator[ current ] = deepClone(source[ current ]);
+            accumulator[ current ] = deepClone(source[ current ]);
 
-          return accumulator;
-        }, <T> {}
-      ) :
-      source;
+            return accumulator;
+          }, <T> {}
+        ) :
+        source;
 }
