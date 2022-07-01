@@ -1,10 +1,11 @@
-import { ImageFragments } from '../image/image.gql';
-import { GroupModifierFragments } from '../group-modifier/group-modifier.gql';
+import { imageFragments } from '../image/image.gql';
+import { groupModifierFragments } from '../group-modifier/group-modifier.gql';
 import type { GroupModifier } from '../group-modifier/group-modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Image } from "../image/image.gql";
 import type { Group } from '../group/group.gql';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
+import { InjectionToken } from '@angular/core';
 
 export type DiscountType = 'FIXED' | 'PERCENT';
 
@@ -38,34 +39,41 @@ export interface DishTag {
 	name: string;
 }
 
-export const DishFragments = {
-	vOb: <ValuesOrBoolean<Dish>> {
-		customData: true,
+export const dishFragments: ValuesOrBoolean<Dish> = {
+	customData: true,
+	id: true,
+	name: true,
+	description: true,
+	price: true,
+	weight: true,
+	balance: true,
+	tags: true,
+	additionalInfo: true,
+	carbohydrateAmount: true,
+	carbohydrateFullAmount: true,
+	energyAmount: true,
+	discountAmount: true,
+	discountType: true,
+	energyFullAmount: true,
+	fatAmount: true,
+	fatFullAmount: true,
+	fiberAmount: true,
+	fiberFullAmount: true,
+	measureUnit: true,
+	images: imageFragments,
+	modifiers: groupModifierFragments,
+	groupId: true,
+	parentGroup: {
 		id: true,
-		name: true,
-		description: true,
-		price: true,
-		weight: true,
-		balance: true,
-		tags: true,
-		additionalInfo: true,
-		carbohydrateAmount: true,
-		carbohydrateFullAmount: true,
-		energyAmount: true,
-		discountAmount: true,
-		discountType: true,
-		energyFullAmount: true,
-		fatAmount: true,
-		fatFullAmount: true,
-		fiberAmount: true,
-		fiberFullAmount: true,
-		measureUnit: true,
-		images: ImageFragments.vOb,
-		modifiers: GroupModifierFragments.vOb,
-		groupId: true,
-		parentGroup: {
-			id: true,
-			dishesPlaceholder: ImageFragments.vOb
-		}
+		dishesPlaceholder: imageFragments
 	}
 };
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
+ */
+export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>(
+	'DISH_FRAGMENTS', {
+	providedIn: 'root',
+	factory: () => ({ ...dishFragments })
+});

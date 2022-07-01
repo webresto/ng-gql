@@ -1,7 +1,8 @@
-import { DishFragments } from '../dish/dish.gql';
+import { dishFragments } from '../dish/dish.gql';
 import type { OrderModifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish, DiscountType } from '../dish/dish.gql';
+import { InjectionToken } from '@angular/core';
 
 export interface OrderDish {
 	id: number;
@@ -19,23 +20,30 @@ export interface OrderDish {
 	modifiers: OrderModifier[];
 }
 
-export const OrderDishFragments = {
-	vOb: <ValuesOrBoolean<OrderDish>> {
+export const orderDishFragments: ValuesOrBoolean<OrderDish> = {
+	id: true,
+	amount: true,
+	dish: dishFragments,
+	modifiers: {
 		id: true,
+		dish: dishFragments,
 		amount: true,
-		dish: DishFragments.vOb,
-		modifiers: {
-			id: true,
-			dish: DishFragments.vOb,
-			amount: true,
-			groupId: true,
-		},
-		discountTotal: true,
-		discountType: true,
-		discountAmount: true,
-		discountMessage: true,
-		comment: true,
-		totalWeight: true,
-		itemTotal: true,
-	}
+		groupId: true,
+	},
+	discountTotal: true,
+	discountType: true,
+	discountAmount: true,
+	discountMessage: true,
+	comment: true,
+	totalWeight: true,
+	itemTotal: true,
 };
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<OrderDish>, используемым в запросе OrderDish с сервера.
+ */
+export const ORDER_DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<OrderDish>>(
+	'ORDER_DISH_FRAGMENTS', {
+	providedIn: 'root',
+	factory: () => ({ ...orderDishFragments })
+});

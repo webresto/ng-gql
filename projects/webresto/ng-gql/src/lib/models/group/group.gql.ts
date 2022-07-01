@@ -1,7 +1,8 @@
-import { ImageFragments } from '../image/image.gql';
+import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from '../dish/dish.gql';
 import type { Image } from '../image/image.gql';
-import type { ValuesOrBoolean } from '../values-or-boolean';
+import { imageFragments } from '../image/image.gql';
+import { InjectionToken } from '@angular/core';
 
 export interface Group {
 	id: string;
@@ -17,19 +18,26 @@ export interface Group {
 	dishesPlaceholder: Image | null;
 }
 
-export const GroupFragments = {
-	vOb: <ValuesOrBoolean<Group>> {
+export const groupFragment: ValuesOrBoolean<Group> = {
+	id: true,
+	description: true,
+	name: true,
+	order: true,
+	visible: true,
+	slug: true,
+	discount: true,
+	dishesPlaceholder: imageFragments,
+	parentGroup: {
 		id: true,
-		description: true,
-		name: true,
-		order: true,
-		visible: true,
-		slug: true,
-		discount: true,
-		dishesPlaceholder: ImageFragments.vOb,
-		parentGroup: {
-			id: true,
-			dishesPlaceholder: ImageFragments.vOb
-		}
+		dishesPlaceholder: imageFragments
 	}
 };
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<Group>, используемым в запросе Group с сервера.
+ */
+export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>(
+	'GROUP_FRAGMENTS', {
+	providedIn: 'root',
+		factory: () => ({ ...groupFragment })
+});

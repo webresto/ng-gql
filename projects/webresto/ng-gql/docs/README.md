@@ -62,17 +62,30 @@
 
 ### Variables
 
-- [DishFragments](README.md#dishfragments)
-- [MessageOrActionGql](README.md#messageoractiongql)
-- [GroupModifierFragments](README.md#groupmodifierfragments)
-- [GroupFragments](README.md#groupfragments)
-- [ImageFragments](README.md#imagefragments)
-- [MaintenanceFragment](README.md#maintenancefragment)
-- [ModifierFragments](README.md#modifierfragments)
-- [NavigationFragments](README.md#navigationfragments)
-- [OrderDishFragments](README.md#orderdishfragments)
-- [OrderFragments](README.md#orderfragments)
-- [PaymentMethodFragments](README.md#paymentmethodfragments)
+- [dishFragments](README.md#dishfragments)
+- [DISH\_FRAGMENTS](README.md#dish_fragments)
+- [messageFragments](README.md#messagefragments)
+- [actionFragments](README.md#actionfragments)
+- [MESSAGE\_FRAGMENTS](README.md#message_fragments)
+- [ACTION\_FRAGMENTS](README.md#action_fragments)
+- [groupModifierFragments](README.md#groupmodifierfragments)
+- [GROUP\_MODIFIER\_FRAGMENTS](README.md#group_modifier_fragments)
+- [groupFragment](README.md#groupfragment)
+- [GROUP\_FRAGMENTS](README.md#group_fragments)
+- [imageFragments](README.md#imagefragments)
+- [IMAGE\_FRAGMENTS](README.md#image_fragments)
+- [maintenanceFragments](README.md#maintenancefragments)
+- [MAINTENANCE\_FRAGMENTS](README.md#maintenance_fragments)
+- [modifierFragments](README.md#modifierfragments)
+- [MODIFIER\_FRAGMENTS](README.md#modifier_fragments)
+- [navigationFragments](README.md#navigationfragments)
+- [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
+- [orderDishFragments](README.md#orderdishfragments)
+- [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
+- [orderFragments](README.md#orderfragments)
+- [ORDER\_FRAGMENTS](README.md#order_fragments)
+- [paymentMethodFragments](README.md#paymentmethodfragments)
+- [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
 
 ### Classes
 
@@ -343,13 +356,15 @@ ___
 
 ### ValuesOrBoolean
 
-Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
+Ƭ **ValuesOrBoolean**<`IncomingT`, `ExtT`, `T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Type |
+| :------ | :------ |
+| `IncomingT` | `IncomingT` |
+| `ExtT` | extends `IncomingT` = `IncomingT` |
+| `T` | `ExtT` extends `IncomingT` ? `ExtT` : `never` |
 
 ___
 
@@ -372,136 +387,147 @@ ___
 
 ## Variables
 
-### DishFragments
+### dishFragments
 
-• `Const` **DishFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\> |
+• `Const` **dishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>
 
 ___
 
-### MessageOrActionGql
+### DISH\_FRAGMENTS
 
-• `Const` **MessageOrActionGql**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `messageVob` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\> |
-| `actionVob` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\> |
+• `Const` **DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md)\>\>
 
 ___
 
-### GroupModifierFragments
+### messageFragments
 
-• `Const` **GroupModifierFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\> |
+• `Const` **messageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\>
 
 ___
 
-### GroupFragments
+### actionFragments
 
-• `Const` **GroupFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\> |
+• `Const` **actionFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\>
 
 ___
 
-### ImageFragments
+### MESSAGE\_FRAGMENTS
 
-• `Const` **ImageFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\> |
+• `Const` **MESSAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md)\>\>
 
 ___
 
-### MaintenanceFragment
+### ACTION\_FRAGMENTS
 
-• `Const` **MaintenanceFragment**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\> |
+• `Const` **ACTION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>\>\>
 
 ___
 
-### ModifierFragments
+### groupModifierFragments
 
-• `Const` **ModifierFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\> |
+• `Const` **groupModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\>
 
 ___
 
-### NavigationFragments
+### GROUP\_MODIFIER\_FRAGMENTS
 
-• `Const` **NavigationFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\> |
+• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md), [`GroupModifier`](interfaces/GroupModifier.md), [`GroupModifier`](interfaces/GroupModifier.md)\>\>
 
 ___
 
-### OrderDishFragments
+### groupFragment
 
-• `Const` **OrderDishFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\> |
+• `Const` **groupFragment**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>
 
 ___
 
-### OrderFragments
+### GROUP\_FRAGMENTS
 
-• `Const` **OrderFragments**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\> |
+• `Const` **GROUP\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md)\>\>
 
 ___
 
-### PaymentMethodFragments
+### imageFragments
 
-• `Const` **PaymentMethodFragments**: `Object`
+• `Const` **imageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>
 
-#### Type declaration
+___
 
-| Name | Type |
-| :------ | :------ |
-| `vOb` | [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\> |
+### IMAGE\_FRAGMENTS
+
+• `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md)\>\>
+
+___
+
+### maintenanceFragments
+
+• `Const` **maintenanceFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\>
+
+___
+
+### MAINTENANCE\_FRAGMENTS
+
+• `Const` **MAINTENANCE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md)\>\>
+
+___
+
+### modifierFragments
+
+• `Const` **modifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\>
+
+___
+
+### MODIFIER\_FRAGMENTS
+
+• `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md), [`Modifier`](interfaces/Modifier.md), [`Modifier`](interfaces/Modifier.md)\>\>
+
+___
+
+### navigationFragments
+
+• `Const` **navigationFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>
+
+___
+
+### NAVIGATION\_FRAGMENTS
+
+• `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md)\>\>
+
+___
+
+### orderDishFragments
+
+• `Const` **orderDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\>
+
+___
+
+### ORDER\_DISH\_FRAGMENTS
+
+• `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md), [`OrderDish`](interfaces/OrderDish.md), [`OrderDish`](interfaces/OrderDish.md)\>\>
+
+___
+
+### orderFragments
+
+• `Const` **orderFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### ORDER\_FRAGMENTS
+
+• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md), [`Order`](interfaces/Order.md), [`Order`](interfaces/Order.md)\>\>
+
+___
+
+### paymentMethodFragments
+
+• `Const` **paymentMethodFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>
+
+___
+
+### PAYMENT\_METHOD\_FRAGMENTS
+
+• `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
 
 ## Events
 

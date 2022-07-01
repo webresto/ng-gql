@@ -11,7 +11,7 @@
  *   2. Если значение T[K] - "сложный" тип обьекта (НО НЕ МАССИВ!) - вложенный объект, формируемый по аналогичной схеме.
  *   3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.
  */
-export type ValuesOrBoolean<T> = {
+export type ValuesOrBoolean<IncomingT, ExtT extends IncomingT = IncomingT, T = ExtT extends IncomingT ? ExtT : never> = {
   [ K in keyof Partial<T> ]: true | (
     T[ K ] extends string | number | bigint | symbol | boolean | undefined | null ?
     true :

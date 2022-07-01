@@ -1,12 +1,13 @@
 import type { PaymentMethod } from '../payment-method/payment-method.gql';
-import type { OrderDish } from '../order-dish/order-dish.gql';
-import { OrderDishFragments } from '../order-dish/order-dish.gql';
 import type { OrderModifier } from '../modifier/modifier.gql';
 import type { Message, Action } from '../event-message/event-message';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from '../dish/dish.gql';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 import type { Customer } from '../customer/customer';
+import type { OrderDish } from '../order-dish/order-dish.gql';
+import { orderDishFragments } from '../order-dish/order-dish.gql';
+import { InjectionToken } from '@angular/core';
 
 /**
  * @alias OrderState
@@ -110,36 +111,6 @@ export interface CheckResponse {
 	action: Action | null;
 }
 
-export const OrderFragments = {
-	vOb: <ValuesOrBoolean<Order>> {
-		id: true,
-		shortId: true,
-		dishesCount: true,
-		comment: true,
-		deliveryDescription: true,
-		message: true,
-		deliveryCost: true,
-		totalWeight: true,
-		total: true,
-		orderTotal: true,
-		discountTotal: true,
-		state: true,
-		trifleFrom: true,
-		customData: true,
-		customer: true,
-		address: true,
-		rmsId: true,
-		rmsOrderNumber: true,
-		rmsDeliveryDate: true,
-		dishes: OrderDishFragments.vOb,
-		rmsDelivered: true,
-		paymentMethod: {
-			id: true,
-			title: true
-		}
-	}
-};
-
 export type OrderAdditionalFields = {
 	selfService: boolean,
 	pickupAddressId?: string | undefined,
@@ -153,3 +124,40 @@ export type OrderAdditionalFields = {
 };
 
 export type OrderForm = Order & OrderAdditionalFields;
+
+export const orderFragments: ValuesOrBoolean<Order> = {
+	id: true,
+	shortId: true,
+	dishesCount: true,
+	comment: true,
+	deliveryDescription: true,
+	message: true,
+	deliveryCost: true,
+	totalWeight: true,
+	total: true,
+	orderTotal: true,
+	discountTotal: true,
+	state: true,
+	trifleFrom: true,
+	customData: true,
+	customer: true,
+	address: true,
+	rmsId: true,
+	rmsOrderNumber: true,
+	rmsDeliveryDate: true,
+	dishes: orderDishFragments,
+	rmsDelivered: true,
+	paymentMethod: {
+		id: true,
+		title: true
+	}
+};
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<Order>, используемым в запросе Order с сервера.
+ */
+export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>(
+	'ORDER_FRAGMENTS', {
+	providedIn: 'root',
+	factory: () => ({ ...orderFragments })
+});

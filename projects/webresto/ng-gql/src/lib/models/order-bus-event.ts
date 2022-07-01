@@ -101,5 +101,3 @@ export type StorageOrderTokenSetOrderId = {
 export type StorageOrderTokenRemoveOrderId = {
   event: 'removeOrderId';
 };
-
-

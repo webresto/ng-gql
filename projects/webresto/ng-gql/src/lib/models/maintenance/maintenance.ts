@@ -1,3 +1,4 @@
+import { InjectionToken } from '@angular/core';
 import type { BaseModelWithCustomData } from "../base/base-model-with-custom-data";
 import type { ValuesOrBoolean } from "../values-or-boolean";
 
@@ -14,14 +15,21 @@ export interface Maintenance extends BaseModelWithCustomData {
   stopDate: string;
 }
 
-export const MaintenanceFragment = {
-  vOb: <ValuesOrBoolean<Maintenance>> {
-    id: true,
-    title: true,
-    description: true,
-    enable: true,
-    startDate: true,
-    stopDate: true,
-    customData: true
-  }
+export const maintenanceFragments: ValuesOrBoolean<Maintenance> = {
+  id: true,
+  title: true,
+  description: true,
+  enable: true,
+  startDate: true,
+  stopDate: true,
+  customData: true
 };
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<Maintenance>, используемым в запросе Maintenance с сервера.
+ */
+export const MAINTENANCE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Maintenance>>(
+  'MAINTENANCE_FRAGMENTS', {
+  providedIn: 'root',
+  factory: () => ({ ...maintenanceFragments })
+});

@@ -31,7 +31,7 @@
 
 ### constructor
 
-• **new NgGqlService**(`apollo`, `config`)
+• **new NgGqlService**(`apollo`, `config`, `navigationFragments`, `maintenanceFragment`, `groupFragments`, `dishFragments`)
 
 #### Parameters
 
@@ -39,6 +39,10 @@
 | :------ | :------ |
 | `apollo` | [`ApolloService`](ApolloService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
+| `navigationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Navigation`](../interfaces/Navigation.md), [`Navigation`](../interfaces/Navigation.md), [`Navigation`](../interfaces/Navigation.md)\> |
+| `maintenanceFragment` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Maintenance`](../interfaces/Maintenance.md), [`Maintenance`](../interfaces/Maintenance.md), [`Maintenance`](../interfaces/Maintenance.md)\> |
+| `groupFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Group`](../interfaces/Group.md), [`Group`](../interfaces/Group.md), [`Group`](../interfaces/Group.md)\> |
+| `dishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Dish`](../interfaces/Dish.md), [`Dish`](../interfaces/Dish.md), [`Dish`](../interfaces/Dish.md)\> |
 
 ## Methods
 
@@ -210,7 +214,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `N` |  |
-| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |  |
+| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`, `T`, `T` extends `T` ? `T` : `never`\> |  |
 | `variables?` | `V` |  |
 | `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> |  |
 
@@ -237,7 +241,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `N` |  |
-| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |  |
+| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`, `T`, `T` extends `T` ? `T` : `never`\> |  |
 | `variables` | `V` |  |
 | `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> |  |
 
@@ -264,7 +268,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `name` | `N` |  |
-| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |  |
+| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`, `T`, `T` extends `T` ? `T` : `never`\> |  |
 | `variables?` | `V` |  |
 | `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> |  |
 | `extra?` | `ExtraSubscriptionOptions` | - |
@@ -295,7 +299,7 @@ ___
 | :------ | :------ | :------ |
 | `nameQuery` | `NQuery` |  |
 | `nameSubscribe` | `NSubscribe` |  |
-| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\> |  |
+| `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`, `T`, `T` extends `T` ? `T` : `never`\> |  |
 | `uniqueKeyForCompareItem` | keyof `T` |  |
 | `variables?` | `Object` |  |
 | `variables.query?` | `VQ` | - |

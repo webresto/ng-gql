@@ -2,8 +2,8 @@ import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
-import type { NgGqlConfig, Action, Message, OrderInput, CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier } from '../models';
-import { isValue, isEqualItems, MessageOrActionGql, OrderFragments, PaymentMethodFragments } from '../models';
+import { NgGqlConfig, Action, Message, OrderInput, CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier, PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../models';
+import { isValue, isEqualItems } from '../models';
 import { NgGqlService } from './ng-gql.service';
 
 @Injectable({
@@ -13,7 +13,11 @@ export class NgOrderService {
 
   constructor(
     private ngGqlService: NgGqlService,
-    @Inject('config') private config: NgGqlConfig
+    @Inject('config') private config: NgGqlConfig,
+    @Inject(PAYMENT_METHOD_FRAGMENTS) private paymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
+    @Inject(ACTION_FRAGMENTS) private actionFragment: ValuesOrBoolean<Action>,
+    @Inject(MESSAGE_FRAGMENTS) private messageFragments: ValuesOrBoolean<Message>,
+    @Inject(ORDER_FRAGMENTS) private orderFragments: ValuesOrBoolean<Order>,
   ) { }
 
   /**
@@ -127,7 +131,7 @@ export class NgOrderService {
 
   getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
     return this.ngGqlService.customQuery$<PaymentMethod, 'paymentMethod', { orderId: string; }>(
-      'paymentMethod', PaymentMethodFragments.vOb, { orderId: orderId ?? '' }, {
+      'paymentMethod', this.paymentMethodFragments, { orderId: orderId ?? '' }, {
       fieldsTypeMap: new Map([
         [ 'orderId', 'String!' ]
       ])
@@ -231,7 +235,7 @@ export class NgOrderService {
     switchMap(
       order => this.ngGqlService.customSubscribe$<Action, 'action', {
         orderId: string;
-      }>('action', MessageOrActionGql.actionVob, { orderId: order.id })
+      }>('action', this.actionFragment, { orderId: order.id })
     ),
     mergeWith(this._eventAction.asObservable()),
     shareReplay(1)
@@ -247,7 +251,7 @@ export class NgOrderService {
     switchMap(
       order => this.ngGqlService.customSubscribe$<Message, 'message', {
         orderId: string;
-      }>('message', MessageOrActionGql.messageVob, { orderId: order.id })
+      }>('message', this.messageFragments, { orderId: order.id })
     ),
     mergeWith(this._eventMessage.asObservable()),
     shareReplay(1)
@@ -264,7 +268,7 @@ export class NgOrderService {
   *  */
   loadOrder$(orderId: string | undefined): Observable<Order> {
     const customvOb = this.config.customFields?.[ 'Order' ];
-    const vOb = customvOb ? { ...OrderFragments.vOb, ...customvOb } : OrderFragments.vOb;
+    const vOb = customvOb ? { ...this.orderFragments, ...customvOb } : this.orderFragments;
     return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | undefined>('order', 'order', vOb, 'id', orderId ? {
       query: {
         orderId
@@ -615,7 +619,7 @@ export class NgOrderService {
 
   private addDishToOrder$(data: AddToOrderInput): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'orderAddDish', AddToOrderInput>(
-      'orderAddDish', OrderFragments.vOb, data
+      'orderAddDish', this.orderFragments, data
     ).pipe(
       map(
         data => data.orderAddDish
@@ -624,7 +628,7 @@ export class NgOrderService {
   };
 
   private removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>('orderRemoveDish', OrderFragments.vOb, data, { requiredFields: [ 'orderDishId', 'id' ] }).pipe(
+    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>('orderRemoveDish', this.orderFragments, data, { requiredFields: [ 'orderDishId', 'id' ] }).pipe(
       map(
         data => data.orderRemoveDish
       )
@@ -634,7 +638,7 @@ export class NgOrderService {
   private updateOrder$(order: Partial<Order>): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'orderUpdate', {
       order: Partial<Order>;
-    }>('orderUpdate', OrderFragments.vOb, { order }).pipe(
+    }>('orderUpdate', this.orderFragments, { order }).pipe(
       map(
         data => data.orderUpdate
       )
@@ -643,9 +647,9 @@ export class NgOrderService {
 
   private sendOrder$(orderId: string): Observable<CheckResponse> {
     return this.ngGqlService.customMutation$<CheckResponse, 'sendOrder', OrderInput>('sendOrder', <ValuesOrBoolean<CheckResponse>> {
-      order: OrderFragments.vOb,
-      message: MessageOrActionGql.messageVob,
-      action: MessageOrActionGql.actionVob
+      order: this.orderFragments,
+      message: this.messageFragments,
+      action: this.actionFragment
     }, {
       orderId
     }, {
@@ -659,9 +663,9 @@ export class NgOrderService {
 
   private checkOrder$(data: CheckOrderInput): Observable<CheckResponse> {
     return this.ngGqlService.customMutation$<CheckResponse, 'checkOrder', CheckOrderInput>('checkOrder', {
-      order: OrderFragments.vOb,
-      message: MessageOrActionGql.messageVob,
-      action: MessageOrActionGql.actionVob
+      order: this.orderFragments,
+      message: this.messageFragments,
+      action: this.actionFragment
     }, data, {
       requiredFields: [ 'orderId', 'paymentMethodId', 'customer' ],
       fieldsTypeMap: new Map([
@@ -677,7 +681,7 @@ export class NgOrderService {
 
   private setDishAmount$(data: RemoveOrSetAmountToDish): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'orderSetDishAmount', RemoveOrSetAmountToDish>(
-      'orderSetDishAmount', OrderFragments.vOb, data,
+      'orderSetDishAmount', this.orderFragments, data,
     ).pipe(
       map(
         data => data.orderSetDishAmount
@@ -686,7 +690,7 @@ export class NgOrderService {
   };
 
   private setDishComment$(data: SetDishCommentInput<number>): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderSetDishComment', SetDishCommentInput<number>>('orderSetDishComment', OrderFragments.vOb, data).pipe(
+    return this.ngGqlService.customMutation$<Order, 'orderSetDishComment', SetDishCommentInput<number>>('orderSetDishComment', this.orderFragments, data).pipe(
       map(
         data => data.orderSetDishComment
       )

@@ -1,3 +1,4 @@
+import { InjectionToken } from '@angular/core';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
 /**
@@ -55,13 +56,19 @@ export interface NavigationsOptions {
 	| `onepagebynavigationmenu`; //Построение из меню которое пришло в navigation_menu где все разделы аккамулируются на одной странице, акамуляция происходит по массиву из `navigation_menu` с учетом очереди
 }
 
-
-export const NavigationFragments = {
-	vOb: <ValuesOrBoolean<Navigation>> {
-		mnemonicId: true,
-		description: true,
-		options: true,
-		id: true,
-		navigation_menu: true
-	}
+export const navigationFragments: ValuesOrBoolean<Navigation> = {
+	mnemonicId: true,
+	description: true,
+	options: true,
+	id: true,
+	navigation_menu: true
 };
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
+ */
+export const NAVIGATION_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Navigation>>(
+	'NAVIGATION_FRAGMENTS', {
+	providedIn: 'root',
+		factory: () => ({ ...navigationFragments })
+});

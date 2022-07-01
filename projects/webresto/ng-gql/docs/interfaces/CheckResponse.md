@@ -24,4 +24,4 @@ ___
 
 ### action
 
-• **action**: ``null`` \| [`Action`](Action.md)
+• **action**: ``null`` \| [`Action`](Action.md)<`any`\>

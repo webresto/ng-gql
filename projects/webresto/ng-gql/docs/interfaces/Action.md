@@ -1,4 +1,10 @@
-# Interface: Action
+# Interface: Action<T\>
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | `any` |
 
 ## Table of contents
 
@@ -17,4 +23,4 @@ ___
 
 ### data
 
-• **data**: `any`
+• **data**: `T`

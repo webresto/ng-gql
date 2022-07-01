@@ -1,6 +1,7 @@
-import { ImageFragments } from '../image/image.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from "../dish/dish.gql";
+import { imageFragments } from '../image/image.gql';
+import { InjectionToken } from '@angular/core';
 
 export interface OrderModifier {
 	id: string;
@@ -19,26 +20,35 @@ export interface Modifier {
 	dish: Dish;
 }
 
-export const ModifierFragments = {
-	vOb: <ValuesOrBoolean<Modifier>> {
-		modifierId: true,
-		maxAmount: true,
-		minAmount: true,
-		defaultAmount: true,
-		dish: {
+export const modifierFragments: ValuesOrBoolean<Modifier> = {
+	modifierId: true,
+	maxAmount: true,
+	minAmount: true,
+	defaultAmount: true,
+	dish: {
+		id: true,
+		name: true,
+		description: true,
+		price: true,
+		weight: true,
+		balance: true,
+		tags: true,
+		groupId: true,
+		parentGroup: {
 			id: true,
-			name: true,
-			description: true,
-			price: true,
-			weight: true,
-			balance: true,
-			tags: true,
-			groupId: true,
-			parentGroup: {
-				id: true,
-				dishesPlaceholder: ImageFragments.vOb
-			},
-			images: ImageFragments.vOb
-		}
+			dishesPlaceholder: imageFragments
+		},
+		images: imageFragments
 	}
-};
+}
+
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<Modifier>, используемым в запросе Modifier с сервера.
+ */
+export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
+	'MODIFIER_FRAGMENTS', {
+	providedIn: 'root',
+		factory: () => ({ ...modifierFragments })
+});
+

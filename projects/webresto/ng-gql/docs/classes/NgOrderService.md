@@ -38,7 +38,7 @@
 
 ### constructor
 
-• **new NgOrderService**(`ngGqlService`, `config`)
+• **new NgOrderService**(`ngGqlService`, `config`, `paymentMethodFragments`, `actionFragment`, `messageFragments`, `orderFragments`)
 
 #### Parameters
 
@@ -46,6 +46,10 @@
 | :------ | :------ |
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
+| `paymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`PaymentMethod`](../interfaces/PaymentMethod.md), [`PaymentMethod`](../interfaces/PaymentMethod.md), [`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
+| `actionFragment` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>, [`Action`](../interfaces/Action.md)<`any`\>, [`Action`](../interfaces/Action.md)<`any`\>\> |
+| `messageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md), [`Message`](../interfaces/Message.md), [`Message`](../interfaces/Message.md)\> |
+| `orderFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Order`](../interfaces/Order.md), [`Order`](../interfaces/Order.md), [`Order`](../interfaces/Order.md)\> |
 
 ## Methods
 
@@ -353,7 +357,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `action` | [`Action`](../interfaces/Action.md) |
+| `action` | [`Action`](../interfaces/Action.md)<`any`\> |
 
 #### Returns
 
@@ -373,11 +377,11 @@ ___
 
 ### getActionEmitter
 
-▸ **getActionEmitter**(): `Observable`<[`Action`](../interfaces/Action.md)\>
+▸ **getActionEmitter**(): `Observable`<[`Action`](../interfaces/Action.md)<`any`\>\>
 
 #### Returns
 
-`Observable`<[`Action`](../interfaces/Action.md)\>
+`Observable`<[`Action`](../interfaces/Action.md)<`any`\>\>
 
 ## Properties
 

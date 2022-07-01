@@ -1,3 +1,4 @@
+import { InjectionToken } from '@angular/core';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
@@ -12,16 +13,23 @@ export interface PaymentMethod extends BaseModelWithCustomData {
 	enable: boolean;
 }
 
-export const PaymentMethodFragments = {
-	vOb: <ValuesOrBoolean<PaymentMethod>> {
-		id: true,
-		type: true,
-		title: true,
-		description: true,
-		isCash: true,
-		adapter: true,
-		order: true,
-		enable: true,
-		customData: true,
-	}
+export const paymentMethodFragments: ValuesOrBoolean<PaymentMethod> = {
+	id: true,
+	type: true,
+	title: true,
+	description: true,
+	isCash: true,
+	adapter: true,
+	order: true,
+	enable: true,
+	customData: true,
 };
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.
+ */
+export const PAYMENT_METHOD_FRAGMENTS = new InjectionToken<ValuesOrBoolean<PaymentMethod>>(
+	'PAYMENT_METHOD_FRAGMENTS', {
+	providedIn: 'root',
+	factory: () => ({ ...paymentMethodFragments })
+});
