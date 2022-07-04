@@ -12,16 +12,16 @@
 
 ### order
 
-• **order**: [`Order`](Order.md)
+• **order**: `Partial`<[`Order`](Order.md)\>
 
 ___
 
 ### message
 
-• **message**: ``null`` \| [`Message`](Message.md)
+• **message**: ``null`` \| `Partial`<[`Message`](Message.md)\>
 
 ___
 
 ### action
 
-• **action**: ``null`` \| [`Action`](Action.md)<`any`\>
+• **action**: ``null`` \| `Partial`<[`Action`](Action.md)<`any`\>\>

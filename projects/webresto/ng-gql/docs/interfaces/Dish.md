@@ -85,7 +85,7 @@ ___
 
 ### tags
 
-• `Optional` **tags**: [`DishTag`](DishTag.md)[]
+• `Optional` **tags**: `Partial`<[`DishTag`](DishTag.md)\>[]
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 ### images
 
-• **images**: [`Image`](Image.md)[]
+• **images**: `Partial`<[`Image`](Image.md)\>[]
 
 ___
 
@@ -109,13 +109,13 @@ ___
 
 ### parentGroup
 
-• **parentGroup**: `Pick`<[`Group`](Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>
+• **parentGroup**: `Partial`<`Pick`<[`Group`](Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>\>
 
 ___
 
 ### modifiers
 
-• `Optional` **modifiers**: [`GroupModifier`](GroupModifier.md)[]
+• `Optional` **modifiers**: `Partial`<[`GroupModifier`](GroupModifier.md)\>[]
 
 ___
 

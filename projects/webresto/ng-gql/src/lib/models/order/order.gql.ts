@@ -1,5 +1,5 @@
 import type { PaymentMethod } from '../payment-method/payment-method.gql';
-import type { OrderModifier } from '../modifier/modifier.gql';
+import type { Modifier, OrderModifier } from '../modifier/modifier.gql';
 import type { Message, Action } from '../event-message/event-message';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from '../dish/dish.gql';
@@ -26,7 +26,7 @@ export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER';
 export interface Order extends BaseModelWithCustomData {
 	id: string;
 	shortId: string;
-	dishes: OrderDish[];
+	dishes: Partial<OrderDish>[];
 	dishesCount: number;
 	comment: string;
 	deliveryDescription: string;
@@ -42,10 +42,10 @@ export interface Order extends BaseModelWithCustomData {
 	rmsOrderNumber?: string;
 	rmsDeliveryDate?: string;
 	rmsDelivered?: boolean;
-	customer: Customer | null;
-	address: Address | null;
+	customer: Partial<Customer> | null;
+	address: Partial<Address> | null;
 	paid?: boolean;
-	paymentMethod: Pick<PaymentMethod, 'id' | 'title'> & Partial<Omit<PaymentMethod, 'id' | 'title'>> | null;
+	paymentMethod: Partial<PaymentMethod> | null;
 }
 
 export interface Address {
@@ -66,7 +66,7 @@ export type AddToOrderInput = {
 	orderId: string,
 	dishId: string,
 	amount?: number,
-	modifiers?: OrderModifier[],
+	modifiers?: Partial<OrderModifier>[] | Partial<Modifier>[],
 	comment?: string,
 	replace?: boolean,
 	orderDishId?: number;
@@ -78,10 +78,10 @@ export type RemoveOrSetAmountToDish = {
 	id: string;
 };
 
-export type SetDishCommentInput<T extends (Dish | number)> = T extends Dish ? {
+export type SetDishCommentInput<T extends (Partial<Dish> | number)> = T extends Partial<Dish> ? {
 	id?: string,
 	comment?: string;
-	dish: Dish;
+	dish: Partial<Dish>;
 } : {
 	id?: string,
 	comment?: string;
@@ -95,8 +95,8 @@ export type CheckOrderInput = {
 	pickupAddressId?: string,
 	locationId?: string,
 	date?: string,
-	address: Address | null,
-	customer: Customer | null,
+	address: Partial<Address> | null,
+	customer: Partial<Customer> | null,
 	comment?: string,
 	notifyMethodId?: string,
 } & Partial<BaseModelWithCustomData>;
@@ -106,9 +106,9 @@ export type OrderInput = {
 };
 
 export interface CheckResponse {
-	order: Order;
-	message: Message | null;
-	action: Action | null;
+	order: Partial<Order>;
+	message: Partial<Message> | null;
+	action: Partial<Action> | null;
 }
 
 export type OrderAdditionalFields = {

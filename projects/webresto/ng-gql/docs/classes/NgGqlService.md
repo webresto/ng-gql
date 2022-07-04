@@ -119,7 +119,7 @@ ___
 
 ### getMenu$
 
-▸ **getMenu$**(`slug`): `Observable`<``null`` \| [`Group`](../interfaces/Group.md)[]\>
+▸ **getMenu$**(`slug`): `Observable`<`undefined` \| ``null`` \| `Partial`<[`Group`](../interfaces/Group.md)\>[]\>
 
 #### Parameters
 
@@ -129,7 +129,7 @@ ___
 
 #### Returns
 
-`Observable`<``null`` \| [`Group`](../interfaces/Group.md)[]\>
+`Observable`<`undefined` \| ``null`` \| `Partial`<[`Group`](../interfaces/Group.md)\>[]\>
 
 ___
 

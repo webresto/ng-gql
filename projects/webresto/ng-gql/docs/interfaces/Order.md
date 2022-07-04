@@ -60,7 +60,7 @@ ___
 
 ### dishes
 
-• **dishes**: [`OrderDish`](OrderDish.md)[]
+• **dishes**: `Partial`<[`OrderDish`](OrderDish.md)\>[]
 
 ___
 
@@ -156,13 +156,13 @@ ___
 
 ### customer
 
-• **customer**: ``null`` \| [`Customer`](Customer.md)
+• **customer**: ``null`` \| `Partial`<[`Customer`](Customer.md)\>
 
 ___
 
 ### address
 
-• **address**: ``null`` \| [`Address`](Address.md)
+• **address**: ``null`` \| `Partial`<[`Address`](Address.md)\>
 
 ___
 
@@ -174,4 +174,4 @@ ___
 
 ### paymentMethod
 
-• **paymentMethod**: ``null`` \| `Pick`<[`PaymentMethod`](PaymentMethod.md), ``"id"`` \| ``"title"``\> & `Partial`<`Omit`<[`PaymentMethod`](PaymentMethod.md), ``"id"`` \| ``"title"``\>\>
+• **paymentMethod**: ``null`` \| `Partial`<[`PaymentMethod`](PaymentMethod.md)\>

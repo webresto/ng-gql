@@ -7,7 +7,7 @@ export interface OrderModifier {
 	id: string;
 	amount?: number;
 	groupId: string;
-	dish: Dish;
+	dish: Partial< Dish>;
 }
 
 export interface Modifier {
@@ -17,7 +17,7 @@ export interface Modifier {
 	minAmount: number;
 	amount?: number;
 	defaultAmount: number;
-	dish: Dish;
+	dish: Partial< Dish>;
 }
 
 export const defaultModifierFragments: ValuesOrBoolean<Modifier> = {

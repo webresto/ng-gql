@@ -52,4 +52,4 @@ ___
 
 ### dish
 
-• **dish**: [`Dish`](Dish.md)
+• **dish**: `Partial`<[`Dish`](Dish.md)\>

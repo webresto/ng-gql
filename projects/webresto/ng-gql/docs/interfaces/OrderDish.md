@@ -34,7 +34,7 @@ ___
 
 ### dish
 
-• **dish**: [`Dish`](Dish.md)
+• **dish**: `Partial`<[`Dish`](Dish.md)\>
 
 ___
 
@@ -94,4 +94,4 @@ ___
 
 ### modifiers
 
-• **modifiers**: [`OrderModifier`](OrderModifier.md)[]
+• **modifiers**: `Partial`<[`OrderModifier`](OrderModifier.md)\>[]

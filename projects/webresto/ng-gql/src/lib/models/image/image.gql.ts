@@ -4,7 +4,7 @@ import type { ValuesOrBoolean } from '../values-or-boolean';
 export interface Image {
 	id: string;
 	uploadDate: string;
-	images: ImageItem;
+	images: Partial<ImageItem>;
 }
 
 export interface ImageItem {

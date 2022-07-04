@@ -11,11 +11,11 @@ export interface Group {
 	slug?: string;
 	visible: boolean;
 	order: number;
-	dishes?: Dish[];
+	dishes?: Partial<Dish>[];
 	discount?: string | null;
-	parentGroup?: Pick<Group, 'id' | 'dishesPlaceholder'>;
-	childGroups: Group[];
-	dishesPlaceholder: Image | null;
+	parentGroup?: Partial<Pick<Group, 'id' | 'dishesPlaceholder'>>;
+	childGroups: Partial<Group>[];
+	dishesPlaceholder: Partial<Image> | null;
 }
 
 export const defaultGroupFragments: ValuesOrBoolean<Group> = {

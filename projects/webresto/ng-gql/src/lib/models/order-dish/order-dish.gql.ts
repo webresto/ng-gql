@@ -7,7 +7,7 @@ import { InjectionToken } from '@angular/core';
 export interface OrderDish {
 	id: number;
 	amount: number;
-	dish: Dish,
+	dish: Partial<Dish>,
 	itemTotal: number;
 	itemTotalBeforeDiscount?: number;
 	discountTotal: number | null;
@@ -17,7 +17,7 @@ export interface OrderDish {
 	comment: string | null;
 	totalWeight: number;
 	total?: number;
-	modifiers: OrderModifier[];
+	modifiers: Partial<OrderModifier>[];
 }
 
 export const defaultOrderDishFragments: ValuesOrBoolean<OrderDish> = {

@@ -16,12 +16,12 @@ export interface Dish extends BaseModelWithCustomData {
 	price: number;
 	weight: number;
 	balance: number;
-	tags?: DishTag[];
+	tags?: Partial<DishTag>[];
 	additionalInfo?: string | number | { [ key: string ]: string | any; } | null;
-	images: Image[];
+	images: Partial<Image>[];
 	groupId?: string;
-	parentGroup: Pick<Group, 'id' | 'dishesPlaceholder'>;
-	modifiers?: GroupModifier[] | undefined;
+	parentGroup: Partial<Pick<Group, 'id' | 'dishesPlaceholder'>>;
+	modifiers?: Partial<GroupModifier>[] | undefined;
 	carbohydrateAmount?: number;
 	carbohydrateFullAmount?: number;
 	energyAmount?: number;

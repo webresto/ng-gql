@@ -195,12 +195,12 @@ export class NgGqlService {
     return {
       ...sourceDish, modifiers: sourceDish.modifiers ? sourceDish.modifiers.map(
         (groupModifier, groupIndex) => ({
-          ...groupModifier, childModifiers: groupModifier.childModifiers.filter(
+          ...groupModifier, childModifiers: groupModifier.childModifiers?.filter(
             childModifier => isValue(childModifier.dish)
           ).map(
             (childModifier, childIndex) => ({
               ...childModifier,
-              amount: groupIndex === 0 && childIndex === 0 && groupModifier.childModifiers.length === 2 && groupModifier.minAmount === 1 && groupModifier.maxAmount === 1 ? 1 : childModifier.defaultAmount ?? 0
+              amount: groupIndex === 0 && childIndex === 0 && groupModifier.childModifiers?.length === 2 && groupModifier.minAmount === 1 && groupModifier.maxAmount === 1 ? 1 : childModifier.defaultAmount ?? 0
             })
           )
         })
@@ -248,12 +248,12 @@ export class NgGqlService {
     switchMap(
       groupsData => {
         const groups = groupsData.groups;
-        const addGroup = (items: Group[], item: Group) => {
+        const addGroup = (items: Partial<Group>[], item: Partial<Group>) => {
           if (!items.find(value => value.id === item.id)) {
             items.push(item);
           }
         };
-        const getGroups = (items: Group[]) => items.reduce<Group[]>(
+        const getGroups = (items: Partial<Group>[]) => items.reduce<Partial<Group>[]>(
           (accumulator, current) => {
             addGroup(accumulator, current);
             if (current.childGroups && current.childGroups.length > 0) {
@@ -289,7 +289,7 @@ export class NgGqlService {
             );
             this._dishes$.next(dishes);
             const groupsById = allNestingsGroups.reduce<{
-              [ key: string ]: Group;
+              [ key: string ]: Partial<Group>;
             }>(
               (accumulator, current) => {
                 if (!current.childGroups) {
@@ -329,8 +329,8 @@ export class NgGqlService {
               groupIdsBySlug[ group.slug! ] = groupId;
               if (!parentGroupId) continue;
               if (!groupsById[ parentGroupId ]) continue;
-              if (groupsById[ parentGroupId ].childGroups.find(chGroup => chGroup.id === group.id)) continue;
-              groupsById[ parentGroupId ].childGroups.push(group);
+              if (groupsById[ parentGroupId ].childGroups?.find(chGroup => chGroup.id === group.id)) continue;
+              groupsById[ parentGroupId ].childGroups?.push(group);
             }
             return { groupsById, groupIdsBySlug };
           }),
@@ -342,7 +342,7 @@ export class NgGqlService {
     distinctUntilChanged((previous, current) => isEqualItems(previous, current))
   );
 
-  getMenu$(slug: string | string[] | undefined): Observable<Group[] | null> {
+  getMenu$(slug: string | string[] | undefined): Observable<Partial<Group>[] |undefined| null> {
     return this.loadedMenu$.pipe(
       map(({ groupsById, groupIdsBySlug }) => {
         if (slug) {
@@ -361,7 +361,7 @@ export class NgGqlService {
               };
           }
         } else {
-          return Object.values(groupsById) as Group[];
+          return Object.values(groupsById) as Partial<Group>[];
         }
       })
     );

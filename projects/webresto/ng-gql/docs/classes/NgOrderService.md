@@ -193,7 +193,7 @@ ___
 | `loading` | `BehaviorSubject`<`boolean`\> | `undefined` |  |
 | `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` |  |
 | `amount` | `number` | `1` |  |
-| `dishModifiers` | [`Modifier`](../interfaces/Modifier.md)[] \| [`OrderModifier`](../interfaces/OrderModifier.md)[] | `[]` |  |
+| `dishModifiers` | `Partial`<[`Modifier`](../interfaces/Modifier.md)\>[] \| `Partial`<[`OrderModifier`](../interfaces/OrderModifier.md)\>[] | `[]` |  |
 | `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` |  |
 | `errorCb?` | (`err`: `unknown`) => `void` | `undefined` |  |
 | `comment?` | `string` | `undefined` | - |

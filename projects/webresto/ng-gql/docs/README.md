@@ -278,7 +278,7 @@ ___
 | `orderId` | `string` |
 | `dishId` | `string` |
 | `amount?` | `number` |
-| `modifiers?` | [`OrderModifier`](interfaces/OrderModifier.md)[] |
+| `modifiers?` | `Partial`<[`OrderModifier`](interfaces/OrderModifier.md)\>[] \| `Partial`<[`Modifier`](interfaces/Modifier.md)\>[] |
 | `comment?` | `string` |
 | `replace?` | `boolean` |
 | `orderDishId?` | `number` |
@@ -301,19 +301,19 @@ ___
 
 ### SetDishCommentInput
 
-Ƭ **SetDishCommentInput**<`T`\>: `T` extends [`Dish`](interfaces/Dish.md) ? { `id?`: `string` ; `comment?`: `string` ; `dish`: [`Dish`](interfaces/Dish.md)  } : { `id?`: `string` ; `comment?`: `string` ; `orderDishId?`: `number`  }
+Ƭ **SetDishCommentInput**<`T`\>: `T` extends `Partial`<[`Dish`](interfaces/Dish.md)\> ? { `id?`: `string` ; `comment?`: `string` ; `dish`: `Partial`<[`Dish`](interfaces/Dish.md)\>  } : { `id?`: `string` ; `comment?`: `string` ; `orderDishId?`: `number`  }
 
 #### Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`Dish`](interfaces/Dish.md) \| `number` |
+| `T` | extends `Partial`<[`Dish`](interfaces/Dish.md)\> \| `number` |
 
 ___
 
 ### CheckOrderInput
 
-Ƭ **CheckOrderInput**: { `orderId`: `string` ; `paymentMethodId?`: `string` ; `selfService`: `boolean` ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `date?`: `string` ; `address`: [`Address`](interfaces/Address.md) \| ``null`` ; `customer`: [`Customer`](interfaces/Customer.md) \| ``null`` ; `comment?`: `string` ; `notifyMethodId?`: `string`  } & `Partial`<[`BaseModelWithCustomData`](interfaces/BaseModelWithCustomData.md)\>
+Ƭ **CheckOrderInput**: { `orderId`: `string` ; `paymentMethodId?`: `string` ; `selfService`: `boolean` ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `date?`: `string` ; `address`: `Partial`<[`Address`](interfaces/Address.md)\> \| ``null`` ; `customer`: `Partial`<[`Customer`](interfaces/Customer.md)\> \| ``null`` ; `comment?`: `string` ; `notifyMethodId?`: `string`  } & `Partial`<[`BaseModelWithCustomData`](interfaces/BaseModelWithCustomData.md)\>
 
 ___
 

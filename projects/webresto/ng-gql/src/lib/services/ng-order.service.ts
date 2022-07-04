@@ -459,7 +459,7 @@ export class NgOrderService {
     loading: BehaviorSubject<boolean>,
     dish: Dish,
     amount: number = 1,
-    dishModifiers: Modifier[] | OrderModifier[] = [],
+    dishModifiers: Partial<OrderModifier>[] | Partial<Modifier>[] = [],
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void,
     comment?: string,
@@ -471,10 +471,10 @@ export class NgOrderService {
         dishId: dish.id,
         modifiers: dishModifiers.map(
           dishModifier => ({
-            id: 'id' in dishModifier ? dishModifier.id : dishModifier.modifierId,
+            id: 'id' in dishModifier ? dishModifier.id : (<Partial<Modifier>> dishModifier).modifierId,
             amount: dishModifier.amount,
             dish: dishModifier.dish,
-            groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish.groupId
+            groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId
           })
         ),
         amount,

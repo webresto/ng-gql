@@ -32,20 +32,13 @@ ___
 
 ### childModifiers
 
-• **childModifiers**: [`Modifier`](Modifier.md)[]
+• **childModifiers**: `Partial`<[`Modifier`](Modifier.md)\>[]
 
 ___
 
 ### group
 
-• **group**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `id` | `string` |
-| `name` | `string` |
+• **group**: `Partial`<{ `id`: `string` ; `name`: `string`  }\>
 
 ___
 
@@ -117,7 +110,7 @@ ___
 
 ### dish
 
-• **dish**: [`Dish`](Dish.md)
+• **dish**: `Partial`<[`Dish`](Dish.md)\>
 
 #### Inherited from
 
