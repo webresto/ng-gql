@@ -457,7 +457,7 @@ export class NgOrderService {
   */
   addToOrder(
     loading: BehaviorSubject<boolean>,
-    dish: Dish,
+    dish: Partial<Dish> | string,
     amount: number = 1,
     dishModifiers: Partial<OrderModifier>[] | Partial<Modifier>[] = [],
     successCb?: (order: Order) => void,
@@ -466,23 +466,29 @@ export class NgOrderService {
     replacedOrderDishId?: number,
   ) {
     loading.next(true);
-    this._orderBus$.emit({
-      event: 'add', loading, successCb, errorCb, data: {
-        dishId: dish.id,
-        modifiers: dishModifiers.map(
-          dishModifier => ({
-            id: 'id' in dishModifier ? dishModifier.id : (<Partial<Modifier>> dishModifier).modifierId,
-            amount: dishModifier.amount,
-            dish: dishModifier.dish,
-            groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId
-          })
-        ),
-        amount,
-        comment,
-        replace: isValue(replacedOrderDishId),
-        orderDishId: replacedOrderDishId
-      }
-    });
+    const dishId = typeof dish == 'string' ? dish : dish.id;
+    if (isValue(dishId)) {
+      this._orderBus$.emit({
+        event: 'add', loading, successCb, errorCb, data: {
+          dishId,
+          modifiers: dishModifiers.map(
+            dishModifier => ({
+              id: 'id' in dishModifier ? dishModifier.id : (<Partial<Modifier>> dishModifier).modifierId,
+              amount: dishModifier.amount,
+              dish: dishModifier.dish,
+              groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId
+            })
+          ),
+          amount,
+          comment,
+          replace: isValue(replacedOrderDishId),
+          orderDishId: replacedOrderDishId
+        }
+      });
+    } else {
+      throw new Error('Не передан dishid');
+    }
+
   }
 
   /**
