@@ -1,5 +1,5 @@
-import { imageFragments } from '../image/image.gql';
-import { groupModifierFragments } from '../group-modifier/group-modifier.gql';
+import { defaultImageFragments } from '../image/image.gql';
+import { defaultGroupModifierFragments } from '../group-modifier/group-modifier.gql';
 import type { GroupModifier } from '../group-modifier/group-modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Image } from "../image/image.gql";
@@ -39,7 +39,7 @@ export interface DishTag {
 	name: string;
 }
 
-export const dishFragments: ValuesOrBoolean<Dish> = {
+export const defaultDishFragments: ValuesOrBoolean<Dish> = {
 	customData: true,
 	id: true,
 	name: true,
@@ -60,12 +60,12 @@ export const dishFragments: ValuesOrBoolean<Dish> = {
 	fiberAmount: true,
 	fiberFullAmount: true,
 	measureUnit: true,
-	images: imageFragments,
-	modifiers: groupModifierFragments,
+	images: defaultImageFragments,
+	modifiers: defaultGroupModifierFragments,
 	groupId: true,
 	parentGroup: {
 		id: true,
-		dishesPlaceholder: imageFragments
+		dishesPlaceholder: defaultImageFragments
 	}
 };
 
@@ -75,5 +75,5 @@ export const dishFragments: ValuesOrBoolean<Dish> = {
 export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>(
 	'DISH_FRAGMENTS', {
 	providedIn: 'root',
-	factory: () => ({ ...dishFragments })
+	factory: () => ({ ...defaultDishFragments })
 });

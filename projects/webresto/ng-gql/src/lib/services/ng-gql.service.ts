@@ -49,10 +49,10 @@ export class NgGqlService {
   constructor(
     private apollo: ApolloService,
     @Inject('config') private config: NgGqlConfig,
-    @Inject(NAVIGATION_FRAGMENTS) private navigationFragments: ValuesOrBoolean<Navigation>,
-    @Inject(MAINTENANCE_FRAGMENTS) private maintenanceFragment: ValuesOrBoolean<Maintenance>,
-    @Inject(GROUP_FRAGMENTS) private groupFragments: ValuesOrBoolean<Group>,
-    @Inject(DISH_FRAGMENTS) private dishFragments: ValuesOrBoolean<Dish>,
+    @Inject(NAVIGATION_FRAGMENTS) private defaultNavigationFragments: ValuesOrBoolean<Navigation>,
+    @Inject(MAINTENANCE_FRAGMENTS) private defaultMaintenanceFragments: ValuesOrBoolean<Maintenance>,
+    @Inject(GROUP_FRAGMENTS) private defaultGroupFragments: ValuesOrBoolean<Group>,
+    @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>,
   ) {
   }
 
@@ -107,7 +107,7 @@ export class NgGqlService {
       (<BehaviorSubject<NavigationLoader<Navigation>>> this._navigationLoader$).next({
         nameQuery: 'navigation',
         nameSubscribe: 'navigation',
-        queryObject: customvOb ? { ... this.navigationFragments, ...customvOb } : this.navigationFragments,
+        queryObject: customvOb ? { ... this.defaultNavigationFragments, ...customvOb } : this.defaultNavigationFragments,
         uniqueKeyForCompareItem: 'mnemonicId'
       });
     };
@@ -117,7 +117,7 @@ export class NgGqlService {
 
   getMaintenance$(): Observable<Maintenance> {
     const customvOb = this.config.customFields?.[ 'Maintenance' ];
-    const vOb = customvOb ? { ...this.maintenanceFragment, ...customvOb } : this.maintenanceFragment;
+    const vOb = customvOb ? { ...this.defaultMaintenanceFragments, ...customvOb } : this.defaultMaintenanceFragments;
     return this.queryAndSubscribe('maintenance', 'maintenance', vOb, 'id').pipe(
       filter(result => result.length > 0),
       map(
@@ -214,7 +214,7 @@ export class NgGqlService {
         const rootGroups = rootGroupsData.groups;
         const nesting = this.config.nesting ?? 2;
         const customvOb = this.config.customFields?.[ 'Group' ];
-        const vOb = customvOb ? { ...this.groupFragments, ...customvOb } : this.groupFragments;
+        const vOb = isValue(customvOb) ? { ...this.defaultGroupFragments, ...customvOb } : this.defaultGroupFragments;
         const queryObject: ValuesOrBoolean<Group> = new Array(nesting).fill(nesting).reduce(
           (accumulator: ValuesOrBoolean<Group>) => {
             const item = { ...vOb };
@@ -222,7 +222,7 @@ export class NgGqlService {
             return item;
           }, { ...vOb, childGroups: { ...vOb } }
         );
-        const criteria = !!rootGroups[ 0 ]?.id ? {
+        const criteria = isValue(rootGroups[ 0 ]?.id) ? {
           id: rootGroups.map(rootGroup => rootGroup.id),
           concept: rootGroupsData.concept
         } : {
@@ -268,7 +268,7 @@ export class NgGqlService {
         const allNestingsIds = allNestingsGroups.map(group => group.id);
         console.log(allNestingsGroups);
         const customvObDish = this.config.customFields?.[ 'Dish' ];
-        const vOb = customvObDish ? { ...this.dishFragments, ...customvObDish } : this.dishFragments;
+        const vOb = customvObDish ? { ...this.defaultDishFragments, ...customvObDish } : this.defaultDishFragments;
         return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', vOb, 'id', {
           query: {
             criteria: {
@@ -380,7 +380,7 @@ export class NgGqlService {
         } else {
           const dishesNotInStock = ids.filter(dishId => !dishes.find(dish => dish.id === dishId));
           const customvObDish = this.config.customFields?.[ 'Dish' ];
-          const vOb = customvObDish ? { ...this.dishFragments, ...customvObDish } : this.dishFragments;
+          const vOb = customvObDish ? { ...this.defaultDishFragments, ...customvObDish } : this.defaultDishFragments;
           return this.customQuery$<Dish, 'dish', VCriteria>('dish', vOb, {
             criteria: {
               id: dishesNotInStock

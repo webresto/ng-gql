@@ -38,7 +38,7 @@
 
 ### constructor
 
-• **new NgOrderService**(`ngGqlService`, `config`, `paymentMethodFragments`, `actionFragment`, `messageFragments`, `orderFragments`)
+• **new NgOrderService**(`ngGqlService`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
 
 #### Parameters
 
@@ -46,10 +46,10 @@
 | :------ | :------ |
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
-| `paymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`PaymentMethod`](../interfaces/PaymentMethod.md), [`PaymentMethod`](../interfaces/PaymentMethod.md), [`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
-| `actionFragment` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>, [`Action`](../interfaces/Action.md)<`any`\>, [`Action`](../interfaces/Action.md)<`any`\>\> |
-| `messageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md), [`Message`](../interfaces/Message.md), [`Message`](../interfaces/Message.md)\> |
-| `orderFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Order`](../interfaces/Order.md), [`Order`](../interfaces/Order.md), [`Order`](../interfaces/Order.md)\> |
+| `defaultPaymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`PaymentMethod`](../interfaces/PaymentMethod.md), [`PaymentMethod`](../interfaces/PaymentMethod.md), [`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
+| `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>, [`Action`](../interfaces/Action.md)<`any`\>, [`Action`](../interfaces/Action.md)<`any`\>\> |
+| `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md), [`Message`](../interfaces/Message.md), [`Message`](../interfaces/Message.md)\> |
+| `defaultOrderFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Order`](../interfaces/Order.md), [`Order`](../interfaces/Order.md), [`Order`](../interfaces/Order.md)\> |
 
 ## Methods
 

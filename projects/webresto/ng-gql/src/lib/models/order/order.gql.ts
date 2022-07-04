@@ -6,7 +6,7 @@ import type { Dish } from '../dish/dish.gql';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 import type { Customer } from '../customer/customer';
 import type { OrderDish } from '../order-dish/order-dish.gql';
-import { orderDishFragments } from '../order-dish/order-dish.gql';
+import { defaultOrderDishFragments } from '../order-dish/order-dish.gql';
 import { InjectionToken } from '@angular/core';
 
 /**
@@ -125,7 +125,7 @@ export type OrderAdditionalFields = {
 
 export type OrderForm = Order & OrderAdditionalFields;
 
-export const orderFragments: ValuesOrBoolean<Order> = {
+export const defaultOrderFragments: ValuesOrBoolean<Order> = {
 	id: true,
 	shortId: true,
 	dishesCount: true,
@@ -145,7 +145,7 @@ export const orderFragments: ValuesOrBoolean<Order> = {
 	rmsId: true,
 	rmsOrderNumber: true,
 	rmsDeliveryDate: true,
-	dishes: orderDishFragments,
+	dishes: defaultOrderDishFragments,
 	rmsDelivered: true,
 	paymentMethod: {
 		id: true,
@@ -159,5 +159,5 @@ export const orderFragments: ValuesOrBoolean<Order> = {
 export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>(
 	'ORDER_FRAGMENTS', {
 	providedIn: 'root',
-	factory: () => ({ ...orderFragments })
+	factory: () => ({ ...defaultOrderFragments })
 });

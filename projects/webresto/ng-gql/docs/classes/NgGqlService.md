@@ -31,7 +31,7 @@
 
 ### constructor
 
-• **new NgGqlService**(`apollo`, `config`, `navigationFragments`, `maintenanceFragment`, `groupFragments`, `dishFragments`)
+• **new NgGqlService**(`apollo`, `config`, `defaultNavigationFragments`, `defaultMaintenanceFragments`, `defaultGroupFragments`, `defaultDishFragments`)
 
 #### Parameters
 
@@ -39,10 +39,10 @@
 | :------ | :------ |
 | `apollo` | [`ApolloService`](ApolloService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
-| `navigationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Navigation`](../interfaces/Navigation.md), [`Navigation`](../interfaces/Navigation.md), [`Navigation`](../interfaces/Navigation.md)\> |
-| `maintenanceFragment` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Maintenance`](../interfaces/Maintenance.md), [`Maintenance`](../interfaces/Maintenance.md), [`Maintenance`](../interfaces/Maintenance.md)\> |
-| `groupFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Group`](../interfaces/Group.md), [`Group`](../interfaces/Group.md), [`Group`](../interfaces/Group.md)\> |
-| `dishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Dish`](../interfaces/Dish.md), [`Dish`](../interfaces/Dish.md), [`Dish`](../interfaces/Dish.md)\> |
+| `defaultNavigationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Navigation`](../interfaces/Navigation.md), [`Navigation`](../interfaces/Navigation.md), [`Navigation`](../interfaces/Navigation.md)\> |
+| `defaultMaintenanceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Maintenance`](../interfaces/Maintenance.md), [`Maintenance`](../interfaces/Maintenance.md), [`Maintenance`](../interfaces/Maintenance.md)\> |
+| `defaultGroupFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Group`](../interfaces/Group.md), [`Group`](../interfaces/Group.md), [`Group`](../interfaces/Group.md)\> |
+| `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Dish`](../interfaces/Dish.md), [`Dish`](../interfaces/Dish.md), [`Dish`](../interfaces/Dish.md)\> |
 
 ## Methods
 

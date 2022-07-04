@@ -1,4 +1,4 @@
-import { modifierFragments } from '../modifier/modifier.gql';
+import { defaultModifierFragments } from '../modifier/modifier.gql';
 import type { Modifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import {  InjectionToken } from '@angular/core';
@@ -13,12 +13,12 @@ export interface GroupModifier extends Exclude<Modifier, 'amount' | 'defaultAmou
 	totalAmount: number;
 }
 
-export const groupModifierFragments: ValuesOrBoolean<GroupModifier> = {
+export const defaultGroupModifierFragments: ValuesOrBoolean<GroupModifier> = {
 	modifierId: true,
 	maxAmount: true,
 	minAmount: true,
 	required: true,
-	childModifiers: modifierFragments,
+	childModifiers: defaultModifierFragments,
 	group: {
 		id: true,
 		name: true,
@@ -31,6 +31,6 @@ export const groupModifierFragments: ValuesOrBoolean<GroupModifier> = {
 export const GROUP_MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<GroupModifier>>(
 	'GROUP_MODIFIER_FRAGMENTS', {
 	providedIn: 'root',
-		factory: () => (groupModifierFragments)
+		factory: () => (defaultGroupModifierFragments)
 });
 

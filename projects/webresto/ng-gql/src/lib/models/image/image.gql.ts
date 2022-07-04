@@ -13,7 +13,7 @@ export interface ImageItem {
 	small: string | null;
 }
 
-export const imageFragments: ValuesOrBoolean<Image> = {
+export const defaultImageFragments: ValuesOrBoolean<Image> = {
 	id: true,
 	uploadDate: true,
 	images: true,
@@ -25,5 +25,5 @@ export const imageFragments: ValuesOrBoolean<Image> = {
 export const IMAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Image>>(
 	'IMAGE_FRAGMENTS', {
 	providedIn: 'root',
-	factory: () => ({ ...imageFragments })
+	factory: () => ({ ...defaultImageFragments })
 });

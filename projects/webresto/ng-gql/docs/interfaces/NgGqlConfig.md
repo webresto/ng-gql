@@ -11,6 +11,8 @@
 - [customFields](NgGqlConfig.md#customfields)
 - [orderIdStorageToken](NgGqlConfig.md#orderidstoragetoken)
 - [phoneCode](NgGqlConfig.md#phonecode)
+- [usePersistCache](NgGqlConfig.md#usepersistcache)
+- [apolloCacheConfig](NgGqlConfig.md#apollocacheconfig)
 
 ## Properties
 
@@ -57,3 +59,15 @@ ___
 ### phoneCode
 
 • **phoneCode**: ``null`` \| `string`
+
+___
+
+### usePersistCache
+
+• `Optional` **usePersistCache**: `boolean`
+
+___
+
+### apolloCacheConfig
+
+• `Optional` **apolloCacheConfig**: `InMemoryCacheConfig`

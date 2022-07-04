@@ -1,6 +1,6 @@
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from "../dish/dish.gql";
-import { imageFragments } from '../image/image.gql';
+import { defaultImageFragments } from '../image/image.gql';
 import { InjectionToken } from '@angular/core';
 
 export interface OrderModifier {
@@ -20,7 +20,7 @@ export interface Modifier {
 	dish: Dish;
 }
 
-export const modifierFragments: ValuesOrBoolean<Modifier> = {
+export const defaultModifierFragments: ValuesOrBoolean<Modifier> = {
 	modifierId: true,
 	maxAmount: true,
 	minAmount: true,
@@ -36,9 +36,9 @@ export const modifierFragments: ValuesOrBoolean<Modifier> = {
 		groupId: true,
 		parentGroup: {
 			id: true,
-			dishesPlaceholder: imageFragments
+			dishesPlaceholder: defaultImageFragments
 		},
-		images: imageFragments
+		images: defaultImageFragments
 	}
 }
 
@@ -49,6 +49,6 @@ export const modifierFragments: ValuesOrBoolean<Modifier> = {
 export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
 	'MODIFIER_FRAGMENTS', {
 	providedIn: 'root',
-		factory: () => ({ ...modifierFragments })
+		factory: () => ({ ...defaultModifierFragments })
 });
 

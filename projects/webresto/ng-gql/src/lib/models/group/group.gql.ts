@@ -1,7 +1,7 @@
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from '../dish/dish.gql';
 import type { Image } from '../image/image.gql';
-import { imageFragments } from '../image/image.gql';
+import { defaultImageFragments } from '../image/image.gql';
 import { InjectionToken } from '@angular/core';
 
 export interface Group {
@@ -18,7 +18,7 @@ export interface Group {
 	dishesPlaceholder: Image | null;
 }
 
-export const groupFragment: ValuesOrBoolean<Group> = {
+export const defaultGroupFragments: ValuesOrBoolean<Group> = {
 	id: true,
 	description: true,
 	name: true,
@@ -26,10 +26,10 @@ export const groupFragment: ValuesOrBoolean<Group> = {
 	visible: true,
 	slug: true,
 	discount: true,
-	dishesPlaceholder: imageFragments,
+	dishesPlaceholder: defaultImageFragments,
 	parentGroup: {
 		id: true,
-		dishesPlaceholder: imageFragments
+		dishesPlaceholder: defaultImageFragments
 	}
 };
 
@@ -39,5 +39,5 @@ export const groupFragment: ValuesOrBoolean<Group> = {
 export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>(
 	'GROUP_FRAGMENTS', {
 	providedIn: 'root',
-		factory: () => ({ ...groupFragment })
+		factory: () => ({ ...defaultGroupFragments })
 });

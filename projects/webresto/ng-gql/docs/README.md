@@ -62,29 +62,29 @@
 
 ### Variables
 
-- [dishFragments](README.md#dishfragments)
+- [defaultDishFragments](README.md#defaultdishfragments)
 - [DISH\_FRAGMENTS](README.md#dish_fragments)
-- [messageFragments](README.md#messagefragments)
-- [actionFragments](README.md#actionfragments)
+- [defaultMessageFragments](README.md#defaultmessagefragments)
+- [defaultActionFragments](README.md#defaultactionfragments)
 - [MESSAGE\_FRAGMENTS](README.md#message_fragments)
 - [ACTION\_FRAGMENTS](README.md#action_fragments)
-- [groupModifierFragments](README.md#groupmodifierfragments)
+- [defaultGroupModifierFragments](README.md#defaultgroupmodifierfragments)
 - [GROUP\_MODIFIER\_FRAGMENTS](README.md#group_modifier_fragments)
-- [groupFragment](README.md#groupfragment)
+- [defaultGroupFragments](README.md#defaultgroupfragments)
 - [GROUP\_FRAGMENTS](README.md#group_fragments)
-- [imageFragments](README.md#imagefragments)
+- [defaultImageFragments](README.md#defaultimagefragments)
 - [IMAGE\_FRAGMENTS](README.md#image_fragments)
-- [maintenanceFragments](README.md#maintenancefragments)
+- [defaultMaintenanceFragments](README.md#defaultmaintenancefragments)
 - [MAINTENANCE\_FRAGMENTS](README.md#maintenance_fragments)
-- [modifierFragments](README.md#modifierfragments)
+- [defaultModifierFragments](README.md#defaultmodifierfragments)
 - [MODIFIER\_FRAGMENTS](README.md#modifier_fragments)
-- [navigationFragments](README.md#navigationfragments)
+- [defaultNavigationFragments](README.md#defaultnavigationfragments)
 - [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
-- [orderDishFragments](README.md#orderdishfragments)
+- [defaultOrderDishFragments](README.md#defaultorderdishfragments)
 - [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
-- [orderFragments](README.md#orderfragments)
+- [defaultOrderFragments](README.md#defaultorderfragments)
 - [ORDER\_FRAGMENTS](README.md#order_fragments)
-- [paymentMethodFragments](README.md#paymentmethodfragments)
+- [defaultPaymentMethodFragments](README.md#defaultpaymentmethodfragments)
 - [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
 
 ### Classes
@@ -387,9 +387,9 @@ ___
 
 ## Variables
 
-### dishFragments
+### defaultDishFragments
 
-• `Const` **dishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>
+• `Const` **defaultDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>
 
 ___
 
@@ -399,15 +399,15 @@ ___
 
 ___
 
-### messageFragments
+### defaultMessageFragments
 
-• `Const` **messageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\>
+• `Const` **defaultMessageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\>
 
 ___
 
-### actionFragments
+### defaultActionFragments
 
-• `Const` **actionFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\>
+• `Const` **defaultActionFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\>
 
 ___
 
@@ -423,9 +423,9 @@ ___
 
 ___
 
-### groupModifierFragments
+### defaultGroupModifierFragments
 
-• `Const` **groupModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\>
+• `Const` **defaultGroupModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\>
 
 ___
 
@@ -435,9 +435,9 @@ ___
 
 ___
 
-### groupFragment
+### defaultGroupFragments
 
-• `Const` **groupFragment**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>
+• `Const` **defaultGroupFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>
 
 ___
 
@@ -447,9 +447,9 @@ ___
 
 ___
 
-### imageFragments
+### defaultImageFragments
 
-• `Const` **imageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>
+• `Const` **defaultImageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>
 
 ___
 
@@ -459,9 +459,9 @@ ___
 
 ___
 
-### maintenanceFragments
+### defaultMaintenanceFragments
 
-• `Const` **maintenanceFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\>
+• `Const` **defaultMaintenanceFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\>
 
 ___
 
@@ -471,9 +471,9 @@ ___
 
 ___
 
-### modifierFragments
+### defaultModifierFragments
 
-• `Const` **modifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\>
+• `Const` **defaultModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\>
 
 ___
 
@@ -483,9 +483,9 @@ ___
 
 ___
 
-### navigationFragments
+### defaultNavigationFragments
 
-• `Const` **navigationFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>
+• `Const` **defaultNavigationFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>
 
 ___
 
@@ -495,9 +495,9 @@ ___
 
 ___
 
-### orderDishFragments
+### defaultOrderDishFragments
 
-• `Const` **orderDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\>
+• `Const` **defaultOrderDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\>
 
 ___
 
@@ -507,9 +507,9 @@ ___
 
 ___
 
-### orderFragments
+### defaultOrderFragments
 
-• `Const` **orderFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\>
+• `Const` **defaultOrderFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\>
 
 ___
 
@@ -519,9 +519,9 @@ ___
 
 ___
 
-### paymentMethodFragments
+### defaultPaymentMethodFragments
 
-• `Const` **paymentMethodFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>
+• `Const` **defaultPaymentMethodFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>
 
 ___
 

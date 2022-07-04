@@ -1,4 +1,4 @@
-import { dishFragments } from '../dish/dish.gql';
+import { defaultDishFragments } from '../dish/dish.gql';
 import type { OrderModifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish, DiscountType } from '../dish/dish.gql';
@@ -20,13 +20,13 @@ export interface OrderDish {
 	modifiers: OrderModifier[];
 }
 
-export const orderDishFragments: ValuesOrBoolean<OrderDish> = {
+export const defaultOrderDishFragments: ValuesOrBoolean<OrderDish> = {
 	id: true,
 	amount: true,
-	dish: dishFragments,
+	dish: defaultDishFragments,
 	modifiers: {
 		id: true,
-		dish: dishFragments,
+		dish: defaultDishFragments,
 		amount: true,
 		groupId: true,
 	},
@@ -45,5 +45,5 @@ export const orderDishFragments: ValuesOrBoolean<OrderDish> = {
 export const ORDER_DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<OrderDish>>(
 	'ORDER_DISH_FRAGMENTS', {
 	providedIn: 'root',
-	factory: () => ({ ...orderDishFragments })
+	factory: () => ({ ...defaultOrderDishFragments })
 });

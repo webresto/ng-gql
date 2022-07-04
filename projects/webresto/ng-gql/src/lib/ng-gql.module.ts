@@ -5,9 +5,10 @@ import { HttpLink } from 'apollo-angular/http';
 import { split, InMemoryCache } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import type { NgGqlConfig } from './models';
+import { isValue, NgGqlConfig } from './models';
 import type { OperationDefinitionNode } from 'graphql';
 import { persistCacheSync, LocalStorageWrapper } from 'apollo3-cache-persist';
+import type { InMemoryCacheConfig } from '@apollo/client';
 
 @NgModule({
   imports: [
@@ -23,8 +24,6 @@ export class NgGqlModule {
     httpLink: HttpLink,
     @Inject('config') config: NgGqlConfig
   ) {
-
-
 
     // Create an http link:
     const http = httpLink.create({
@@ -54,7 +53,7 @@ export class NgGqlModule {
     );
 
     if (!apollo.client) {
-      const cache = new InMemoryCache({
+      const defaultCacheConfig: InMemoryCacheConfig = {
         addTypename: true,
         resultCaching: true,
         typePolicies: {
@@ -74,12 +73,20 @@ export class NgGqlModule {
             }
           },
         }
-      });
 
-      persistCacheSync({
-        cache,
-        storage: new LocalStorageWrapper(window.localStorage),
-      });
+      };
+      const cache = new InMemoryCache(
+        isValue(config.apolloCacheConfig) ?
+          { ...defaultCacheConfig, ...config.apolloCacheConfig }
+          : { ...defaultCacheConfig }
+      );
+      if (!isValue(config.usePersistCache) || config.usePersistCache) {
+        persistCacheSync({
+          cache,
+          serialize: true,
+          storage: new LocalStorageWrapper(window.localStorage),
+        });
+      };
 
       apollo.create({
         link,

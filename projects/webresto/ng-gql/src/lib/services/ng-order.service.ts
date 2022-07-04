@@ -19,10 +19,10 @@ export class NgOrderService {
   constructor(
     private ngGqlService: NgGqlService,
     @Inject('config') private config: NgGqlConfig,
-    @Inject(PAYMENT_METHOD_FRAGMENTS) private paymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
-    @Inject(ACTION_FRAGMENTS) private actionFragment: ValuesOrBoolean<Action>,
-    @Inject(MESSAGE_FRAGMENTS) private messageFragments: ValuesOrBoolean<Message>,
-    @Inject(ORDER_FRAGMENTS) private orderFragments: ValuesOrBoolean<Order>,
+    @Inject(PAYMENT_METHOD_FRAGMENTS) private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
+    @Inject(ACTION_FRAGMENTS) private defaultActionFragments: ValuesOrBoolean<Action>,
+    @Inject(MESSAGE_FRAGMENTS) private defaultMessageFragments: ValuesOrBoolean<Message>,
+    @Inject(ORDER_FRAGMENTS) private defaultOrderFragments: ValuesOrBoolean<Order>,
   ) { }
 
   /**
@@ -136,7 +136,7 @@ export class NgOrderService {
 
   getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
     return this.ngGqlService.customQuery$<PaymentMethod, 'paymentMethod', { orderId: string; }>(
-      'paymentMethod', this.paymentMethodFragments, { orderId: orderId ?? '' }, {
+      'paymentMethod', this.defaultPaymentMethodFragments, { orderId: orderId ?? '' }, {
       fieldsTypeMap: new Map([
         [ 'orderId', 'String!' ]
       ])
@@ -240,7 +240,7 @@ export class NgOrderService {
     switchMap(
       order => this.ngGqlService.customSubscribe$<Action, 'action', {
         orderId: string;
-      }>('action', this.actionFragment, { orderId: order.id })
+      }>('action', this.defaultActionFragments, { orderId: order.id })
     ),
     mergeWith(this._eventAction.asObservable()),
     shareReplay(1)
@@ -256,7 +256,7 @@ export class NgOrderService {
     switchMap(
       order => this.ngGqlService.customSubscribe$<Message, 'message', {
         orderId: string;
-      }>('message', this.messageFragments, { orderId: order.id })
+      }>('message', this.defaultMessageFragments, { orderId: order.id })
     ),
     mergeWith(this._eventMessage.asObservable()),
     shareReplay(1)
@@ -273,7 +273,7 @@ export class NgOrderService {
   *  */
   loadOrder$(orderId: string | undefined): Observable<Order> {
     const customvOb = this.config.customFields?.[ 'Order' ];
-    const vOb = customvOb ? { ...this.orderFragments, ...customvOb } : this.orderFragments;
+    const vOb = customvOb ? { ...this.defaultOrderFragments, ...customvOb } : this.defaultOrderFragments;
     return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | undefined>('order', 'order', vOb, 'id', orderId ? {
       query: {
         orderId
@@ -624,7 +624,7 @@ export class NgOrderService {
 
   private addDishToOrder$(data: AddToOrderInput): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'orderAddDish', AddToOrderInput>(
-      'orderAddDish', this.orderFragments, data
+      'orderAddDish', this.defaultOrderFragments, data
     ).pipe(
       map(
         data => data.orderAddDish
@@ -633,7 +633,7 @@ export class NgOrderService {
   };
 
   private removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>('orderRemoveDish', this.orderFragments, data, { requiredFields: [ 'orderDishId', 'id' ] }).pipe(
+    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>('orderRemoveDish', this.defaultOrderFragments, data, { requiredFields: [ 'orderDishId', 'id' ] }).pipe(
       map(
         data => data.orderRemoveDish
       )
@@ -643,7 +643,7 @@ export class NgOrderService {
   private updateOrder$(order: Partial<Order>): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'orderUpdate', {
       order: Partial<Order>;
-    }>('orderUpdate', this.orderFragments, { order }).pipe(
+    }>('orderUpdate', this.defaultOrderFragments, { order }).pipe(
       map(
         data => data.orderUpdate
       )
@@ -652,9 +652,9 @@ export class NgOrderService {
 
   private sendOrder$(orderId: string): Observable<CheckResponse> {
     return this.ngGqlService.customMutation$<CheckResponse, 'sendOrder', OrderInput>('sendOrder', <ValuesOrBoolean<CheckResponse>> {
-      order: this.orderFragments,
-      message: this.messageFragments,
-      action: this.actionFragment
+      order: this.defaultOrderFragments,
+      message: this.defaultMessageFragments,
+      action: this.defaultActionFragments
     }, {
       orderId
     }, {
@@ -668,9 +668,9 @@ export class NgOrderService {
 
   private checkOrder$(data: CheckOrderInput): Observable<CheckResponse> {
     return this.ngGqlService.customMutation$<CheckResponse, 'checkOrder', CheckOrderInput>('checkOrder', {
-      order: this.orderFragments,
-      message: this.messageFragments,
-      action: this.actionFragment
+      order: this.defaultOrderFragments,
+      message: this.defaultMessageFragments,
+      action: this.defaultActionFragments
     }, data, {
       requiredFields: [ 'orderId', 'paymentMethodId', 'customer' ],
       fieldsTypeMap: new Map([
@@ -686,7 +686,7 @@ export class NgOrderService {
 
   private setDishAmount$(data: RemoveOrSetAmountToDish): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'orderSetDishAmount', RemoveOrSetAmountToDish>(
-      'orderSetDishAmount', this.orderFragments, data,
+      'orderSetDishAmount', this.defaultOrderFragments, data,
     ).pipe(
       map(
         data => data.orderSetDishAmount
@@ -695,7 +695,7 @@ export class NgOrderService {
   };
 
   private setDishComment$(data: SetDishCommentInput<number>): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderSetDishComment', SetDishCommentInput<number>>('orderSetDishComment', this.orderFragments, data).pipe(
+    return this.ngGqlService.customMutation$<Order, 'orderSetDishComment', SetDishCommentInput<number>>('orderSetDishComment', this.defaultOrderFragments, data).pipe(
       map(
         data => data.orderSetDishComment
       )

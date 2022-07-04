@@ -24,13 +24,13 @@ export interface Action<T = any> {
   data: T;
 }
 
-export const messageFragments: ValuesOrBoolean<Message> = {
+export const defaultMessageFragments: ValuesOrBoolean<Message> = {
   type: true,
   title: true,
   message: true
 };
 
-export const actionFragments: ValuesOrBoolean<Action> = {
+export const defaultActionFragments: ValuesOrBoolean<Action> = {
   data: true,
   type: true
 };
@@ -41,7 +41,7 @@ export const actionFragments: ValuesOrBoolean<Action> = {
 export const MESSAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Message>>(
   'MESSAGE_FRAGMENTS', {
   providedIn: 'root',
-  factory: () => ({ ...messageFragments })
+  factory: () => ({ ...defaultMessageFragments })
 });
 
 /**
@@ -50,5 +50,5 @@ export const MESSAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Message>>(
 export const ACTION_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Action>>(
   'ACTION_FRAGMENTS', {
   providedIn: 'root',
-  factory: () => ({ ...actionFragments })
+  factory: () => ({ ...defaultActionFragments })
 });

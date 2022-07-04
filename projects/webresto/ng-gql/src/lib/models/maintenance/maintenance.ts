@@ -15,7 +15,7 @@ export interface Maintenance extends BaseModelWithCustomData {
   stopDate: string;
 }
 
-export const maintenanceFragments: ValuesOrBoolean<Maintenance> = {
+export const defaultMaintenanceFragments: ValuesOrBoolean<Maintenance> = {
   id: true,
   title: true,
   description: true,
@@ -31,5 +31,5 @@ export const maintenanceFragments: ValuesOrBoolean<Maintenance> = {
 export const MAINTENANCE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Maintenance>>(
   'MAINTENANCE_FRAGMENTS', {
   providedIn: 'root',
-  factory: () => ({ ...maintenanceFragments })
+  factory: () => ({ ...defaultMaintenanceFragments })
 });

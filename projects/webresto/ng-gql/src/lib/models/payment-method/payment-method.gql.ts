@@ -13,7 +13,7 @@ export interface PaymentMethod extends BaseModelWithCustomData {
 	enable: boolean;
 }
 
-export const paymentMethodFragments: ValuesOrBoolean<PaymentMethod> = {
+export const defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod> = {
 	id: true,
 	type: true,
 	title: true,
@@ -31,5 +31,5 @@ export const paymentMethodFragments: ValuesOrBoolean<PaymentMethod> = {
 export const PAYMENT_METHOD_FRAGMENTS = new InjectionToken<ValuesOrBoolean<PaymentMethod>>(
 	'PAYMENT_METHOD_FRAGMENTS', {
 	providedIn: 'root',
-	factory: () => ({ ...paymentMethodFragments })
+	factory: () => ({ ...defaultPaymentMethodFragments })
 });
