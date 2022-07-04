@@ -4,19 +4,18 @@ import type { ExtraSubscriptionOptions } from 'apollo-angular';
 import { BehaviorSubject, of } from 'rxjs';
 import { filter, map, switchMap, shareReplay, startWith, mergeWith, distinctUntilChanged } from 'rxjs/operators';
 import type { Observable } from 'rxjs';
-import {
+import type {
   NgGqlConfig, GQLRequestVariables, Group, ValuesOrBoolean,
   Dish, PhoneKnowledge, CheckPhoneResponse, Navigation, NavigationBase, NavigationLoader,
-  CheckPhoneCodeInput, VCriteria, Maintenance, Phone, NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS
+  CheckPhoneCodeInput, VCriteria, Maintenance, Phone
 } from '../models';
-import { isValue, isEqualItems, deepClone, generateQueryString } from '../models';
+import { isValue, isEqualItems, deepClone, generateQueryString, NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS } from '../models';
 import { ApolloService } from './apollo.service';
 
 interface SlugAndConcept {
   slug: string,
   concept: string | 'origin';
 }
-
 
 type PartialGroupNullable = Pick<Group, 'slug'> & {
   id: string | null;

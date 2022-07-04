@@ -17,6 +17,7 @@
     "@angular/core": "^14.0.4",
     "@apollo/client": "^3.6.9",
     "apollo-angular": "^3.0.1",
+    "apollo3-cache-persist": "^0.14.0",
     "graphql": "^16.5.0",
     "rxjs": "^7.5.5",
     "subscriptions-transport-ws": "^0.11.0",

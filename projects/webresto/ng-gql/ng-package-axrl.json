@@ -8,6 +8,7 @@
     "@apollo/client",
     "apollo-angular",
     "graphql",
-    "subscriptions-transport-ws"
+    "subscriptions-transport-ws",
+    "apollo3-cache-persist"
   ]
 }

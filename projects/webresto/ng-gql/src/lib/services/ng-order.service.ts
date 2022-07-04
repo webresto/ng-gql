@@ -2,8 +2,13 @@ import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
-import { NgGqlConfig, Action, Message, OrderInput, CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier, CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm, SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier, PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../models';
-import { isValue, isEqualItems } from '../models';
+import type {
+  NgGqlConfig, Action, Message, OrderInput,
+  CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier,
+  CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm,
+  SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier
+} from '../models';
+import { isValue, isEqualItems, PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../models';;
 import { NgGqlService } from './ng-gql.service';
 
 @Injectable({

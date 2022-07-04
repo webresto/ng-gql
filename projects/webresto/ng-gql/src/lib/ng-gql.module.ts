@@ -7,6 +7,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import type { NgGqlConfig } from './models';
 import type { OperationDefinitionNode } from 'graphql';
+import { persistCacheSync, LocalStorageWrapper } from 'apollo3-cache-persist';
 
 @NgModule({
   imports: [
@@ -22,6 +23,8 @@ export class NgGqlModule {
     httpLink: HttpLink,
     @Inject('config') config: NgGqlConfig
   ) {
+
+
 
     // Create an http link:
     const http = httpLink.create({
@@ -51,29 +54,36 @@ export class NgGqlModule {
     );
 
     if (!apollo.client) {
-      apollo.create({
-        link,
-        cache: new InMemoryCache({
-          addTypename: true,
-          resultCaching: true,
-          typePolicies: {
-            "GroupModifier":{
-              keyFields: ['modifierId']
-            },
-            "Modifier": {
-              keyFields: [ 'modifierId' ]
-            },
-            "Order": {
-              fields: {
-                "dishes": {
-                  merge(existing, incoming) {
-                    return [ ...incoming ];
-                  }
+      const cache = new InMemoryCache({
+        addTypename: true,
+        resultCaching: true,
+        typePolicies: {
+          "GroupModifier": {
+            keyFields: [ 'modifierId' ]
+          },
+          "Modifier": {
+            keyFields: [ 'modifierId' ]
+          },
+          "Order": {
+            fields: {
+              "dishes": {
+                merge(existing, incoming) {
+                  return [ ...incoming ];
                 }
               }
-            },
-          }
-        })
+            }
+          },
+        }
+      });
+
+      persistCacheSync({
+        cache,
+        storage: new LocalStorageWrapper(window.localStorage),
+      });
+
+      apollo.create({
+        link,
+        cache
       });
     };
   }
