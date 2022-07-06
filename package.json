@@ -5,6 +5,7 @@
     "start": "ng build --watch",
     "updatePackageVersion": "node updatePackageVersion.js",
     "build": "ng build",
+    "upd": "npm update --save --force --legacy-peer-deps",
     "build:local": "ng build && npm run gen-doc",
     "watch:axrl": "ng build --watch --configuration axrl",
     "watch:axrl:nadym": "ng build --watch --configuration axrl-nadym",
