@@ -12,11 +12,13 @@ import type {
 import { isValue, isEqualItems, deepClone, generateQueryString, NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS } from '../models';
 import { ApolloService } from './apollo.service';
 
+/** @private */
 interface SlugAndConcept {
   slug: string,
   concept: string | 'origin';
 }
 
+/** @private */
 type PartialGroupNullable = Pick<Group, 'slug'> & {
   id: string | null;
 };

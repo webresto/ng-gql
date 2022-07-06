@@ -184,20 +184,21 @@ ___
 
 ### addToOrder
 
-▸ **addToOrder**(`loading`, `dish`, `amount?`, `dishModifiers?`, `successCb?`, `errorCb?`, `comment?`, `replacedOrderDishId?`): `void`
+▸ **addToOrder**(`options`): `void`
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `loading` | `BehaviorSubject`<`boolean`\> | `undefined` |  |
-| `dish` | [`Dish`](../interfaces/Dish.md) | `undefined` |  |
-| `amount` | `number` | `1` |  |
-| `dishModifiers` | `Partial`<[`Modifier`](../interfaces/Modifier.md)\>[] \| `Partial`<[`OrderModifier`](../interfaces/OrderModifier.md)\>[] | `[]` |  |
-| `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` |  |
-| `errorCb?` | (`err`: `unknown`) => `void` | `undefined` |  |
-| `comment?` | `string` | `undefined` | - |
-| `replacedOrderDishId?` | `number` | `undefined` | - |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | - |
+| `options.loading` | `BehaviorSubject`<`boolean`\> |  |
+| `options.dishId` | `string` |  |
+| `options.amount?` | `number` |  |
+| `options.dishModifiers?` | `Partial`<[`Modifier`](../interfaces/Modifier.md)\>[] \| `Partial`<[`OrderModifier`](../interfaces/OrderModifier.md)\>[] |  |
+| `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | - |
+| `options.errorCb?` | (`err`: `unknown`) => `void` | - |
+| `options.comment?` | `string` | - |
+| `options.replacedOrderDishId?` | `number` | - |
 
 #### Returns
 
@@ -207,17 +208,18 @@ ___
 
 ### removeFromOrder
 
-▸ **removeFromOrder**(`loading`, `amount?`, `successCb?`, `errorCb?`, `orderDishId?`): `void`
+▸ **removeFromOrder**(`options`): `void`
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `loading` | `BehaviorSubject`<`boolean`\> | `undefined` |  |
-| `amount` | `number` | `1` |  |
-| `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` |  |
-| `errorCb?` | (`err`: `unknown`) => `void` | `undefined` |  |
-| `orderDishId?` | `number` | `undefined` |  |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | - |
+| `options.loading` | `BehaviorSubject`<`boolean`\> |  |
+| `options.amount` | `number` |  |
+| `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | - |
+| `options.errorCb?` | (`err`: `unknown`) => `void` | - |
+| `options.orderDishId` | `number` |  |
 
 #### Returns
 
@@ -234,7 +236,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.data` | `Partial`<[`Order`](../interfaces/Order.md)\> |  |
+| `options.data` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; groupId: string; ... 20 more ...; customData: Partial<...\>; }\>; ... 9 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> |  |
 | `options.loading` | `BehaviorSubject`<`boolean`\> |  |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |
@@ -247,15 +249,16 @@ ___
 
 ### checkOrder
 
-▸ **checkOrder**(`orderForm`, `successCb?`, `errorCb?`): `void`
+▸ **checkOrder**(`options`): `void`
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `orderForm` | [`OrderForm`](../README.md#orderform) |  |
-| `successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` |  |
-| `errorCb?` | (`err`: `unknown`) => `void` |  |
+| `options` | `Object` | - |
+| `options.orderForm` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; groupId: string; ... 20 more ...; customData: Partial<...\>; }\>; ... 9 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> |  |
+| `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | - |
+| `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 
 #### Returns
 
@@ -269,13 +272,13 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `options` | `Object` |
-| `options.orderId` | `string` |
-| `options.loading?` | `BehaviorSubject`<`boolean`\> |
-| `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` |
-| `options.errorCb?` | (`err`: `unknown`) => `void` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | - |
+| `options.orderId` | `string` |  |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> | - |
+| `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | - |
+| `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 
 #### Returns
 
@@ -285,17 +288,18 @@ ___
 
 ### setDishAmount
 
-▸ **setDishAmount**(`loading`, `orderDishId`, `amount?`, `successCb?`, `errorCb?`): `void`
+▸ **setDishAmount**(`options`): `void`
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `loading` | `BehaviorSubject`<`boolean`\> | `undefined` |  |
-| `orderDishId` | `number` | `undefined` |  |
-| `amount` | `number` | `1` |  |
-| `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | `undefined` |  |
-| `errorCb?` | (`err`: `unknown`) => `void` | `undefined` |  |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | - |
+| `options.loading` | `BehaviorSubject`<`boolean`\> |  |
+| `options.orderDishId` | `number` |  |
+| `options.amount?` | `number` |  |
+| `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | - |
+| `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 
 #### Returns
 
@@ -305,17 +309,18 @@ ___
 
 ### setDishComment
 
-▸ **setDishComment**(`loading`, `dish`, `comment`, `successCb?`, `errorCb?`): `void`
+▸ **setDishComment**(`options`): `void`
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `loading` | `BehaviorSubject`<`boolean`\> |  |
-| `dish` | [`Dish`](../interfaces/Dish.md) |  |
-| `comment` | `string` |  |
-| `successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` |  |
-| `errorCb?` | (`err`: `unknown`) => `void` |  |
+| `options` | `Object` | - |
+| `options.loading` | `BehaviorSubject`<`boolean`\> |  |
+| `options.orderDishId` | `number` |  |
+| `options.comment` | `string` |  |
+| `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | - |
+| `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 
 #### Returns
 

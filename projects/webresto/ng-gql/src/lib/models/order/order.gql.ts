@@ -2,7 +2,6 @@ import type { PaymentMethod } from '../payment-method/payment-method.gql';
 import type { Modifier, OrderModifier } from '../modifier/modifier.gql';
 import type { Message, Action } from '../event-message/event-message';
 import type { ValuesOrBoolean } from '../values-or-boolean';
-import type { Dish } from '../dish/dish.gql';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 import type { Customer } from '../customer/customer';
 import type { OrderDish } from '../order-dish/order-dish.gql';
@@ -78,14 +77,10 @@ export type RemoveOrSetAmountToDish = {
 	id: string;
 };
 
-export type SetDishCommentInput<T extends (Partial<Dish> | number)> = T extends Partial<Dish> ? {
+export type SetDishCommentInput = {
 	id?: string,
 	comment?: string;
-	dish: Partial<Dish>;
-} : {
-	id?: string,
-	comment?: string;
-	orderDishId?: number;
+	orderDishId: number;
 };
 
 export type CheckOrderInput = {
@@ -100,10 +95,6 @@ export type CheckOrderInput = {
 	comment?: string,
 	notifyMethodId?: string,
 } & Partial<BaseModelWithCustomData>;
-
-export type OrderInput = {
-	orderId: string,
-};
 
 export interface CheckResponse {
 	order: Partial<Order>;
