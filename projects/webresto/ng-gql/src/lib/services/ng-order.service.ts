@@ -1,7 +1,7 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, fromEvent, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
-import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
+import { filter, map, switchMap, shareReplay, startWith, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
 import type {
   NgGqlConfig, Action, Message,
   CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier,
@@ -60,9 +60,9 @@ export class NgOrderService {
    * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
    * Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
    */
-  getOrderId(storageOrderIdToken: string): string | undefined {
+  getOrderId(storageOrderIdToken: string, storageOrderId?: string): string | undefined {
     try {
-      const cartString = localStorage.getItem(storageOrderIdToken);
+      const cartString = isValue(storageOrderId) ? storageOrderId : localStorage.getItem(storageOrderIdToken);
       if (cartString) {
         const cartData: {
           orderId: string;
@@ -159,13 +159,36 @@ export class NgOrderService {
     methods: PaymentMethod[];
   }> = this.storageOrderIdToken$.pipe(
     switchMap(
-      storageOrderIdToken => {
-        const orderId = this.getOrderId(storageOrderIdToken);
+      storageOrderIdToken => fromEvent<StorageEvent>(window, 'storage').pipe(
+        startWith({
+          key: storageOrderIdToken,
+          /** Returns the new value of the key of the storage item whose value is being changed. */
+          newValue: localStorage.getItem(storageOrderIdToken),
+          /** Returns the old value of the key of the storage item whose value is being changed. */
+          oldValue: localStorage.getItem(storageOrderIdToken),
+          /** Returns the Storage object that was affected. */
+          storageArea: window.localStorage,
+          /** Returns the URL of the document whose storage item changed. */
+          url: window.location.href
+        }),
+        filter(event => event.key === storageOrderIdToken),
+        map(event => this.getOrderId(storageOrderIdToken, event.newValue ?? undefined)),
+        shareReplay(1),
+        distinctUntilChanged(),
+      )
+    ),
+    switchMap(
+      storageOrderId => {
         return combineLatest([
-          this.getPaymentMethods$(orderId),
-          this.loadOrder$(orderId).pipe(
-            switchMap(
-              order => order.state === 'ORDER' ? this.loadOrder$(undefined) : of(order)
+          this.getPaymentMethods$(storageOrderId),
+          this.loadOrder$(storageOrderId).pipe(
+            map(
+              order => {
+                if (order.state === 'ORDER') {
+                  this.removeOrderId();
+                };
+                return order;
+              }
             ),
             distinctUntilChanged((previous, current) => {
               return isEqualItems(previous, current);
@@ -174,11 +197,8 @@ export class NgOrderService {
         ]).pipe(
           map(
             data => {
-              const storageOrderId = this.getOrderId(storageOrderIdToken);
               const [ methods, order ] = data;
-              if (!storageOrderId || storageOrderId !== order.id) {
-                this.setOrderId(order.id);
-              };
+
               return {
                 methods,
                 order: {
@@ -192,7 +212,6 @@ export class NgOrderService {
             })
         );
       }),
-
     shareReplay(1),
     distinctUntilChanged((previous, current) => {
       return isEqualItems(previous, current);
