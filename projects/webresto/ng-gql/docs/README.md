@@ -54,7 +54,6 @@
 - [RemoveOrSetAmountToDish](README.md#removeorsetamounttodish)
 - [SetDishCommentInput](README.md#setdishcommentinput)
 - [CheckOrderInput](README.md#checkorderinput)
-- [OrderInput](README.md#orderinput)
 - [OrderAdditionalFields](README.md#orderadditionalfields)
 - [OrderForm](README.md#orderform)
 - [ValuesOrBoolean](README.md#valuesorboolean)
@@ -301,31 +300,21 @@ ___
 
 ### SetDishCommentInput
 
-Ƭ **SetDishCommentInput**<`T`\>: `T` extends `Partial`<[`Dish`](interfaces/Dish.md)\> ? { `id?`: `string` ; `comment?`: `string` ; `dish`: `Partial`<[`Dish`](interfaces/Dish.md)\>  } : { `id?`: `string` ; `comment?`: `string` ; `orderDishId?`: `number`  }
+Ƭ **SetDishCommentInput**: `Object`
 
-#### Type parameters
+#### Type declaration
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends `Partial`<[`Dish`](interfaces/Dish.md)\> \| `number` |
+| `id?` | `string` |
+| `comment?` | `string` |
+| `orderDishId` | `number` |
 
 ___
 
 ### CheckOrderInput
 
 Ƭ **CheckOrderInput**: { `orderId`: `string` ; `paymentMethodId?`: `string` ; `selfService`: `boolean` ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `date?`: `string` ; `address`: `Partial`<[`Address`](interfaces/Address.md)\> \| ``null`` ; `customer`: `Partial`<[`Customer`](interfaces/Customer.md)\> \| ``null`` ; `comment?`: `string` ; `notifyMethodId?`: `string`  } & `Partial`<[`BaseModelWithCustomData`](interfaces/BaseModelWithCustomData.md)\>
-
-___
-
-### OrderInput
-
-Ƭ **OrderInput**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `string` |
 
 ___
 
@@ -565,7 +554,7 @@ ___
 
 ### CartBusEventUpdate
 
-• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: [`Order`](interfaces/Order.md)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: `ScanFormType`<[`OrderForm`](README.md#orderform)\>[``"value"``]  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
@@ -583,13 +572,13 @@ ___
 
 ### CartBusEventSetCommentToDish
 
-• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput)<[`Dish`](interfaces/Dish.md)\>, ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
 
 ___
 
 ### CartBusEventCheck
 
-• **CartBusEventCheck**: { `event`: ``"check"`` ; `data`: [`OrderForm`](README.md#orderform)  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
+• **CartBusEventCheck**: { `event`: ``"check"`` ; `data`: `Omit`<[`CheckOrderInput`](README.md#checkorderinput), ``"orderId"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
 
 ___
 

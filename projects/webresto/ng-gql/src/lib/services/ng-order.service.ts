@@ -3,13 +3,15 @@ import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import type { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, shareReplay, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
 import type {
-  NgGqlConfig, Action, Message, OrderInput,
+  NgGqlConfig, Action, Message,
   CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier,
-  CheckResponse, CartBusEvent, Dish, RemoveOrSetAmountToDish, OrderForm,
-  SetDishCommentInput, CartBusEventUpdate, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier
+  CheckResponse, CartBusEvent, RemoveOrSetAmountToDish, OrderForm,
+  SetDishCommentInput, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier
 } from '../models';
 import { isValue, isEqualItems, PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../models';;
 import { NgGqlService } from './ng-gql.service';
+import type { ScanFormType } from '../models/scan-form-type';
+
 
 @Injectable({
   providedIn: 'root'
@@ -356,12 +358,12 @@ export class NgOrderService {
   * Используется только в случае, если в @see config параметр busSubscribeMode установлен в значении 'custom' для самостоятельного управления подпиской на стороне приложения.
   * Использование этого потока и событий внутри него извне не подразумевается и не предусматривается,
   * Для выполнения действий с заказом, необходимо использовать соответствующие методы:
-  * @see addToOrder
-  * @see removeFromOrder
-  * @see checkOrder
-  * @see sendOrder
-  * @see setDishAmount
-  * @see setDishComment
+  * @see this.addToOrder
+  * @see this.removeFromOrder
+  * @see this.checkOrder
+  * @see this.sendOrder
+  * @see this.setDishAmount
+  * @see this.setDishComment
   */
   orderBus$ = this.orderAndPaymentMethods$.pipe(
     map(
@@ -375,40 +377,29 @@ export class NgOrderService {
     ),
     concatMap(
       ({ busEvent, order }) => {
-        const reducer = () => {
-          switch (busEvent.event) {
+        const reducer = (busEventData: CartBusEvent): Observable<Order | CheckResponse> => {
+          switch (busEventData.event) {
             case 'add': return this.addDishToOrder$({
-              ...busEvent.data,
+              ...busEventData.data,
               orderId: order.id,
             });
             case 'remove': return this.removeDishFromOrder$({
               id: order.id,
-              orderDishId: busEvent.data.orderDishId,
-              amount: busEvent.data.amount
+              orderDishId: busEventData.data.orderDishId,
+              amount: busEventData.data.amount
             });
-            case 'check': return this.checkOrder$({
-              orderId: busEvent.data.id,
-              paymentMethodId: busEvent.data.paymentMethod?.id,
-              selfService: busEvent.data.selfService,
-              address: busEvent.data.address,
-              customer: busEvent.data.customer,
-              comment: busEvent.data.comment,
-              pickupAddressId: busEvent.data.pickupAddressId,
-              locationId: busEvent.data.locationId,
-              customData: busEvent.data.customData,
-              date: busEvent.data.deliveryTimeInfo?.deliveryDate ? `${ busEvent.data.deliveryTimeInfo.deliveryDate } ${ busEvent.data.deliveryTimeInfo.deliveryTime }` : undefined,
-            });
-            case 'order': return this.sendOrder$(busEvent.data);
-            case 'update': return this.updateOrder$(busEvent.data);
+            case 'check': return this.checkOrder$({ ...busEventData.data, orderId: order.id });
+            case 'order': return this.sendOrder$(busEventData.data);
+            case 'update': return this.updateOrder$(busEventData.data);
             case 'setDishAmount': return this.setDishAmount$({
-              ...busEvent.data, id: order.id
+              ...busEventData.data, id: order.id
             });
             case 'setCommentToDish': return this.setDishComment$({
-              ...busEvent.data, id: order.id
+              ...busEventData.data, id: order.id
             });
           };
         };
-        return (<Observable<Order | CheckResponse>> reducer()).pipe(
+        return reducer(busEvent).pipe(
           map(
             result => {
               if (isValue(busEvent.loading)) {
@@ -448,69 +439,73 @@ export class NgOrderService {
   /**
    * @method addToOrder
    * Используется для отправки в шину события добавления блюда.
-   * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
-   * @param dish - добавляемое блюдо
-   * @param amount - количество
-   * @param dishModifiers - выбранные пользователем модификаторы блюда
-   * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
-   * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+   * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
+   * @param options.dishId - id добавляемого блюдо
+   * @param options.amount - количество
+   * @param options.dishModifiers - выбранные пользователем модификаторы блюда (необязательный)
+   * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+   * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
   addToOrder(
-    loading: BehaviorSubject<boolean>,
-    dish: Partial<Dish> | string,
-    amount: number = 1,
-    dishModifiers: Partial<OrderModifier>[] | Partial<Modifier>[] = [],
-    successCb?: (order: Order) => void,
-    errorCb?: (err: unknown) => void,
-    comment?: string,
-    replacedOrderDishId?: number,
-  ) {
-    loading.next(true);
-    const dishId = typeof dish == 'string' ? dish : dish.id;
-    if (isValue(dishId)) {
-      this._orderBus$.emit({
-        event: 'add', loading, successCb, errorCb, data: {
-          dishId,
-          modifiers: dishModifiers.map(
-            dishModifier => ({
-              id: 'id' in dishModifier ? dishModifier.id : (<Partial<Modifier>> dishModifier).modifierId,
-              amount: dishModifier.amount,
-              dish: dishModifier.dish,
-              groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId
-            })
-          ),
-          amount,
-          comment,
-          replace: isValue(replacedOrderDishId),
-          orderDishId: replacedOrderDishId
-        }
-      });
-    } else {
-      throw new Error('Не передан dishid');
-    }
-
+    options: {
+      loading: BehaviorSubject<boolean>,
+      dishId: string,
+      amount?: number,
+      dishModifiers?: Partial<OrderModifier>[] | Partial<Modifier>[],
+      successCb?: (order: Order) => void,
+      errorCb?: (err: unknown) => void,
+      comment?: string,
+      replacedOrderDishId?: number;
+    }) {
+    options.loading.next(true);
+    this._orderBus$.emit({
+      event: 'add',
+      loading: options.loading,
+      successCb: options.successCb,
+      errorCb: options.errorCb,
+      data: {
+        dishId: options.dishId,
+        modifiers: (options.dishModifiers ?? []).map(
+          dishModifier => ({
+            id: 'id' in dishModifier ? dishModifier.id : (<Partial<Modifier>> dishModifier).modifierId,
+            amount: dishModifier.amount,
+            dish: dishModifier.dish,
+            groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId
+          })
+        ),
+        amount: options.amount ?? 1,
+        comment: options.comment,
+        replace: isValue(options.replacedOrderDishId),
+        orderDishId: options.replacedOrderDishId
+      }
+    });
   }
 
   /**
   * @method removeFromOrder
   * Используется для отправки в шину события удаления блюда из корзины
-  * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
-  * @param amount - количество
-  * @param orderDishId - id удаляемого блюда в корзине
-  * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
-  * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+  * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
+  * @param options.amount - количество
+  * @param options.orderDishId - id удаляемого блюда в корзине
+  * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+  * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
-  removeFromOrder(
+  removeFromOrder(options: {
     loading: BehaviorSubject<boolean>,
-    amount: number = 1,
+    amount: number,
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void,
-    orderDishId?: number
-  ) {
-    loading.next(true);
+    orderDishId: number;
+  }): void {
+    options.loading.next(true);
     this._orderBus$.emit({
-      event: 'remove', loading, successCb, errorCb, data: {
-        orderDishId, amount
+      event: 'remove',
+      loading: options.loading,
+      successCb: options.successCb,
+      errorCb: options.errorCb,
+      data: {
+        orderDishId: options.orderDishId,
+        amount: options.amount ?? 1
       }
     });
   }
@@ -528,13 +523,17 @@ export class NgOrderService {
   * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
   updateOrder(options: {
-    data: Partial<Order>,
+    data: ScanFormType<OrderForm>[ 'value' ],
     loading: BehaviorSubject<boolean>,
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void,
   }) {
-    this._orderBus$.emit(<CartBusEventUpdate> {
-      event: 'update', data: options.data, loading: options.loading, errorCb: options.errorCb, successCb: options.successCb
+    this._orderBus$.emit({
+      event: 'update',
+      data: options.data,
+      loading: options.loading,
+      errorCb: options.errorCb,
+      successCb: options.successCb
     });
   }
 
@@ -542,26 +541,64 @@ export class NgOrderService {
    * @method checkOrder
    * Используется для отправки в шину события обязательной проверки заказа перед оформлением.
    * Метод необходимо вызывать после того, как пользователь полностью заполнил в заказе все необходимые данные и далее после каждого вносимого в форму изменения, при условии, что в форме все необходимые данные заполнены.
-   * @param orderForm - Форма чекаута с данными проверяемого заказа
-   * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
-   * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+   * @param options.orderForm - Форма чекаута с данными проверяемого заказа
+   * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+   * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
-  checkOrder(orderForm: OrderForm,
+  checkOrder(options: {
+    orderForm: ScanFormType<OrderForm>[ 'value' ],
     successCb?: (order: CheckResponse) => void,
-    errorCb?: (err: unknown) => void
-  ) {
-    this._orderBus$.emit({
-      event: 'check', successCb, errorCb, data: orderForm,
-    });
+    errorCb?: (err: unknown) => void;
+  }) {
+    if (
+      isValue(options.orderForm.selfService) &&
+      isValue(options.orderForm.paymentMethod) &&
+      isValue(options.orderForm.customer) &&
+      isValue(options.orderForm.customer.phone) &&
+      isValue(options.orderForm.customer.phone.code) &&
+      isValue(options.orderForm.customer.phone.number) &&
+      isValue(options.orderForm.address)
+    ) {
+      const data: Omit<CheckOrderInput, 'orderId'> = {
+        paymentMethodId: options.orderForm.paymentMethod.id,
+        selfService: options.orderForm.selfService,
+        address: options.orderForm.address,
+        customer: {
+          mail: options.orderForm.customer.mail,
+          name: options.orderForm.customer.name,
+          phone: {
+            code: options.orderForm.customer.phone.code,
+            number: options.orderForm.customer.phone.number
+          }
+        },
+        comment: options.orderForm.comment,
+        pickupAddressId: options.orderForm.pickupAddressId,
+        locationId: options.orderForm.locationId,
+        customData: options.orderForm.customData,
+        date: options.orderForm.deliveryTimeInfo?.deliveryDate ?
+          `${ options.orderForm.deliveryTimeInfo.deliveryDate } ${ options.orderForm.deliveryTimeInfo.deliveryTime }` :
+          undefined
+      };
+
+      this._orderBus$.emit({
+        event: 'check',
+        successCb: options.successCb,
+        errorCb: options.errorCb,
+        data,
+      });
+
+    } else {
+      throw new Error('В options.orderForm отсутствуют один или несколько обязательных параметров : selfService, paymentMethod, address, customer, customer.phone, customer.phone.code, customer.phone.number!');
+    }
   }
 
   /**
   * @method sendOrder
   * Используется для отправки в шину события оформления заказа.
   * Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
-  * @param option.orderId - Форма чекаута с данными оформляемего заказа
-  * @param option.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
-  * @param option.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+  * @param options.orderId - Форма чекаута с данными оформляемего заказа
+  * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+  * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
   sendOrder(options: {
     orderId: string,
@@ -581,24 +618,28 @@ export class NgOrderService {
   /**
   * @method setDishAmount
   * Устанавливает для блюда dish в заказе количество amount.
-  * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
-  * @param orderDishId - id блюда в корзине, для которого изменяется количество заказываемых порций
-  * @param amount - необходимое количество порций
-  * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
-  * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+  * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
+  * @param options.orderDishId - id блюда в корзине, для которого изменяется количество заказываемых порций
+  * @param options.amount - необходимое количество порций
+  * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+  * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
-  setDishAmount(
+  setDishAmount(options: {
     loading: BehaviorSubject<boolean>,
     orderDishId: number,
-    amount: number = 1,
+    amount?: number,
     successCb?: (order: Order) => void,
-    errorCb?: (err: unknown) => void
-  ) {
-    loading.next(true);
+    errorCb?: (err: unknown) => void;
+  }): void {
+    options.loading.next(true);
     this._orderBus$.emit({
-      event: 'setDishAmount', loading, successCb, errorCb, data: {
-        orderDishId,
-        amount
+      event: 'setDishAmount',
+      loading: options.loading,
+      successCb: options.successCb,
+      errorCb: options.errorCb,
+      data: {
+        orderDishId: options.orderDishId,
+        amount: options.amount ?? 1
       }
     });
   }
@@ -606,24 +647,28 @@ export class NgOrderService {
   /**
   * @method setDishComment
   * Добавляет к заказываемому блюду комментарий.
-  * @param loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
-  * @param dish - блюдо, которому добавляется комментарий в корзине
-  * @param comment - добавляемый комментарий
-  * @param successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
-  * @param errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+  * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
+  * @param options.orderDishId - id блюда в корзине, которому добавляется комментарий
+  * @param options.comment - добавляемый комментарий
+  * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+  * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
-  setDishComment(
+  setDishComment(options: {
     loading: BehaviorSubject<boolean>,
-    dish: Dish,
+    orderDishId: number,
     comment: string,
     successCb?: (order: Order) => void,
-    errorCb?: (err: unknown) => void
-  ) {
-    loading.next(true);
+    errorCb?: (err: unknown) => void;
+  }) {
+    options.loading.next(true);
     this._orderBus$.emit({
-      event: 'setCommentToDish', loading, successCb, errorCb, data: {
-        dish,
-        comment
+      event: 'setCommentToDish',
+      loading: options.loading,
+      successCb: options.successCb,
+      errorCb: options.errorCb,
+      data: {
+        orderDishId: options.orderDishId,
+        comment: options.comment
       }
     });
   }
@@ -646,9 +691,9 @@ export class NgOrderService {
     );
   };
 
-  private updateOrder$(order: Partial<Order>): Observable<Order> {
+  private updateOrder$(order: ScanFormType<OrderForm>[ 'value' ]): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'orderUpdate', {
-      order: Partial<Order>;
+      order: ScanFormType<OrderForm>[ 'value' ];
     }>('orderUpdate', this.defaultOrderFragments, { order }).pipe(
       map(
         data => data.orderUpdate
@@ -657,11 +702,12 @@ export class NgOrderService {
   }
 
   private sendOrder$(orderId: string): Observable<CheckResponse> {
-    return this.ngGqlService.customMutation$<CheckResponse, 'sendOrder', OrderInput>('sendOrder', <ValuesOrBoolean<CheckResponse>> {
-      order: this.defaultOrderFragments,
-      message: this.defaultMessageFragments,
-      action: this.defaultActionFragments
-    }, {
+    return this.ngGqlService.customMutation$<CheckResponse, 'sendOrder', { orderId: string; }>(
+      'sendOrder', <ValuesOrBoolean<CheckResponse>> {
+        order: this.defaultOrderFragments,
+        message: this.defaultMessageFragments,
+        action: this.defaultActionFragments
+      }, {
       orderId
     }, {
       requiredFields: [ 'orderId' ]
@@ -700,8 +746,8 @@ export class NgOrderService {
     );
   };
 
-  private setDishComment$(data: SetDishCommentInput<number>): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderSetDishComment', SetDishCommentInput<number>>('orderSetDishComment', this.defaultOrderFragments, data).pipe(
+  private setDishComment$(data: SetDishCommentInput): Observable<Order> {
+    return this.ngGqlService.customMutation$<Order, 'orderSetDishComment', SetDishCommentInput>('orderSetDishComment', this.defaultOrderFragments, data).pipe(
       map(
         data => data.orderSetDishComment
       )

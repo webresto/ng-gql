@@ -1,6 +1,6 @@
 import type { BehaviorSubject } from 'rxjs';
-import type { Dish } from './dish/dish.gql';
-import type { Order, OrderForm, AddToOrderInput, RemoveOrSetAmountToDish, SetDishCommentInput, CheckResponse } from './order/order.gql';
+import type { Order, CheckOrderInput, AddToOrderInput, RemoveOrSetAmountToDish, SetDishCommentInput, CheckResponse, OrderForm } from './order/order.gql';
+import type { ScanFormType } from './scan-form-type';
 
 /**
  * @alias CartBusEvent
@@ -38,7 +38,7 @@ export type CartBusEventAdd = {
 export type CartBusEventUpdate = {
   event: 'update';
   /** Данные для операции */
-  data: Order;
+  data: ScanFormType<OrderForm>[ 'value' ];
 } & CartBusEventBase<Order>;
 
 /**
@@ -68,7 +68,7 @@ export type CartBusEventSetAmountToDish = {
 export type CartBusEventSetCommentToDish = {
   event: 'setCommentToDish';
   /** Данные для операции */
-  data: Omit<SetDishCommentInput<Dish>, 'id'>;
+  data: Omit<SetDishCommentInput, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
 } & CartBusEventBase<Order>;
 
@@ -77,7 +77,7 @@ export type CartBusEventSetCommentToDish = {
  * Отправка заказа на проверку перед оформлением. */
 export type CartBusEventCheck = {
   event: 'check';
-  data: OrderForm;
+  data: Omit<CheckOrderInput, 'orderId'>;
 } & CartBusEventBase<CheckResponse>;
 
 /**
