@@ -81,11 +81,23 @@ export type CartBusEventCheck = {
 } & CartBusEventBase<CheckResponse>;
 
 /**
+ * @interface SendOrderInput
+ * Данные для отправки оформленного заказа
+ * orderId - id оформляемого заказа
+ * orderIdFactory - необязательная фабричная функция для кастомной генерации id нового заказа, в случае успешного ответа API.
+ * По умолчанию (если orderIdFactory не передавался) в качестве id нового заказа будет отправлено undefined и id будет сгенерирован на стороне сервера API.
+ */
+export interface SendOrderInput {
+  orderId: string,
+  orderIdFactory?: () => string | undefined;
+}
+
+/**
  * @event CartBusEventSend
  * Отправка заказа на оформление */
 export type CartBusEventSend = {
   event: 'order';
-  data: string;
+  data: SendOrderInput;
 } & CartBusEventBase<CheckResponse>;
 
 export type StorageOrderTokenEvent = StorageOrderTokenSetOrderId | StorageOrderTokenRemoveOrderId;
@@ -100,4 +112,5 @@ export type StorageOrderTokenSetOrderId = {
 
 export type StorageOrderTokenRemoveOrderId = {
   event: 'removeOrderId';
+  newOrderId?: string;
 };

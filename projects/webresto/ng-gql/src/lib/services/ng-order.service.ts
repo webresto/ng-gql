@@ -6,7 +6,7 @@ import type {
   NgGqlConfig, Action, Message,
   CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier,
   CheckResponse, CartBusEvent, RemoveOrSetAmountToDish, OrderForm,
-  SetDishCommentInput, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier
+  SetDishCommentInput, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier, SendOrderInput
 } from '../models';
 import { isValue, isEqualItems, PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../models';;
 import { NgGqlService } from './ng-gql.service';
@@ -105,9 +105,10 @@ export class NgOrderService {
    * @method removeOrderId
    * Удаляет сохраненный в localStorage id заказа.
    */
-  removeOrderId() {
+  removeOrderId(newOrderId?: string) {
     this._storageActionBus$.emit({
-      event: 'removeOrderId'
+      event: 'removeOrderId',
+      newOrderId
     });
   }
 
@@ -159,7 +160,9 @@ export class NgOrderService {
     methods: PaymentMethod[];
   }> = this.storageOrderIdToken$.pipe(
     switchMap(
-      storageOrderIdToken => fromEvent<StorageEvent>(window, 'storage').pipe(
+      storageOrderIdToken => fromEvent<StorageEvent>(window, 'storage', {
+        passive: true
+      }).pipe(
         startWith({
           key: storageOrderIdToken,
           /** Returns the new value of the key of the storage item whose value is being changed. */
@@ -171,14 +174,20 @@ export class NgOrderService {
           /** Returns the URL of the document whose storage item changed. */
           url: window.location.href
         }),
-        filter(event => event.key === storageOrderIdToken),
+        //    filter(event => event.key === storageOrderIdToken),
+        map(ev => {
+          debugger;
+          return ev;
+        }),
         map(event => this.getOrderId(storageOrderIdToken, event.newValue ?? undefined)),
         shareReplay(1),
-        distinctUntilChanged(),
       )
     ),
+    distinctUntilChanged(),
     switchMap(
+
       storageOrderId => {
+        debugger;
         return combineLatest([
           this.getPaymentMethods$(storageOrderId),
           this.loadOrder$(storageOrderId).pipe(
@@ -188,8 +197,7 @@ export class NgOrderService {
                   this.removeOrderId();
                 };
                 return order;
-              }
-            ),
+              }),
             distinctUntilChanged((previous, current) => {
               return isEqualItems(previous, current);
             })
@@ -346,6 +354,7 @@ export class NgOrderService {
             localStorage.setItem(
               token, JSON.stringify({ orderId: orderId, dt: Date.now() })
             );
+
           };
         };
         if (busEvent.event == 'setOrderId' && isValue(busEvent.data.alternativeToken)) {
@@ -358,7 +367,11 @@ export class NgOrderService {
               storageOrderIdToken => {
                 switch (busEvent.event) {
                   case 'removeOrderId':
-                    localStorage.removeItem(storageOrderIdToken);
+                    if (busEvent.newOrderId) {
+                      setStorage(storageOrderIdToken, busEvent.newOrderId);
+                    } else {
+                      localStorage.removeItem(storageOrderIdToken);
+                    };
                     break;
                   case 'setOrderId':
                     setStorage(storageOrderIdToken, busEvent.data.orderId);
@@ -621,6 +634,7 @@ export class NgOrderService {
   */
   sendOrder(options: {
     orderId: string,
+    orderIdFactory?: () => string | undefined;
     loading?: BehaviorSubject<boolean>,
     successCb?: (order: CheckResponse) => void,
     errorCb?: (err: unknown) => void;
@@ -630,7 +644,10 @@ export class NgOrderService {
       loading: options.loading,
       successCb: options.successCb,
       errorCb: options.errorCb,
-      data: options.orderId
+      data: {
+        orderId: options.orderId,
+        orderIdFactory: options.orderIdFactory
+      }
     });
   }
 
@@ -720,20 +737,33 @@ export class NgOrderService {
     );
   }
 
-  private sendOrder$(orderId: string): Observable<CheckResponse> {
+  private sendOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
     return this.ngGqlService.customMutation$<CheckResponse, 'sendOrder', { orderId: string; }>(
       'sendOrder', <ValuesOrBoolean<CheckResponse>> {
         order: this.defaultOrderFragments,
         message: this.defaultMessageFragments,
         action: this.defaultActionFragments
       }, {
-      orderId
+      orderId: sendOrderData.orderId
     }, {
       requiredFields: [ 'orderId' ]
     }).pipe(
       map(
-        data => data.sendOrder
-      )
+        data => {
+          if (isValue(data)) {
+            if (isValue(sendOrderData.orderIdFactory)) {
+              const newOrderId = sendOrderData.orderIdFactory();
+              if (newOrderId) {
+                this.setOrderId(newOrderId);
+              } else {
+                this.removeOrderId(newOrderId);
+              };
+            } else {
+              this.removeOrderId();
+            };
+          };
+          return data.sendOrder;
+        })
     );
   };
 
