@@ -1,0 +1,55 @@
+# Interface: AddToOrderInput
+
+## Table of contents
+
+### Properties
+
+- [orderId](AddToOrderInput.md#orderid)
+- [dishId](AddToOrderInput.md#dishid)
+- [amount](AddToOrderInput.md#amount)
+- [modifiers](AddToOrderInput.md#modifiers)
+- [comment](AddToOrderInput.md#comment)
+- [replace](AddToOrderInput.md#replace)
+- [orderDishId](AddToOrderInput.md#orderdishid)
+
+## Properties
+
+### orderId
+
+• **orderId**: `string`
+
+___
+
+### dishId
+
+• **dishId**: `string`
+
+___
+
+### amount
+
+• `Optional` **amount**: `number`
+
+___
+
+### modifiers
+
+• `Optional` **modifiers**: `Partial`<[`Modifier`](Modifier.md)\>[] \| `Partial`<[`OrderModifier`](OrderModifier.md)\>[]
+
+___
+
+### comment
+
+• `Optional` **comment**: `string`
+
+___
+
+### replace
+
+• `Optional` **replace**: `boolean`
+
+___
+
+### orderDishId
+
+• `Optional` **orderDishId**: `number`

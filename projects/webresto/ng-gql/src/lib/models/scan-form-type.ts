@@ -1,4 +1,4 @@
-import { FormGroup, FormArray, FormControl } from '@angular/forms';
+import type { FormGroup, FormArray, FormControl } from '@angular/forms';
 
 /** @private */
 export type ScanFormType<T> = T extends FormGroup<infer U> ?

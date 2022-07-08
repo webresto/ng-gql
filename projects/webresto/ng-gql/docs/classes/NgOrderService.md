@@ -38,13 +38,14 @@
 
 ### constructor
 
-• **new NgOrderService**(`ngGqlService`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
+• **new NgOrderService**(`ngGqlService`, `storageWrapper`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
+| `storageWrapper` | [`StorageWrapper`](StorageWrapper.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 | `defaultPaymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`PaymentMethod`](../interfaces/PaymentMethod.md), [`PaymentMethod`](../interfaces/PaymentMethod.md), [`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
 | `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>, [`Action`](../interfaces/Action.md)<`any`\>, [`Action`](../interfaces/Action.md)<`any`\>\> |
@@ -59,9 +60,9 @@
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `newToken` | `string` |  |
+| Name | Type |
+| :------ | :------ |
+| `newToken` | `string` |
 
 #### Returns
 
@@ -71,13 +72,14 @@ ___
 
 ### getOrderId
 
-▸ **getOrderId**(`storageOrderIdToken`): `undefined` \| `string`
+▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`): `undefined` \| `string`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `storageOrderIdToken` | `string` |
+| `storageOrderId?` | `string` |
 
 #### Returns
 
@@ -91,10 +93,10 @@ ___
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `orderId` | `string` |  |
-| `storageOrderIdToken?` | `string` |  |
+| Name | Type |
+| :------ | :------ |
+| `orderId` | `string` |
+| `storageOrderIdToken?` | `string` |
 
 #### Returns
 
@@ -104,7 +106,13 @@ ___
 
 ### removeOrderId
 
-▸ **removeOrderId**(): `void`
+▸ **removeOrderId**(`newOrderId?`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `newOrderId?` | `string` |
 
 #### Returns
 
@@ -168,13 +176,14 @@ ___
 
 ### loadOrder$
 
-▸ **loadOrder$**(`orderId`): `Observable`<[`Order`](../interfaces/Order.md)\>
+▸ **loadOrder$**(`id`, `isShort?`): `Observable`<[`Order`](../interfaces/Order.md)\>
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `orderId` | `undefined` \| `string` |  |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `id` | `undefined` \| `string` | `undefined` |  |
+| `isShort` | `boolean` | `false` | - |
 
 #### Returns
 
@@ -236,7 +245,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.data` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; groupId: string; ... 20 more ...; customData: Partial<...\>; }\>; ... 9 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> |  |
+| `options.data` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; groupId: string; ... 20 more ...; customData: Partial<...\>; }\>; ... 9 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> |  |
 | `options.loading` | `BehaviorSubject`<`boolean`\> |  |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |
@@ -256,7 +265,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.orderForm` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; groupId: string; ... 20 more ...; customData: Partial<...\>; }\>; ... 9 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> |  |
+| `options.orderForm` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; groupId: string; ... 20 more ...; customData: Partial<...\>; }\>; ... 9 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> |  |
 | `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 
@@ -276,6 +285,7 @@ ___
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
 | `options.orderId` | `string` |  |
+| `options.orderIdFactory?` | () => `undefined` \| `string` | - |
 | `options.loading?` | `BehaviorSubject`<`boolean`\> | - |
 | `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |

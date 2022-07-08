@@ -26,7 +26,7 @@ type PartialGroupNullable = Pick<Group, 'slug'> & {
 /**
  * Объект настройки генерации части строки запроса с описанием типов параметров операции.
  */
-export type QueryGenerationParam<V> = {
+export interface QueryGenerationParam<V> {
   /**
    * Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
    * (например у параметра указан тип String!, а не String).
@@ -78,28 +78,28 @@ export class NgGqlService {
   }
 
   /**
-   * @method getNavigation$
+   * @method getNavigation$()
    * Используется для получения массива обьектов навигации для различных компонентов приложения.
    * @param options - объект NavigationLoader. Обязателен, при использовании нестандартной схемы навигации в приложении.
-   * @see NavigationLoader<T>
+   * @see @interface NavigationLoader<T>
    */
   getNavigation$<T extends NavigationBase>(options: NavigationLoader<T>): Observable<T[]>;
 
   /**
-   * @method getNavigation$
+   * @method getNavigation$()
    * Используется для получения массива обьектов навигации для различных компонентов приложения.
    * Если приложение использует стандартную механику навигации, параметр `options` - не требуется.
    */
   getNavigation$(): Observable<Navigation[]>;
 
   /**
- * @method getNavigation$
+ * @method getNavigation$()
  * Используется для получения массива обьектов навигации для различных компонентов приложения.
  * Если приложение использует стандартную механику навигации, параметр `options` - не требуется.
  * Если приложение использует нестандартную механику навигации, параметр `options` - обязательный.
  * @param options - объект NavigationLoader.
  * Обязателен, при использовании нестандартной схемы навигации в приложении.
- * @see NavigationLoader<T>
+ * @see @interface NavigationLoader<T>
  */
   getNavigation$<T extends NavigationBase = Navigation>(options?: NavigationLoader<T>): Observable<T[]> {
     const customvOb = this.config.customFields?.[ 'Navigation' ];
@@ -188,7 +188,7 @@ export class NgGqlService {
 
 
   /**
-   * @method addAmountToDish
+   * @method addAmountToDish()
    * Метод-хелпер, используемый для добавления модификаторам блюда параметра amount и установки ему значения, в случае, если они у него имеются.
    * @param sourceDish - объект с исходными данными блюда.
    * @returns новый, дополненный объект с данными блюда.
@@ -344,7 +344,7 @@ export class NgGqlService {
     distinctUntilChanged((previous, current) => isEqualItems(previous, current))
   );
 
-  getMenu$(slug: string | string[] | undefined): Observable<Partial<Group>[] |undefined| null> {
+  getMenu$(slug: string | string[] | undefined): Observable<Partial<Group>[] | undefined | null> {
     return this.loadedMenu$.pipe(
       map(({ groupsById, groupIdsBySlug }) => {
         if (slug) {
@@ -405,7 +405,7 @@ export class NgGqlService {
   }
 
   /**
-   * @method isKnownPhone$
+   * @method isKnownPhone$()
    * Проверяет переданный номер телефона на "знакомость".
    * @param phone - Объект с данными номера телефона.
    * @returns
@@ -478,13 +478,14 @@ export class NgGqlService {
   };
 
   /**
-   * @method customQuery$ для выполнения запросов типа "query" к серверу API GraphQL
-   * @typeParam T Тип запрашиваемых данных, по которому построен объект @see `queryObject`.
+   * @method customQuery$() для выполнения запросов типа "query" к серверу API GraphQL
+   * @typeParam T Тип запрашиваемых данных, по которому построен объект @param queryObject.
    * @typeParam N Строка-название операции из схемы сервера GraphQL.
    * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
    * @param name - название операции, объвленное в схеме сервера GraphQL.
    * @param queryObject - объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>.
-   *    @see ValuesOrBoolean<T>
+   * @see @alias ValuesOrBoolean<T>
+   *
    * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
    *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
    *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
@@ -501,7 +502,7 @@ export class NgGqlService {
    * @returns - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
    *  в виде одиночного объекта либо массива.
    **/
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
+  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables >(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
       query: gql`query ${ generateQueryString({
         name,
@@ -519,13 +520,13 @@ export class NgGqlService {
   };
 
   /**
- * @method customMutation$ для выполнения запросов типа "mutation" к серверу API GraphQL
- * @typeParam T Тип мутируемых данных, по которому построен объект @see `queryObject`.
+ * @method customMutation$() для выполнения запросов типа "mutation" к серверу API GraphQL
+ * @typeParam T Тип мутируемых данных, по которому построен объект @param queryObject
  * @typeParam N Строка-название операции из схемы сервера GraphQL.
  * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
  * @param name - название операции, объвленное в схеме сервера GraphQL.
  * @param queryObject - объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>.
- *     @see ValuesOrBoolean<T>
+ * @see @alias ValuesOrBoolean<T>
  * @param variables - обязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
  *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
  *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
@@ -558,13 +559,13 @@ export class NgGqlService {
   };
 
   /**
-* @method customSubscribe$ для выполнения запросов типа "subscription" к серверу API GraphQL
-* @typeParam T Тип данных, на обновление которых производится подписка и по которому построен объект @see `queryObject`.
+* @method customSubscribe$() для выполнения запросов типа "subscription" к серверу API GraphQL
+* @typeParam T Тип данных, на обновление которых производится подписка и по которому построен объект @param queryObject
 * @typeParam N Строка-название операции из схемы сервера GraphQL.
 * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
 * @param name - название операции, объвленное в схеме сервера GraphQL.
 * @param queryObject - объект-источник информации о структуре данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>.
-*     @see ValuesOrBoolean<T>
+* @see @alias ValuesOrBoolean<T>
 * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
 *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
 *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
@@ -582,9 +583,9 @@ export class NgGqlService {
 * ВАЖНО! В потоке будут поступать только обновления для данных, на которые сделана подписка.
 * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
 * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
-* @see queryAndSubscribe
+* @see this.queryAndSubscribe
 **/
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]> {
+  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables >(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]> {
     const q = generateQueryString({
       name,
       queryObject,
@@ -603,15 +604,14 @@ export class NgGqlService {
   };
 
   /**
-  * @method queryAndSubscribe
+  * @method queryAndSubscribe()
   * Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
-
   * @param nameQuery - название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL.
   * @param nameSubscribe - название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных.
   * @param queryObject - объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>.
-  *   @see ValuesOrBoolean<T>
+  * @see @alias ValuesOrBoolean<T>
   * @param uniqueKeyForCompareItem - наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id').
-    Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки.
+  * Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки.
   * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.

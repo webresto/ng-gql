@@ -53,7 +53,7 @@ export interface NgGqlConfig {
    * добавленных в базовые модели на стороне конкретного сервера и объявленные в схеме GraphQL на сервере.
    * В качестве ключей указывается название модели, в качестве значений - объекты,
    * содержащие часть конфигурации `ValuesOrBoolean` этой модели, отражающую отличия с базовой моделью.
-   * @see ValuesOrBoolean
+   * @see @alias ValuesOrBoolean<T>
    * */
   customFields?: {
     [ modelName: string ]: ValuesOrBoolean<unknown>;

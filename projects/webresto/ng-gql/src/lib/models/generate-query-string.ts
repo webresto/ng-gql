@@ -1,5 +1,9 @@
 import { isValue } from './is-value';
 
+type StringKeysType = {
+  [ key: string ]: number | string | object | boolean | null | undefined;
+};
+
 /**
  * @alias VCriteria
  * Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
@@ -27,7 +31,7 @@ export type GQLRequestVariables = undefined | VCriteria | {
 };
 
 /**
- * @function generateQueryString
+ * @function generateQueryString()
  * Функция - генератор строки запроса к серверу GraphQL.
  * @param options - объект с данными, необходимыми для формирования запроса, где:
  * @param options.name - название операции, объвленное в схеме сервера GraphQL.
@@ -43,12 +47,12 @@ export type GQLRequestVariables = undefined | VCriteria | {
  * @returns часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V.
  *  НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription
  */
-export function generateQueryString<T, N extends `${ string }`, V = (GQLRequestVariables | undefined)>(options: {
+export function generateQueryString<T, N extends `${ string }`, GQLRequestVariables>(options: {
   name: N,
   queryObject: T,
-  variables?: V,
-  requiredFields?: (keyof V)[];
-  fieldsTypeMap?: Map<keyof V, string>;
+  variables?: GQLRequestVariables,
+  requiredFields?: (keyof GQLRequestVariables)[];
+  fieldsTypeMap?: Map<keyof GQLRequestVariables, string>;
 }) {
   const { name, queryObject, variables } = options;
   const makeFieldList = <T, V>(source: T, name: string, indent: number = 1, variables?: V): string => {
@@ -76,7 +80,7 @@ export function generateQueryString<T, N extends `${ string }`, V = (GQLRequestV
       }\n${ indentString }}
       `;
   };
-  const getGqlType = <K extends keyof V>(key: K, value: V[ K ], optionalField: boolean = false, fieldsTypeMap?: Map<keyof V, string>): string => {
+  const getGqlType = <K extends keyof GQLRequestVariables>(key: K, value: GQLRequestVariables[ K ], optionalField: boolean = false, fieldsTypeMap?: Map<keyof GQLRequestVariables, string>): string => {
     switch (true) {
       case isValue(fieldsTypeMap) && fieldsTypeMap.has(key): return fieldsTypeMap?.get(key)!;
       case typeof value === 'number': return optionalField ? 'Int!' : 'Int';
@@ -86,7 +90,7 @@ export function generateQueryString<T, N extends `${ string }`, V = (GQLRequestV
       default: throw new Error('Параметр должен принадлежать типам number, string, object или boolean');
     }
   };
-  return ` load${ name[ 0 ].toUpperCase() + name.slice(1) } ${ variables ? `(${ (<(keyof V)[]> Object.keys(variables)).filter(
+  return ` load${ name[ 0 ].toUpperCase() + name.slice(1) } ${ variables ? `(${ (<(keyof GQLRequestVariables)[]> Object.keys(variables)).filter(
     key => isValue(variables[ key ])
   ).map(
     key => `$${ String(key) }:${ getGqlType(key, variables[ key ], options.requiredFields && options.requiredFields.includes(key), options.fieldsTypeMap) }`

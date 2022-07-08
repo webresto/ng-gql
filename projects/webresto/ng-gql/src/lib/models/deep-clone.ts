@@ -3,7 +3,7 @@ import { isValue } from './is-value';
 type ArrayElement<T> = T extends Array<infer U> ? U : never;
 
 /**
- * @function deepClone
+ * @function deepClone()
  * Функция для "глубокого" рекурсивного клонирования любых объектов
  * @param source - объект, который требуется скопировать
  * @returns полная копия объекта объекта, полученного в качестве аргумента

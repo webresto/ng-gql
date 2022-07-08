@@ -1,17 +1,15 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, fromEvent, of } from 'rxjs';
-import type { Observable, Subscription } from 'rxjs';
+import { combineLatest, fromEvent, of } from 'rxjs';
+import type { Observable, BehaviorSubject } from 'rxjs';
 import { filter, map, switchMap, shareReplay, startWith, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
 import type {
   NgGqlConfig, Action, Message,
   CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier,
   CheckResponse, CartBusEvent, RemoveOrSetAmountToDish, OrderForm,
-  SetDishCommentInput, ValuesOrBoolean, StorageOrderTokenEvent, OrderModifier, SendOrderInput
+  SetDishCommentInput, ValuesOrBoolean, OrderModifier, SendOrderInput, ScanFormType
 } from '../models';
-import { isValue, isEqualItems, PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../models';;
+import { isValue, isEqualItems, StorageWrapper, PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../models';;
 import { NgGqlService } from './ng-gql.service';
-import type { ScanFormType } from '../models/scan-form-type';
-
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +18,7 @@ export class NgOrderService {
 
   constructor(
     private ngGqlService: NgGqlService,
+    private storageWrapper: StorageWrapper,
     @Inject('config') private config: NgGqlConfig,
     @Inject(PAYMENT_METHOD_FRAGMENTS) private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
     @Inject(ACTION_FRAGMENTS) private defaultActionFragments: ValuesOrBoolean<Action>,
@@ -28,88 +27,35 @@ export class NgOrderService {
   ) { }
 
   /**
-   * Поток для изменения "на лету" токена, с которым в localStorage сохраняется id заказа.
-   * Необходим для реализации на сайте "мультикорзины" - нескольких параллельных корзин, между которыми пользователь может переключаться при переходе по страницам сайта.
-   */
-  private _storageOrderIdToken$ = new BehaviorSubject<string | null>(
-    this.config.orderIdStorageToken !== undefined ?
-      this.config.orderIdStorageToken :
-      `${ window.location.host }-orderId
-     `);
-
-  private storageOrderIdToken$ = this._storageOrderIdToken$.pipe(
-    filter((storageOrderIdToken): storageOrderIdToken is string => !!storageOrderIdToken),
-    distinctUntilChanged(),
-  );
-
-  /**
-   * @method updateStorageOrderIdToken
-   * Реализация "мульткорзины".
-   * Предназначен для переключения между корзинами, каждая из которых хранятся в localStorage со своим токеном.
-   * Предназначен для переключения потоков с
-   * @param newToken
+   * @method updateStorageOrderIdToken()
+   * @see this.StorageWrapper.updateStorageOrderIdToken()
    */
   updateStorageOrderIdToken(newToken: string) {
-    this._storageOrderIdToken$.next(newToken);
+    this.storageWrapper.updateStorageOrderIdToken(newToken);
   }
 
   /**
-   * @method getOrderId
-   *  @returns Возвращает orderId, сохраненный ранее в localStorage с ключом @interface `NgGqlConfig.orderIdStorageToken` (по умолчанию -'${ window.location.host }-orderId').
-   * Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
-   * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
-   * Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
+   * @method getOrderId()
+   * @see this.StorageWrapper.getOrderId()
    */
-  getOrderId(storageOrderIdToken: string, storageOrderId?: string): string | undefined {
-    try {
-      const cartString = isValue(storageOrderId) ? storageOrderId : localStorage.getItem(storageOrderIdToken);
-      if (cartString) {
-        const cartData: {
-          orderId: string;
-          dt: number;
-        } = JSON.parse(cartString);
-        const idObsolescence = (43200000 * (isValue(this.config.obsolescence) ? this.config.obsolescence : 14));
-        if ((Date.now() - cartData.dt) > idObsolescence) {
-          return undefined;
-        } else {
-          return cartData.orderId;
-        };
-      } else {
-        return undefined;
-      };
-    } catch (error) {
-      return undefined;
-    };
+  getOrderId(storageOrderIdToken: string, storageOrderId?: string) {
+    return this.storageWrapper.getOrderId(storageOrderIdToken, storageOrderId);
   }
 
   /**
-   * @method setOrderId
-   * @param orderId - id Заказа, который требуется сохранить в localStorage с ключом @interface `NgGqlConfig.orderIdStorageToken` (по умолчанию -'${ window.location.host }-orderId').
-   * Id хранится в виде обьекта, содержащего помимо савмого id также временную метку создания записи (в виде unix-timestamp).
-   * Старые orderId не используются - метод вернет `undefined`, в API будет запрошен новый заказ, а данные в localStorage обновятся.
-   * Значение считается устаревшим, если с момента его добавления прошло больше времени, чем указано в `NgGqlConfig.obsolescence` (по умолчанию - 14 дней).
-   * @param storageOrderIdToken - необязательный альтернативный токен для сохранения orderId в localstorage.
-   * Также все последующие операции в localStorage данными заказа начнут использовать этот токен, т.к. обновится внутренняя подписка информации об используемом токене.
+   * @method setOrderId()
+   * @see this.StorageWrapper.setOrderId()
    */
   setOrderId(orderId: string, storageOrderIdToken?: string) {
-    this._storageActionBus$.emit({
-      event: 'setOrderId',
-      data: {
-        orderId,
-        alternativeToken: storageOrderIdToken
-      }
-    });
+    this.storageWrapper.setOrderId(orderId, storageOrderIdToken);
   }
 
   /**
-   * @method removeOrderId
-   * Удаляет сохраненный в localStorage id заказа.
+   * @method removeOrderId()
+   * @see this.StorageWrapper.removeOrderId()
    */
   removeOrderId(newOrderId?: string) {
-    this._storageActionBus$.emit({
-      event: 'removeOrderId',
-      newOrderId
-    });
+    this.storageWrapper.removeOrderId(newOrderId);
   }
 
   paymentLink$(phone: string, fromPhone: string, orderId: string): Observable<any> {
@@ -158,28 +104,18 @@ export class NgOrderService {
   private orderAndPaymentMethods$: Observable<{
     order: Order,
     methods: PaymentMethod[];
-  }> = this.storageOrderIdToken$.pipe(
+  }> = this.storageWrapper.storageOrderIdToken$.pipe(
     switchMap(
       storageOrderIdToken => fromEvent<StorageEvent>(window, 'storage', {
         passive: true
       }).pipe(
-        startWith({
-          key: storageOrderIdToken,
-          /** Returns the new value of the key of the storage item whose value is being changed. */
-          newValue: localStorage.getItem(storageOrderIdToken),
-          /** Returns the old value of the key of the storage item whose value is being changed. */
-          oldValue: localStorage.getItem(storageOrderIdToken),
-          /** Returns the Storage object that was affected. */
-          storageArea: window.localStorage,
-          /** Returns the URL of the document whose storage item changed. */
-          url: window.location.href
-        }),
-        //    filter(event => event.key === storageOrderIdToken),
+        startWith(this.storageWrapper.startStorageEventFactory(storageOrderIdToken)),
+        filter(event => event.key === storageOrderIdToken),
         map(ev => {
           debugger;
           return ev;
         }),
-        map(event => this.getOrderId(storageOrderIdToken, event.newValue ?? undefined)),
+        map(event => this.storageWrapper.getOrderId(storageOrderIdToken, event.newValue ?? undefined)),
         shareReplay(1),
       )
     ),
@@ -191,13 +127,6 @@ export class NgOrderService {
         return combineLatest([
           this.getPaymentMethods$(storageOrderId),
           this.loadOrder$(storageOrderId).pipe(
-            map(
-              order => {
-                if (order.state === 'ORDER') {
-                  this.removeOrderId();
-                };
-                return order;
-              }),
             distinctUntilChanged((previous, current) => {
               return isEqualItems(previous, current);
             })
@@ -205,16 +134,14 @@ export class NgOrderService {
         ]).pipe(
           map(
             data => {
-              const [ methods, order ] = data;
-
               return {
-                methods,
+                methods: data[ 0 ],
                 order: {
-                  ...order,
-                  paymentMethod: !order.paymentMethod && methods.length > 0 ? {
-                    id: methods[ 0 ].id,
-                    title: methods[ 0 ].title
-                  } : order.paymentMethod
+                  ...data[ 1 ],
+                  paymentMethod: !data[ 1 ].paymentMethod && data[ 0 ].length > 0 ? {
+                    id: data[ 0 ][ 0 ].id,
+                    title: data[ 0 ][ 0 ].title
+                  } : data[ 1 ].paymentMethod
                 }
               };
             })
@@ -233,7 +160,7 @@ export class NgOrderService {
   );
 
   /**
-   * @method getOrderPaymentMethods$
+   * @method getOrderPaymentMethods$()
    * @returns Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
    */
   getOrderPaymentMethods$(): Observable<PaymentMethod[]> {
@@ -247,7 +174,7 @@ export class NgOrderService {
   );
 
   /**
-   * @method  getOrder
+   * @method () getOrder
    * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
    */
   getOrder(): Observable<Order> {
@@ -261,8 +188,8 @@ export class NgOrderService {
   /**
    * Поток Observable, в который будут поступать события по текущему заказу в процессе оформления, подразумевающие совершение каких-либо действий на стороне фронта и выполняемых пользователем
    * (переход на страницу оплаты или, к примеру, открытие диалогового окна с предложением блюда по акции, акции и т.п. )
-   * Для получения потока используется метод @method getActionEmitter()
-   * Для отправки в поток кастомных сообщений испльзуется @method emitActionEvent()
+   * Для получения потока используется метод @method this.getActionEmitter()
+   * Для отправки в поток кастомных сообщений испльзуется @method this.emitActionEvent()
    */
   private _actions$ = this.getOrder().pipe(
     distinctUntilKeyChanged('id'),
@@ -277,8 +204,8 @@ export class NgOrderService {
 
   /**
    * Поток Observable, в который будут поступать информационные сообщения по текущему заказу (блюдо добавлено/удалено/заказ оформлен).
-   * Для получения потока используется метод @method getMessageEmitter()
-   * Для отправки в поток кастомных сообщений испльзуется @method emitMessageEvent()
+   * Для получения потока используется метод @method this.getMessageEmitter()
+   * Для отправки в поток кастомных сообщений испльзуется @method this.emitMessageEvent()
    */
   private _messages$ = this.getOrder().pipe(
     distinctUntilKeyChanged('id'),
@@ -292,24 +219,24 @@ export class NgOrderService {
   );
 
   /**
-  * @method loadOrder$
+  * @method loadOrder$()
   *
   * Метод загружает заказ и делает подписку для получения по нему обновлений.
   * Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
   * (например, данные для страницы "Спасибо за заказ").
   *
-  * @param orderId - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
+  * @param id - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
   *  */
-  loadOrder$(orderId: string | undefined): Observable<Order> {
+  loadOrder$(id: string | undefined, isShort: boolean = false): Observable<Order> {
     const customvOb = this.config.customFields?.[ 'Order' ];
     const vOb = customvOb ? { ...this.defaultOrderFragments, ...customvOb } : this.defaultOrderFragments;
-    return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | undefined>('order', 'order', vOb, 'id', orderId ? {
-      query: {
-        orderId
-      },
-      subscribe: {
-        orderId
-      }
+    return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | { shortId: string; } | undefined>('order', 'order', vOb, 'id', id ? {
+      query: isShort ?
+        { shortId: id } :
+        { orderId: id },
+      subscribe: isShort ?
+        { shortId: id } :
+        { orderId: id }
     } : undefined, undefined).pipe(
       map(values => values[ 0 ] ? values[ 0 ] : null),
       filter((order): order is Order => isValue(order)),
@@ -344,50 +271,15 @@ export class NgOrderService {
     );
   }
 
-  private _storageActionBus$ = new EventEmitter<StorageOrderTokenEvent>();
-  private storageActionBus$ = this._storageActionBus$.pipe(
-    switchMap(
-      busEvent => {
-        const setStorage = (token: string, orderId: string) => {
-          const storageOrderId = this.getOrderId(token);
-          if (!storageOrderId || orderId !== storageOrderId) {
-            localStorage.setItem(
-              token, JSON.stringify({ orderId: orderId, dt: Date.now() })
-            );
 
-          };
-        };
-        if (busEvent.event == 'setOrderId' && isValue(busEvent.data.alternativeToken)) {
-          setStorage(busEvent.data.alternativeToken, busEvent.data.orderId);
-          this.updateStorageOrderIdToken(busEvent.data.alternativeToken);
-          return of(() => { });
-        } else {
-          return this.storageOrderIdToken$.pipe(
-            map(
-              storageOrderIdToken => {
-                switch (busEvent.event) {
-                  case 'removeOrderId':
-                    if (busEvent.newOrderId) {
-                      setStorage(storageOrderIdToken, busEvent.newOrderId);
-                    } else {
-                      localStorage.removeItem(storageOrderIdToken);
-                    };
-                    break;
-                  case 'setOrderId':
-                    setStorage(storageOrderIdToken, busEvent.data.orderId);
-                    break;
-                };
-              }),
-          );
-        };
-      }),
-  );
+
+  ;
 
   private _orderBus$ = new EventEmitter<CartBusEvent>();
 
   /**
   * Внутренний поток-шина для событий, ассоциированных с действиями, которыми необходимо выполнить с заказом (добавить/удалить блюдо, проверить заказ, отправить на проверку и тп.).
-  * Используется только в случае, если в @see config параметр busSubscribeMode установлен в значении 'custom' для самостоятельного управления подпиской на стороне приложения.
+  * Используется только в случае, если в @see this.config параметр busSubscribeMode установлен в значении 'custom' для самостоятельного управления подпиской на стороне приложения.
   * Использование этого потока и событий внутри него извне не подразумевается и не предусматривается,
   * Для выполнения действий с заказом, необходимо использовать соответствующие методы:
   * @see this.addToOrder
@@ -455,21 +347,14 @@ export class NgOrderService {
       }),
   );
 
-  private _orderBusSubscription$: Subscription | undefined = this.config.busSubscribeMode === 'subscribe' ? this.orderBus$.subscribe({
+  private _orderBusSubscription$ = this.config.busSubscribeMode === 'subscribe' ? this.orderBus$.subscribe({
     next: () => { },
     error: () => { },
-    complete: () => this._orderBusSubscription$?.unsubscribe()
+    complete: () => { }
   }) : undefined;
 
-  private _storageActionBusSubscription$: Subscription = this.storageActionBus$.subscribe({
-    next: () => { },
-    error: () => { },
-    complete: () => this._storageActionBusSubscription$?.unsubscribe()
-  });
-
-
   /**
-   * @method addToOrder
+   * @method addToOrder()
    * Используется для отправки в шину события добавления блюда.
    * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
    * @param options.dishId - id добавляемого блюдо
@@ -514,7 +399,7 @@ export class NgOrderService {
   }
 
   /**
-  * @method removeFromOrder
+  * @method removeFromOrder()
   * Используется для отправки в шину события удаления блюда из корзины
   * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
   * @param options.amount - количество
@@ -543,10 +428,10 @@ export class NgOrderService {
   }
 
   /**
-  * @method updateOrder
+  * @method updateOrder()
   * Используется для отправки в шину события обновления данных в заказе, не связанных с блюдами.
-  * Может использоваться ТОЛЬКО ДО того, как заказ отправлен через @method sendOrder
-  * Также, заказ нужно повторно проверять методом @method checkOrder, если такая проверка уже проводилась ранее.
+  * Может использоваться ТОЛЬКО ДО того, как заказ отправлен через @method this.sendOrder()
+  * Также, заказ нужно повторно проверять методом @method this.checkOrder(), если такая проверка уже проводилась ранее.
   * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
   * @param options.data - объект заказа, при этом не все данные из него будут приняты и, в результате, обновлены.
   * Большая часть будет данных будет проигнорирована и может изменяться только в рамках других методов согласно заложенной бизнес-логике.
@@ -570,7 +455,7 @@ export class NgOrderService {
   }
 
   /**
-   * @method checkOrder
+   * @method checkOrder()
    * Используется для отправки в шину события обязательной проверки заказа перед оформлением.
    * Метод необходимо вызывать после того, как пользователь полностью заполнил в заказе все необходимые данные и далее после каждого вносимого в форму изменения, при условии, что в форме все необходимые данные заполнены.
    * @param options.orderForm - Форма чекаута с данными проверяемого заказа
@@ -625,7 +510,7 @@ export class NgOrderService {
   }
 
   /**
-  * @method sendOrder
+  * @method sendOrder()
   * Используется для отправки в шину события оформления заказа.
   * Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
   * @param options.orderId - Форма чекаута с данными оформляемего заказа
@@ -652,7 +537,7 @@ export class NgOrderService {
   }
 
   /**
-  * @method setDishAmount
+  * @method setDishAmount()
   * Устанавливает для блюда dish в заказе количество amount.
   * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
   * @param options.orderDishId - id блюда в корзине, для которого изменяется количество заказываемых порций
@@ -681,7 +566,7 @@ export class NgOrderService {
   }
 
   /**
-  * @method setDishComment
+  * @method setDishComment()
   * Добавляет к заказываемому блюду комментарий.
   * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
   * @param options.orderDishId - id блюда в корзине, которому добавляется комментарий
@@ -804,12 +689,12 @@ export class NgOrderService {
   };
 
   destroy() {
-    if (this._orderBusSubscription$ && !this._orderBusSubscription$.closed) {
+    if (isValue(this._orderBusSubscription$)) {
       this._orderBusSubscription$.unsubscribe();
     };
-    this._storageActionBusSubscription$.unsubscribe();
+    this.storageWrapper.destroy();
     Object.values(this).filter(
-      (property): property is EventEmitter<unknown> | BehaviorSubject<unknown> => property instanceof EventEmitter || property instanceof BehaviorSubject
+      (property): property is EventEmitter<unknown> => property instanceof EventEmitter
     ).forEach(
       property => property.complete()
     );

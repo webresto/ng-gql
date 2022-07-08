@@ -61,7 +61,7 @@ export interface Address {
 	doorphone?: string;
 }
 
-export type AddToOrderInput = {
+export interface AddToOrderInput {
 	orderId: string,
 	dishId: string,
 	amount?: number,
@@ -71,19 +71,19 @@ export type AddToOrderInput = {
 	orderDishId?: number;
 };
 
-export type RemoveOrSetAmountToDish = {
+export interface RemoveOrSetAmountToDish {
 	orderDishId?: number;
 	amount?: number;
 	id: string;
 };
 
-export type SetDishCommentInput = {
+export interface SetDishCommentInput {
 	id?: string,
 	comment?: string;
 	orderDishId: number;
 };
 
-export type CheckOrderInput = {
+export interface CheckOrderInput extends Partial<BaseModelWithCustomData> {
 	orderId: string,
 	paymentMethodId?: string,
 	selfService: boolean,
@@ -94,7 +94,7 @@ export type CheckOrderInput = {
 	customer: Partial<Customer> | null,
 	comment?: string,
 	notifyMethodId?: string,
-} & Partial<BaseModelWithCustomData>;
+};
 
 export interface CheckResponse {
 	order: Partial<Order>;
@@ -102,7 +102,7 @@ export interface CheckResponse {
 	action: Partial<Action> | null;
 }
 
-export type OrderAdditionalFields = {
+export interface OrderAdditionalFields {
 	selfService: boolean,
 	pickupAddressId?: string | undefined,
 	locationId?: string | undefined,

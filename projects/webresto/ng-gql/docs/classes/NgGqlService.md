@@ -216,7 +216,7 @@ ___
 | `name` | `N` |  |
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`, `T`, `T` extends `T` ? `T` : `never`\> |  |
 | `variables?` | `V` |  |
-| `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> |  |
+| `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`V`\> |  |
 
 #### Returns
 
@@ -243,7 +243,7 @@ ___
 | `name` | `N` |  |
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`, `T`, `T` extends `T` ? `T` : `never`\> |  |
 | `variables` | `V` |  |
-| `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> |  |
+| `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`V`\> |  |
 
 #### Returns
 
@@ -270,7 +270,7 @@ ___
 | `name` | `N` |  |
 | `queryObject` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`, `T`, `T` extends `T` ? `T` : `never`\> |  |
 | `variables?` | `V` |  |
-| `paramOptions?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`V`\> |  |
+| `paramOptions?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`V`\> |  |
 | `extra?` | `ExtraSubscriptionOptions` | - |
 
 #### Returns
@@ -305,8 +305,8 @@ ___
 | `variables.query?` | `VQ` | - |
 | `variables.subscribe?` | `VS` | - |
 | `paramOptions?` | `Object` |  |
-| `paramOptions.query?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`VQ`\> | - |
-| `paramOptions.subscribe?` | [`QueryGenerationParam`](../README.md#querygenerationparam)<`VS`\> | - |
+| `paramOptions.query?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`VQ`\> | - |
+| `paramOptions.subscribe?` | [`QueryGenerationParam`](../interfaces/QueryGenerationParam.md)<`VS`\> | - |
 
 #### Returns
 

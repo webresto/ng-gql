@@ -3,8 +3,7 @@ import type { Order, CheckOrderInput, AddToOrderInput, RemoveOrSetAmountToDish, 
 import type { ScanFormType } from './scan-form-type';
 
 /**
- * @alias CartBusEvent
- * @event
+ * @alias @event CartBusEvent
  * Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
  */
 export type CartBusEvent = CartBusEventAdd | CartBusEventUpdate | CartBusEventRemove | CartBusEventSetAmountToDish | CartBusEventSetCommentToDish | CartBusEventCheck | CartBusEventSend;
@@ -12,7 +11,7 @@ export type CartBusEvent = CartBusEventAdd | CartBusEventUpdate | CartBusEventRe
 /**
  * @event CartBusEventBase Базовый интерфейс событий в шине событий
  */
-export type CartBusEventBase<T> = {
+export interface CartBusEventBase<T> {
   /** Пользовательский callback, который дополнительно будет выполнен в случае успешной операции */
   successCb?: (result: T) => void;
 
@@ -26,59 +25,59 @@ export type CartBusEventBase<T> = {
 /**
  *  @event CartBusEventAdd
  * Добавление в заказ (корзину). */
-export type CartBusEventAdd = {
+export interface CartBusEventAdd extends CartBusEventBase<Order> {
   event: 'add';
   /** Данные для операции */
   data: Omit<AddToOrderInput, 'orderId'>;
-} & CartBusEventBase<Order>;
+};
 
 /**
  *  @event CartBusEventUpdate
  * Обновление данных в заказе? НЕ связанных с блюдами. */
-export type CartBusEventUpdate = {
+export interface CartBusEventUpdate extends CartBusEventBase<Order> {
   event: 'update';
   /** Данные для операции */
   data: ScanFormType<OrderForm>[ 'value' ];
-} & CartBusEventBase<Order>;
+};
 
 /**
  * @event CartBusEventRemove
  * Удаление блюда из заказа (корзины). */
-export type CartBusEventRemove = {
+export interface CartBusEventRemove extends CartBusEventBase<Order> {
   event: 'remove';
   /** Данные для операции */
   data: Omit<RemoveOrSetAmountToDish, 'id'>;
-} & CartBusEventBase<Order>;
+};
 
 /**
  * @event CartBusEventSetToDish
  * Установить количество порций или комментарий для блюда
  * Данные необходимого блюда и требуемое количество указываются в @field data */
-export type CartBusEventSetAmountToDish = {
+export interface CartBusEventSetAmountToDish extends CartBusEventBase<Order> {
   event: 'setDishAmount';
   /** Данные для операции */
   data: Omit<RemoveOrSetAmountToDish, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-} & CartBusEventBase<Order>;
+};
 
 /**
  * @event CartBusEventSetToDish
  * Установить количество порций или комментарий для блюда
  * Данные необходимого блюда и требуемое количество указываются в @field data */
-export type CartBusEventSetCommentToDish = {
+export interface CartBusEventSetCommentToDish extends CartBusEventBase < Order > {
   event: 'setCommentToDish';
   /** Данные для операции */
   data: Omit<SetDishCommentInput, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-} & CartBusEventBase<Order>;
+};
 
 /**
  * @event CartBusEventCheck
  * Отправка заказа на проверку перед оформлением. */
-export type CartBusEventCheck = {
+export interface CartBusEventCheck extends CartBusEventBase<CheckResponse> {
   event: 'check';
   data: Omit<CheckOrderInput, 'orderId'>;
-} & CartBusEventBase<CheckResponse>;
+};
 
 /**
  * @interface SendOrderInput
@@ -95,22 +94,7 @@ export interface SendOrderInput {
 /**
  * @event CartBusEventSend
  * Отправка заказа на оформление */
-export type CartBusEventSend = {
+export interface CartBusEventSend extends CartBusEventBase<CheckResponse> {
   event: 'order';
   data: SendOrderInput;
-} & CartBusEventBase<CheckResponse>;
-
-export type StorageOrderTokenEvent = StorageOrderTokenSetOrderId | StorageOrderTokenRemoveOrderId;
-
-export type StorageOrderTokenSetOrderId = {
-  event: 'setOrderId';
-  data: {
-    orderId: string;
-    alternativeToken?: string;
-  };
-};
-
-export type StorageOrderTokenRemoveOrderId = {
-  event: 'removeOrderId';
-  newOrderId?: string;
-};
+} ;

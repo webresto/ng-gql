@@ -28,11 +28,18 @@
 - [NavigationsMenuItem](interfaces/NavigationsMenuItem.md)
 - [NavigationsOptions](interfaces/NavigationsOptions.md)
 - [NgGqlConfig](interfaces/NgGqlConfig.md)
+- [SendOrderInput](interfaces/SendOrderInput.md)
 - [OrderDish](interfaces/OrderDish.md)
 - [Order](interfaces/Order.md)
 - [Address](interfaces/Address.md)
+- [AddToOrderInput](interfaces/AddToOrderInput.md)
+- [RemoveOrSetAmountToDish](interfaces/RemoveOrSetAmountToDish.md)
+- [SetDishCommentInput](interfaces/SetDishCommentInput.md)
+- [CheckOrderInput](interfaces/CheckOrderInput.md)
 - [CheckResponse](interfaces/CheckResponse.md)
+- [OrderAdditionalFields](interfaces/OrderAdditionalFields.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
+- [QueryGenerationParam](interfaces/QueryGenerationParam.md)
 
 ### Functions
 
@@ -46,18 +53,10 @@
 - [DiscountType](README.md#discounttype)
 - [VCriteria](README.md#vcriteria)
 - [GQLRequestVariables](README.md#gqlrequestvariables)
-- [StorageOrderTokenEvent](README.md#storageordertokenevent)
-- [StorageOrderTokenSetOrderId](README.md#storageordertokensetorderid)
-- [StorageOrderTokenRemoveOrderId](README.md#storageordertokenremoveorderid)
+- [CartBusEvent](README.md#cartbusevent)
 - [OrderState](README.md#orderstate)
-- [AddToOrderInput](README.md#addtoorderinput)
-- [RemoveOrSetAmountToDish](README.md#removeorsetamounttodish)
-- [SetDishCommentInput](README.md#setdishcommentinput)
-- [CheckOrderInput](README.md#checkorderinput)
-- [OrderAdditionalFields](README.md#orderadditionalfields)
 - [OrderForm](README.md#orderform)
 - [ValuesOrBoolean](README.md#valuesorboolean)
-- [QueryGenerationParam](README.md#querygenerationparam)
 
 ### Variables
 
@@ -89,13 +88,13 @@
 ### Classes
 
 - [EventMessage](classes/EventMessage.md)
+- [StorageWrapper](classes/StorageWrapper.md)
 - [ApolloService](classes/ApolloService.md)
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
 
 ### Events
 
-- [CartBusEvent](README.md#cartbusevent)
 - [CartBusEventBase](README.md#cartbuseventbase)
 - [CartBusEventAdd](README.md#cartbuseventadd)
 - [CartBusEventUpdate](README.md#cartbuseventupdate)
@@ -131,7 +130,7 @@ ___
 
 ### generateQueryString
 
-▸ **generateQueryString**<`T`, `N`, `V`\>(`options`): `string`
+▸ **generateQueryString**<`T`, `N`, `GQLRequestVariables`\>(`options`): `string`
 
 #### Type parameters
 
@@ -139,7 +138,7 @@ ___
 | :------ | :------ |
 | `T` | `T` |
 | `N` | extends `string` |
-| `V` | [`GQLRequestVariables`](README.md#gqlrequestvariables) |
+| `GQLRequestVariables` | `GQLRequestVariables` |
 
 #### Parameters
 
@@ -148,9 +147,9 @@ ___
 | `options` | `Object` |  |
 | `options.name` | `N` |  |
 | `options.queryObject` | `T` |  |
-| `options.variables?` | `V` |  |
-| `options.requiredFields?` | keyof `V`[] |  |
-| `options.fieldsTypeMap?` | `Map`<keyof `V`, `string`\> |  |
+| `options.variables?` | `GQLRequestVariables` |  |
+| `options.requiredFields?` | keyof `GQLRequestVariables`[] |  |
+| `options.fieldsTypeMap?` | `Map`<keyof `GQLRequestVariables`, `string`\> |  |
 
 #### Returns
 
@@ -227,36 +226,9 @@ ___
 
 ___
 
-### StorageOrderTokenEvent
+### CartBusEvent
 
-Ƭ **StorageOrderTokenEvent**: [`StorageOrderTokenSetOrderId`](README.md#storageordertokensetorderid) \| [`StorageOrderTokenRemoveOrderId`](README.md#storageordertokenremoveorderid)
-
-___
-
-### StorageOrderTokenSetOrderId
-
-Ƭ **StorageOrderTokenSetOrderId**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `event` | ``"setOrderId"`` |
-| `data` | { `orderId`: `string` ; `alternativeToken?`: `string`  } |
-| `data.orderId` | `string` |
-| `data.alternativeToken?` | `string` |
-
-___
-
-### StorageOrderTokenRemoveOrderId
-
-Ƭ **StorageOrderTokenRemoveOrderId**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `event` | ``"removeOrderId"`` |
+Ƭ **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheck`](README.md#cartbuseventcheck) \| [`CartBusEventSend`](README.md#cartbuseventsend)
 
 ___
 
@@ -266,80 +238,9 @@ ___
 
 ___
 
-### AddToOrderInput
-
-Ƭ **AddToOrderInput**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `string` |
-| `dishId` | `string` |
-| `amount?` | `number` |
-| `modifiers?` | `Partial`<[`OrderModifier`](interfaces/OrderModifier.md)\>[] \| `Partial`<[`Modifier`](interfaces/Modifier.md)\>[] |
-| `comment?` | `string` |
-| `replace?` | `boolean` |
-| `orderDishId?` | `number` |
-
-___
-
-### RemoveOrSetAmountToDish
-
-Ƭ **RemoveOrSetAmountToDish**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `orderDishId?` | `number` |
-| `amount?` | `number` |
-| `id` | `string` |
-
-___
-
-### SetDishCommentInput
-
-Ƭ **SetDishCommentInput**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `id?` | `string` |
-| `comment?` | `string` |
-| `orderDishId` | `number` |
-
-___
-
-### CheckOrderInput
-
-Ƭ **CheckOrderInput**: { `orderId`: `string` ; `paymentMethodId?`: `string` ; `selfService`: `boolean` ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `date?`: `string` ; `address`: `Partial`<[`Address`](interfaces/Address.md)\> \| ``null`` ; `customer`: `Partial`<[`Customer`](interfaces/Customer.md)\> \| ``null`` ; `comment?`: `string` ; `notifyMethodId?`: `string`  } & `Partial`<[`BaseModelWithCustomData`](interfaces/BaseModelWithCustomData.md)\>
-
-___
-
-### OrderAdditionalFields
-
-Ƭ **OrderAdditionalFields**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `selfService` | `boolean` |
-| `pickupAddressId?` | `string` |
-| `locationId?` | `string` |
-| `promocode?` | `string` |
-| `deliveryTimeInfo?` | { `deliveryType`: ``"fast"`` \| ``"date-time"`` \| `undefined` ; `deliveryDate`: `string` \| `undefined` ; `deliveryTime`: `string` \| `undefined`  } |
-| `deliveryTimeInfo.deliveryType` | ``"fast"`` \| ``"date-time"`` \| `undefined` |
-| `deliveryTimeInfo.deliveryDate` | `string` \| `undefined` |
-| `deliveryTimeInfo.deliveryTime` | `string` \| `undefined` |
-
-___
-
 ### OrderForm
 
-Ƭ **OrderForm**: [`Order`](interfaces/Order.md) & [`OrderAdditionalFields`](README.md#orderadditionalfields)
+Ƭ **OrderForm**: [`Order`](interfaces/Order.md) & [`OrderAdditionalFields`](interfaces/OrderAdditionalFields.md)
 
 ___
 
@@ -354,25 +255,6 @@ ___
 | `IncomingT` | `IncomingT` |
 | `ExtT` | extends `IncomingT` = `IncomingT` |
 | `T` | `ExtT` extends `IncomingT` ? `ExtT` : `never` |
-
-___
-
-### QueryGenerationParam
-
-Ƭ **QueryGenerationParam**<`V`\>: `Object`
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `V` |
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `requiredFields?` | keyof `V`[] |  |
-| `fieldsTypeMap?` | `Map`<keyof `V`, `string`\> |  |
 
 ## Variables
 
@@ -520,12 +402,6 @@ ___
 
 ## Events
 
-### CartBusEvent
-
-• **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheck`](README.md#cartbuseventcheck) \| [`CartBusEventSend`](README.md#cartbuseventsend)
-
-___
-
 ### CartBusEventBase
 
 • **CartBusEventBase**<`T`\>: `Object`
@@ -536,52 +412,44 @@ ___
 | :------ |
 | `T` |
 
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `successCb?` | (`result`: `T`) => `void` |  |
-| `errorCb?` | (`err`: `unknown`) => `void` |  |
-| `loading?` | `BehaviorSubject`<`boolean`\> |  |
-
 ___
 
 ### CartBusEventAdd
 
-• **CartBusEventAdd**: { `event`: ``"add"`` ; `data`: `Omit`<[`AddToOrderInput`](README.md#addtoorderinput), ``"orderId"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventAdd**: `Object`
 
 ___
 
 ### CartBusEventUpdate
 
-• **CartBusEventUpdate**: { `event`: ``"update"`` ; `data`: `ScanFormType`<[`OrderForm`](README.md#orderform)\>[``"value"``]  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventUpdate**: `Object`
 
 ___
 
 ### CartBusEventRemove
 
-• **CartBusEventRemove**: { `event`: ``"remove"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventRemove**: `Object`
 
 ___
 
 ### CartBusEventSetAmountToDish
 
-• **CartBusEventSetAmountToDish**: { `event`: ``"setDishAmount"`` ; `data`: `Omit`<[`RemoveOrSetAmountToDish`](README.md#removeorsetamounttodish), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventSetAmountToDish**: `Object`
 
 ___
 
 ### CartBusEventSetCommentToDish
 
-• **CartBusEventSetCommentToDish**: { `event`: ``"setCommentToDish"`` ; `data`: `Omit`<[`SetDishCommentInput`](README.md#setdishcommentinput), ``"id"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`Order`](interfaces/Order.md)\>
+• **CartBusEventSetCommentToDish**: `Object`
 
 ___
 
 ### CartBusEventCheck
 
-• **CartBusEventCheck**: { `event`: ``"check"`` ; `data`: `Omit`<[`CheckOrderInput`](README.md#checkorderinput), ``"orderId"``\>  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
+• **CartBusEventCheck**: `Object`
 
 ___
 
 ### CartBusEventSend
 
-• **CartBusEventSend**: { `event`: ``"order"`` ; `data`: `string`  } & [`CartBusEventBase`](README.md#cartbuseventbase)<[`CheckResponse`](interfaces/CheckResponse.md)\>
+• **CartBusEventSend**: `Object`
