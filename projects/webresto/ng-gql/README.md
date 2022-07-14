@@ -25,7 +25,7 @@ import { NgGqlModule } from '@webresto/ng-gql';
 @NgModule({
   imports: [
      ...
-    NgGqlModule.forRoot({ 
+    NgGqlModule.forRoot({
       url: '...',
       nesting:2,
       busSubscribeMode:'subscribe'  }),
@@ -38,4 +38,4 @@ export class AppModule { }
 Описание [объекта конфигурации:](interfaces/NgGqlConfig.md)
 
 ## Использование
-См. в [документации.](modules.md)
+См. в [документации.](docs/README.md)
