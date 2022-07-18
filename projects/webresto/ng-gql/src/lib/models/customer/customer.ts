@@ -1,7 +1,7 @@
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 
 export interface Customer {
-  phone: Phone | null;
+  phone: Partial<Phone> | null;
   mail?: string;
   name: string | null;
 }
@@ -22,7 +22,7 @@ export interface PhoneKnowledge extends BaseModelWithCustomData {
 }
 
 export interface CheckPhoneCodeInput {
-  phone: Phone;
+  phone: Partial<Phone>;
   code: string;
 };
 

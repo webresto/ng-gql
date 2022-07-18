@@ -363,7 +363,7 @@ export class NgGqlService {
               };
           }
         } else {
-          return Object.values(groupsById) as Partial<Group>[];
+          return Object.values(groupsById) ;
         }
       })
     );

@@ -52,4 +52,4 @@ ___
 
 ### dish
 
-• **dish**: `Partial`<[`Dish`](Dish.md)\>
+• **dish**: `Omit`<`Partial`<[`Dish`](Dish.md)\>, ``"modifiers"``\>

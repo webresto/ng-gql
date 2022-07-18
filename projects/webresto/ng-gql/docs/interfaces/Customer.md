@@ -12,7 +12,7 @@
 
 ### phone
 
-• **phone**: ``null`` \| [`Phone`](Phone.md)
+• **phone**: ``null`` \| `Partial`<[`Phone`](Phone.md)\>
 
 ___
 

@@ -7,7 +7,7 @@ export interface OrderModifier {
 	id: string;
 	amount?: number;
 	groupId: string;
-	dish: Partial< Dish>;
+	dish: Omit<Partial<Dish>, 'modifiers'>;
 }
 
 export interface Modifier {
@@ -17,7 +17,7 @@ export interface Modifier {
 	minAmount: number;
 	amount?: number;
 	defaultAmount: number;
-	dish: Partial< Dish>;
+	dish: Omit<Partial<Dish>, 'modifiers'>;
 }
 
 export const defaultModifierFragments: ValuesOrBoolean<Modifier> = {
@@ -40,7 +40,7 @@ export const defaultModifierFragments: ValuesOrBoolean<Modifier> = {
 		},
 		images: defaultImageFragments
 	}
-}
+};
 
 
 /**
@@ -49,6 +49,6 @@ export const defaultModifierFragments: ValuesOrBoolean<Modifier> = {
 export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
 	'MODIFIER_FRAGMENTS', {
 	providedIn: 'root',
-		factory: () => ({ ...defaultModifierFragments })
+	factory: () => ({ ...defaultModifierFragments })
 });
 

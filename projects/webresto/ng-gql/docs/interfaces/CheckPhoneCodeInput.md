@@ -11,7 +11,7 @@
 
 ### phone
 
-• **phone**: [`Phone`](Phone.md)
+• **phone**: `Partial`<[`Phone`](Phone.md)\>
 
 ___
 
