@@ -19,5 +19,4 @@ export { generateQueryString } from './generate-query-string';
 export { VCriteria, GQLRequestVariables } from './generate-query-string';
 export * from './order-bus-event';
 export { BaseModelWithCustomData } from './base/base-model-with-custom-data';
-export { ScanFormType } from './scan-form-type';
 export { StorageWrapper } from './storage-wrapper/storage-wrapper';

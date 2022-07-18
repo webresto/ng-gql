@@ -5,6 +5,7 @@
     "entryFile": "src/public-api.ts"
   },
   "allowedNonPeerDependencies": [
+    "@axrl/ngx-extended-form-builder",
     "@apollo/client",
     "apollo-angular",
     "graphql",

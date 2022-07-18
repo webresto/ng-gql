@@ -6,10 +6,11 @@ import type {
   NgGqlConfig, Action, Message,
   CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier,
   CheckResponse, CartBusEvent, RemoveOrSetAmountToDish, OrderForm,
-  SetDishCommentInput, ValuesOrBoolean, OrderModifier, SendOrderInput, ScanFormType
+  SetDishCommentInput, ValuesOrBoolean, OrderModifier, SendOrderInput,
 } from '../models';
 import { isValue, isEqualItems, StorageWrapper, PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../models';;
 import { NgGqlService } from './ng-gql.service';
+import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
 
 @Injectable({
   providedIn: 'root'
@@ -440,7 +441,7 @@ export class NgOrderService {
   * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
   updateOrder(options: {
-    data: ScanFormType<OrderForm>[ 'value' ],
+    data: FormGroupType<OrderForm>[ 'value' ],
     loading: BehaviorSubject<boolean>,
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void,
@@ -463,7 +464,7 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   checkOrder(options: {
-    orderForm: ScanFormType<OrderForm>[ 'value' ],
+    orderForm: FormGroupType<OrderForm>[ 'value' ],
     successCb?: (order: CheckResponse) => void,
     errorCb?: (err: unknown) => void;
   }) {
@@ -612,9 +613,9 @@ export class NgOrderService {
     );
   };
 
-  private updateOrder$(order: ScanFormType<OrderForm>[ 'value' ]): Observable<Order> {
+  private updateOrder$(order: FormGroupType<OrderForm>[ 'value' ]): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'orderUpdate', {
-      order: ScanFormType<OrderForm>[ 'value' ];
+      order: FormGroupType<OrderForm>[ 'value' ];
     }>('orderUpdate', this.defaultOrderFragments, { order }).pipe(
       map(
         data => data.orderUpdate

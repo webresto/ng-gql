@@ -1,15 +1,15 @@
 {
   "name": "@webresto/ng-gql",
-  "version": "1.1.61",
+  "version": "1.1.62",
   "repository": {
     "type": "git",
     "url": "https://git.hm/webresto/ng-graphql.git"
   },
   "homepage": "https://git.hm/webresto/ng-graphql",
   "peerDependencies": {
-    "@angular/common": "^14.0.5",
-    "@angular/core": "^14.0.5",
-    "@angular/forms": "^14.0.5"
+    "@angular/common": "^14.0.6",
+    "@angular/core": "^14.0.6",
+    "@angular/forms": "^14.0.6"
   },
   "dependencies": {
     "tslib": "^2.4.0",
@@ -17,6 +17,7 @@
     "apollo-angular": "^3.0.1",
     "graphql": "^16.5.0",
     "subscriptions-transport-ws": "^0.11.0",
+    "@axrl/ngx-extended-form-builder": "1.1.9",
     "apollo3-cache-persist": "^0.14.0"
   }
 }
