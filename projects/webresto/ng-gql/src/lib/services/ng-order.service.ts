@@ -113,7 +113,6 @@ export class NgOrderService {
         startWith(this.storageWrapper.startStorageEventFactory(storageOrderIdToken)),
         filter(event => event.key === storageOrderIdToken),
         map(ev => {
-          debugger;
           return ev;
         }),
         map(event => this.storageWrapper.getOrderId(storageOrderIdToken, event.newValue ?? undefined)),
@@ -124,7 +123,6 @@ export class NgOrderService {
     switchMap(
 
       storageOrderId => {
-        debugger;
         return combineLatest([
           this.getPaymentMethods$(storageOrderId),
           this.loadOrder$(storageOrderId).pipe(
