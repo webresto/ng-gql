@@ -3,21 +3,21 @@ import type { Dish } from "../dish/dish.gql";
 import { defaultImageFragments } from '../image/image.gql';
 import { InjectionToken } from '@angular/core';
 
-export interface OrderModifier {
+export interface OrderModifier<T extends Dish = Dish> {
 	id: string;
 	amount?: number;
 	groupId: string;
-	dish: Omit<Partial<Dish>, 'modifiers'>;
+	dish: Omit<Partial<T>, 'modifiers'>;
 }
 
-export interface Modifier {
+export interface Modifier<T extends Dish = Dish> {
 	modifierId: string;
 	groupId?: string;
 	maxAmount: number;
 	minAmount: number;
 	amount?: number;
 	defaultAmount: number;
-	dish: Omit<Partial<Dish>, 'modifiers'>;
+	dish: Omit<Partial<T>, 'modifiers'>;
 }
 
 export const defaultModifierFragments: ValuesOrBoolean<Modifier> = {

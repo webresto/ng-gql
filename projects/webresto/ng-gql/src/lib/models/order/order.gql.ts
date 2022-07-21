@@ -7,6 +7,7 @@ import type { Customer } from '../customer/customer';
 import type { OrderDish } from '../order-dish/order-dish.gql';
 import { defaultOrderDishFragments } from '../order-dish/order-dish.gql';
 import { InjectionToken } from '@angular/core';
+import type { Dish } from '../dish/dish.gql';
 
 /**
  * @alias OrderState
@@ -22,10 +23,10 @@ import { InjectionToken } from '@angular/core';
  */
 export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER';
 
-export interface Order extends BaseModelWithCustomData {
+export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
 	id: string;
 	shortId: string;
-	dishes: Partial<OrderDish>[];
+	dishes: Partial<OrderDish<T>>[];
 	dishesCount: number;
 	comment: string;
 	deliveryDescription: string;

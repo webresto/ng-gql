@@ -14,6 +14,7 @@
 - [link](NavigationsMenuItemBase.md#link)
 - [concept](NavigationsMenuItemBase.md#concept)
 - [active](NavigationsMenuItemBase.md#active)
+- [visible](NavigationsMenuItemBase.md#visible)
 
 ## Properties
 
@@ -38,3 +39,9 @@ ___
 ### active
 
 • `Optional` **active**: `boolean`
+
+___
+
+### visible
+
+• `Optional` **visible**: `boolean`

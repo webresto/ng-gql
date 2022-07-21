@@ -38,6 +38,7 @@ export interface NavigationsMenuItemBase {
 	concept: 'origin' | string;
 
 	active?: boolean;
+	visible?: boolean;
 }
 
 export interface NavigationsMenuItem extends NavigationsMenuItemBase {
@@ -70,5 +71,5 @@ export const defaultNavigationFragments: ValuesOrBoolean<Navigation> = {
 export const NAVIGATION_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Navigation>>(
 	'NAVIGATION_FRAGMENTS', {
 	providedIn: 'root',
-		factory: () => ({ ...defaultNavigationFragments })
+	factory: () => ({ ...defaultNavigationFragments })
 });

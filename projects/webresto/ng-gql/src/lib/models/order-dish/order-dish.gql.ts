@@ -3,11 +3,12 @@ import type { OrderModifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish, DiscountType } from '../dish/dish.gql';
 import { InjectionToken } from '@angular/core';
+import type { BehaviorSubject } from 'rxjs';
 
-export interface OrderDish {
+export interface OrderDish<T extends Dish = Dish> {
 	id: number;
 	amount: number;
-	dish: Partial<Dish>,
+	dish: Partial<T>,
 	itemTotal: number;
 	itemTotalBeforeDiscount?: number;
 	discountTotal: number | null;
@@ -18,6 +19,8 @@ export interface OrderDish {
 	totalWeight: number;
 	total?: number;
 	modifiers: Partial<OrderModifier>[];
+	isLoading?: BehaviorSubject<boolean>;
+
 }
 
 export const defaultOrderDishFragments: ValuesOrBoolean<OrderDish> = {

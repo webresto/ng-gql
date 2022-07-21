@@ -64,6 +64,10 @@ ___
 
 • `Optional` **visible**: `boolean`
 
+#### Overrides
+
+[NavigationsMenuItemBase](NavigationsMenuItemBase.md).[visible](NavigationsMenuItemBase.md#visible)
+
 ___
 
 ### icon

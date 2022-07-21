@@ -246,7 +246,7 @@ ___
 
 ### ValuesOrBoolean
 
-Ƭ **ValuesOrBoolean**<`IncomingT`, `ExtT`, `T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
+Ƭ **ValuesOrBoolean**<`IncomingT`, `ExtT`, `T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends Observable<unknown\> \| AbstractControl<unknown\> ? never : T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
 
 #### Type parameters
 

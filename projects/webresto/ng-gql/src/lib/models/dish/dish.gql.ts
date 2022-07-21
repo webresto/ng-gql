@@ -6,6 +6,7 @@ import type { Image } from "../image/image.gql";
 import type { Group } from '../group/group.gql';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 import { InjectionToken } from '@angular/core';
+import type { BehaviorSubject } from 'rxjs';
 
 export type DiscountType = 'FIXED' | 'PERCENT';
 
@@ -33,6 +34,7 @@ export interface Dish extends BaseModelWithCustomData {
 	measureUnit?: string;
 	discountAmount: number | null;
 	discountType: DiscountType | null;
+	isLoading?: BehaviorSubject<boolean>;
 }
 
 export interface DishTag {

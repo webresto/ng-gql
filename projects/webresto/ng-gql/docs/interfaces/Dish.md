@@ -34,6 +34,7 @@
 - [measureUnit](Dish.md#measureunit)
 - [discountAmount](Dish.md#discountamount)
 - [discountType](Dish.md#discounttype)
+- [isLoading](Dish.md#isloading)
 
 ## Properties
 
@@ -182,3 +183,9 @@ ___
 ### discountType
 
 • **discountType**: ``null`` \| [`DiscountType`](../README.md#discounttype)
+
+___
+
+### isLoading
+
+• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>

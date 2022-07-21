@@ -2,10 +2,11 @@ import { defaultModifierFragments } from '../modifier/modifier.gql';
 import type { Modifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import { InjectionToken } from '@angular/core';
+import type { Dish } from '../dish/dish.gql';
 
-export interface GroupModifier extends Exclude<Modifier, 'amount' | 'defaultAmount' | 'hideIfDefaultAmount' | 'groupId' | 'dish'> {
+export interface GroupModifier<T extends Dish = Dish> extends Exclude<Modifier, 'amount' | 'defaultAmount' | 'hideIfDefaultAmount' | 'groupId' | 'dish'> {
 	required: boolean;
-	childModifiers: Partial<Modifier>[];
+	childModifiers: Partial<Modifier<T>>[];
 	group: Partial<{
 		id: string;
 		name: string;
