@@ -205,9 +205,9 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `T` | `T` |  |
-| `N` | extends `string` |  |
-| `V` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |  |
+| `T` | `T` | - |
+| `N` | extends `string` | - |
+| `V` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) | - |
 
 #### Parameters
 
@@ -232,9 +232,9 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `T` | `T` |  |
-| `N` | extends `string` |  |
-| `V` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |  |
+| `T` | `T` | - |
+| `N` | extends `string` | - |
+| `V` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) | - |
 
 #### Parameters
 
@@ -259,9 +259,9 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `T` | `T` |  |
-| `N` | extends `string` |  |
-| `V` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |  |
+| `T` | `T` | - |
+| `N` | extends `string` | - |
+| `V` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) | - |
 
 #### Parameters
 

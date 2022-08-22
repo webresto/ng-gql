@@ -1,6 +1,5 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, of } from 'rxjs';
-import { filter, map, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, of, filter, map, switchMap, distinctUntilChanged } from 'rxjs';
 import { isValue } from '../is-value';
 import type { NgGqlConfig } from '../ng-gql-config/ng-gql-config';
 

@@ -1,4 +1,10 @@
-# Interface: Modifier
+# Interface: Modifier<T\>
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`Dish`](Dish.md) = [`Dish`](Dish.md) |
 
 ## Table of contents
 
@@ -52,4 +58,4 @@ ___
 
 ### dish
 
-• **dish**: `Omit`<`Partial`<[`Dish`](Dish.md)\>, ``"modifiers"``\>
+• **dish**: `Omit`<`Partial`<`T`\>, ``"modifiers"``\>

@@ -1,7 +1,6 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { combineLatest, fromEvent, of } from 'rxjs';
+import { combineLatest, fromEvent, of, filter, map, switchMap, shareReplay, startWith, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs';
 import type { Observable, BehaviorSubject } from 'rxjs';
-import { filter, map, switchMap, shareReplay, startWith, catchError, concatMap, distinctUntilKeyChanged, distinctUntilChanged, mergeWith } from 'rxjs/operators';
 import type {
   NgGqlConfig, Action, Message,
   CheckOrderInput, Order, PaymentMethod, AddToOrderInput, Modifier,
@@ -116,12 +115,10 @@ export class NgOrderService {
           return ev;
         }),
         map(event => this.storageWrapper.getOrderId(storageOrderIdToken, event.newValue ?? undefined)),
-        shareReplay(1),
       )
     ),
     distinctUntilChanged(),
     switchMap(
-
       storageOrderId => {
         return combineLatest([
           this.getPaymentMethods$(storageOrderId),
@@ -152,32 +149,28 @@ export class NgOrderService {
     })
   );
 
-  private _orderPaymentMethods$ = this.orderAndPaymentMethods$.pipe(
-    map(
-      orderAndPaymentMethods => orderAndPaymentMethods.methods
-    )
-  );
-
   /**
    * @method getOrderPaymentMethods$()
    * @returns Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
    */
   getOrderPaymentMethods$(): Observable<PaymentMethod[]> {
-    return this._orderPaymentMethods$;
+    return this.orderAndPaymentMethods$.pipe(
+      map(
+        orderAndPaymentMethods => orderAndPaymentMethods.methods
+      )
+    );
   };
-
-  private _order$ = this.orderAndPaymentMethods$.pipe(
-    map(
-      orderAndPaymentMethods => orderAndPaymentMethods.order
-    )
-  );
 
   /**
    * @method () getOrder
    * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
    */
   getOrder(): Observable<Order> {
-    return this._order$;
+    return this.orderAndPaymentMethods$.pipe(
+      map(
+        orderAndPaymentMethods => orderAndPaymentMethods.order
+      )
+    );
   };
 
 
@@ -239,32 +232,47 @@ export class NgOrderService {
     } : undefined, undefined).pipe(
       map(values => values[ 0 ] ? values[ 0 ] : null),
       filter((order): order is Order => isValue(order)),
-      map(
+      switchMap(
         order => {
-          return {
-            ...order,
-            customer: {
-              name: order.customer?.name ?? null,
-              phone: order.customer?.phone ?? {
-                code: this.config.phoneCode,
-                number: null,
-              }
-            },
-            address: order.address ?? {
-              streetId: null,
-              home: null,
-              street: null,
-              comment: undefined,
-              city: undefined,
-              housing: undefined,
-              index: undefined,
-              entrance: undefined,
-              floor: undefined,
-              apartment: undefined,
-              doorphone: undefined
-            },
-            dishes: order.dishes ?? []
-          };
+          const dishesIds = order.dishes.map(orderDish => orderDish.dish?.id).filter((id): id is string => isValue(id));
+          return this.ngGqlService.getDishes$(dishesIds).pipe(
+            map(
+              dishes => {
+                debugger;
+                return {
+                  ...order,
+                  customer: {
+                    name: order.customer?.name ?? null,
+                    phone: order.customer?.phone ?? {
+                      code: this.config.phoneCode,
+                      number: null,
+                    }
+                  },
+                  address: order.address ?? {
+                    streetId: null,
+                    home: null,
+                    street: null,
+                    comment: undefined,
+                    city: undefined,
+                    housing: undefined,
+                    index: undefined,
+                    entrance: undefined,
+                    floor: undefined,
+                    apartment: undefined,
+                    doorphone: undefined
+                  },
+                  dishes: (order.dishes ?? []).map(
+                    orderDish => ({
+                      ...orderDish, dish: isValue(orderDish.dish) ?
+                        dishes.find(
+                          findedDish => findedDish.id === orderDish.dish!.id
+                        ) ?? orderDish.dish :
+                        orderDish.dish
+                    })
+                  )
+                };
+              })
+          );
         }
       )
     );

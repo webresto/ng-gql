@@ -1,4 +1,10 @@
-# Interface: OrderDish
+# Interface: OrderDish<T\>
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`Dish`](Dish.md) = [`Dish`](Dish.md) |
 
 ## Table of contents
 
@@ -17,6 +23,7 @@
 - [totalWeight](OrderDish.md#totalweight)
 - [total](OrderDish.md#total)
 - [modifiers](OrderDish.md#modifiers)
+- [isLoading](OrderDish.md#isloading)
 
 ## Properties
 
@@ -34,7 +41,7 @@ ___
 
 ### dish
 
-• **dish**: `Partial`<[`Dish`](Dish.md)\>
+• **dish**: `Partial`<`T`\>
 
 ___
 
@@ -94,4 +101,10 @@ ___
 
 ### modifiers
 
-• **modifiers**: `Partial`<[`OrderModifier`](OrderModifier.md)\>[]
+• **modifiers**: `Partial`<[`OrderModifier`](OrderModifier.md)<[`Dish`](Dish.md)\>\>[]
+
+___
+
+### isLoading
+
+• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>

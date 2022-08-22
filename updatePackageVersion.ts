@@ -14,19 +14,21 @@ async function main() {
     const versionArray = libraryPackageJson?.version?.split('.');
     const libraryPeerDependencies = libraryPackageJson.peerDependencies;
     const libraryDependencies = libraryPackageJson.dependencies;
+    const mainDevDependencies = mainPackageJson.devDependencies;
+    const mainDependencies = mainPackageJson.dependencies;
     let haveChanges: boolean = false;
     [ libraryPeerDependencies, libraryDependencies ].forEach(
       libDeps => {
         Object.keys(libDeps).forEach(
           key => {
-            if (mainPackageJson.dependencies[ key ] && mainPackageJson.dependencies[ key ] !== libDeps[ key ]) {
-              libDeps[ key ] = mainPackageJson.dependencies[ key ];
+            if (mainDependencies[ key ] && mainDependencies[ key ] !== libDeps[ key ]) {
+              libDeps[ key ] = mainDependencies[ key ];
               if (!haveChanges) {
                 haveChanges = true;
               };
             } else {
-              if (mainPackageJson.devDependencies[ key ] && mainPackageJson.devDependencies[ key ] !== libDeps[ key ]) {
-                libDeps[ key ] = mainPackageJson.devDependencies[ key ];
+              if (mainDevDependencies[ key ] && mainDevDependencies[ key ] !== libDeps[ key ]) {
+                libDeps[ key ] = mainDevDependencies[ key ];
                 if (!haveChanges) {
                   haveChanges = true;
                 };

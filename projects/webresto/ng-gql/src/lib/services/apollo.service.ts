@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import type { ExtraSubscriptionOptions, MutationResult, WatchQueryOptions } from 'apollo-angular';
 import type { ApolloQueryResult, FetchResult, QueryOptions, SubscriptionOptions, MutationOptions } from '@apollo/client/core';
-import { catchError, filter, of, map, throwError } from 'rxjs';
+import { catchError, filter, of, map } from 'rxjs';
 import { EmptyObject } from 'apollo-angular/types';
 import { isValue } from '../models';
 

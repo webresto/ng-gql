@@ -1,4 +1,10 @@
-# Interface: GroupModifier
+# Interface: GroupModifier<T\>
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`Dish`](Dish.md) = [`Dish`](Dish.md) |
 
 ## Hierarchy
 
@@ -32,7 +38,7 @@ ___
 
 ### childModifiers
 
-• **childModifiers**: `Partial`<[`Modifier`](Modifier.md)\>[]
+• **childModifiers**: `Partial`<[`Modifier`](Modifier.md)<`T`\>\>[]
 
 ___
 

@@ -302,7 +302,7 @@ ___
 
 ### GROUP\_MODIFIER\_FRAGMENTS
 
-• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md), [`GroupModifier`](interfaces/GroupModifier.md), [`GroupModifier`](interfaces/GroupModifier.md)\>\>
+• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
 ___
 
@@ -350,7 +350,7 @@ ___
 
 ### MODIFIER\_FRAGMENTS
 
-• `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md), [`Modifier`](interfaces/Modifier.md), [`Modifier`](interfaces/Modifier.md)\>\>
+• `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
 ___
 
@@ -374,7 +374,7 @@ ___
 
 ### ORDER\_DISH\_FRAGMENTS
 
-• `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md), [`OrderDish`](interfaces/OrderDish.md), [`OrderDish`](interfaces/OrderDish.md)\>\>
+• `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
 ___
 
@@ -386,7 +386,7 @@ ___
 
 ### ORDER\_FRAGMENTS
 
-• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md), [`Order`](interfaces/Order.md), [`Order`](interfaces/Order.md)\>\>
+• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
 ___
 

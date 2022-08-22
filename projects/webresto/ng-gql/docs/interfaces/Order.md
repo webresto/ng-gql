@@ -1,4 +1,10 @@
-# Interface: Order
+# Interface: Order<T\>
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`Dish`](Dish.md) = [`Dish`](Dish.md) |
 
 ## Hierarchy
 
@@ -60,7 +66,7 @@ ___
 
 ### dishes
 
-• **dishes**: `Partial`<[`OrderDish`](OrderDish.md)\>[]
+• **dishes**: `Partial`<[`OrderDish`](OrderDish.md)<`T`\>\>[]
 
 ___
 

@@ -34,7 +34,7 @@ ___
 
 ### modifiers
 
-• `Optional` **modifiers**: `Partial`<[`Modifier`](Modifier.md)\>[] \| `Partial`<[`OrderModifier`](OrderModifier.md)\>[]
+• `Optional` **modifiers**: `Partial`<[`Modifier`](Modifier.md)<[`Dish`](Dish.md)\>\>[] \| `Partial`<[`OrderModifier`](OrderModifier.md)<[`Dish`](Dish.md)\>\>[]
 
 ___
 

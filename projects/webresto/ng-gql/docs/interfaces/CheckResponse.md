@@ -12,7 +12,7 @@
 
 ### order
 
-• **order**: `Partial`<[`Order`](Order.md)\>
+• **order**: `Partial`<[`Order`](Order.md)<[`Dish`](Dish.md)\>\>
 
 ___
 

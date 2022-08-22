@@ -116,7 +116,7 @@ ___
 
 ### modifiers
 
-• `Optional` **modifiers**: `Partial`<[`GroupModifier`](GroupModifier.md)\>[]
+• `Optional` **modifiers**: `Partial`<[`GroupModifier`](GroupModifier.md)<[`Dish`](Dish.md)\>\>[]
 
 ___
 

@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular';
-import { BehaviorSubject, of } from 'rxjs';
-import { filter, map, switchMap, shareReplay, startWith, mergeWith, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, of, filter, map, switchMap, shareReplay, startWith, mergeWith, distinctUntilChanged } from 'rxjs';
 import type { Observable } from 'rxjs';
 import type {
   NgGqlConfig, GQLRequestVariables, Group, ValuesOrBoolean,
@@ -210,160 +209,163 @@ export class NgGqlService {
     };
   }
 
-  private loadedMenu$ = this.rootGroups$.pipe(
-    switchMap(
-      rootGroupsData => {
-        const rootGroups = rootGroupsData.groups;
-        const nesting = this.config.nesting ?? 2;
-        const customvOb = this.config.customFields?.[ 'Group' ];
-        const vOb = isValue(customvOb) ? { ...this.defaultGroupFragments, ...customvOb } : this.defaultGroupFragments;
-        const queryObject: ValuesOrBoolean<Group> = new Array(nesting).fill(nesting).reduce(
-          (accumulator: ValuesOrBoolean<Group>) => {
-            const item = { ...vOb };
-            item.childGroups = accumulator;
-            return item;
-          }, { ...vOb, childGroups: { ...vOb } }
-        );
-        const criteria = isValue(rootGroups[ 0 ]?.id) ? {
-          id: rootGroups.map(rootGroup => rootGroup.id),
-          concept: rootGroupsData.concept
-        } : {
-          slug: rootGroups.map(rootGroup => rootGroup.slug),
-          concept: rootGroupsData.concept
-        };
-        return this.queryAndSubscribe<Group, 'group', 'group', VCriteria>('group', 'group', queryObject, 'id', {
-          query: {
-            criteria
-          },
-          subscribe: {
-            criteria
-          }
-        }).pipe(
-          map(
-            groups => ({
-              concept: rootGroupsData.concept,
-              groups
-            })
-          )
-        );
-      }),
-    switchMap(
-      groupsData => {
-        const groups = groupsData.groups;
-        const addGroup = (items: Partial<Group>[], item: Partial<Group>) => {
-          if (!items.find(value => value.id === item.id)) {
-            items.push(item);
-          }
-        };
-        const getGroups = (items: Partial<Group>[]) => items.reduce<Partial<Group>[]>(
-          (accumulator, current) => {
-            addGroup(accumulator, current);
-            if (current.childGroups && current.childGroups.length > 0) {
-              getGroups(current.childGroups).forEach(
-                child => addGroup(accumulator, child)
-              );
-            };
-            return accumulator;
-          }, []
-        );
-        const allNestingsGroups = getGroups(groups);
-        const allNestingsIds = allNestingsGroups.map(group => group.id);
-        console.log(allNestingsGroups);
-        const customvObDish = this.config.customFields?.[ 'Dish' ];
-        const vOb = customvObDish ? { ...this.defaultDishFragments, ...customvObDish } : this.defaultDishFragments;
-        return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', vOb, 'id', {
-          query: {
-            criteria: {
-              parentGroup: allNestingsIds,
-              concept: groupsData.concept
+  getMenu$(slug: string | string[] | undefined): Observable<Partial<Group>[] | undefined | null> {
+    return this.rootGroups$.pipe(
+      switchMap(
+        rootGroupsData => {
+          const rootGroups = rootGroupsData.groups;
+          const nesting = this.config.nesting ?? 2;
+          const customvOb = this.config.customFields?.[ 'Group' ];
+          const vOb = isValue(customvOb) ? { ...this.defaultGroupFragments, ...customvOb } : this.defaultGroupFragments;
+          const queryObject: ValuesOrBoolean<Group> = new Array(nesting).fill(nesting).reduce(
+            (accumulator: ValuesOrBoolean<Group>) => {
+              const item = { ...vOb };
+              item.childGroups = accumulator;
+              return item;
+            }, { ...vOb, childGroups: { ...vOb } }
+          );
+          const criteria = isValue(rootGroups[ 0 ]?.id) ? {
+            id: rootGroups.map(rootGroup => rootGroup.id),
+            concept: rootGroupsData.concept
+          } : {
+            slug: rootGroups.map(rootGroup => rootGroup.slug),
+            concept: rootGroupsData.concept
+          };
+          return this.queryAndSubscribe<Group, 'group', 'group', VCriteria>('group', 'group', queryObject, 'id', {
+            query: {
+              criteria
+            },
+            subscribe: {
+              criteria
             }
-          },
-          subscribe: {
-            criteria: {
-              parentGroup: allNestingsIds,
-              concept: groupsData.concept
+          }).pipe(
+            map(
+              groups => ({
+                concept: rootGroupsData.concept,
+                groups
+              })
+            )
+          );
+        }),
+      switchMap(
+        groupsData => {
+          const groups = groupsData.groups;
+          const addGroup = (items: Partial<Group>[], item: Partial<Group>) => {
+            if (!items.find(value => value.id === item.id)) {
+              items.push(item);
             }
-          }
-        }).pipe(
-          map(data => {
-            const dishes = data.map(
-              dataDish => this.addAmountToDish(dataDish)
-            );
-            this._dishes$.next(dishes);
-            const groupsById = allNestingsGroups.reduce<{
-              [ key: string ]: Partial<Group>;
-            }>(
-              (accumulator, current) => {
-                if (!current.childGroups) {
-                  current.childGroups = [];
-                };
-                if (!current.dishes) {
-                  current.dishes = [];
-                };
-                if (current.id) {
-                  accumulator[ current.id ] = current;
-                };
-                return accumulator;
-              }, {}
-            );
-            const groupIdsBySlug: {
-              [ key: string ]: string;
-            } = {};
-
-            // Inserting dishes by groups
-            for (let dish of dishes) {
-              const groupId = dish.parentGroup?.id || dish.groupId;
-              if (!groupId) continue;
-              if (!groupsById[ groupId ]) continue;
-              if (groupsById[ groupId ].dishes) {
-                const checkDish = groupsById[ groupId ].dishes?.find(item => item.id === dish.id);
-                if (!checkDish) {
-                  groupsById[ groupId ].dishes?.push(dish);
-                };
-              } else {
-                groupsById[ groupId ].dishes = [ dish ];
+          };
+          const getGroups = (items: Partial<Group>[]) => items.reduce<Partial<Group>[]>(
+            (accumulator, current) => {
+              addGroup(accumulator, current);
+              if (current.childGroups && current.childGroups.length > 0) {
+                getGroups(current.childGroups).forEach(
+                  child => addGroup(accumulator, child)
+                );
+              };
+              return accumulator;
+            }, []
+          );
+          const allNestingsGroups = getGroups(groups);
+          const allNestingsIds = allNestingsGroups.map(group => group.id);
+          console.log(allNestingsGroups);
+          const customvObDish = this.config.customFields?.[ 'Dish' ];
+          const vOb = customvObDish ? { ...this.defaultDishFragments, ...customvObDish } : this.defaultDishFragments;
+          return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', vOb, 'id', {
+            query: {
+              criteria: {
+                parentGroup: allNestingsIds,
+                concept: groupsData.concept
+              }
+            },
+            subscribe: {
+              criteria: {
+                parentGroup: allNestingsIds,
+                concept: groupsData.concept
               }
             }
-            // Create groups hierarchy
-            for (let groupId in groupsById) {
-              const group = groupsById[ groupId ];
-              const parentGroupId = group.parentGroup?.id;
-              groupIdsBySlug[ group.slug! ] = groupId;
-              if (!parentGroupId) continue;
-              if (!groupsById[ parentGroupId ]) continue;
-              if (groupsById[ parentGroupId ].childGroups?.find(chGroup => chGroup.id === group.id)) continue;
-              groupsById[ parentGroupId ].childGroups?.push(group);
-            }
-            return { groupsById, groupIdsBySlug };
-          }),
-          distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
-        );
-      }
-    ),
-    shareReplay(1),
-    distinctUntilChanged((previous, current) => isEqualItems(previous, current))
-  );
+          }).pipe(
+            map(data => {
+              const dishes = data.map(
+                dataDish => this.addAmountToDish(dataDish)
+              );
+              this._dishes$.next(dishes);
+              const groupsById = allNestingsGroups.reduce<{
+                [ key: string ]: Partial<Group>;
+              }>(
+                (accumulator, current) => {
+                  if (!current.childGroups) {
+                    current.childGroups = [];
+                  };
+                  if (!current.dishes) {
+                    current.dishes = [];
+                  };
+                  if (current.id) {
+                    accumulator[ current.id ] = current;
+                  };
+                  return accumulator;
+                }, {}
+              );
+              const groupIdsBySlug: {
+                [ key: string ]: string;
+              } = {};
 
-  getMenu$(slug: string | string[] | undefined): Observable<Partial<Group>[] | undefined | null> {
-    return this.loadedMenu$.pipe(
+              // Inserting dishes by groups
+              for (let dish of dishes) {
+                const groupId = dish.parentGroup?.id || dish.groupId;
+                if (!groupId) continue;
+                if (!groupsById[ groupId ]) continue;
+                if (groupsById[ groupId ].dishes) {
+                  const checkDish = groupsById[ groupId ].dishes?.find(item => item.id === dish.id);
+                  if (!checkDish) {
+                    groupsById[ groupId ].dishes?.push(dish);
+                  };
+                } else {
+                  groupsById[ groupId ].dishes = [ dish ];
+                }
+              }
+              // Create groups hierarchy
+              for (let groupId in groupsById) {
+                const group = groupsById[ groupId ];
+                const parentGroupId = group.parentGroup?.id;
+                groupIdsBySlug[ group.slug! ] = groupId;
+                if (!parentGroupId) continue;
+                if (!groupsById[ parentGroupId ]) continue;
+                if (groupsById[ parentGroupId ].childGroups?.find(chGroup => chGroup.id === group.id)) continue;
+                groupsById[ parentGroupId ].childGroups?.push(group);
+              }
+              return { groupsById, groupIdsBySlug };
+            }),
+            distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
+          );
+        }
+      ),
+      shareReplay(1),
+      distinctUntilChanged((previous, current) => isEqualItems(previous, current))
+    ).pipe(
       map(({ groupsById, groupIdsBySlug }) => {
-        if (slug) {
-          switch (typeof slug) {
-            case 'string':
-              if (!groupIdsBySlug[ slug ]) {
-                return [];
-              } else {
-                return groupsById[ groupIdsBySlug[ slug ] ].childGroups;
-              };
-            default:
-              if (!slug.length) {
-                return [];
-              } else {
-                return slug.map(s => groupsById[ groupIdsBySlug[ s ] ]);
-              };
-          }
+        if (isValue(slug)) {
+          if (typeof slug === 'string') {
+            if (!groupIdsBySlug[ slug ]) {
+              return [];
+            } else {
+              return groupsById[ groupIdsBySlug[ slug ] ].childGroups;
+            };
+          } else {
+            if (slug.length == 0) {
+              return [];
+            } else {
+              return slug.map(
+                s => groupsById[ groupIdsBySlug[ s ] ]
+              ).sort(
+                (g1, g2) => (g1.order ?? 0) - (g2.order ?? 0)
+              );
+            };
+          };
         } else {
-          return Object.values(groupsById) ;
+          return Object.values(groupsById).sort(
+            (g1, g2) => (g1.order ?? 0) - (g2.order ?? 0)
+          );
         }
       })
     );
@@ -502,7 +504,7 @@ export class NgGqlService {
    * @returns - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
    *  в виде одиночного объекта либо массива.
    **/
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables >(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
+  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
       query: gql`query ${ generateQueryString({
         name,
@@ -585,7 +587,7 @@ export class NgGqlService {
 * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
 * @see this.queryAndSubscribe
 **/
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables >(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]> {
+  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]> {
     const q = generateQueryString({
       name,
       queryObject,
