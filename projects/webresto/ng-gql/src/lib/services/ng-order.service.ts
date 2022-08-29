@@ -238,7 +238,6 @@ export class NgOrderService {
           return this.ngGqlService.getDishes$(dishesIds).pipe(
             map(
               dishes => {
-                debugger;
                 return {
                   ...order,
                   customer: {
