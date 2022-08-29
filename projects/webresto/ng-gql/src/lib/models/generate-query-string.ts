@@ -47,7 +47,7 @@ export type GQLRequestVariables = undefined | VCriteria | {
  * @returns часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V.
  *  НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription
  */
-export function generateQueryString<T, N extends `${ string }`, GQLRequestVariables>(options: {
+export function generateQueryString<T extends object, N extends `${ string }`, GQLRequestVariables>(options: {
   name: N,
   queryObject: T,
   variables?: GQLRequestVariables,
@@ -55,7 +55,7 @@ export function generateQueryString<T, N extends `${ string }`, GQLRequestVariab
   fieldsTypeMap?: Map<keyof GQLRequestVariables, string>;
 }) {
   const { name, queryObject, variables } = options;
-  const makeFieldList = <T, V>(source: T, name: string, indent: number = 1, variables?: V): string => {
+  const makeFieldList = <T extends object, V>(source: T, name: string, indent: number = 1, variables?: V): string => {
     const indentString = new Array<string>(indent * 2).fill(' ').join('');
     return `${ name }${ indent === 1 && variables ? `(${ (<(keyof V)[]> Object.keys(variables)).filter(
       key => isValue(variables[ key ])

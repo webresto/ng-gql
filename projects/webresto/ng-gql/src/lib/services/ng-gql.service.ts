@@ -504,7 +504,7 @@ export class NgGqlService {
    * @returns - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
    *  в виде одиночного объекта либо массива.
    **/
-  customQuery$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
+  customQuery$<T extends {}, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T | T[]>> {
     return this.apollo.watchQuery<Record<N, T | T[]>, V>({
       query: gql`query ${ generateQueryString({
         name,
@@ -544,7 +544,7 @@ export class NgGqlService {
  *
  * @returns - Observable поток с результатом выполнения операции в формате объекта с одним ключом N (название операции), значение которого - непосредственно результат операции.
  **/
-  customMutation$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>> {
+  customMutation$<T extends {}, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables: V, paramOptions?: QueryGenerationParam<V>): Observable<Record<N, T>> {
     return this.apollo.mutate<Record<N, T>, V>({
       mutation: gql`mutation ${ generateQueryString({
         name,
@@ -587,7 +587,7 @@ export class NgGqlService {
 * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
 * @see this.queryAndSubscribe
 **/
-  customSubscribe$<T, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]> {
+  customSubscribe$<T extends {}, N extends `${ string }`, V = GQLRequestVariables>(name: N, queryObject: ValuesOrBoolean<T>, variables?: V, paramOptions?: QueryGenerationParam<V>, extra?: ExtraSubscriptionOptions): Observable<Record<N, T>[ N ]> {
     const q = generateQueryString({
       name,
       queryObject,
@@ -630,22 +630,24 @@ export class NgGqlService {
   * Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
   * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
   **/
-  queryAndSubscribe<
-    T, NQuery extends `${ string }`, NSubscribe extends `${ string }`,
+  queryAndSubscribe<T extends {},
+    NQuery extends `${ string }`,
+    NSubscribe extends `${ string }`,
     VQ = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
-    VS = Exclude<GQLRequestVariables, 'query' | 'subscribe'>>(
-      nameQuery: NQuery,
-      nameSubscribe: NSubscribe,
-      queryObject: ValuesOrBoolean<T>,
-      uniqueKeyForCompareItem: keyof T,
-      variables?: {
-        query?: VQ,
-        subscribe?: VS;
-      },
-      paramOptions?: {
-        query?: QueryGenerationParam<VQ>,
-        subscribe?: QueryGenerationParam<VS>;
-      }): Observable<T[]> {
+    VS = Exclude<GQLRequestVariables, 'query' | 'subscribe'>
+  >(
+    nameQuery: NQuery,
+    nameSubscribe: NSubscribe,
+    queryObject: ValuesOrBoolean<T>,
+    uniqueKeyForCompareItem: keyof T,
+    variables?: {
+      query?: VQ,
+      subscribe?: VS;
+    },
+    paramOptions?: {
+      query?: QueryGenerationParam<VQ>,
+      subscribe?: QueryGenerationParam<VS>;
+    }): Observable<T[]> {
     const updateFn: (store: T | T[], subscribeValue: T) => T[] = (store, newValue) => {
       const array = (Array.isArray(store) ? store : [ store ]);
       const findItem = array.find(
