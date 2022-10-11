@@ -1,13 +1,18 @@
 # Interface: SendOrderInput
 
+**`Interface`**
+
+SendOrderInput
+Данные для отправки оформленного заказа
+orderId - id оформляемого заказа
+orderIdFactory - необязательная фабричная функция для кастомной генерации id нового заказа, в случае успешного ответа API.
+По умолчанию (если orderIdFactory не передавался) в качестве id нового заказа будет отправлено undefined и id будет сгенерирован на стороне сервера API.
+
 ## Table of contents
 
 ### Properties
 
 - [orderId](SendOrderInput.md#orderid)
-
-### Methods
-
 - [orderIdFactory](SendOrderInput.md#orderidfactory)
 
 ## Properties
@@ -16,12 +21,16 @@
 
 • **orderId**: `string`
 
-## Methods
+___
 
 ### orderIdFactory
 
-▸ `Optional` **orderIdFactory**(): `undefined` \| `string`
+• `Optional` **orderIdFactory**: () => `undefined` \| `string`
 
-#### Returns
+#### Type declaration
+
+▸ (): `undefined` \| `string`
+
+##### Returns
 
 `undefined` \| `string`

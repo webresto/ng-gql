@@ -53,7 +53,6 @@
 - [DiscountType](README.md#discounttype)
 - [VCriteria](README.md#vcriteria)
 - [GQLRequestVariables](README.md#gqlrequestvariables)
-- [CartBusEvent](README.md#cartbusevent)
 - [OrderState](README.md#orderstate)
 - [OrderForm](README.md#orderform)
 - [ValuesOrBoolean](README.md#valuesorboolean)
@@ -95,20 +94,26 @@
 
 ### Events
 
-- [CartBusEventBase](README.md#cartbuseventbase)
-- [CartBusEventAdd](README.md#cartbuseventadd)
-- [CartBusEventUpdate](README.md#cartbuseventupdate)
-- [CartBusEventRemove](README.md#cartbuseventremove)
-- [CartBusEventSetAmountToDish](README.md#cartbuseventsetamounttodish)
-- [CartBusEventSetCommentToDish](README.md#cartbuseventsetcommenttodish)
-- [CartBusEventCheck](README.md#cartbuseventcheck)
-- [CartBusEventSend](README.md#cartbuseventsend)
+- [CartBusEvent](README.md#cartbusevent)
+- [CartBusEventBase](interfaces/CartBusEventBase.md)
+- [CartBusEventAdd](interfaces/CartBusEventAdd.md)
+- [CartBusEventUpdate](interfaces/CartBusEventUpdate.md)
+- [CartBusEventRemove](interfaces/CartBusEventRemove.md)
+- [CartBusEventSetAmountToDish](interfaces/CartBusEventSetAmountToDish.md)
+- [CartBusEventSetCommentToDish](interfaces/CartBusEventSetCommentToDish.md)
+- [CartBusEventCheck](interfaces/CartBusEventCheck.md)
+- [CartBusEventSend](interfaces/CartBusEventSend.md)
 
 ## Functions
 
 ### deepClone
 
 ▸ **deepClone**<`T`\>(`source`): `T`
+
+**`Function`**
+
+deepClone()
+Функция для "глубокого" рекурсивного клонирования любых объектов
 
 #### Type parameters
 
@@ -120,11 +125,13 @@
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `source` | `T` |  |
+| `source` | `T` | объект, который требуется скопировать |
 
 #### Returns
 
 `T`
+
+полная копия объекта объекта, полученного в качестве аргумента
 
 ___
 
@@ -132,11 +139,16 @@ ___
 
 ▸ **generateQueryString**<`T`, `N`, `GQLRequestVariables`\>(`options`): `string`
 
+**`Function`**
+
+generateQueryString()
+Функция - генератор строки запроса к серверу GraphQL.
+
 #### Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `T` | `T` |
+| `T` | extends `object` |
 | `N` | extends `string` |
 | `GQLRequestVariables` | `GQLRequestVariables` |
 
@@ -144,22 +156,51 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `options` | `Object` |  |
-| `options.name` | `N` |  |
-| `options.queryObject` | `T` |  |
-| `options.variables?` | `GQLRequestVariables` |  |
-| `options.requiredFields?` | keyof `GQLRequestVariables`[] |  |
-| `options.fieldsTypeMap?` | `Map`<keyof `GQLRequestVariables`, `string`\> |  |
+| `options` | `Object` | объект с данными, необходимыми для формирования запроса, где: |
+| `options.name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
+| `options.queryObject` | `T` | объект-источник информации о структуре запрашиваемых данных |
+| `options.variables?` | `GQLRequestVariables` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа    параметров допустимо использовать типы - number, string, object или boolean. |
+| `options.requiredFields?` | keyof `GQLRequestVariables`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.    (например у параметра указан тип String!, а не String). |
+| `options.fieldsTypeMap?` | `Map`<keyof `GQLRequestVariables`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL. ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
 
 #### Returns
 
 `string`
+
+часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V.
+ НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription
 
 ___
 
 ### isValue
 
 ▸ **isValue**<`T`\>(`value`): value is NonNullable<T\>
+
+**`Function`**
+
+isValue()
+
+Функция-хелпер для проверки, что переданное значение не является null или undefined.
+Может пригодиться в ситуациях, где требуется более сложная проверка, чем при использовании optional chaining (оператора "??"),
+либо защиты от ложно-положительных срабатываний при проверке наличия значения
+Например :
+
+```typescript
+   interface Foo {
+   value? :number | undefinded
+   }
+   const a:Foo = {
+     value: 0
+   };
+   if (a) {
+    <block_a>
+   } else {
+     <block_b>
+    };
+```
+
+В этом примере block_a не будет выполнен, поскольку приведение к типу boolean значения 0 в результате дает false.
+А проверка isValue(a) - вернет true.
 
 #### Type parameters
 
@@ -183,6 +224,9 @@ ___
 
 ▸ **isEqualItems**<`T`\>(`a`, `b`): `boolean`
 
+Функция для сравнения двух переменных.
+Осуществляет "глубокое" сравнение для непримитивных типов по значениям их свойств, а не по ссылке на объект.
+
 #### Type parameters
 
 | Name |
@@ -194,11 +238,13 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `a` | `T` |  |
-| `b` | `T` | - |
+| `b` | `T` | сравниваемые объекты. |
 
 #### Returns
 
 `boolean`
+
+true, если объекты идентичны и false, если объекты различаются.
 
 ## Type Aliases
 
@@ -212,11 +258,18 @@ ___
 
 Ƭ **VCriteria**: `Object`
 
+**`Alias`**
+
+VCriteria
+Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
+Формируется по правилам Waterline query language.
+Подробнее: https://docs.webresto.org/docs/data/criteria/
+
 #### Type declaration
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `criteria` | { `[key: string]`: `any`;  } |  |
+| `criteria` | { `[key: string]`: `any`;  } | Объект Waterline query language |
 
 ___
 
@@ -224,17 +277,34 @@ ___
 
 Ƭ **GQLRequestVariables**: `undefined` \| [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
 
-___
+**`Alias`**
 
-### CartBusEvent
-
-Ƭ **CartBusEvent**: [`CartBusEventAdd`](README.md#cartbuseventadd) \| [`CartBusEventUpdate`](README.md#cartbuseventupdate) \| [`CartBusEventRemove`](README.md#cartbuseventremove) \| [`CartBusEventSetAmountToDish`](README.md#cartbuseventsetamounttodish) \| [`CartBusEventSetCommentToDish`](README.md#cartbuseventsetcommenttodish) \| [`CartBusEventCheck`](README.md#cartbuseventcheck) \| [`CartBusEventSend`](README.md#cartbuseventsend)
+GQLRequestVariables
+Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описаны для запроса в схеме GraphQL сервера, с соответствующими им значениями.
+В качестве ключей выступают строки, соответствующие названиям параметров.
+Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
 
 ___
 
 ### OrderState
 
 Ƭ **OrderState**: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"``
+
+**`Alias`**
+
+OrderState
+Возможные состояния заказа.
+ `CART` - начальное состояние заказа
+ `CHECKOUT` - заказ проверен и готов к оформлению.
+В заказе еще возможны изменения, но после любых изменений требуется повторно выполнять проверку.
+
+**`See`**
+
+'NgOrderService.checkOrder'
+ `PAYMENT` - заказ переходит в это состояние при выборе онлайн оплаты или через внутреннюю платежную систему (бонусами и т.п.),
+	Состояние сохраняется, пока оплата не будет завершена, после чего заказ перейдет в состояние `ORDER`.
+ `ORDER` - заказ успешно оформлен. Это финальный статус и он не подразумевает, что заказ также был доставлен.
+	Данные о выполненной доставке могут быть получены от RMS (`Order.rmsDelivered`).
 
 ___
 
@@ -247,6 +317,22 @@ ___
 ### ValuesOrBoolean
 
 Ƭ **ValuesOrBoolean**<`IncomingT`, `ExtT`, `T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends Observable<unknown\> \| AbstractControl<unknown\> ? never : T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
+
+**`Alias`**
+
+ValuesOrBoolean<T>
+
+Тип, описывающий объект-конфигуратор запроса к серверу GraphQL для данных типа T.
+Данный обьект будет использоваться в качестве источника информации о требуемых данных при генерации строки-запроса.
+Сервер вернет данные только для полей, присутсвующих в этом обьекте, с сохранением структуры по всем уровням вложенности.
+В качестве ключей (K) необходимо указать ключи из типа T, данные для которых необходимо получить.
+Ключи, значения которых являются любыми развновидностями Observable или AbstractControl (все виды реактивных форм Ангуляр) - не принимаются.
+Структура возвращаемых данных будет соответствовать структуре, переданной в данном объекте, а не типе Т.
+То есть, даже если некие ключи-свойства в типе T указаны как обязательные, их все равно можно не указывать в данном обьекте, но и в возвращаемых API данных эти данные будут отсутствовать.
+В качестве значений:
+  1. true или T[K] - в случае, если T[K] принадлежит примитивным типам, undefined или null.
+  2. Если значение T[K] - "сложный" тип обьекта (НО НЕ МАССИВ!) - вложенный объект, формируемый по аналогичной схеме.
+  3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.
 
 #### Type parameters
 
@@ -268,6 +354,8 @@ ___
 
 • `Const` **DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md)\>\>
 
+InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
+
 ___
 
 ### defaultMessageFragments
@@ -286,11 +374,15 @@ ___
 
 • `Const` **MESSAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md)\>\>
 
+InjectionToken с объектом ValuesOrBoolean<Message>, используемым в запросе Message с сервера.
+
 ___
 
 ### ACTION\_FRAGMENTS
 
 • `Const` **ACTION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Action>, используемым в запросе Action с сервера.
 
 ___
 
@@ -304,6 +396,8 @@ ___
 
 • `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
+InjectionToken с объектом ValuesOrBoolean<GroupModifier>, используемым в запросе GroupModifier с сервера.
+
 ___
 
 ### defaultGroupFragments
@@ -315,6 +409,8 @@ ___
 ### GROUP\_FRAGMENTS
 
 • `Const` **GROUP\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Group>, используемым в запросе Group с сервера.
 
 ___
 
@@ -328,6 +424,8 @@ ___
 
 • `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md)\>\>
 
+InjectionToken с объектом ValuesOrBoolean<Image>, используемым в запросе Image с сервера.
+
 ___
 
 ### defaultMaintenanceFragments
@@ -339,6 +437,8 @@ ___
 ### MAINTENANCE\_FRAGMENTS
 
 • `Const` **MAINTENANCE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Maintenance>, используемым в запросе Maintenance с сервера.
 
 ___
 
@@ -352,6 +452,8 @@ ___
 
 • `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
+InjectionToken с объектом ValuesOrBoolean<Modifier>, используемым в запросе Modifier с сервера.
+
 ___
 
 ### defaultNavigationFragments
@@ -363,6 +465,8 @@ ___
 ### NAVIGATION\_FRAGMENTS
 
 • `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
 
 ___
 
@@ -376,6 +480,8 @@ ___
 
 • `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
+InjectionToken с объектом ValuesOrBoolean<OrderDish>, используемым в запросе OrderDish с сервера.
+
 ___
 
 ### defaultOrderFragments
@@ -387,6 +493,8 @@ ___
 ### ORDER\_FRAGMENTS
 
 • `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Order>, используемым в запросе Order с сервера.
 
 ___
 
@@ -400,11 +508,24 @@ ___
 
 • `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
 
+InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.
+
 ## Events
 
-### CartBusEventBase
+### CartBusEvent
+
+Ƭ **CartBusEvent**: [`CartBusEventAdd`](interfaces/CartBusEventAdd.md) \| [`CartBusEventUpdate`](interfaces/CartBusEventUpdate.md) \| [`CartBusEventRemove`](interfaces/CartBusEventRemove.md) \| [`CartBusEventSetAmountToDish`](interfaces/CartBusEventSetAmountToDish.md) \| [`CartBusEventSetCommentToDish`](interfaces/CartBusEventSetCommentToDish.md) \| [`CartBusEventCheck`](interfaces/CartBusEventCheck.md) \| [`CartBusEventSend`](interfaces/CartBusEventSend.md)
+
+**`Alias`**
+
+CartBusEvent
+Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
+
+___
 
 • **CartBusEventBase**<`T`\>: `Object`
+
+CartBusEventBase Базовый интерфейс событий в шине событий
 
 #### Type parameters
 
@@ -412,44 +533,47 @@ ___
 | :------ |
 | `T` |
 
-___
-
-### CartBusEventAdd
-
 • **CartBusEventAdd**: `Object`
 
-___
-
-### CartBusEventUpdate
+CartBusEventAdd
+Добавление в заказ (корзину).
 
 • **CartBusEventUpdate**: `Object`
 
-___
-
-### CartBusEventRemove
+CartBusEventUpdate
+Обновление данных в заказе? НЕ связанных с блюдами.
 
 • **CartBusEventRemove**: `Object`
 
-___
-
-### CartBusEventSetAmountToDish
+CartBusEventRemove
+Удаление блюда из заказа (корзины).
 
 • **CartBusEventSetAmountToDish**: `Object`
 
-___
+CartBusEventSetToDish
+Установить количество порций или комментарий для блюда
+Данные необходимого блюда и требуемое количество указываются в
 
-### CartBusEventSetCommentToDish
+**`Field`**
+
+data
 
 • **CartBusEventSetCommentToDish**: `Object`
 
-___
+CartBusEventSetToDish
+Установить количество порций или комментарий для блюда
+Данные необходимого блюда и требуемое количество указываются в
 
-### CartBusEventCheck
+**`Field`**
+
+data
 
 • **CartBusEventCheck**: `Object`
 
-___
-
-### CartBusEventSend
+CartBusEventCheck
+Отправка заказа на проверку перед оформлением.
 
 • **CartBusEventSend**: `Object`
+
+CartBusEventSend
+Отправка заказа на оформление

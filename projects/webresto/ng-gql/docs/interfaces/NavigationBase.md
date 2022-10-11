@@ -1,5 +1,10 @@
 # Interface: NavigationBase
 
+**`Interface`**
+
+NavigationBase
+Базовый интерфейс для объектов, содержащих информацию о навигации внутри приложения.
+
 ## Hierarchy
 
 - **`NavigationBase`**

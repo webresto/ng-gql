@@ -13,12 +13,12 @@ export interface Phone {
 }
 
 export interface PhoneKnowledge extends BaseModelWithCustomData {
-  id: number;
-  phone: string;
+  id: number | null;
+  phone: string | null;
   isFirst: boolean;
   isConfirm: boolean;
-  codeTime: string;
-  confirmCode: string;
+  codeTime: string | null;
+  confirmCode: string | null;
 }
 
 export interface CheckPhoneCodeInput {

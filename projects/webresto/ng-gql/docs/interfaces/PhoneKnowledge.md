@@ -1,5 +1,8 @@
 # Interface: PhoneKnowledge
 
+Базовый интерфейс. описывающий содержимаое свойства customData в той или иной конкретной реализации сервера.
+Т.к. структура customData будет одинакова для всех содержащих ее моделей, другие модели наследуюттся от этого базового интерфейса.
+
 ## Hierarchy
 
 - [`BaseModelWithCustomData`](BaseModelWithCustomData.md)
@@ -32,13 +35,13 @@ ___
 
 ### id
 
-• **id**: `number`
+• **id**: ``null`` \| `number`
 
 ___
 
 ### phone
 
-• **phone**: `string`
+• **phone**: ``null`` \| `string`
 
 ___
 
@@ -56,10 +59,10 @@ ___
 
 ### codeTime
 
-• **codeTime**: `string`
+• **codeTime**: ``null`` \| `string`
 
 ___
 
 ### confirmCode
 
-• **confirmCode**: `string`
+• **confirmCode**: ``null`` \| `string`

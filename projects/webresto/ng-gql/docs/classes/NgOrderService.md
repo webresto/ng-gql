@@ -58,6 +58,14 @@
 
 ▸ **updateStorageOrderIdToken**(`newToken`): `void`
 
+**`Method`**
+
+updateStorageOrderIdToken()
+
+**`See`**
+
+this.StorageWrapper.updateStorageOrderIdToken()
+
 #### Parameters
 
 | Name | Type |
@@ -73,6 +81,14 @@ ___
 ### getOrderId
 
 ▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`): `undefined` \| `string`
+
+**`Method`**
+
+getOrderId()
+
+**`See`**
+
+this.StorageWrapper.getOrderId()
 
 #### Parameters
 
@@ -91,6 +107,14 @@ ___
 
 ▸ **setOrderId**(`orderId`, `storageOrderIdToken?`): `void`
 
+**`Method`**
+
+setOrderId()
+
+**`See`**
+
+this.StorageWrapper.setOrderId()
+
 #### Parameters
 
 | Name | Type |
@@ -107,6 +131,14 @@ ___
 ### removeOrderId
 
 ▸ **removeOrderId**(`newOrderId?`): `void`
+
+**`Method`**
+
+removeOrderId()
+
+**`See`**
+
+this.StorageWrapper.removeOrderId()
 
 #### Parameters
 
@@ -158,9 +190,15 @@ ___
 
 ▸ **getOrderPaymentMethods$**(): `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
+**`Method`**
+
+getOrderPaymentMethods$()
+
 #### Returns
 
 `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
+
+Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
 
 ___
 
@@ -168,9 +206,15 @@ ___
 
 ▸ **getOrder**(): `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
 
+**`Method`**
+
+() getOrder
+
 #### Returns
 
 `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
+
+Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
 
 ___
 
@@ -178,11 +222,19 @@ ___
 
 ▸ **loadOrder$**(`id`, `isShort?`): `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
 
+**`Method`**
+
+loadOrder$()
+
+Метод загружает заказ и делает подписку для получения по нему обновлений.
+Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
+(например, данные для страницы "Спасибо за заказ").
+
 #### Parameters
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `id` | `undefined` \| `string` | `undefined` |  |
+| `id` | `undefined` \| `string` | `undefined` | id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему. |
 | `isShort` | `boolean` | `false` | - |
 
 #### Returns
@@ -195,15 +247,20 @@ ___
 
 ▸ **addToOrder**(`options`): `void`
 
+**`Method`**
+
+addToOrder()
+Используется для отправки в шину события добавления блюда.
+
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.loading` | `BehaviorSubject`<`boolean`\> |  |
-| `options.dishId` | `string` |  |
-| `options.amount?` | `number` |  |
-| `options.dishModifiers?` | `Partial`<[`Modifier`](../interfaces/Modifier.md)<[`Dish`](../interfaces/Dish.md)\>\>[] \| `Partial`<[`OrderModifier`](../interfaces/OrderModifier.md)<[`Dish`](../interfaces/Dish.md)\>\>[] |  |
+| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.dishId` | `string` | id добавляемого блюдо |
+| `options.amount?` | `number` | количество |
+| `options.dishModifiers?` | `Partial`<[`Modifier`](../interfaces/Modifier.md)<[`Dish`](../interfaces/Dish.md)\>\>[] \| `Partial`<[`OrderModifier`](../interfaces/OrderModifier.md)<[`Dish`](../interfaces/Dish.md)\>\>[] | выбранные пользователем модификаторы блюда (необязательный) |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 | `options.comment?` | `string` | - |
@@ -219,16 +276,21 @@ ___
 
 ▸ **removeFromOrder**(`options`): `void`
 
+**`Method`**
+
+removeFromOrder()
+Используется для отправки в шину события удаления блюда из корзины
+
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.loading` | `BehaviorSubject`<`boolean`\> |  |
-| `options.amount` | `number` |  |
+| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.amount` | `number` | количество |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |
-| `options.orderDishId` | `number` |  |
+| `options.orderDishId` | `number` | id удаляемого блюда в корзине |
 
 #### Returns
 
@@ -240,13 +302,28 @@ ___
 
 ▸ **updateOrder**(`options`): `void`
 
+**`Method`**
+
+updateOrder()
+Используется для отправки в шину события обновления данных в заказе, не связанных с блюдами.
+Может использоваться ТОЛЬКО ДО того, как заказ отправлен через
+
+**`Method`**
+
+this.sendOrder()
+Также, заказ нужно повторно проверять методом
+
+**`Method`**
+
+this.checkOrder(), если такая проверка уже проводилась ранее.
+
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.data` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; modifiers: Partial<{ id: string; groupId: string; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; ... 21 more ...; customData: Partial<...\>; }\>; }\>[]; ... 11 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> |  |
-| `options.loading` | `BehaviorSubject`<`boolean`\> |  |
+| `options.data` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; modifiers: Partial<{ id: string; groupId: string; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; ... 21 more ...; customData: Partial<...\>; }\>; }\>[]; ... 11 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> | объект заказа, при этом не все данные из него будут приняты и, в результате, обновлены. Большая часть будет данных будет проигнорирована и может изменяться только в рамках других методов согласно заложенной бизнес-логике. В настоящее время из всего заказа учитываются изменения ТОЛЬКО в свойстве `Order.trifleFrom`. |
+| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 
@@ -260,12 +337,18 @@ ___
 
 ▸ **checkOrder**(`options`): `void`
 
+**`Method`**
+
+checkOrder()
+Используется для отправки в шину события обязательной проверки заказа перед оформлением.
+Метод необходимо вызывать после того, как пользователь полностью заполнил в заказе все необходимые данные и далее после каждого вносимого в форму изменения, при условии, что в форме все необходимые данные заполнены.
+
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.orderForm` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; modifiers: Partial<{ id: string; groupId: string; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; ... 21 more ...; customData: Partial<...\>; }\>; }\>[]; ... 11 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> |  |
+| `options.orderForm` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; modifiers: Partial<{ id: string; groupId: string; amount: number; dish: Partial<{ id: string; images: Partial<{ id: string; uploadDate: string; images: Partial<{ large: string; origin: string; small: string; }\>; }\>[]; ... 21 more ...; customData: Partial<...\>; }\>; }\>[]; ... 11 more ...; total: number; }\>[] ; `message`: `string` ; `discountTotal`: `number` ; `comment`: `string` ; `totalWeight`: `number` ; `total`: `number` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; customData: Partial<{ [x: string]: any; }\>; order: number; type: string; title: string; isCash: boolean; adapter: string; enable: boolean; }\> ; `promocode`: `string` ; `deliveryTimeInfo`: `Partial`<{ deliveryType: "fast" \| "date-time"; deliveryDate: string; deliveryTime: string; }\>  }\> | Форма чекаута с данными проверяемого заказа |
 | `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 
@@ -279,12 +362,18 @@ ___
 
 ▸ **sendOrder**(`options`): `void`
 
+**`Method`**
+
+sendOrder()
+Используется для отправки в шину события оформления заказа.
+Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
+
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.orderId` | `string` |  |
+| `options.orderId` | `string` | Форма чекаута с данными оформляемего заказа |
 | `options.orderIdFactory?` | () => `undefined` \| `string` | - |
 | `options.loading?` | `BehaviorSubject`<`boolean`\> | - |
 | `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | - |
@@ -300,14 +389,19 @@ ___
 
 ▸ **setDishAmount**(`options`): `void`
 
+**`Method`**
+
+setDishAmount()
+Устанавливает для блюда dish в заказе количество amount.
+
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.loading` | `BehaviorSubject`<`boolean`\> |  |
-| `options.orderDishId` | `number` |  |
-| `options.amount?` | `number` |  |
+| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.orderDishId` | `number` | id блюда в корзине, для которого изменяется количество заказываемых порций |
+| `options.amount?` | `number` | необходимое количество порций |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 
@@ -321,14 +415,19 @@ ___
 
 ▸ **setDishComment**(`options`): `void`
 
+**`Method`**
+
+setDishComment()
+Добавляет к заказываемому блюду комментарий.
+
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.loading` | `BehaviorSubject`<`boolean`\> |  |
-| `options.orderDishId` | `number` |  |
-| `options.comment` | `string` |  |
+| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.orderDishId` | `number` | id блюда в корзине, которому добавляется комментарий |
+| `options.comment` | `string` | добавляемый комментарий |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | - |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | - |
 
@@ -403,3 +502,18 @@ ___
 ### orderBus$
 
 • **orderBus$**: `Observable`<`void` \| () => `void`\>
+
+Внутренний поток-шина для событий, ассоциированных с действиями, которыми необходимо выполнить с заказом (добавить/удалить блюдо, проверить заказ, отправить на проверку и тп.).
+Используется только в случае, если в
+
+**`See`**
+
+ - this.config параметр busSubscribeMode установлен в значении 'custom' для самостоятельного управления подпиской на стороне приложения.
+Использование этого потока и событий внутри него извне не подразумевается и не предусматривается,
+Для выполнения действий с заказом, необходимо использовать соответствующие методы:
+ - this.addToOrder
+ - this.removeFromOrder
+ - this.checkOrder
+ - this.sendOrder
+ - this.setDishAmount
+ - this.setDishComment

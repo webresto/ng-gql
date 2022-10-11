@@ -11,7 +11,7 @@ import type {
 import { isValue, isEqualItems, deepClone, generateQueryString, NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS } from '../models';
 import { ApolloService } from './apollo.service';
 
-/** @private */
+/** @internal */
 interface SlugAndConcept {
   slug: string,
   concept: string | 'origin';
@@ -407,7 +407,7 @@ export class NgGqlService {
   }
 
   /**
-   * @method isKnownPhone$()
+   * @method isKnownPhone$
    * Проверяет переданный номер телефона на "знакомость".
    * @param phone - Объект с данными номера телефона.
    * @returns

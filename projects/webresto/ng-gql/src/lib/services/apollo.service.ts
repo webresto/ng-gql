@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
-import type { ExtraSubscriptionOptions, MutationResult, WatchQueryOptions } from 'apollo-angular';
-import type { ApolloQueryResult, FetchResult, QueryOptions, SubscriptionOptions, MutationOptions } from '@apollo/client/core';
+import type { ExtraSubscriptionOptions, WatchQueryOptions } from 'apollo-angular';
+import type { ApolloQueryResult, FetchResult, QueryOptions, SubscriptionOptions } from '@apollo/client/core';
 import { catchError, filter, of, map } from 'rxjs';
-import { EmptyObject } from 'apollo-angular/types';
+import { EmptyObject, MutationOptions } from 'apollo-angular/types';
 import { isValue } from '../models';
+
+/**
+ * @private
+ */
+type MutationResult<TData = any> = FetchResult<TData> & {
+  loading: boolean;
+};
 
 @Injectable({
   providedIn: 'root'
@@ -51,13 +58,6 @@ export class ApolloService {
 
   mutate<T, V = EmptyObject>(options: MutationOptions<T, V>) {
     return this.apollo.mutate<T, V>(options).pipe(
-      map(data => {
-        if ( isValue(data.errors)) {
-          throw new Error(JSON.stringify(data.errors));
-        } else {
-          return data;
-        }
-      }),
       catchError(
         error => {
           console.log(error);

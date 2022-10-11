@@ -61,7 +61,7 @@ export interface NgGqlConfig {
 
   /**
    * Токен, с которым в localStorage будут храниться id заказов.
-   * Если не задан - используется токен по умолчанию -'${ window.location.host }-orderId'.
+   * Если не задан - используется токен по умолчанию -'$\{ window.location.host \}-orderId'.
    * Если задан null - корзина не будет загружаться при старте приложения, потоки будут ожидать,
    * пока в поток `NgOrderService.storageOrderIdToken$` не будет передана строка с токеном.
    */
