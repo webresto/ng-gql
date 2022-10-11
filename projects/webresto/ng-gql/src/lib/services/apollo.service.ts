@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import type { ExtraSubscriptionOptions, WatchQueryOptions } from 'apollo-angular';
 import type { ApolloQueryResult, FetchResult, QueryOptions, SubscriptionOptions } from '@apollo/client/core';
 import { catchError, filter, of, map } from 'rxjs';
 import { EmptyObject, MutationOptions } from 'apollo-angular/types';
 import { isValue } from '../models';
-
+import type { NgGqlConfig } from '../models';
 /**
  * @private
  */
@@ -18,7 +18,7 @@ type MutationResult<TData = any> = FetchResult<TData> & {
 })
 export class ApolloService {
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo, @Inject('config') private config: NgGqlConfig,) { }
 
   watchQuery<TData, TVariables = EmptyObject>(options: WatchQueryOptions<TVariables, TData>) {
     return this.apollo.watchQuery<TData, TVariables>(options).valueChanges.pipe(
@@ -32,6 +32,9 @@ export class ApolloService {
       catchError(
         error => {
           console.log(error);
+          if (this.config.debugMode) {
+            alert(error);
+          };
           return of(null);
         }),
       filter((value): value is ApolloQueryResult<TData> => !!value),
@@ -50,6 +53,9 @@ export class ApolloService {
       catchError(
         error => {
           console.log(error);
+          if (this.config.debugMode) {
+            alert(error);
+          };
           return of(null);
         }),
       filter((value): value is ApolloQueryResult<T> => !!value),
@@ -61,6 +67,9 @@ export class ApolloService {
       catchError(
         error => {
           console.log(error);
+          if (this.config.debugMode) {
+            alert(error);
+          };
           return of(null);
         }),
       filter((value): value is MutationResult<T> => !!value),
@@ -80,6 +89,9 @@ export class ApolloService {
       catchError(
         error => {
           console.log(error);
+          if (this.config.debugMode) {
+            alert(error);
+          };
           return of(null);
         }),
       filter((value): value is FetchResult<T> => !!value),

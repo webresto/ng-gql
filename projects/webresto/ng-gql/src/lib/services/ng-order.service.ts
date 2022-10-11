@@ -73,6 +73,9 @@ export class NgOrderService {
       .pipe(
         catchError(error => {
           console.log('error', error);
+          if (this.config.debugMode) {
+            alert(error);
+          };
           this.emitMessageEvent({
             type: 'info',
             title: 'Не удалось отправить ссылку для оплаты.',
@@ -345,6 +348,9 @@ export class NgOrderService {
             };
             if (busEvent.errorCb) {
               busEvent.errorCb(err);
+            };
+            if (this.config.debugMode) {
+              alert(JSON.stringify(err));
             };
             console.log(err);
             return of(() => { });

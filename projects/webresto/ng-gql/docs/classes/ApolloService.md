@@ -17,13 +17,14 @@
 
 ### constructor
 
-• **new ApolloService**(`apollo`)
+• **new ApolloService**(`apollo`, `config`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `apollo` | `Apollo` |
+| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 
 ## Methods
 

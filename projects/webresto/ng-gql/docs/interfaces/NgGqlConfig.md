@@ -15,6 +15,7 @@
 - [phoneCode](NgGqlConfig.md#phonecode)
 - [usePersistCache](NgGqlConfig.md#usepersistcache)
 - [apolloCacheConfig](NgGqlConfig.md#apollocacheconfig)
+- [debugMode](NgGqlConfig.md#debugmode)
 
 ## Properties
 
@@ -132,3 +133,11 @@ ___
 
 Объект с дополнительными параметрами конфигруации InMemoryCache для Apollo-клиента.
 При передаче параметров, уже заданных в NgGqlModule, стандартные значения будут заменены значениями, полученными в `apolloCacheConfig`.
+
+___
+
+### debugMode
+
+• `Optional` **debugMode**: `boolean`
+
+Если true - ошибки в ответах от сервера API GraphQL дополнительно будут выводиться в alert()

@@ -86,5 +86,9 @@ export interface NgGqlConfig {
    */
   apolloCacheConfig?: InMemoryCacheConfig;
 
+  /**
+   * Если true - ошибки в ответах от сервера API GraphQL дополнительно будут выводиться в alert()
+   */
+  debugMode?: boolean;
 }
 
