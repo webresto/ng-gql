@@ -235,48 +235,49 @@ export class NgOrderService {
     } : undefined, undefined).pipe(
       map(values => values[ 0 ] ? values[ 0 ] : null),
       filter((order): order is Order => isValue(order)),
-      switchMap(
-        order => {
-          const dishesIds = order.dishes.map(orderDish => orderDish.dish?.id).filter((id): id is string => isValue(id));
-          return this.ngGqlService.getDishes$(dishesIds).pipe(
-            map(
-              dishes => {
-                return {
-                  ...order,
-                  customer: {
-                    name: order.customer?.name ?? null,
-                    phone: order.customer?.phone ?? {
-                      code: this.config.phoneCode,
-                      number: null,
-                    }
-                  },
-                  address: order.address ?? {
-                    streetId: null,
-                    home: null,
-                    street: null,
-                    comment: undefined,
-                    city: undefined,
-                    housing: undefined,
-                    index: undefined,
-                    entrance: undefined,
-                    floor: undefined,
-                    apartment: undefined,
-                    doorphone: undefined
-                  },
-                  dishes: (order.dishes ?? []).map(
-                    orderDish => ({
-                      ...orderDish, dish: isValue(orderDish.dish) ?
-                        dishes.find(
-                          findedDish => findedDish.id === orderDish.dish!.id
-                        ) ?? orderDish.dish :
-                        orderDish.dish
+      /*      switchMap(
+              order => {
+                const dishesIds = order.dishes.map(orderDish => orderDish.dish?.id).filter((id): id is string => isValue(id));
+                return this.ngGqlService.getDishes$(dishesIds).pipe(
+                  map(
+                    dishes => {
+                      return {
+                        ...order,
+                        customer: {
+                          name: order.customer?.name ?? null,
+                          phone: order.customer?.phone ?? {
+                            code: this.config.phoneCode,
+                            number: null,
+                          }
+                        },
+                        address: order.address ?? {
+                          streetId: null,
+                          home: null,
+                          street: null,
+                          comment: undefined,
+                          city: undefined,
+                          housing: undefined,
+                          index: undefined,
+                          entrance: undefined,
+                          floor: undefined,
+                          apartment: undefined,
+                          doorphone: undefined
+                        },
+                        dishes: (order.dishes ?? []).map(
+                          orderDish => ({
+                            ...orderDish, dish: isValue(orderDish.dish) ?
+                              dishes.find(
+                                findedDish => findedDish.id === orderDish.dish!.id
+                              ) ?? orderDish.dish :
+                              orderDish.dish
+                          })
+                        )
+                      };
                     })
-                  )
-                };
-              })
-          );
-        }
-      )
+                );
+              }
+            )
+            */
     );
   }
 
