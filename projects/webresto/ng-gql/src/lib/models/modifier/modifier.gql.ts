@@ -1,7 +1,6 @@
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from "../dish/dish.gql";
 import { defaultImageFragments } from '../image/image.gql';
-import { InjectionToken } from '@angular/core';
 
 export interface OrderModifier<T extends Dish = Dish> {
 	id: string;
@@ -41,14 +40,3 @@ export const defaultModifierFragments: ValuesOrBoolean<Modifier> = {
 		images: defaultImageFragments
 	}
 };
-
-
-/**
- * InjectionToken с объектом ValuesOrBoolean<Modifier>, используемым в запросе Modifier с сервера.
- */
-export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
-	'MODIFIER_FRAGMENTS', {
-	providedIn: 'root',
-	factory: () => ({ ...defaultModifierFragments })
-});
-

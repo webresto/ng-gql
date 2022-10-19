@@ -1,4 +1,3 @@
-import { InjectionToken } from '@angular/core';
 import type { BaseModelWithCustomData } from "../base/base-model-with-custom-data";
 import type { ValuesOrBoolean } from "../values-or-boolean";
 
@@ -25,11 +24,3 @@ export const defaultMaintenanceFragments: ValuesOrBoolean<Maintenance> = {
   customData: true
 };
 
-/**
- * InjectionToken с объектом ValuesOrBoolean<Maintenance>, используемым в запросе Maintenance с сервера.
- */
-export const MAINTENANCE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Maintenance>>(
-  'MAINTENANCE_FRAGMENTS', {
-  providedIn: 'root',
-  factory: () => ({ ...defaultMaintenanceFragments })
-});

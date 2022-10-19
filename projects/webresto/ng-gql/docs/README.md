@@ -2,6 +2,33 @@
 
 ## Table of contents
 
+### Variables
+
+- [IMAGE\_FRAGMENTS](README.md#image_fragments)
+- [MESSAGE\_FRAGMENTS](README.md#message_fragments)
+- [ACTION\_FRAGMENTS](README.md#action_fragments)
+- [MAINTENANCE\_FRAGMENTS](README.md#maintenance_fragments)
+- [MODIFIER\_FRAGMENTS](README.md#modifier_fragments)
+- [DISH\_FRAGMENTS](README.md#dish_fragments)
+- [GROUP\_FRAGMENTS](README.md#group_fragments)
+- [GROUP\_MODIFIER\_FRAGMENTS](README.md#group_modifier_fragments)
+- [ORDER\_FRAGMENTS](README.md#order_fragments)
+- [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
+- [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
+- [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
+- [defaultDishFragments](README.md#defaultdishfragments)
+- [defaultMessageFragments](README.md#defaultmessagefragments)
+- [defaultActionFragments](README.md#defaultactionfragments)
+- [defaultGroupModifierFragments](README.md#defaultgroupmodifierfragments)
+- [defaultGroupFragments](README.md#defaultgroupfragments)
+- [defaultImageFragments](README.md#defaultimagefragments)
+- [defaultMaintenanceFragments](README.md#defaultmaintenancefragments)
+- [defaultModifierFragments](README.md#defaultmodifierfragments)
+- [defaultNavigationFragments](README.md#defaultnavigationfragments)
+- [defaultOrderDishFragments](README.md#defaultorderdishfragments)
+- [defaultOrderFragments](README.md#defaultorderfragments)
+- [defaultPaymentMethodFragments](README.md#defaultpaymentmethodfragments)
+
 ### Interfaces
 
 - [BaseModelWithCustomData](interfaces/BaseModelWithCustomData.md)
@@ -57,33 +84,6 @@
 - [OrderForm](README.md#orderform)
 - [ValuesOrBoolean](README.md#valuesorboolean)
 
-### Variables
-
-- [defaultDishFragments](README.md#defaultdishfragments)
-- [DISH\_FRAGMENTS](README.md#dish_fragments)
-- [defaultMessageFragments](README.md#defaultmessagefragments)
-- [defaultActionFragments](README.md#defaultactionfragments)
-- [MESSAGE\_FRAGMENTS](README.md#message_fragments)
-- [ACTION\_FRAGMENTS](README.md#action_fragments)
-- [defaultGroupModifierFragments](README.md#defaultgroupmodifierfragments)
-- [GROUP\_MODIFIER\_FRAGMENTS](README.md#group_modifier_fragments)
-- [defaultGroupFragments](README.md#defaultgroupfragments)
-- [GROUP\_FRAGMENTS](README.md#group_fragments)
-- [defaultImageFragments](README.md#defaultimagefragments)
-- [IMAGE\_FRAGMENTS](README.md#image_fragments)
-- [defaultMaintenanceFragments](README.md#defaultmaintenancefragments)
-- [MAINTENANCE\_FRAGMENTS](README.md#maintenance_fragments)
-- [defaultModifierFragments](README.md#defaultmodifierfragments)
-- [MODIFIER\_FRAGMENTS](README.md#modifier_fragments)
-- [defaultNavigationFragments](README.md#defaultnavigationfragments)
-- [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
-- [defaultOrderDishFragments](README.md#defaultorderdishfragments)
-- [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
-- [defaultOrderFragments](README.md#defaultorderfragments)
-- [ORDER\_FRAGMENTS](README.md#order_fragments)
-- [defaultPaymentMethodFragments](README.md#defaultpaymentmethodfragments)
-- [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
-
 ### Classes
 
 - [EventMessage](classes/EventMessage.md)
@@ -103,6 +103,174 @@
 - [CartBusEventSetCommentToDish](interfaces/CartBusEventSetCommentToDish.md)
 - [CartBusEventCheck](interfaces/CartBusEventCheck.md)
 - [CartBusEventSend](interfaces/CartBusEventSend.md)
+
+## Variables
+
+### IMAGE\_FRAGMENTS
+
+• `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Image>, используемым в запросе Image с сервера.
+
+___
+
+### MESSAGE\_FRAGMENTS
+
+• `Const` **MESSAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Message>, используемым в запросе Message с сервера.
+
+___
+
+### ACTION\_FRAGMENTS
+
+• `Const` **ACTION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Action>, используемым в запросе Action с сервера.
+
+___
+
+### MAINTENANCE\_FRAGMENTS
+
+• `Const` **MAINTENANCE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Maintenance>, используемым в запросе Maintenance с сервера.
+
+___
+
+### MODIFIER\_FRAGMENTS
+
+• `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Modifier>, используемым в запросе Modifier с сервера.
+
+___
+
+### DISH\_FRAGMENTS
+
+• `Const` **DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
+
+___
+
+### GROUP\_FRAGMENTS
+
+• `Const` **GROUP\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Group>, используемым в запросе Group с сервера.
+
+___
+
+### GROUP\_MODIFIER\_FRAGMENTS
+
+• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+
+InjectionToken с объектом ValuesOrBoolean<GroupModifier>, используемым в запросе GroupModifier с сервера.
+
+___
+
+### ORDER\_FRAGMENTS
+
+• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Order>, используемым в запросе Order с сервера.
+
+___
+
+### ORDER\_DISH\_FRAGMENTS
+
+• `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+
+InjectionToken с объектом ValuesOrBoolean<OrderDish>, используемым в запросе OrderDish с сервера.
+
+___
+
+### PAYMENT\_METHOD\_FRAGMENTS
+
+• `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.
+
+___
+
+### NAVIGATION\_FRAGMENTS
+
+• `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
+
+___
+
+### defaultDishFragments
+
+• `Const` **defaultDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>
+
+___
+
+### defaultMessageFragments
+
+• `Const` **defaultMessageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\>
+
+___
+
+### defaultActionFragments
+
+• `Const` **defaultActionFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\>
+
+___
+
+### defaultGroupModifierFragments
+
+• `Const` **defaultGroupModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\>
+
+___
+
+### defaultGroupFragments
+
+• `Const` **defaultGroupFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>
+
+___
+
+### defaultImageFragments
+
+• `Const` **defaultImageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>
+
+___
+
+### defaultMaintenanceFragments
+
+• `Const` **defaultMaintenanceFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\>
+
+___
+
+### defaultModifierFragments
+
+• `Const` **defaultModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\>
+
+___
+
+### defaultNavigationFragments
+
+• `Const` **defaultNavigationFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>
+
+___
+
+### defaultOrderDishFragments
+
+• `Const` **defaultOrderDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\>
+
+___
+
+### defaultOrderFragments
+
+• `Const` **defaultOrderFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\>
+
+___
+
+### defaultPaymentMethodFragments
+
+• `Const` **defaultPaymentMethodFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>
 
 ## Functions
 
@@ -341,174 +509,6 @@ ValuesOrBoolean<T>
 | `IncomingT` | `IncomingT` |
 | `ExtT` | extends `IncomingT` = `IncomingT` |
 | `T` | `ExtT` extends `IncomingT` ? `ExtT` : `never` |
-
-## Variables
-
-### defaultDishFragments
-
-• `Const` **defaultDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>
-
-___
-
-### DISH\_FRAGMENTS
-
-• `Const` **DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
-
-___
-
-### defaultMessageFragments
-
-• `Const` **defaultMessageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\>
-
-___
-
-### defaultActionFragments
-
-• `Const` **defaultActionFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\>
-
-___
-
-### MESSAGE\_FRAGMENTS
-
-• `Const` **MESSAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Message>, используемым в запросе Message с сервера.
-
-___
-
-### ACTION\_FRAGMENTS
-
-• `Const` **ACTION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Action>, используемым в запросе Action с сервера.
-
-___
-
-### defaultGroupModifierFragments
-
-• `Const` **defaultGroupModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\>
-
-___
-
-### GROUP\_MODIFIER\_FRAGMENTS
-
-• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
-
-InjectionToken с объектом ValuesOrBoolean<GroupModifier>, используемым в запросе GroupModifier с сервера.
-
-___
-
-### defaultGroupFragments
-
-• `Const` **defaultGroupFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>
-
-___
-
-### GROUP\_FRAGMENTS
-
-• `Const` **GROUP\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Group>, используемым в запросе Group с сервера.
-
-___
-
-### defaultImageFragments
-
-• `Const` **defaultImageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>
-
-___
-
-### IMAGE\_FRAGMENTS
-
-• `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Image>, используемым в запросе Image с сервера.
-
-___
-
-### defaultMaintenanceFragments
-
-• `Const` **defaultMaintenanceFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\>
-
-___
-
-### MAINTENANCE\_FRAGMENTS
-
-• `Const` **MAINTENANCE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Maintenance>, используемым в запросе Maintenance с сервера.
-
-___
-
-### defaultModifierFragments
-
-• `Const` **defaultModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\>
-
-___
-
-### MODIFIER\_FRAGMENTS
-
-• `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Modifier>, используемым в запросе Modifier с сервера.
-
-___
-
-### defaultNavigationFragments
-
-• `Const` **defaultNavigationFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>
-
-___
-
-### NAVIGATION\_FRAGMENTS
-
-• `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
-
-___
-
-### defaultOrderDishFragments
-
-• `Const` **defaultOrderDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\>
-
-___
-
-### ORDER\_DISH\_FRAGMENTS
-
-• `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>\>\>
-
-InjectionToken с объектом ValuesOrBoolean<OrderDish>, используемым в запросе OrderDish с сервера.
-
-___
-
-### defaultOrderFragments
-
-• `Const` **defaultOrderFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### ORDER\_FRAGMENTS
-
-• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Order>, используемым в запросе Order с сервера.
-
-___
-
-### defaultPaymentMethodFragments
-
-• `Const` **defaultPaymentMethodFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>
-
-___
-
-### PAYMENT\_METHOD\_FRAGMENTS
-
-• `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.
 
 ## Events
 

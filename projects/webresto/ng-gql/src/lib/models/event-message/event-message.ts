@@ -1,4 +1,3 @@
-import { InjectionToken } from '@angular/core';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
 export class EventMessage {
@@ -35,20 +34,3 @@ export const defaultActionFragments: ValuesOrBoolean<Action> = {
   type: true
 };
 
-/**
- * InjectionToken с объектом ValuesOrBoolean<Message>, используемым в запросе Message с сервера.
- */
-export const MESSAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Message>>(
-  'MESSAGE_FRAGMENTS', {
-  providedIn: 'root',
-  factory: () => ({ ...defaultMessageFragments })
-});
-
-/**
- * InjectionToken с объектом ValuesOrBoolean<Action>, используемым в запросе Action с сервера.
- */
-export const ACTION_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Action>>(
-  'ACTION_FRAGMENTS', {
-  providedIn: 'root',
-  factory: () => ({ ...defaultActionFragments })
-});

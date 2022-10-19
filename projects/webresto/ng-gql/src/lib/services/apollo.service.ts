@@ -1,17 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
-import { Apollo } from 'apollo-angular';
-import type { ExtraSubscriptionOptions, WatchQueryOptions } from 'apollo-angular';
-import type { ApolloQueryResult, FetchResult, QueryOptions, SubscriptionOptions } from '@apollo/client/core';
 import { catchError, filter, of, map } from 'rxjs';
-import { EmptyObject, MutationOptions } from 'apollo-angular/types';
+import { Apollo } from 'apollo-angular';
+import { EmptyObject, ExtraSubscriptionOptions, MutationOptions, MutationResult, WatchQueryOptions } from 'apollo-angular/types';
+import type { ApolloQueryResult, FetchResult, QueryOptions, SubscriptionOptions, } from '@apollo/client/core';
 import { isValue } from '../models';
 import type { NgGqlConfig } from '../models';
-/**
- * @private
- */
-type MutationResult<TData = any> = FetchResult<TData> & {
-  loading: boolean;
-};
 
 @Injectable({
   providedIn: 'root'

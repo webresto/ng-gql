@@ -5,7 +5,6 @@ import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Image } from "../image/image.gql";
 import type { Group } from '../group/group.gql';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
-import { InjectionToken } from '@angular/core';
 import type { BehaviorSubject } from 'rxjs';
 
 export type DiscountType = 'FIXED' | 'PERCENT';
@@ -71,11 +70,3 @@ export const defaultDishFragments: ValuesOrBoolean<Dish> = {
 	}
 };
 
-/**
- * InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
- */
-export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>(
-	'DISH_FRAGMENTS', {
-	providedIn: 'root',
-	factory: () => ({ ...defaultDishFragments })
-});

@@ -25,11 +25,3 @@ export const defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod> = {
 	customData: true,
 };
 
-/**
- * InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.
- */
-export const PAYMENT_METHOD_FRAGMENTS = new InjectionToken<ValuesOrBoolean<PaymentMethod>>(
-	'PAYMENT_METHOD_FRAGMENTS', {
-	providedIn: 'root',
-	factory: () => ({ ...defaultPaymentMethodFragments })
-});

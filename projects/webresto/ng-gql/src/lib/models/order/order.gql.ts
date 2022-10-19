@@ -4,9 +4,8 @@ import type { Message, Action } from '../event-message/event-message';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 import type { Customer } from '../customer/customer';
-import type { OrderDish } from '../order-dish/order-dish.gql';
+import { OrderDish } from '../order-dish/order-dish.gql';
 import { defaultOrderDishFragments } from '../order-dish/order-dish.gql';
-import { InjectionToken } from '@angular/core';
 import type { Dish } from '../dish/dish.gql';
 
 /**
@@ -145,11 +144,3 @@ export const defaultOrderFragments: ValuesOrBoolean<Order> = {
 	}
 };
 
-/**
- * InjectionToken с объектом ValuesOrBoolean<Order>, используемым в запросе Order с сервера.
- */
-export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>(
-	'ORDER_FRAGMENTS', {
-	providedIn: 'root',
-	factory: () => ({ ...defaultOrderFragments })
-});

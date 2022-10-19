@@ -57,15 +57,22 @@ export class NgGqlModule {
         addTypename: true,
         resultCaching: true,
         typePolicies: {
-          "GroupModifier": {
-            keyFields: [ 'modifierId' ]
-          },
-          "Modifier": {
-            keyFields: [ 'modifierId' ]
-          },
-          "Order": {
+          GroupModifier: {
+            keyFields: [ 'modifierId' ],
             fields: {
-              "dishes": {
+              childModifiers: {
+                merge(existing, incoming) {
+                  return [ ...incoming ];
+                }
+              }
+            }
+          },
+          Modifier: {
+            keyFields: [ 'modifierId' ]
+          },
+          Order: {
+            fields: {
+              dishes: {
                 merge(existing, incoming) {
                   return [ ...incoming ];
                 }

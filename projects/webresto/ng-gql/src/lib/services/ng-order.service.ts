@@ -7,7 +7,8 @@ import type {
   CheckResponse, CartBusEvent, RemoveOrSetAmountToDish, OrderForm,
   SetDishCommentInput, ValuesOrBoolean, OrderModifier, SendOrderInput,
 } from '../models';
-import { isValue, isEqualItems, StorageWrapper, PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../models';;
+import { isValue, isEqualItems, StorageWrapper, } from '../models';
+import { PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../injection-tokens';
 import { NgGqlService } from './ng-gql.service';
 import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
 

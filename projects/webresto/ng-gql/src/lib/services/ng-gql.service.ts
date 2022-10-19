@@ -8,7 +8,8 @@ import type {
   Dish, PhoneKnowledge, CheckPhoneResponse, Navigation, NavigationBase, NavigationLoader,
   CheckPhoneCodeInput, VCriteria, Maintenance, Phone
 } from '../models';
-import { isValue, isEqualItems, deepClone, generateQueryString, NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS } from '../models';
+import { isValue, isEqualItems, deepClone, generateQueryString } from '../models';
+import { NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS } from '../injection-tokens';
 import { ApolloService } from './apollo.service';
 
 /** @internal */
@@ -340,7 +341,6 @@ export class NgGqlService {
           );
         }
       ),
-      shareReplay(1),
       distinctUntilChanged((previous, current) => isEqualItems(previous, current))
     ).pipe(
       map(({ groupsById, groupIdsBySlug }) => {

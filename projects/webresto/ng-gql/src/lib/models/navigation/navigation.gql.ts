@@ -1,4 +1,3 @@
-import { InjectionToken } from '@angular/core';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
 /**
@@ -65,11 +64,3 @@ export const defaultNavigationFragments: ValuesOrBoolean<Navigation> = {
 	navigation_menu: true
 };
 
-/**
- * InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
- */
-export const NAVIGATION_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Navigation>>(
-	'NAVIGATION_FRAGMENTS', {
-	providedIn: 'root',
-	factory: () => ({ ...defaultNavigationFragments })
-});

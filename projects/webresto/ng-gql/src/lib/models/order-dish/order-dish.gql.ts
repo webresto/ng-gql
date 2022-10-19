@@ -2,7 +2,6 @@ import { defaultDishFragments } from '../dish/dish.gql';
 import type { OrderModifier } from '../modifier/modifier.gql';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish, DiscountType } from '../dish/dish.gql';
-import { InjectionToken } from '@angular/core';
 import type { BehaviorSubject } from 'rxjs';
 
 export interface OrderDish<T extends Dish = Dish> {
@@ -42,11 +41,3 @@ export const defaultOrderDishFragments: ValuesOrBoolean<OrderDish> = {
 	itemTotal: true,
 };
 
-/**
- * InjectionToken с объектом ValuesOrBoolean<OrderDish>, используемым в запросе OrderDish с сервера.
- */
-export const ORDER_DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<OrderDish>>(
-	'ORDER_DISH_FRAGMENTS', {
-	providedIn: 'root',
-	factory: () => ({ ...defaultOrderDishFragments })
-});
