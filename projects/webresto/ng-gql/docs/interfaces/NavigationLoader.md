@@ -45,7 +45,7 @@ ___
 
 ### queryObject
 
-• **queryObject**: [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`, `T`, `T` extends `T` ? `T` : `never`\>
+• **queryObject**: [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>
 
 ___
 

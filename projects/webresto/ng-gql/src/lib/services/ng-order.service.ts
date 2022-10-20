@@ -91,13 +91,13 @@ export class NgOrderService {
     return this.ngGqlService.customQuery$<PaymentMethod, 'paymentMethod', { orderId: string; }>(
       'paymentMethod', this.defaultPaymentMethodFragments, { orderId: orderId ?? '' }, {
       fieldsTypeMap: new Map([
-        [ 'orderId', 'String!' ]
+        ['orderId', 'String!']
       ])
     }
     ).pipe(
       map(
         data => (
-          Array.isArray(data.paymentMethod) ? data.paymentMethod : [ data.paymentMethod ]
+          Array.isArray(data.paymentMethod) ? data.paymentMethod : [data.paymentMethod]
         ).filter(
           method => method.enable
         )
@@ -135,13 +135,13 @@ export class NgOrderService {
           map(
             data => {
               return {
-                methods: data[ 0 ],
+                methods: data[0],
                 order: {
-                  ...data[ 1 ],
-                  paymentMethod: !data[ 1 ].paymentMethod && data[ 0 ].length > 0 ? {
-                    id: data[ 0 ][ 0 ].id,
-                    title: data[ 0 ][ 0 ].title
-                  } : data[ 1 ].paymentMethod
+                  ...data[1],
+                  paymentMethod: !data[1].paymentMethod && data[0].length > 0 ? {
+                    id: data[0][0].id,
+                    title: data[0][0].title
+                  } : data[1].paymentMethod
                 }
               };
             })
@@ -224,9 +224,7 @@ export class NgOrderService {
   * @param id - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
   *  */
   loadOrder$(id: string | undefined, isShort: boolean = false): Observable<Order> {
-    const customvOb = this.config.customFields?.[ 'Order' ];
-    const vOb = customvOb ? { ...this.defaultOrderFragments, ...customvOb } : this.defaultOrderFragments;
-    return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | { shortId: string; } | undefined>('order', 'order', vOb, 'id', id ? {
+    return this.ngGqlService.queryAndSubscribe<Order, 'order', 'order', { orderId: string; } | { shortId: string; } | undefined>('order', 'order', this.defaultOrderFragments, 'id', id ? {
       query: isShort ?
         { shortId: id } :
         { orderId: id },
@@ -234,7 +232,7 @@ export class NgOrderService {
         { shortId: id } :
         { orderId: id }
     } : undefined, undefined).pipe(
-      map(values => values[ 0 ] ? values[ 0 ] : null),
+      map(values => values[0] ? values[0] : null),
       filter((order): order is Order => isValue(order)),
       /*      switchMap(
               order => {
@@ -341,7 +339,7 @@ export class NgOrderService {
                 busEvent.loading.next(false);
               };
               if (isValue(busEvent.successCb)) {
-                busEvent.successCb(<Order & CheckResponse> result);
+                busEvent.successCb(<Order & CheckResponse>result);
               };
             }),
           catchError((err: unknown) => {
@@ -398,7 +396,7 @@ export class NgOrderService {
         dishId: options.dishId,
         modifiers: (options.dishModifiers ?? []).map(
           dishModifier => ({
-            id: 'id' in dishModifier ? dishModifier.id : (<Partial<Modifier>> dishModifier).modifierId,
+            id: 'id' in dishModifier ? dishModifier.id : (<Partial<Modifier>>dishModifier).modifierId,
             amount: dishModifier.amount,
             dish: dishModifier.dish,
             groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId
@@ -454,7 +452,7 @@ export class NgOrderService {
   * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
   */
   updateOrder(options: {
-    data: FormGroupType<OrderForm>[ 'value' ],
+    data: FormGroupType<OrderForm>['value'],
     loading: BehaviorSubject<boolean>,
     successCb?: (order: Order) => void,
     errorCb?: (err: unknown) => void,
@@ -477,7 +475,7 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   checkOrder(options: {
-    orderForm: FormGroupType<OrderForm>[ 'value' ],
+    orderForm: FormGroupType<OrderForm>['value'],
     successCb?: (order: CheckResponse) => void,
     errorCb?: (err: unknown) => void;
   }) {
@@ -507,7 +505,7 @@ export class NgOrderService {
         locationId: options.orderForm.locationId,
         customData: options.orderForm.customData,
         date: options.orderForm.deliveryTimeInfo?.deliveryDate ?
-          `${ options.orderForm.deliveryTimeInfo.deliveryDate } ${ options.orderForm.deliveryTimeInfo.deliveryTime }` :
+          `${options.orderForm.deliveryTimeInfo.deliveryDate} ${options.orderForm.deliveryTimeInfo.deliveryTime}` :
           undefined
       };
 
@@ -619,16 +617,16 @@ export class NgOrderService {
   };
 
   private removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
-    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>('orderRemoveDish', this.defaultOrderFragments, data, { requiredFields: [ 'orderDishId', 'id' ] }).pipe(
+    return this.ngGqlService.customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>('orderRemoveDish', this.defaultOrderFragments, data, { requiredFields: ['orderDishId', 'id'] }).pipe(
       map(
         data => data.orderRemoveDish
       )
     );
   };
 
-  private updateOrder$(order: FormGroupType<OrderForm>[ 'value' ]): Observable<Order> {
+  private updateOrder$(order: FormGroupType<OrderForm>['value']): Observable<Order> {
     return this.ngGqlService.customMutation$<Order, 'orderUpdate', {
-      order: FormGroupType<OrderForm>[ 'value' ];
+      order: FormGroupType<OrderForm>['value'];
     }>('orderUpdate', this.defaultOrderFragments, { order }).pipe(
       map(
         data => data.orderUpdate
@@ -638,14 +636,14 @@ export class NgOrderService {
 
   private sendOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
     return this.ngGqlService.customMutation$<CheckResponse, 'sendOrder', { orderId: string; }>(
-      'sendOrder', <ValuesOrBoolean<CheckResponse>> {
+      'sendOrder', <ValuesOrBoolean<CheckResponse>>{
         order: this.defaultOrderFragments,
         message: this.defaultMessageFragments,
         action: this.defaultActionFragments
       }, {
       orderId: sendOrderData.orderId
     }, {
-      requiredFields: [ 'orderId' ]
+      requiredFields: ['orderId']
     }).pipe(
       map(
         data => {
@@ -672,10 +670,10 @@ export class NgOrderService {
       message: this.defaultMessageFragments,
       action: this.defaultActionFragments
     }, data, {
-      requiredFields: [ 'orderId', 'paymentMethodId', 'customer' ],
+      requiredFields: ['orderId', 'paymentMethodId', 'customer'],
       fieldsTypeMap: new Map([
-        [ 'address', 'Address' ],
-        [ 'customer', 'Customer!' ]
+        ['address', 'Address'],
+        ['customer', 'Customer!']
       ])
     }).pipe(
       map(

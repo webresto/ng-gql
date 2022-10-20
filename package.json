@@ -13,10 +13,10 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^14.2.6",
-    "@angular/compiler": "^14.2.6",
-    "@angular/core": "^14.2.6",
-    "@angular/forms": "^14.2.6",
+    "@angular/common": "^14.2.7",
+    "@angular/compiler": "^14.2.7",
+    "@angular/core": "^14.2.7",
+    "@angular/forms": "^14.2.7",
     "@apollo/client": "^3.7.0",
     "@axrl/ngx-extended-form-builder": "^1.2.1",
     "apollo-angular": "^4.1.0",
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.2.6",
     "@angular/cli": "^14.2.6",
-    "@angular/compiler-cli": "^14.2.6",
+    "@angular/compiler-cli": "^14.2.7",
     "@types/node": "^18.11.2",
     "ng-packagr": "^14.2.1",
     "typedoc": "^0.23.17",

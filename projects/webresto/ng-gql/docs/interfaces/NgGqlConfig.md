@@ -10,7 +10,6 @@
 - [nesting](NgGqlConfig.md#nesting)
 - [obsolescence](NgGqlConfig.md#obsolescence)
 - [busSubscribeMode](NgGqlConfig.md#bussubscribemode)
-- [customFields](NgGqlConfig.md#customfields)
 - [orderIdStorageToken](NgGqlConfig.md#orderidstoragetoken)
 - [phoneCode](NgGqlConfig.md#phonecode)
 - [usePersistCache](NgGqlConfig.md#usepersistcache)
@@ -51,49 +50,6 @@ ___
 Способ подписки на события шины.
 При выборе параметра 'subscribe' - библиотека будет автоматически подписываться на события в шине и также автоматически отпишется от нее при завершении работы.
 В случае выбора параметра 'custom' - подписка на события и управление ею производится на стороне проекта разработчиком самостоятельно, к примеру, используя asyncPipe.
-
-___
-
-### customFields
-
-• `Optional` **customFields**: `Object`
-
-**`Deprecated`**
-
-Используй InjectionToken нужных моделей для конфигурации объектов запросов.
-Можно дополнительно импортировать стандартный объект конфигурации запроса для данной модели, если требуются незначительные изменения.
-Например:
-```ts
-import { NgGqlModule, DISH_FRAGMENTS, defaultDishFragments } from '@webresto/ng-gql';
-...
-const myDishFragment:ValuesOrBoolean<Dish> = {
-                                             здесь описываете ваш объект конфигурации для запроса
-                                             };
-...
-@NgModule({
-  ...
-  providers: [
-               .... ваши провайдеры
-                { provide: DISH_FRAGMENTS , useValue: myDishFragment }
-           ]
-})
-export class AppModule {
-```
-
-Необязательный объект с дополнительной пользовательской информацией о пользовательских свойствах,
-добавленных в базовые модели на стороне конкретного сервера и объявленные в схеме GraphQL на сервере.
-В качестве ключей указывается название модели, в качестве значений - объекты,
-содержащие часть конфигурации `ValuesOrBoolean` этой модели, отражающую отличия с базовой моделью.
-
-**`See`**
-
-**`Alias`**
-
-ValuesOrBoolean<T>
-
-#### Index signature
-
-▪ [modelName: `string`]: [`ValuesOrBoolean`](../README.md#valuesorboolean)<`unknown`\>
 
 ___
 

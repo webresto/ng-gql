@@ -108,7 +108,7 @@
 
 ### IMAGE\_FRAGMENTS
 
-• `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md), [`Image`](interfaces/Image.md)\>\>
+• `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Image>, используемым в запросе Image с сервера.
 
@@ -116,7 +116,7 @@ ___
 
 ### MESSAGE\_FRAGMENTS
 
-• `Const` **MESSAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md), [`Message`](interfaces/Message.md)\>\>
+• `Const` **MESSAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Message>, используемым в запросе Message с сервера.
 
@@ -124,7 +124,7 @@ ___
 
 ### ACTION\_FRAGMENTS
 
-• `Const` **ACTION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>, [`Action`](interfaces/Action.md)<`any`\>\>\>
+• `Const` **ACTION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)<`any`\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Action>, используемым в запросе Action с сервера.
 
@@ -132,7 +132,7 @@ ___
 
 ### MAINTENANCE\_FRAGMENTS
 
-• `Const` **MAINTENANCE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md), [`Maintenance`](interfaces/Maintenance.md)\>\>
+• `Const` **MAINTENANCE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Maintenance>, используемым в запросе Maintenance с сервера.
 
@@ -140,7 +140,7 @@ ___
 
 ### MODIFIER\_FRAGMENTS
 
-• `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>, [`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+• `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Modifier>, используемым в запросе Modifier с сервера.
 
@@ -148,7 +148,7 @@ ___
 
 ### DISH\_FRAGMENTS
 
-• `Const` **DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md), [`Dish`](interfaces/Dish.md)\>\>
+• `Const` **DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
 
@@ -156,7 +156,7 @@ ___
 
 ### GROUP\_FRAGMENTS
 
-• `Const` **GROUP\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md), [`Group`](interfaces/Group.md)\>\>
+• `Const` **GROUP\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Group>, используемым в запросе Group с сервера.
 
@@ -164,7 +164,7 @@ ___
 
 ### GROUP\_MODIFIER\_FRAGMENTS
 
-• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>, [`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<GroupModifier>, используемым в запросе GroupModifier с сервера.
 
@@ -172,7 +172,7 @@ ___
 
 ### ORDER\_FRAGMENTS
 
-• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>, [`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Order>, используемым в запросе Order с сервера.
 
@@ -180,7 +180,7 @@ ___
 
 ### ORDER\_DISH\_FRAGMENTS
 
-• `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>, [`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+• `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<OrderDish>, используемым в запросе OrderDish с сервера.
 
@@ -188,7 +188,7 @@ ___
 
 ### PAYMENT\_METHOD\_FRAGMENTS
 
-• `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md), [`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
+• `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.
 
@@ -196,7 +196,7 @@ ___
 
 ### NAVIGATION\_FRAGMENTS
 
-• `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md), [`Navigation`](interfaces/Navigation.md)\>\>
+• `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
 
@@ -327,9 +327,9 @@ generateQueryString()
 | `options` | `Object` | объект с данными, необходимыми для формирования запроса, где: |
 | `options.name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
 | `options.queryObject` | `T` | объект-источник информации о структуре запрашиваемых данных |
-| `options.variables?` | `GQLRequestVariables` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа    параметров допустимо использовать типы - number, string, object или boolean. |
-| `options.requiredFields?` | keyof `GQLRequestVariables`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.    (например у параметра указан тип String!, а не String). |
-| `options.fieldsTypeMap?` | `Map`<keyof `GQLRequestVariables`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL. ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
+| `options.variables?` | `GQLRequestVariables` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа     параметров допустимо использовать типы - number, string, object или boolean. |
+| `options.requiredFields?` | keyof `GQLRequestVariables`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип  КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.     (например у параметра указан тип String!, а не String). |
+| `options.fieldsTypeMap?` | `Map`<keyof `GQLRequestVariables`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса,  а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.  ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
 
 #### Returns
 
@@ -484,7 +484,7 @@ ___
 
 ### ValuesOrBoolean
 
-Ƭ **ValuesOrBoolean**<`IncomingT`, `ExtT`, `T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends Observable<unknown\> \| AbstractControl<unknown\> ? never : T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
+Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof Partial<T\>]: true \| (T[K] extends Observable<unknown\> \| AbstractControl<unknown\> ? never : T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
 
 **`Alias`**
 
@@ -504,11 +504,9 @@ ValuesOrBoolean<T>
 
 #### Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `IncomingT` | `IncomingT` |
-| `ExtT` | extends `IncomingT` = `IncomingT` |
-| `T` | `ExtT` extends `IncomingT` ? `ExtT` : `never` |
+| Name |
+| :------ |
+| `T` |
 
 ## Events
 

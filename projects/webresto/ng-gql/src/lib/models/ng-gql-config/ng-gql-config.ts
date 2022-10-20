@@ -29,37 +29,6 @@ export interface NgGqlConfig {
   busSubscribeMode: 'subscribe' | 'custom';
 
   /**
-   * @deprecated Используй InjectionToken нужных моделей для конфигурации объектов запросов.
-   * Можно дополнительно импортировать стандартный объект конфигурации запроса для данной модели, если требуются незначительные изменения.
-   * Например:
-   * ```ts
-   * import { NgGqlModule, DISH_FRAGMENTS, defaultDishFragments } from '@webresto/ng-gql';
-   * ...
-   * const myDishFragment:ValuesOrBoolean<Dish> = {
-   *                                              здесь описываете ваш объект конфигурации для запроса
-   *                                              };
-   * ...
-   * @NgModule({
-   *   ...
-   *   providers: [
-   *                .... ваши провайдеры
-   *                 { provide: DISH_FRAGMENTS , useValue: myDishFragment }
-   *            ]
-   * })
-   * export class AppModule {
-   * ```
-   *
-   * Необязательный объект с дополнительной пользовательской информацией о пользовательских свойствах,
-   * добавленных в базовые модели на стороне конкретного сервера и объявленные в схеме GraphQL на сервере.
-   * В качестве ключей указывается название модели, в качестве значений - объекты,
-   * содержащие часть конфигурации `ValuesOrBoolean` этой модели, отражающую отличия с базовой моделью.
-   * @see @alias ValuesOrBoolean<T>
-   * */
-  customFields?: {
-    [ modelName: string ]: ValuesOrBoolean<unknown>;
-  };
-
-  /**
    * Токен, с которым в localStorage будут храниться id заказов.
    * Если не задан - используется токен по умолчанию -'$\{ window.location.host \}-orderId'.
    * Если задан null - корзина не будет загружаться при старте приложения, потоки будут ожидать,

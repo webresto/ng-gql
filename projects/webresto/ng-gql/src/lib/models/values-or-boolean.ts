@@ -16,13 +16,13 @@ import type { Observable } from 'rxjs';
  *   2. Если значение T[K] - "сложный" тип обьекта (НО НЕ МАССИВ!) - вложенный объект, формируемый по аналогичной схеме.
  *   3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.
  */
-export type ValuesOrBoolean<IncomingT, ExtT extends IncomingT = IncomingT, T = ExtT extends IncomingT ? ExtT : never> = {
-  [ K in keyof Partial<T> ]: true | (
-    T[ K ] extends Observable<unknown> | AbstractControl<unknown> ? never :
-    T[ K ] extends string | number | bigint | symbol | boolean | undefined | null ?
+export type ValuesOrBoolean<T> = {
+  [K in keyof Partial<T>]: true | (
+    T[K] extends Observable<unknown> | AbstractControl<unknown> ? never :
+    T[K] extends string | number | bigint | symbol | boolean | undefined | null ?
     true :
-    T[ K ] extends (Array<infer U> | undefined | null) ?
+    T[K] extends (Array<infer U> | undefined | null) ?
     ValuesOrBoolean<U> :
-    ValuesOrBoolean<T[ K ]>
+    ValuesOrBoolean<T[K]>
   )
 };

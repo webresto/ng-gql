@@ -55,7 +55,7 @@ export class NgGqlModule {
     if (!apollo.client) {
       const defaultCacheConfig: InMemoryCacheConfig = {
         addTypename: true,
-        resultCaching: true,
+        resultCaching: false,
         typePolicies: {
           GroupModifier: {
             keyFields: [ 'modifierId' ],
