@@ -1,6 +1,6 @@
 {
   "name": "@webresto/ng-gql",
-  "version": "1.1.74",
+  "version": "1.1.75",
   "repository": {
     "type": "git",
     "url": "https://git.hm/webresto/ng-graphql.git"
@@ -17,7 +17,7 @@
     "apollo-angular": "^4.1.0",
     "graphql": "^16.6.0",
     "subscriptions-transport-ws": "^0.11.0",
-    "@axrl/ngx-extended-form-builder": "^1.2.1",
+    "@axrl/ngx-extended-form-builder": "^1.2.3",
     "apollo3-cache-persist": "^0.14.1"
   }
 }

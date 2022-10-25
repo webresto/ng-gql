@@ -7,19 +7,20 @@ import type {
   CheckResponse, CartBusEvent, RemoveOrSetAmountToDish, OrderForm,
   SetDishCommentInput, ValuesOrBoolean, OrderModifier, SendOrderInput,
 } from '../models';
-import { isValue, isEqualItems, StorageWrapper, } from '../models';
+import { isValue, isEqualItems, NqGqlLocalStorageWrapper, } from '../models';
 import { PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../injection-tokens';
 import { NgGqlService } from './ng-gql.service';
 import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
+import { NgGqlModule } from '../ng-gql.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: NgGqlModule
 })
 export class NgOrderService {
 
   constructor(
     private ngGqlService: NgGqlService,
-    private storageWrapper: StorageWrapper,
+    private storageWrapper: NqGqlLocalStorageWrapper,
     @Inject('config') private config: NgGqlConfig,
     @Inject(PAYMENT_METHOD_FRAGMENTS) private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
     @Inject(ACTION_FRAGMENTS) private defaultActionFragments: ValuesOrBoolean<Action>,

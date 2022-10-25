@@ -1,4 +1,4 @@
-# Class: StorageWrapper
+# Class: NqGqlLocalStorageWrapper
 
 Класс, в который вынесена логика работы с хранилищем localStorage.
 Ключевая необходимость использования этого класса вместо работы с хранилищем напрямую - методы StorageWrapper также инициируют отправку
@@ -10,28 +10,28 @@
 
 ### Constructors
 
-- [constructor](StorageWrapper.md#constructor)
+- [constructor](NqGqlLocalStorageWrapper.md#constructor)
 
 ### Methods
 
-- [setOrderId](StorageWrapper.md#setorderid)
-- [removeOrderId](StorageWrapper.md#removeorderid)
-- [setToStorage](StorageWrapper.md#settostorage)
-- [removeFromStorage](StorageWrapper.md#removefromstorage)
-- [startStorageEventFactory](StorageWrapper.md#startstorageeventfactory)
-- [getOrderId](StorageWrapper.md#getorderid)
-- [updateStorageOrderIdToken](StorageWrapper.md#updatestorageorderidtoken)
-- [destroy](StorageWrapper.md#destroy)
+- [setOrderId](NqGqlLocalStorageWrapper.md#setorderid)
+- [removeOrderId](NqGqlLocalStorageWrapper.md#removeorderid)
+- [setToStorage](NqGqlLocalStorageWrapper.md#settostorage)
+- [removeFromStorage](NqGqlLocalStorageWrapper.md#removefromstorage)
+- [startStorageEventFactory](NqGqlLocalStorageWrapper.md#startstorageeventfactory)
+- [getOrderId](NqGqlLocalStorageWrapper.md#getorderid)
+- [updateStorageOrderIdToken](NqGqlLocalStorageWrapper.md#updatestorageorderidtoken)
+- [destroy](NqGqlLocalStorageWrapper.md#destroy)
 
 ### Properties
 
-- [storageOrderIdToken$](StorageWrapper.md#storageorderidtoken$)
+- [storageOrderIdToken$](NqGqlLocalStorageWrapper.md#storageorderidtoken$)
 
 ## Constructors
 
 ### constructor
 
-• **new StorageWrapper**(`config`)
+• **new NqGqlLocalStorageWrapper**(`config`)
 
 #### Parameters
 

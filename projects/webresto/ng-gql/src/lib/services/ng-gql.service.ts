@@ -11,6 +11,7 @@ import type {
 import { isValue, isEqualItems, deepClone, generateQueryString } from '../models';
 import { NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS } from '../injection-tokens';
 import { ApolloService } from './apollo.service';
+import { NgGqlModule } from '../ng-gql.module';
 
 /** @internal */
 interface SlugAndConcept {
@@ -43,7 +44,7 @@ export interface QueryGenerationParam<V> {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: NgGqlModule
 })
 /** Основной сервис для работы с библиотекой. Содержит все необходимые методы для управления сайтом. */
 export class NgGqlService {

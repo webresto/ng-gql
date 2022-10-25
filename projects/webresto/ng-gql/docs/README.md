@@ -87,7 +87,7 @@
 ### Classes
 
 - [EventMessage](classes/EventMessage.md)
-- [StorageWrapper](classes/StorageWrapper.md)
+- [NqGqlLocalStorageWrapper](classes/NqGqlLocalStorageWrapper.md)
 - [ApolloService](classes/ApolloService.md)
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)

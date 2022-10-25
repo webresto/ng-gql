@@ -1,5 +1,6 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, of, filter, map, switchMap, distinctUntilChanged } from 'rxjs';
+import { NgGqlModule } from '../../ng-gql.module';
 import { isValue } from '../is-value';
 import type { NgGqlConfig } from '../ng-gql-config/ng-gql-config';
 
@@ -26,9 +27,9 @@ export interface StorageOrderTokenRemoveOrderId {
  * вкладке, где произошли изменения.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: NgGqlModule
 })
-export class StorageWrapper {
+export class NqGqlLocalStorageWrapper {
 
   constructor(@Inject('config') private config: NgGqlConfig) { }
 

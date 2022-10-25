@@ -5,9 +5,10 @@ import { EmptyObject, ExtraSubscriptionOptions, MutationOptions, MutationResult,
 import type { ApolloQueryResult, FetchResult, QueryOptions, SubscriptionOptions, } from '@apollo/client/core';
 import { isValue } from '../models';
 import type { NgGqlConfig } from '../models';
+import { NgGqlModule } from '../ng-gql.module';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: NgGqlModule
 })
 export class ApolloService {
 
