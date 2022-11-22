@@ -12,20 +12,20 @@
     "gen-doc": "typedoc --tsconfig projects/webresto/ng-gql/tsconfig.lib.prod.json"
   },
   "private": true,
-  "dependencies": {
+  "peerDependencies": {
     "@angular/common": "^14.2.7",
     "@angular/compiler": "^14.2.7",
     "@angular/core": "^14.2.7",
     "@angular/forms": "^14.2.7",
     "@apollo/client": "^3.7.0",
-    "@axrl/ngx-extended-form-builder": "^1.2.3",
+    "@axrl/ngx-extended-form-builder": "^1.2.4",
     "apollo-angular": "^4.1.0",
     "apollo3-cache-persist": "^0.14.1",
     "graphql": "^16.6.0",
     "rxjs": "^7.5.7",
     "subscriptions-transport-ws": "^0.11.0",
-    "tslib": "^2.4.0",
-    "zone.js": "^0.11.8"
+    "tslib": "^2.4.1",
+    "zone.js": "^0.12.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.2.6",
