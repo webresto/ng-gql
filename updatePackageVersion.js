@@ -70,7 +70,6 @@ function main() {
                     versionArray = (_a = libraryPackageJson === null || libraryPackageJson === void 0 ? void 0 : libraryPackageJson.version) === null || _a === void 0 ? void 0 : _a.split('.');
                     mainDependencies_1 = __assign(__assign(__assign({}, mainPackageJson.dependencies), mainPackageJson.peerDependencies), mainPackageJson.devDependencies);
                     haveChanges_1 = false;
-                    console.log(mainDependencies_1);
                     [libraryPackageJson.peerDependencies, libraryPackageJson.dependencies].forEach(function (libDeps) {
                         Object.keys(libDeps).forEach(function (key) {
                             if (mainDependencies_1[key] && mainDependencies_1[key] !== libDeps[key]) {

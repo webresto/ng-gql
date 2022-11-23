@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "start": "ng build --watch",
+    "build-update-deps-script":"tsc updatePackageVersion.ts --skipLibCheck",
     "updatePackageVersion": "node updatePackageVersion.js",
     "build": "ng build",
     "upd": "npm update --save --force",

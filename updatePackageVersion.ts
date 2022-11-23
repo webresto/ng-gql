@@ -14,7 +14,6 @@ export async function main() {
     const versionArray = libraryPackageJson?.version?.split('.');
     const mainDependencies = { ...mainPackageJson.dependencies, ...mainPackageJson.peerDependencies, ...mainPackageJson.devDependencies };
     let haveChanges: boolean = false;
-    console.log(mainDependencies);
     [libraryPackageJson.peerDependencies, libraryPackageJson.dependencies].forEach(
       libDeps => {
         Object.keys(libDeps).forEach(
