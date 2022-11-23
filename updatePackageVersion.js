@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,13 +47,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+exports.main = void 0;
 var promises_1 = require("fs/promises");
 var libraryPackageJsonPath = './projects/webresto/ng-gql/package.json';
 var mainPackageJsonPath = './package.json';
 function main() {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var libraryPackageJson, _b, _c, mainPackageJson, _d, _e, versionArray, libraryPeerDependencies, libraryDependencies, mainDevDependencies_1, mainDependencies_1, haveChanges_1, message_1;
+        var libraryPackageJson, _b, _c, mainPackageJson, _d, _e, versionArray, mainDependencies_1, haveChanges_1, message_1;
         return __generator(this, function (_f) {
             switch (_f.label) {
                 case 0:
@@ -56,27 +68,15 @@ function main() {
                 case 2:
                     mainPackageJson = _e.apply(_d, [_f.sent()]);
                     versionArray = (_a = libraryPackageJson === null || libraryPackageJson === void 0 ? void 0 : libraryPackageJson.version) === null || _a === void 0 ? void 0 : _a.split('.');
-                    libraryPeerDependencies = libraryPackageJson.peerDependencies;
-                    libraryDependencies = libraryPackageJson.dependencies;
-                    mainDevDependencies_1 = mainPackageJson.devDependencies;
-                    mainDependencies_1 = mainPackageJson.dependencies;
+                    mainDependencies_1 = __assign(__assign(__assign({}, mainPackageJson.dependencies), mainPackageJson.peerDependencies), mainPackageJson.devDependencies);
                     haveChanges_1 = false;
-                    [libraryPeerDependencies, libraryDependencies].forEach(function (libDeps) {
+                    console.log(mainDependencies_1);
+                    [libraryPackageJson.peerDependencies, libraryPackageJson.dependencies].forEach(function (libDeps) {
                         Object.keys(libDeps).forEach(function (key) {
                             if (mainDependencies_1[key] && mainDependencies_1[key] !== libDeps[key]) {
                                 libDeps[key] = mainDependencies_1[key];
                                 if (!haveChanges_1) {
                                     haveChanges_1 = true;
-                                }
-                                ;
-                            }
-                            else {
-                                if (mainDevDependencies_1[key] && mainDevDependencies_1[key] !== libDeps[key]) {
-                                    libDeps[key] = mainDevDependencies_1[key];
-                                    if (!haveChanges_1) {
-                                        haveChanges_1 = true;
-                                    }
-                                    ;
                                 }
                                 ;
                             }
@@ -109,5 +109,6 @@ function main() {
         });
     });
 }
+exports.main = main;
 ;
 main();

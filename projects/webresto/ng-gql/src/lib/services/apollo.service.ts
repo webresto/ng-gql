@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { catchError, filter, of, map } from 'rxjs';
-import { Apollo } from 'apollo-angular';
-import { EmptyObject, ExtraSubscriptionOptions, MutationOptions, MutationResult, WatchQueryOptions } from 'apollo-angular/types';
-import type { ApolloQueryResult, FetchResult, QueryOptions, SubscriptionOptions, } from '@apollo/client/core';
+import { Apollo, ExtraSubscriptionOptions, MutationResult, WatchQueryOptions } from 'apollo-angular';
+import type { ApolloQueryResult, FetchResult, MutationOptions, QueryOptions, SubscriptionOptions, } from '@apollo/client/core';
 import { isValue } from '../models';
 import type { NgGqlConfig } from '../models';
 import { NgGqlModule } from '../ng-gql.module';
+import { EmptyObject } from 'apollo-angular/build/types';
 
 @Injectable({
   providedIn: NgGqlModule
