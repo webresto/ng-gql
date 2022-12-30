@@ -128,9 +128,7 @@ export class NgOrderService {
         return combineLatest([
           this.getPaymentMethods$(storageOrderId),
           this.loadOrder$(storageOrderId).pipe(
-            distinctUntilChanged((previous, current) => {
-              return isEqualItems(previous, current);
-            })
+            distinctUntilChanged()
           )
         ]).pipe(
           map(
@@ -149,9 +147,7 @@ export class NgOrderService {
         );
       }),
     shareReplay(1),
-    distinctUntilChanged((previous, current) => {
-      return isEqualItems(previous, current);
-    })
+    distinctUntilChanged((previous, current) => isEqualItems(previous, current))
   );
 
   /**

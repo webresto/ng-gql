@@ -170,14 +170,11 @@ export class NgGqlService {
     mergeWith(
       this._initGroupSlug$.asObservable().pipe(
         filter((slugAndConcept): slugAndConcept is SlugAndConcept => !!slugAndConcept),
-        distinctUntilChanged(
-          (previous, current) => isEqualItems(previous, current)
-        ),
+        distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
         switchMap(slugAndConcept => this._loadGroups(slugAndConcept.slug, slugAndConcept.concept))
       )
     ),
-    distinctUntilChanged((previous, current) => isEqualItems(previous, current),
-    ),
+    distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
   );
 
   private _dishes$ = new BehaviorSubject<Dish[] | null>(null);
@@ -263,6 +260,7 @@ export class NgGqlService {
           );
           const allNestingsGroups = getGroups(groups);
           const allNestingsIds = allNestingsGroups.map(group => group.id);
+
           console.log(allNestingsGroups);
           return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', this.defaultDishFragments, 'id', {
             query: {
@@ -279,6 +277,7 @@ export class NgGqlService {
             }
           }).pipe(
             map(data => {
+
               const dishes = data.map(
                 dataDish => this.addAmountToDish(dataDish)
               );
@@ -299,6 +298,7 @@ export class NgGqlService {
                   return accumulator;
                 }, {}
               );
+
               const groupIdsBySlug: {
                 [key: string]: string;
               } = {};
@@ -306,16 +306,25 @@ export class NgGqlService {
               // Inserting dishes by groups
               for (let dish of dishes) {
                 const groupId = dish.parentGroup?.id || dish.groupId;
-                if (!groupId) continue;
-                if (!groupsById[groupId]) continue;
-                if (groupsById[groupId].dishes) {
-                  const checkDish = groupsById[groupId].dishes?.find(item => item.id === dish.id);
-                  if (!checkDish) {
-                    groupsById[groupId].dishes?.push(dish);
+                if (!isValue(groupId)) {
+                  continue;
+                };
+
+                if (!isValue(groupsById[groupId])) {
+                  continue;
+                };
+
+                const groupDishes = groupsById[groupId].dishes;
+                if (isValue(groupDishes)) {
+                  const checkDishIndex = groupDishes.findIndex(item => item.id === dish.id);
+                  if (checkDishIndex === (-1)) {
+                    groupDishes.push(dish);
+                  } else {
+                    groupDishes[checkDishIndex] = dish;
                   };
                 } else {
                   groupsById[groupId].dishes = [dish];
-                }
+                };
               }
               // Create groups hierarchy
               for (let groupId in groupsById) {
@@ -649,6 +658,7 @@ export class NgGqlService {
         return [...array, newValue];
       };
     };
+
     const apolloQueryOptions = {
       query: gql`query ${generateQueryString<ValuesOrBoolean<T>, NQuery, VQ>({
         name: nameQuery, queryObject,
@@ -658,9 +668,12 @@ export class NgGqlService {
       })}`,
       variables: variables?.query
     };
+
     return this.apollo.watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions).pipe(
       map(
-        res => res.error || res.errors ? null : res.data),
+        res => {
+          return res.error ?? res.data
+        }),
       filter((data): data is Record<NQuery, T | T[]> => !!data),
       switchMap(
         result => this.customSubscribe$<T, NSubscribe, VS>(
@@ -670,11 +683,13 @@ export class NgGqlService {
           map(
             updatedValue => {
               const store: T | T[] = deepClone(result[nameQuery]);
-              return isValue(updatedValue) ?
+              const final = isValue(updatedValue) ?
                 updateFn(store, deepClone(updatedValue)) :
                 Array.isArray(store) ?
                   store :
                   <T[]>[store];
+
+              return final;
             }),
         )
       )

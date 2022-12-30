@@ -1,4 +1,5 @@
 import { isValue } from './is-value';
+import { Observable } from 'rxjs';
 
 /**
  * Функция для сравнения двух переменных.
@@ -13,21 +14,25 @@ export function isEqualItems<T>(a: T, b: T): boolean {
   } else {
     if (Array.isArray(a)) {
       if (Array.isArray(b)) {
-        return a.length === b.length && a.every((aItem, index) => isEqualItems(aItem, b[ index ]));
+        return a.length === b.length && a.every((aItem, index) => isEqualItems(aItem, b[index]));
       } else {
         return false;
       };
     } else {
-      if (typeof a == 'object') {
-        if (typeof b == 'object') {
-          const keysA = <(keyof T)[]> Object.keys(a);
-          const keysB = <(keyof T)[]> Object.keys(b);
-          return keysA.length === keysB.length && keysA.every(key => isEqualItems(a[ key ], b[ key ]));
+      if (typeof a == 'object' && typeof b == 'object') {
+        if (a instanceof Observable || b instanceof Observable) {
+          return false;
+        } else {
+          const keysA = <(keyof T)[]>Object.keys(a);
+          const keysB = <(keyof T)[]>Object.keys(b);
+          return keysA.length === keysB.length && keysA.filter(key => !(a[key] instanceof Observable)).every(key => isEqualItems(a[key], b[key]));
+        }
+      } else {
+        if (typeof a === typeof b) {
+          return a === b;
         } else {
           return false;
-        };
-      } else {
-        return a === b;
+        }
       }
     };
   }
