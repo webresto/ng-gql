@@ -13,7 +13,6 @@ export * from './customer';
 export { NgGqlConfig } from './ng-gql-config/ng-gql-config';
 export { isValue } from './is-value';
 export { deepClone } from './deep-clone';
-export { isEqualItems } from './isEqualItems';
 export { ValuesOrBoolean } from './values-or-boolean';
 export { generateQueryString } from './generate-query-string';
 export { VCriteria, GQLRequestVariables } from './generate-query-string';

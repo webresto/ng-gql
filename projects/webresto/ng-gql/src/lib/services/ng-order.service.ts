@@ -7,7 +7,7 @@ import type {
   CheckResponse, CartBusEvent, RemoveOrSetAmountToDish, OrderForm,
   SetDishCommentInput, ValuesOrBoolean, OrderModifier, SendOrderInput,
 } from '../models';
-import { isValue, isEqualItems, NqGqlLocalStorageWrapper, } from '../models';
+import { isValue, NqGqlLocalStorageWrapper, } from '../models';
 import { PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FRAGMENTS } from '../injection-tokens';
 import { NgGqlService } from './ng-gql.service';
 import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
@@ -147,7 +147,6 @@ export class NgOrderService {
         );
       }),
     shareReplay(1),
-    distinctUntilChanged((previous, current) => isEqualItems(previous, current))
   );
 
   /**

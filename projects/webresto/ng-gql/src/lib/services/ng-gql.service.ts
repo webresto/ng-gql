@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular';
-import { BehaviorSubject, of, filter, map, switchMap, shareReplay, startWith, mergeWith, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject, of, filter, map, switchMap, shareReplay, startWith, mergeWith } from 'rxjs';
 import type { Observable } from 'rxjs';
 import type {
   NgGqlConfig, GQLRequestVariables, Group, ValuesOrBoolean,
   Dish, PhoneKnowledge, CheckPhoneResponse, Navigation, NavigationBase, NavigationLoader,
   CheckPhoneCodeInput, VCriteria, Maintenance, Phone
 } from '../models';
-import { isValue, isEqualItems, deepClone, generateQueryString } from '../models';
+import { isValue, deepClone, generateQueryString } from '../models';
 import { NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS } from '../injection-tokens';
 import { ApolloService } from './apollo.service';
 import { NgGqlModule } from '../ng-gql.module';
@@ -170,11 +170,9 @@ export class NgGqlService {
     mergeWith(
       this._initGroupSlug$.asObservable().pipe(
         filter((slugAndConcept): slugAndConcept is SlugAndConcept => !!slugAndConcept),
-        distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
         switchMap(slugAndConcept => this._loadGroups(slugAndConcept.slug, slugAndConcept.concept))
       )
     ),
-    distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
   );
 
   private _dishes$ = new BehaviorSubject<Dish[] | null>(null);
@@ -338,11 +336,9 @@ export class NgGqlService {
               }
               return { groupsById, groupIdsBySlug };
             }),
-            distinctUntilChanged((previous, current) => isEqualItems(previous, current)),
           );
         }
       ),
-      distinctUntilChanged((previous, current) => isEqualItems(previous, current))
     ).pipe(
       map(({ groupsById, groupIdsBySlug }) => {
         if (isValue(slug)) {
