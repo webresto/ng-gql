@@ -1,9 +1,30 @@
 import { writeFile, readFile } from 'fs/promises';
+import { extname, join } from 'path';
 
-const libraryPackageJsonPath = './projects/webresto/ng-gql/package.json';
-const mainPackageJsonPath = './package.json';
+const libraryPackageJsonPath = process.argv[2];
+if (libraryPackageJsonPath === null || libraryPackageJsonPath === undefined) {
 
-export async function main() {
+  throw new Error("Не передан путь к файлу package.json, который требуется обновить.");
+
+} else {
+
+  if (typeof libraryPackageJsonPath !== 'string') {
+
+    throw new Error("Путь к обновляемому файлу package.json должен быть строкой.");
+
+  } else {
+
+    if (extname(libraryPackageJsonPath) !== '.json') {
+
+      throw new Error("Указанный файл - не json.");
+
+    }
+  }
+}
+
+const mainPackageJsonPath = join(process.cwd(), 'package.json');
+
+async function main() {
   try {
     const libraryPackageJson = JSON.parse(
       await readFile(libraryPackageJsonPath, { encoding: 'utf-8' })
@@ -12,21 +33,24 @@ export async function main() {
       await readFile(mainPackageJsonPath, { encoding: 'utf-8' })
     );
     const versionArray = libraryPackageJson?.version?.split('.');
-    const mainDependencies = { ...mainPackageJson.dependencies, ...mainPackageJson.peerDependencies, ...mainPackageJson.devDependencies };
+    const libraryDependencies = libraryPackageJson.peerDependencies;
     let haveChanges: boolean = false;
-    [libraryPackageJson.peerDependencies, libraryPackageJson.dependencies].forEach(
-      libDeps => {
-        Object.keys(libDeps).forEach(
-          key => {
-            if (mainDependencies[key] && mainDependencies[key] !== libDeps[key]) {
-              libDeps[key] = mainDependencies[key];
-              if (!haveChanges) {
-                haveChanges = true;
-              };
+    Object.keys(libraryDependencies).forEach(
+      key => {
+        if (mainPackageJson.dependencies[key] && mainPackageJson.dependencies[key] !== libraryDependencies[key]) {
+          libraryDependencies[key] = mainPackageJson.dependencies[key];
+          if (!haveChanges) {
+            haveChanges = true;
+          };
+        } else {
+          if (mainPackageJson.devDependencies[key] && mainPackageJson.devDependencies[key] !== libraryDependencies[key]) {
+            libraryDependencies[key] = mainPackageJson.devDependencies[key];
+            if (!haveChanges) {
+              haveChanges = true;
             };
-          });
+          };
+        };
       });
-
     if (haveChanges || (versionArray && versionArray?.[2])) {
       if ((versionArray && versionArray?.[2])) {
         versionArray[2] = String(+versionArray[2] + 1);

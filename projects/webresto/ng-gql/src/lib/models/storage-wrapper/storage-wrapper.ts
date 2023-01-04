@@ -1,7 +1,7 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, of, filter, map, switchMap, distinctUntilChanged } from 'rxjs';
 import { NgGqlModule } from '../../ng-gql.module';
-import { isValue } from '../is-value';
+import { isValue } from '@axrl/common';
 import type { NgGqlConfig } from '../ng-gql-config/ng-gql-config';
 
 export type StorageOrderTokenEvent = StorageOrderTokenSetOrderId | StorageOrderTokenRemoveOrderId;

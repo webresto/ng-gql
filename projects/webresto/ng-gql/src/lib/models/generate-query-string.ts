@@ -1,4 +1,4 @@
-import { isValue } from './is-value';
+import { isValue } from '@axrl/common';
 
 type StringKeysType = {
   [ key: string ]: number | string | object | boolean | null | undefined;

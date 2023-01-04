@@ -3,12 +3,13 @@ import type { ModuleWithProviders } from '@angular/core';
 import { Apollo, ApolloModule } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
 import { split, InMemoryCache } from '@apollo/client/core';
+import type { InMemoryCacheConfig } from '@apollo/client/core';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { isValue, NgGqlConfig } from './models';
+import { NgGqlConfig } from './models';
+import { isValue } from '@axrl/common';
 import type { OperationDefinitionNode } from 'graphql';
 import { persistCacheSync, LocalStorageWrapper } from 'apollo3-cache-persist';
-import type { InMemoryCacheConfig } from '@apollo/client';
 
 @NgModule({
   imports: [
@@ -43,7 +44,7 @@ export class NgGqlModule {
     const link = split(
       // split based on operation type
       ({ query }) => {
-        const { kind, operation } = <OperationDefinitionNode> getMainDefinition(query);
+        const { kind, operation } = <OperationDefinitionNode>getMainDefinition(query);
         return (
           kind === 'OperationDefinition' && operation === 'subscription'
         );
@@ -55,26 +56,26 @@ export class NgGqlModule {
     if (!apollo.client) {
       const defaultCacheConfig: InMemoryCacheConfig = {
         addTypename: true,
-        resultCaching: false,
+        resultCaching: true,
         typePolicies: {
           GroupModifier: {
-            keyFields: [ 'modifierId' ],
+            keyFields: ['modifierId', 'maxAmount', 'minAmount', 'required'],
             fields: {
               childModifiers: {
                 merge(existing, incoming) {
-                  return [ ...incoming ];
+                  return [...incoming];
                 }
               }
             }
           },
           Modifier: {
-            keyFields: [ 'modifierId' ]
+            keyFields: ['modifierId', 'maxAmount', 'minAmount', 'defaultAmount']
           },
           Order: {
             fields: {
               dishes: {
                 merge(existing, incoming) {
-                  return [ ...incoming ];
+                  return [...incoming];
                 }
               }
             }

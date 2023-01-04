@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { NgGqlModule } from '../ng-gql.module';
-import { BehaviorSubject, filter, map, Observable } from 'rxjs';
-import { Dish, Group, isValue, NavigationBase, Order, PaymentMethod } from '../models';
+import { Dish, Group, NavigationBase, Order, PaymentMethod } from '../models';
+import { getFilteredData, createSubject } from '@axrl/common';
+
 
 @Injectable({
   providedIn: NgGqlModule
@@ -10,28 +11,20 @@ export class NgGqlStorageService {
 
   constructor() { }
 
-  private makeFilteredObservable<T>(source: BehaviorSubject<T | null>): Observable<T> {
-    return source.pipe(
-      filter(
-        (value): value is T => isValue(value)
-      )
-    );
-  }
+  private _order = createSubject<Order | null>(null);
+  order = getFilteredData(this._order);
 
-  private _order = new BehaviorSubject<Order | null>(null);
-  order = this.makeFilteredObservable(this._order);
+  private _dishes = createSubject<Dish[] | null>(null);
+  dishes = getFilteredData(this._dishes);
 
-  private _dishes = new BehaviorSubject<Dish[] | null>(null);
-  dishes = this.makeFilteredObservable(this._dishes);
+  private _menu = createSubject<Group[] | null>(null);
+  menu = getFilteredData(this._menu);
 
-  private _menu = new BehaviorSubject<Group[] | null>(null);
-  menu = this.makeFilteredObservable(this._menu);
+  private _navigation = createSubject<NavigationBase | null>(null);
+  navigation = getFilteredData(this._navigation);
 
-  private _navigation = new BehaviorSubject<NavigationBase | null>(null);
-  navigation = this.makeFilteredObservable(this._navigation);
+  private _paymentMethods = createSubject<PaymentMethod[] | null>(null);
+  paymentMethods = getFilteredData(this._paymentMethods);
 
-  private _paymentMethods = new BehaviorSubject<PaymentMethod[] | null>(null);
-  paymentMethods = this.makeFilteredObservable(this._paymentMethods);
-  
 }
 

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -47,14 +36,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.main = void 0;
 var promises_1 = require("fs/promises");
-var libraryPackageJsonPath = './projects/webresto/ng-gql/package.json';
-var mainPackageJsonPath = './package.json';
+var path_1 = require("path");
+var libraryPackageJsonPath = process.argv[2];
+if (libraryPackageJsonPath === null || libraryPackageJsonPath === undefined) {
+    throw new Error("Не передан путь к файлу package.json, который требуется обновить.");
+}
+else {
+    if (typeof libraryPackageJsonPath !== 'string') {
+        throw new Error("Путь к обновляемому файлу package.json должен быть строкой.");
+    }
+    else {
+        if ((0, path_1.extname)(libraryPackageJsonPath) !== '.json') {
+            throw new Error("Указанный файл - не json.");
+        }
+    }
+}
+var mainPackageJsonPath = (0, path_1.join)(process.cwd(), 'package.json');
 function main() {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var libraryPackageJson, _b, _c, mainPackageJson, _d, _e, versionArray, mainDependencies_1, haveChanges_1, message_1;
+        var libraryPackageJson, _b, _c, mainPackageJson_1, _d, _e, versionArray, libraryDependencies_1, haveChanges_1, message_1;
         return __generator(this, function (_f) {
             switch (_f.label) {
                 case 0:
@@ -66,21 +68,29 @@ function main() {
                     _e = (_d = JSON).parse;
                     return [4 /*yield*/, (0, promises_1.readFile)(mainPackageJsonPath, { encoding: 'utf-8' })];
                 case 2:
-                    mainPackageJson = _e.apply(_d, [_f.sent()]);
+                    mainPackageJson_1 = _e.apply(_d, [_f.sent()]);
                     versionArray = (_a = libraryPackageJson === null || libraryPackageJson === void 0 ? void 0 : libraryPackageJson.version) === null || _a === void 0 ? void 0 : _a.split('.');
-                    mainDependencies_1 = __assign(__assign(__assign({}, mainPackageJson.dependencies), mainPackageJson.peerDependencies), mainPackageJson.devDependencies);
+                    libraryDependencies_1 = libraryPackageJson.peerDependencies;
                     haveChanges_1 = false;
-                    [libraryPackageJson.peerDependencies, libraryPackageJson.dependencies].forEach(function (libDeps) {
-                        Object.keys(libDeps).forEach(function (key) {
-                            if (mainDependencies_1[key] && mainDependencies_1[key] !== libDeps[key]) {
-                                libDeps[key] = mainDependencies_1[key];
+                    Object.keys(libraryDependencies_1).forEach(function (key) {
+                        if (mainPackageJson_1.dependencies[key] && mainPackageJson_1.dependencies[key] !== libraryDependencies_1[key]) {
+                            libraryDependencies_1[key] = mainPackageJson_1.dependencies[key];
+                            if (!haveChanges_1) {
+                                haveChanges_1 = true;
+                            }
+                            ;
+                        }
+                        else {
+                            if (mainPackageJson_1.devDependencies[key] && mainPackageJson_1.devDependencies[key] !== libraryDependencies_1[key]) {
+                                libraryDependencies_1[key] = mainPackageJson_1.devDependencies[key];
                                 if (!haveChanges_1) {
                                     haveChanges_1 = true;
                                 }
                                 ;
                             }
                             ;
-                        });
+                        }
+                        ;
                     });
                     if (!(haveChanges_1 || (versionArray && (versionArray === null || versionArray === void 0 ? void 0 : versionArray[2])))) return [3 /*break*/, 4];
                     if ((versionArray && (versionArray === null || versionArray === void 0 ? void 0 : versionArray[2]))) {
@@ -108,6 +118,5 @@ function main() {
         });
     });
 }
-exports.main = main;
 ;
 main();

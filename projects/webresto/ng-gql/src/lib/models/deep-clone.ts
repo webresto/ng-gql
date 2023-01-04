@@ -1,4 +1,4 @@
-import { isValue } from './is-value';
+import { isValue } from '@axrl/common';
 
 type ArrayElement<T> = T extends Array<infer U> ? U : never;
 

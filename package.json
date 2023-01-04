@@ -4,7 +4,7 @@
   "scripts": {
     "start": "ng build --watch",
     "build-update-deps-script": "tsc updatePackageVersion.ts --skipLibCheck",
-    "updatePackageVersion": "node updatePackageVersion.js",
+    "updatePackageVersion": "node updatePackageVersion.js ./projects/webresto/ng-gql/package.json",
     "build": "ng build",
     "upd": "npm update --save --force",
     "build:local": "ng build && npm run gen-doc",
@@ -13,12 +13,13 @@
     "gen-doc": "typedoc --tsconfig projects/webresto/ng-gql/tsconfig.lib.prod.json"
   },
   "private": true,
-  "peerDependencies": {
+  "dependencies": {
     "@angular/common": "^15.0.4",
     "@angular/compiler": "^15.0.4",
     "@angular/core": "^15.0.4",
     "@angular/forms": "^15.0.4",
     "@apollo/client": "^3.7.3",
+    "@axrl/common": "^1.0.20",
     "@axrl/ngx-extended-form-builder": "^1.2.7",
     "apollo-angular": "^4.1.1",
     "apollo3-cache-persist": "^0.14.1",
