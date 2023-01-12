@@ -5,7 +5,7 @@ import type { ApolloQueryResult, FetchResult, MutationOptions, QueryOptions, Sub
 import { isValue } from '@axrl/common';
 import type { NgGqlConfig } from '../models';
 import { NgGqlModule } from '../ng-gql.module';
-import { EmptyObject } from 'apollo-angular/build/types';
+import type { EmptyObject } from 'apollo-angular/types';
 
 @Injectable({
   providedIn: NgGqlModule
