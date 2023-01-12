@@ -8,8 +8,8 @@ import type {
   Dish, PhoneKnowledge, CheckPhoneResponse, Navigation, NavigationBase, NavigationLoader,
   CheckPhoneCodeInput, VCriteria, Maintenance, Phone
 } from '../models';
-import { isValue } from '@axrl/common';
-import { deepClone, generateQueryString } from '../models';
+import { isValue, deepClone } from '@axrl/common';
+import { generateQueryString } from '../models';
 import { NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS } from '../injection-tokens';
 import { ApolloService } from './apollo.service';
 import { NgGqlModule } from '../ng-gql.module';

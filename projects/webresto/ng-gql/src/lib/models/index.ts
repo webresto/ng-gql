@@ -11,7 +11,6 @@ export * from './event-message/event-message';
 export * from './maintenance/maintenance';
 export * from './customer';
 export { NgGqlConfig } from './ng-gql-config/ng-gql-config';
-export { deepClone } from './deep-clone';
 export { ValuesOrBoolean } from './values-or-boolean';
 export { generateQueryString } from './generate-query-string';
 export { VCriteria, GQLRequestVariables } from './generate-query-string';
