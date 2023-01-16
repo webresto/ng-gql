@@ -18,6 +18,7 @@
 - [name](Dish.md#name)
 - [description](Dish.md#description)
 - [price](Dish.md#price)
+- [oldPrice](Dish.md#oldprice)
 - [weight](Dish.md#weight)
 - [balance](Dish.md#balance)
 - [tags](Dish.md#tags)
@@ -72,6 +73,12 @@ ___
 ### price
 
 • **price**: `number`
+
+___
+
+### oldPrice
+
+• **oldPrice**: ``null`` \| `number`
 
 ___
 

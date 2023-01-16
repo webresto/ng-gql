@@ -8,7 +8,7 @@
 
 ## Hierarchy
 
-- `Exclude`<[`Modifier`](Modifier.md), ``"amount"`` \| ``"defaultAmount"`` \| ``"hideIfDefaultAmount"`` \| ``"groupId"`` \| ``"dish"``\>
+- `Exclude`<[`Modifier`](Modifier.md)<`T`\>, ``"amount"`` \| ``"defaultAmount"`` \| ``"hideIfDefaultAmount"`` \| ``"groupId"`` \| ``"dish"``\>
 
   ↳ **`GroupModifier`**
 
@@ -116,7 +116,7 @@ ___
 
 ### dish
 
-• **dish**: `Omit`<`Partial`<[`Dish`](Dish.md)\>, ``"modifiers"``\>
+• **dish**: `Omit`<`Partial`<`T`\>, ``"modifiers"``\>
 
 #### Inherited from
 

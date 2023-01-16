@@ -68,13 +68,6 @@
 - [PaymentMethod](interfaces/PaymentMethod.md)
 - [QueryGenerationParam](interfaces/QueryGenerationParam.md)
 
-### Functions
-
-- [deepClone](README.md#deepclone)
-- [generateQueryString](README.md#generatequerystring)
-- [isValue](README.md#isvalue)
-- [isEqualItems](README.md#isequalitems)
-
 ### Type Aliases
 
 - [DiscountType](README.md#discounttype)
@@ -91,6 +84,10 @@
 - [ApolloService](classes/ApolloService.md)
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
+
+### Functions
+
+- [generateQueryString](README.md#generatequerystring)
 
 ### Events
 
@@ -222,7 +219,7 @@ ___
 
 ### defaultGroupModifierFragments
 
-• `Const` **defaultGroupModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)\>
+• `Const` **defaultGroupModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>
 
 ___
 
@@ -246,7 +243,7 @@ ___
 
 ### defaultModifierFragments
 
-• `Const` **defaultModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)\>
+• `Const` **defaultModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>\>
 
 ___
 
@@ -258,7 +255,7 @@ ___
 
 ### defaultOrderDishFragments
 
-• `Const` **defaultOrderDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)\>
+• `Const` **defaultOrderDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>\>
 
 ___
 
@@ -271,148 +268,6 @@ ___
 ### defaultPaymentMethodFragments
 
 • `Const` **defaultPaymentMethodFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>
-
-## Functions
-
-### deepClone
-
-▸ **deepClone**<`T`\>(`source`): `T`
-
-**`Function`**
-
-deepClone()
-Функция для "глубокого" рекурсивного клонирования любых объектов
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `unknown` |
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `source` | `T` | объект, который требуется скопировать |
-
-#### Returns
-
-`T`
-
-полная копия объекта объекта, полученного в качестве аргумента
-
-___
-
-### generateQueryString
-
-▸ **generateQueryString**<`T`, `N`, `GQLRequestVariables`\>(`options`): `string`
-
-**`Function`**
-
-generateQueryString()
-Функция - генератор строки запроса к серверу GraphQL.
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `object` |
-| `N` | extends `string` |
-| `GQLRequestVariables` | `GQLRequestVariables` |
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `options` | `Object` | объект с данными, необходимыми для формирования запроса, где: |
-| `options.name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
-| `options.queryObject` | `T` | объект-источник информации о структуре запрашиваемых данных |
-| `options.variables?` | `GQLRequestVariables` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа     параметров допустимо использовать типы - number, string, object или boolean. |
-| `options.requiredFields?` | keyof `GQLRequestVariables`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип  КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.     (например у параметра указан тип String!, а не String). |
-| `options.fieldsTypeMap?` | `Map`<keyof `GQLRequestVariables`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса,  а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.  ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
-
-#### Returns
-
-`string`
-
-часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V.
- НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription
-
-___
-
-### isValue
-
-▸ **isValue**<`T`\>(`value`): value is NonNullable<T\>
-
-**`Function`**
-
-isValue()
-
-Функция-хелпер для проверки, что переданное значение не является null или undefined.
-Может пригодиться в ситуациях, где требуется более сложная проверка, чем при использовании optional chaining (оператора "??"),
-либо защиты от ложно-положительных срабатываний при проверке наличия значения
-Например :
-
-```typescript
-   interface Foo {
-   value? :number | undefinded
-   }
-   const a:Foo = {
-     value: 0
-   };
-   if (a) {
-    <block_a>
-   } else {
-     <block_b>
-    };
-```
-
-В этом примере block_a не будет выполнен, поскольку приведение к типу boolean значения 0 в результате дает false.
-А проверка isValue(a) - вернет true.
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `unknown` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `undefined` \| ``null`` \| `T` |
-
-#### Returns
-
-value is NonNullable<T\>
-
-___
-
-### isEqualItems
-
-▸ **isEqualItems**<`T`\>(`a`, `b`): `boolean`
-
-Функция для сравнения двух переменных.
-Осуществляет "глубокое" сравнение для непримитивных типов по значениям их свойств, а не по ссылке на объект.
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `a` | `T` |  |
-| `b` | `T` | сравниваемые объекты. |
-
-#### Returns
-
-`boolean`
-
-true, если объекты идентичны и false, если объекты различаются.
 
 ## Type Aliases
 
@@ -507,6 +362,43 @@ ValuesOrBoolean<T>
 | Name |
 | :------ |
 | `T` |
+
+## Functions
+
+### generateQueryString
+
+▸ **generateQueryString**<`T`, `N`, `GQLRequestVariables`\>(`options`): `string`
+
+**`Function`**
+
+generateQueryString()
+Функция - генератор строки запроса к серверу GraphQL.
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `object` |
+| `N` | extends `string` |
+| `GQLRequestVariables` | `GQLRequestVariables` |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | объект с данными, необходимыми для формирования запроса, где: |
+| `options.name` | `N` | название операции, объвленное в схеме сервера GraphQL. |
+| `options.queryObject` | `T` | объект-источник информации о структуре запрашиваемых данных |
+| `options.variables?` | `GQLRequestVariables` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа параметров допустимо использовать типы - number, string, object или boolean. |
+| `options.requiredFields?` | keyof `GQLRequestVariables`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`. (например у параметра указан тип String!, а не String). |
+| `options.fieldsTypeMap?` | `Map`<keyof `GQLRequestVariables`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL. ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
+
+#### Returns
+
+`string`
+
+часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V.
+ НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription
 
 ## Events
 

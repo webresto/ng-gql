@@ -101,7 +101,7 @@ ___
 
 ### modifiers
 
-• **modifiers**: `Partial`<[`OrderModifier`](OrderModifier.md)<[`Dish`](Dish.md)\>\>[]
+• **modifiers**: `Partial`<[`OrderModifier`](OrderModifier.md)<`T`\>\>[]
 
 ___
 
