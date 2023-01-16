@@ -16,7 +16,7 @@ export interface Modifier<T extends Dish = Dish> {
 	minAmount: number;
 	amount?: number;
 	defaultAmount: number;
-	dish: Pick<T, 'id' | 'name' | 'description' | 'oldPrice' | 'price' | 'weight' | 'balance' | 'tags' | 'groupId' | 'parentGroup' | 'images'>;
+	dish: Pick<T, 'id' | 'additionalInfo' | 'name' | 'description' | 'oldPrice' | 'price' | 'weight' | 'balance' | 'tags' | 'groupId' | 'parentGroup' | 'images'>;
 }
 
 export const defaultModifierFragments: ValuesOrBoolean<Modifier<Dish>> = {
@@ -26,6 +26,7 @@ export const defaultModifierFragments: ValuesOrBoolean<Modifier<Dish>> = {
 	defaultAmount: true,
 	dish: {
 		id: true,
+		additionalInfo: true,
 		name: true,
 		description: true,
 		oldPrice: true,
