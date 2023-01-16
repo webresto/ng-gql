@@ -14,14 +14,15 @@ export interface Dish extends BaseModelWithCustomData {
 	name: string;
 	description: string;
 	price: number;
+	oldPrice: number | null;
 	weight: number;
 	balance: number;
 	tags?: Partial<DishTag>[];
-	additionalInfo?: string | number | { [ key: string ]: string | any; } | null;
+	additionalInfo?: string | number | { [key: string]: string | any; } | null;
 	images: Partial<Image>[];
 	groupId?: string;
 	parentGroup: Partial<Pick<Group, 'id' | 'dishesPlaceholder'>>;
-	modifiers?: Partial<GroupModifier>[] | undefined;
+	modifiers?: Partial<GroupModifier<Dish>>[] | undefined;
 	carbohydrateAmount?: number;
 	carbohydrateFullAmount?: number;
 	energyAmount?: number;
@@ -45,6 +46,7 @@ export const defaultDishFragments: ValuesOrBoolean<Dish> = {
 	id: true,
 	name: true,
 	description: true,
+	oldPrice: true,
 	price: true,
 	weight: true,
 	balance: true,

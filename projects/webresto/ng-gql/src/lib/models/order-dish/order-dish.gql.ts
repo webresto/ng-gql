@@ -17,12 +17,11 @@ export interface OrderDish<T extends Dish = Dish> {
 	comment: string | null;
 	totalWeight: number;
 	total?: number;
-	modifiers: Partial<OrderModifier>[];
+	modifiers: Partial<OrderModifier<T>>[];
 	isLoading?: BehaviorSubject<boolean>;
-
 }
 
-export const defaultOrderDishFragments: ValuesOrBoolean<OrderDish> = {
+export const defaultOrderDishFragments: ValuesOrBoolean<OrderDish<Dish>> = {
 	id: true,
 	amount: true,
 	dish: defaultDishFragments,

@@ -19,7 +19,7 @@ export interface Modifier<T extends Dish = Dish> {
 	dish: Omit<Partial<T>, 'modifiers'>;
 }
 
-export const defaultModifierFragments: ValuesOrBoolean<Modifier> = {
+export const defaultModifierFragments: ValuesOrBoolean<Modifier<Dish>> = {
 	modifierId: true,
 	maxAmount: true,
 	minAmount: true,
@@ -28,6 +28,7 @@ export const defaultModifierFragments: ValuesOrBoolean<Modifier> = {
 		id: true,
 		name: true,
 		description: true,
+		oldPrice: true,
 		price: true,
 		weight: true,
 		balance: true,

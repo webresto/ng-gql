@@ -1,6 +1,6 @@
 {
   "name": "@webresto/ng-gql",
-  "version": "1.1.81",
+  "version": "1.1.82",
   "repository": {
     "type": "git",
     "url": "https://git.hm/webresto/ng-graphql.git"
@@ -10,7 +10,7 @@
     "@angular/common": "^15.1.0",
     "@angular/core": "^15.1.0",
     "@angular/forms": "^15.1.0",
-    "@apollo/client": "^3.7.3",
+    "@apollo/client": "^3.7.4",
     "apollo-angular": "^4.2.0",
     "graphql": "^16.6.0",
     "subscriptions-transport-ws": "^0.11.0",
