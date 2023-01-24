@@ -9,16 +9,16 @@
   "peerDependencies": {
     "@angular/common": "^15.1.0",
     "@angular/core": "^15.1.0",
-    "@angular/forms": "^15.1.0",
+    "@angular/forms": "^15.1.0"
+  },
+  "dependencies": {
+    "tslib": "^2.4.1",
+    "apollo3-cache-persist": "^0.14.1",
     "@apollo/client": "^3.7.4",
     "apollo-angular": "^4.2.0",
     "graphql": "^16.6.0",
     "subscriptions-transport-ws": "^0.11.0",
     "@axrl/ngx-extended-form-builder": "^1.2.9",
     "@axrl/common": "^1.0.24"
-  },
-  "dependencies": {
-    "tslib": "^2.4.1",
-    "apollo3-cache-persist": "^0.14.1"
   }
 }
