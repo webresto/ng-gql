@@ -13,6 +13,7 @@ import { PAYMENT_METHOD_FRAGMENTS, ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, ORDER_FR
 import { NgGqlService } from './ng-gql.service';
 import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
 import { NgGqlModule } from '../ng-gql.module';
+import { NgGqlStorageService } from './ng-gql-storage.service';
 
 @Injectable({
   providedIn: NgGqlModule
@@ -21,6 +22,7 @@ export class NgOrderService {
 
   constructor(
     private ngGqlService: NgGqlService,
+    private storage: NgGqlStorageService,
     private storageWrapper: NqGqlLocalStorageWrapper,
     @Inject('config') private config: NgGqlConfig,
     @Inject(PAYMENT_METHOD_FRAGMENTS) private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
@@ -133,17 +135,18 @@ export class NgOrderService {
           )
         ]).pipe(
           map(
-            data => {
-              return {
-                methods: data[0],
-                order: {
-                  ...data[1],
-                  paymentMethod: !data[1].paymentMethod && data[0].length > 0 ? {
-                    id: data[0][0].id,
-                    title: data[0][0].title
-                  } : data[1].paymentMethod
-                }
+            ([methods, order]) => {
+              if (!isValue(order.paymentMethod) && methods.length > 0) {
+                order.paymentMethod = {
+                  id: methods[0].id,
+                  title: methods[0].title
+                };
               };
+
+              this.storage.updateOrder(order);
+              this.storage.updatePaymentMethods(methods);
+
+              return { methods, order };
             })
         );
       }),

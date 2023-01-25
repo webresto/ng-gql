@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular';
-import { BehaviorSubject, of, filter, map, switchMap, shareReplay, startWith, mergeWith } from 'rxjs';
+import { BehaviorSubject, of, filter, map, switchMap, startWith, mergeWith, exhaustMap } from 'rxjs';
 import type { Observable } from 'rxjs';
 import type {
   NgGqlConfig, GQLRequestVariables, Group, ValuesOrBoolean,
@@ -13,6 +13,7 @@ import { generateQueryString } from '../models';
 import { NAVIGATION_FRAGMENTS, MAINTENANCE_FRAGMENTS, GROUP_FRAGMENTS, DISH_FRAGMENTS } from '../injection-tokens';
 import { ApolloService } from './apollo.service';
 import { NgGqlModule } from '../ng-gql.module';
+import { NgGqlStorageService } from './ng-gql-storage.service';
 
 /** @internal */
 interface SlugAndConcept {
@@ -52,6 +53,7 @@ export class NgGqlService {
 
   constructor(
     private apollo: ApolloService,
+    private storage: NgGqlStorageService,
     @Inject('config') private config: NgGqlConfig,
     @Inject(NAVIGATION_FRAGMENTS) private defaultNavigationFragments: ValuesOrBoolean<Navigation>,
     @Inject(MAINTENANCE_FRAGMENTS) private defaultMaintenanceFragments: ValuesOrBoolean<Maintenance>,
@@ -59,15 +61,6 @@ export class NgGqlService {
     @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>,
   ) {
   }
-
-  private _navigationLoader$ = new BehaviorSubject<NavigationLoader<NavigationBase> | null>(null);
-  private _navigationData$ = this._navigationLoader$.pipe(
-    filter((data): data is NavigationLoader<NavigationBase> => !!data),
-    switchMap(
-      data => this.queryAndSubscribe(data.nameQuery, data.nameSubscribe, data.queryObject, data.uniqueKeyForCompareItem)
-    ),
-    shareReplay(1)
-  );
 
   private _initGroupSlug$ = new BehaviorSubject<SlugAndConcept | null>(null);
 
@@ -102,17 +95,19 @@ export class NgGqlService {
  * @see @interface NavigationLoader<T>
  */
   getNavigation$<T extends NavigationBase = Navigation>(options?: NavigationLoader<T>): Observable<T[]> {
-    if (options) {
-      (<BehaviorSubject<NavigationLoader<T>>>this._navigationLoader$).next(options);
-    } else {
-      (<BehaviorSubject<NavigationLoader<Navigation>>>this._navigationLoader$).next({
-        nameQuery: 'navigation',
-        nameSubscribe: 'navigation',
-        queryObject: this.defaultNavigationFragments,
-        uniqueKeyForCompareItem: 'mnemonicId'
-      });
-    };
-    return <Observable<T[]>>this._navigationData$;
+
+    return this.queryAndSubscribe(
+      options?.nameQuery ?? 'navigation',
+      options?.nameSubscribe ?? 'navigation',
+      options?.queryObject ?? <NavigationLoader<T>['queryObject']>this.defaultNavigationFragments,
+      options?.uniqueKeyForCompareItem ?? <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId'
+    ).pipe(
+      map(
+        navigationData => {
+          this.storage.updateNavigation(navigationData);
+          return navigationData;
+        })
+    );
   }
 
 
@@ -158,7 +153,7 @@ export class NgGqlService {
   rootGroups$: Observable<{
     concept: string | 'origin',
     groups: PartialGroupNullable[];
-  }> = this._navigationData$.pipe(
+  }> = this.storage.navigation.pipe(
     filter((navigationData): navigationData is Navigation[] => !!navigationData && Array.isArray(navigationData) && !!navigationData[0] && 'mnemonicId' in navigationData[0]),
     switchMap(navigationData => {
       const menuItem = navigationData.find(item => item.mnemonicId === 'menu')!;
@@ -175,8 +170,6 @@ export class NgGqlService {
       )
     ),
   );
-
-  private _dishes$ = new BehaviorSubject<Dish[] | null>(null);
 
 
   /**
@@ -260,7 +253,6 @@ export class NgGqlService {
           const allNestingsGroups = getGroups(groups);
           const allNestingsIds = allNestingsGroups.map(group => group.id);
 
-          console.log(allNestingsGroups);
           return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>('dish', 'dish', this.defaultDishFragments, 'id', {
             query: {
               criteria: {
@@ -280,7 +272,8 @@ export class NgGqlService {
               const dishes = data.map(
                 dataDish => this.addAmountToDish(dataDish)
               );
-              this._dishes$.next(dishes);
+
+              this.storage.updateDishes(dishes);
               const groupsById = allNestingsGroups.reduce<{
                 [key: string]: Partial<Group>;
               }>(
@@ -370,36 +363,34 @@ export class NgGqlService {
   }
 
   getDishes$(id?: string | string[]): Observable<Dish[]> {
-    const dishes = this._dishes$.value;
-    if (dishes) {
-      const ids = typeof id === 'string' ? [id] : id;
-      const dishesInStock = dishes.filter(item => typeof id === 'string' ? item.id === id : id?.includes(item.id));
-      if (!ids) {
-        return of(dishes);
-      } else {
-        if (dishesInStock.length == ids.length) {
-          return of(dishesInStock);
-        } else {
-          const dishesNotInStock = ids.filter(dishId => !dishes.find(dish => dish.id === dishId));
-          return this.customQuery$<Dish, 'dish', VCriteria>('dish', this.defaultDishFragments, {
-            criteria: {
-              id: dishesNotInStock
+    return this.storage.dishes.pipe(
+      exhaustMap(
+        dishes => {
+          const ids = typeof id === 'string' ? [id] : id;
+          const dishesInStock = dishes.filter(item => typeof id === 'string' ? item.id === id : id?.includes(item.id));
+          if (!ids) {
+            return of(dishes);
+          } else {
+            if (dishesInStock.length == ids.length) {
+              return of(dishesInStock);
+            } else {
+              const dishesNotInStock = ids.filter(dishId => !dishes.find(dish => dish.id === dishId));
+              return this.customQuery$<Dish, 'dish', VCriteria>('dish', this.defaultDishFragments, {
+                criteria: {
+                  id: dishesNotInStock
+                }
+              }).pipe(
+                map(loadedDishes => {
+                  const result = Array.isArray(loadedDishes.dish) ? loadedDishes.dish : [loadedDishes.dish];
+                  dishes.push(...result);
+                  this.storage.updateDishes(dishes);
+                  return [...dishesInStock, ...result];
+                })
+              );
             }
-          }).pipe(
-            map(loadedDishes => {
-              const result = Array.isArray(loadedDishes.dish) ? loadedDishes.dish : [loadedDishes.dish];
-              dishes.push(...result);
-              this._dishes$.next(dishes);
-              return [...dishesInStock, ...result];
-            })
-          );
-        }
-      }
-    } else {
-      return this._dishes$.asObservable().pipe(
-        filter((data): data is Dish[] => !!data)
-      );
-    }
+          }
+        })
+    )
   }
 
   /**
