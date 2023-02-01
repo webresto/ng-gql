@@ -10,6 +10,8 @@ export * from './payment-method/payment-method.gql';
 export * from './event-message/event-message';
 export * from './maintenance/maintenance';
 export * from './customer';
+export * from './captcha';
+export * from './user';
 export { NgGqlConfig } from './ng-gql-config/ng-gql-config';
 export { ValuesOrBoolean } from './values-or-boolean';
 export { generateQueryString } from './generate-query-string';
