@@ -168,15 +168,10 @@ export class NgOrderService {
           this.storageWrapper.startStorageEventFactory(storageOrderIdToken)
         ),
         filter((event) => event.key === storageOrderIdToken),
-        map((ev) => {
-          return ev;
-        }),
-        map((event) =>
-          this.storageWrapper.getOrderId(
-            storageOrderIdToken,
-            event.newValue ?? undefined
-          )
-        )
+        map((event) => this.storageWrapper.getOrderId(
+          storageOrderIdToken,
+          event.newValue ?? undefined
+        ))
       )
     ),
     distinctUntilChanged(),
@@ -192,7 +187,9 @@ export class NgOrderService {
               title: methods[0].title,
             };
           }
-
+          if (storageOrderId !== order.id) {
+            this.setOrderId(order.id);
+          }
           this.storage.updateOrder(order);
           this.storage.updatePaymentMethods(methods);
 
