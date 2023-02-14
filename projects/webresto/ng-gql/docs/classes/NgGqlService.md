@@ -31,13 +31,14 @@
 
 ### constructor
 
-• **new NgGqlService**(`apollo`, `config`, `defaultNavigationFragments`, `defaultMaintenanceFragments`, `defaultGroupFragments`, `defaultDishFragments`)
+• **new NgGqlService**(`apollo`, `storage`, `config`, `defaultNavigationFragments`, `defaultMaintenanceFragments`, `defaultGroupFragments`, `defaultDishFragments`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `apollo` | [`ApolloService`](ApolloService.md) |
+| `storage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 | `defaultNavigationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Navigation`](../interfaces/Navigation.md)\> |
 | `defaultMaintenanceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Maintenance`](../interfaces/Maintenance.md)\> |
@@ -247,7 +248,7 @@ ValuesOrBoolean<T>
 | :------ | :------ | :------ |
 | `T` | extends `Object` | Тип запрашиваемых данных, по которому построен объект |
 | `N` | extends `string` | Строка-название операции из схемы сервера GraphQL. |
-| `V` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) | = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL. |
+| `V` | extends `OperationVariables` = [`GQLRequestVariables`](../README.md#gqlrequestvariables) | = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL. |
 
 #### Parameters
 
@@ -374,7 +375,7 @@ ValuesOrBoolean<T>
 | `T` | extends `Object` |
 | `NQuery` | extends `string` |
 | `NSubscribe` | extends `string` |
-| `VQ` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |
+| `VQ` | extends `OperationVariables` = [`GQLRequestVariables`](../README.md#gqlrequestvariables) |
 | `VS` | [`GQLRequestVariables`](../README.md#gqlrequestvariables) |
 
 #### Parameters

@@ -116,7 +116,7 @@ ___
 
 ### dish
 
-• **dish**: `Omit`<`Partial`<`T`\>, ``"modifiers"``\>
+• **dish**: `Pick`<`T`, ``"id"`` \| ``"images"`` \| ``"additionalInfo"`` \| ``"name"`` \| ``"description"`` \| ``"oldPrice"`` \| ``"price"`` \| ``"weight"`` \| ``"balance"`` \| ``"tags"`` \| ``"groupId"`` \| ``"parentGroup"``\>
 
 #### Inherited from
 

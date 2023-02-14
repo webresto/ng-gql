@@ -16,6 +16,12 @@
 - [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
 - [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
 - [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
+- [PHONE\_FRAGMENT](README.md#phone_fragment)
+- [USER\_DEVICES\_FRAGMENTS](README.md#user_devices_fragments)
+- [USER\_LOCATION\_FRAGMENTS](README.md#user_location_fragments)
+- [BONUS\_PROGRAM\_FRAGMENTS](README.md#bonus_program_fragments)
+- [USER\_BONUS\_PROGRAM\_FRAGMENTS](README.md#user_bonus_program_fragments)
+- [USER\_FRAGMENTS](README.md#user_fragments)
 - [defaultDishFragments](README.md#defaultdishfragments)
 - [defaultMessageFragments](README.md#defaultmessagefragments)
 - [defaultActionFragments](README.md#defaultactionfragments)
@@ -28,10 +34,13 @@
 - [defaultOrderDishFragments](README.md#defaultorderdishfragments)
 - [defaultOrderFragments](README.md#defaultorderfragments)
 - [defaultPaymentMethodFragments](README.md#defaultpaymentmethodfragments)
+- [defaultUserFragments](README.md#defaultuserfragments)
 
 ### Interfaces
 
 - [BaseModelWithCustomData](interfaces/BaseModelWithCustomData.md)
+- [CaptchaJob](interfaces/CaptchaJob.md)
+- [Captcha](interfaces/Captcha.md)
 - [Customer](interfaces/Customer.md)
 - [Phone](interfaces/Phone.md)
 - [PhoneKnowledge](interfaces/PhoneKnowledge.md)
@@ -66,6 +75,20 @@
 - [CheckResponse](interfaces/CheckResponse.md)
 - [OrderAdditionalFields](interfaces/OrderAdditionalFields.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
+- [BaseResponse](interfaces/BaseResponse.md)
+- [RegistrationPayload](interfaces/RegistrationPayload.md)
+- [RegistrationUserResponse](interfaces/RegistrationUserResponse.md)
+- [OTPRequestPayload](interfaces/OTPRequestPayload.md)
+- [OTPResponse](interfaces/OTPResponse.md)
+- [LoginPayload](interfaces/LoginPayload.md)
+- [LogoutPayload](interfaces/LogoutPayload.md)
+- [User](interfaces/User.md)
+- [BonusProgram](interfaces/BonusProgram.md)
+- [UserBonusProgram](interfaces/UserBonusProgram.md)
+- [UserBonusTransaction](interfaces/UserBonusTransaction.md)
+- [UserDevice](interfaces/UserDevice.md)
+- [UserLocation](interfaces/UserLocation.md)
+- [OneTimePassword](interfaces/OneTimePassword.md)
 - [QueryGenerationParam](interfaces/QueryGenerationParam.md)
 
 ### Type Aliases
@@ -82,6 +105,8 @@
 - [EventMessage](classes/EventMessage.md)
 - [NqGqlLocalStorageWrapper](classes/NqGqlLocalStorageWrapper.md)
 - [ApolloService](classes/ApolloService.md)
+- [NgGqlStorageService](classes/NgGqlStorageService.md)
+- [NgGqlUserService](classes/NgGqlUserService.md)
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
 
@@ -199,6 +224,54 @@ InjectionToken с объектом ValuesOrBoolean<Navigation>, использу
 
 ___
 
+### PHONE\_FRAGMENT
+
+• `Const` **PHONE\_FRAGMENT**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Phone`](interfaces/Phone.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Phone>.
+
+___
+
+### USER\_DEVICES\_FRAGMENTS
+
+• `Const` **USER\_DEVICES\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserDevice`](interfaces/UserDevice.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<UserDevice>.
+
+___
+
+### USER\_LOCATION\_FRAGMENTS
+
+• `Const` **USER\_LOCATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserLocation`](interfaces/UserLocation.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<UserLocation>.
+
+___
+
+### BONUS\_PROGRAM\_FRAGMENTS
+
+• `Const` **BONUS\_PROGRAM\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`BonusProgram`](interfaces/BonusProgram.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<BonusProgram>.
+
+___
+
+### USER\_BONUS\_PROGRAM\_FRAGMENTS
+
+• `Const` **USER\_BONUS\_PROGRAM\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserBonusProgram`](interfaces/UserBonusProgram.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<UserBonusProgram>.
+
+___
+
+### USER\_FRAGMENTS
+
+• `Const` **USER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`User`](interfaces/User.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<User>.
+
+___
+
 ### defaultDishFragments
 
 • `Const` **defaultDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>
@@ -269,6 +342,12 @@ ___
 
 • `Const` **defaultPaymentMethodFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>
 
+___
+
+### defaultUserFragments
+
+• `Const` **defaultUserFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`User`](interfaces/User.md)\> = `{}`
+
 ## Type Aliases
 
 ### DiscountType
@@ -298,7 +377,7 @@ ___
 
 ### GQLRequestVariables
 
-Ƭ **GQLRequestVariables**: `undefined` \| [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
+Ƭ **GQLRequestVariables**: [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
 
 **`Alias`**
 

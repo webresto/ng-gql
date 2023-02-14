@@ -17,6 +17,20 @@
 
   ↳ [`PhoneKnowledge`](PhoneKnowledge.md)
 
+  ↳ [`User`](User.md)
+
+  ↳ [`BonusProgram`](BonusProgram.md)
+
+  ↳ [`UserBonusProgram`](UserBonusProgram.md)
+
+  ↳ [`UserBonusTransaction`](UserBonusTransaction.md)
+
+  ↳ [`UserDevice`](UserDevice.md)
+
+  ↳ [`UserLocation`](UserLocation.md)
+
+  ↳ [`OneTimePassword`](OneTimePassword.md)
+
 ## Table of contents
 
 ### Properties

@@ -38,13 +38,14 @@
 
 ### constructor
 
-• **new NgOrderService**(`ngGqlService`, `storageWrapper`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
+• **new NgOrderService**(`ngGqlService`, `storage`, `storageWrapper`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
+| `storage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
 | `storageWrapper` | [`NqGqlLocalStorageWrapper`](NqGqlLocalStorageWrapper.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 | `defaultPaymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`PaymentMethod`](../interfaces/PaymentMethod.md)\> |

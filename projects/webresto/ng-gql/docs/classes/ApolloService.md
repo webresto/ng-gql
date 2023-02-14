@@ -37,7 +37,7 @@
 | Name | Type |
 | :------ | :------ |
 | `TData` | `TData` |
-| `TVariables` | `EmptyObject` |
+| `TVariables` | extends `OperationVariables` = `EmptyObject` |
 
 #### Parameters
 
