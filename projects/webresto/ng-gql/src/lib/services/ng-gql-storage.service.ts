@@ -3,19 +3,17 @@ import { NgGqlModule } from '../ng-gql.module';
 import { Dish, Group, NavigationBase, Order, PaymentMethod } from '../models';
 import { getFilteredData, createSubject } from '@axrl/common';
 
-
 @Injectable({
-  providedIn: NgGqlModule
+  providedIn: NgGqlModule,
 })
 export class NgGqlStorageService {
-
-  constructor() { }
+  constructor() {}
 
   private _order = createSubject<Order<Dish> | null>(null);
   order = getFilteredData(this._order);
 
   updateOrder<T extends Order<Dish>>(order: T) {
-    this._order.next(order)
+    this._order.next(order);
   }
 
   private _dishes = createSubject<Dish[] | null>(null);
@@ -36,7 +34,7 @@ export class NgGqlStorageService {
   navigation = getFilteredData(this._navigation);
 
   updateNavigation<T extends NavigationBase>(navigation: T[]) {
-    this._navigation.next(navigation)
+    this._navigation.next(navigation);
   }
 
   private _paymentMethods = createSubject<PaymentMethod[] | null>(null);
@@ -45,6 +43,4 @@ export class NgGqlStorageService {
   updatePaymentMethods<T extends PaymentMethod>(methods: T[]) {
     this._paymentMethods.next(methods);
   }
-
 }
-

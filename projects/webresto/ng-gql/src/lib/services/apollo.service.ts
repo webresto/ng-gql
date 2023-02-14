@@ -1,94 +1,108 @@
 import { Inject, Injectable } from '@angular/core';
 import { catchError, filter, of, map } from 'rxjs';
-import { Apollo, ExtraSubscriptionOptions, MutationResult, WatchQueryOptions } from 'apollo-angular';
-import type { ApolloQueryResult, FetchResult, MutationOptions, QueryOptions, SubscriptionOptions, } from '@apollo/client/core';
+import {
+  Apollo,
+  ExtraSubscriptionOptions,
+  MutationResult,
+  WatchQueryOptions,
+} from 'apollo-angular';
+import type {
+  ApolloQueryResult,
+  FetchResult,
+  MutationOptions,
+  OperationVariables,
+  QueryOptions,
+  SubscriptionOptions,
+} from '@apollo/client/core';
 import { isValue } from '@axrl/common';
 import type { NgGqlConfig } from '../models';
 import { NgGqlModule } from '../ng-gql.module';
 import type { EmptyObject } from 'apollo-angular/types';
 
 @Injectable({
-  providedIn: NgGqlModule
+  providedIn: NgGqlModule,
 })
 export class ApolloService {
+  constructor(
+    private apollo: Apollo,
+    @Inject('config') private config: NgGqlConfig
+  ) {}
 
-  constructor(private apollo: Apollo, @Inject('config') private config: NgGqlConfig,) { }
-
-  watchQuery<TData, TVariables = EmptyObject>(options: WatchQueryOptions<TVariables, TData>) {
+  watchQuery<TData, TVariables extends OperationVariables = EmptyObject>(
+    options: WatchQueryOptions<TVariables, TData>
+  ) {
     return this.apollo.watchQuery<TData, TVariables>(options).valueChanges.pipe(
-      map(data => {
+      map((data) => {
         if (isValue(data.error) || isValue(data.errors)) {
           throw new Error(JSON.stringify(data.error || data.errors));
         } else {
           return data;
         }
       }),
-      catchError(
-        error => {
-          console.log(error);
-          if (this.config.debugMode) {
-            alert(error);
-          };
-          return of(null);
-        }),
-      filter((value): value is ApolloQueryResult<TData> => !!value),
+      catchError((error) => {
+        console.log(error);
+        if (this.config.debugMode) {
+          alert(error);
+        }
+        return of(null);
+      }),
+      filter((value): value is ApolloQueryResult<TData> => !!value)
     );
   }
 
   query<T, V = EmptyObject>(options: QueryOptions<V, T>) {
     return this.apollo.query<T, V>(options).pipe(
-      map(data => {
+      map((data) => {
         if (isValue(data.error) || isValue(data.errors)) {
           throw new Error(JSON.stringify(data.error || data.errors));
         } else {
           return data;
         }
       }),
-      catchError(
-        error => {
-          console.log(error);
-          if (this.config.debugMode) {
-            alert(error);
-          };
-          return of(null);
-        }),
-      filter((value): value is ApolloQueryResult<T> => !!value),
+      catchError((error) => {
+        console.log(error);
+        if (this.config.debugMode) {
+          alert(error);
+        }
+        return of(null);
+      }),
+      filter((value): value is ApolloQueryResult<T> => !!value)
     );
-  };
+  }
 
   mutate<T, V = EmptyObject>(options: MutationOptions<T, V>) {
     return this.apollo.mutate<T, V>(options).pipe(
-      catchError(
-        error => {
-          console.log(error);
-          if (this.config.debugMode) {
-            alert(error);
-          };
-          return of(null);
-        }),
-      filter((value): value is MutationResult<T> => !!value),
-
+      catchError((error) => {
+        console.log(error);
+        if (this.config.debugMode) {
+          alert(error);
+        }
+        return of(null);
+      }),
+      filter((value): value is MutationResult<T> => !!value)
     );
-  };
+  }
 
-  subscribe<T, V = EmptyObject>(options: SubscriptionOptions<V, T>, extra?: ExtraSubscriptionOptions) {
+  subscribe<T, V = EmptyObject>(
+    options: SubscriptionOptions<V, T>,
+    extra?: ExtraSubscriptionOptions
+  ) {
     return this.apollo.subscribe<T, V>(options, extra).pipe(
-      map(data => {
+      map((data) => {
         if (isValue(data.errors)) {
           throw new Error(JSON.stringify(data.errors));
         } else {
           return data;
         }
       }),
-      catchError(
-        error => {
-          console.log(error);
-          if (this.config.debugMode) {
-            alert(error);
-          };
-          return of(null);
-        }),
-      filter((value): value is FetchResult<T> => !!value),
+      catchError((error) => {
+        console.log(error);
+        if (this.config.debugMode) {
+          alert(error);
+        }
+        return of(null);
+      }),
+      filter((value): value is FetchResult<T> => !!value)
     );
   }
 }

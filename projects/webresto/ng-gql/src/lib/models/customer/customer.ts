@@ -1,3 +1,4 @@
+import { ValuesOrBoolean } from './../values-or-boolean';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 
 export interface Customer {

@@ -26,7 +26,7 @@ type FieldTypes = Object | number | bigint | Symbol | string | boolean | null | 
  * Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
  *
  */
-export type GQLRequestVariables = undefined | VCriteria | {
+export type GQLRequestVariables = VCriteria | {
   [ key: string ]: number | string | Object | boolean | null | undefined;
 };
 

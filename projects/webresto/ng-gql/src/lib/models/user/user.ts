@@ -1,7 +1,8 @@
 import type { Dish } from '../dish/dish.gql';
 import type { Order } from '../order';
-import type { Phone } from './../customer/customer';
+import { Phone } from './../customer/customer';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
+import { ValuesOrBoolean } from '../values-or-boolean';
 
 /**
  *  Модели, описывающие авторизованного пользователя и его данные
@@ -15,15 +16,17 @@ export interface User extends BaseModelWithCustomData {
   email: string;
   phone: Phone;
   birthday: string;
-  favorites: Dish[]
+  favorites: Dish[];
   bonusProgram: UserBonusProgram[];
   history: Order[];
-  locations: UserLocation[]
-  devices: UserDevice[]
+  locations: UserLocation[];
+  devices: UserDevice[];
   verified: boolean;
   lastPasswordChange: number;
   temporaryCode: string;
 }
+
+export const defaultUserFragments: ValuesOrBoolean<User> = {};
 
 export interface BonusProgram extends BaseModelWithCustomData {
   id: string;

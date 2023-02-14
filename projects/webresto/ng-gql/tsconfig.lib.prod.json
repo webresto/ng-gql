@@ -27,7 +27,7 @@
     "cleanOutputDir": true,
     "sort": "source-order",
     "hideBreadcrumbs": true,
-    "darkHighlightTheme": "material-darker",
+    "darkHighlightTheme": "material-theme-darker",
     "theme": "markdown",
     "entryPointStrategy": "expand",
     "pretty": true,
