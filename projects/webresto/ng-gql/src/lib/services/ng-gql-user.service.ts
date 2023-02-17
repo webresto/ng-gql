@@ -57,9 +57,9 @@ export class NgGqlUserService {
   otpRequest(data: OTPRequestPayload) {
     return this.ngGqlService.customMutation$<
       OTPResponse,
-      'registration',
+      'OTPRequest',
       OTPRequestPayload
-    >('registration', this.defaultOTPResponceFragments, data, {
+    >('OTPRequest', this.defaultOTPResponceFragments, data, {
       requiredFields: ['login', 'captcha'],
     });
   }
@@ -67,10 +67,10 @@ export class NgGqlUserService {
   login(data: LoginPayload) {
     return this.ngGqlService.customMutation$<
       RegistrationUserResponse,
-      'registration',
+      'login',
       LoginPayload
     >(
-      'registration',
+      'login',
       {
         user: this.defaultUserFragments,
         message: this.defaultMessageFragments,
