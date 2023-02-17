@@ -168,10 +168,12 @@ export class NgOrderService {
           this.storageWrapper.startStorageEventFactory(storageOrderIdToken)
         ),
         filter((event) => event.key === storageOrderIdToken),
-        map((event) => this.storageWrapper.getOrderId(
-          storageOrderIdToken,
-          event.newValue ?? undefined
-        ))
+        map((event) =>
+          this.storageWrapper.getOrderId(
+            storageOrderIdToken,
+            event.newValue ?? undefined
+          )
+        )
       )
     ),
     distinctUntilChanged(),

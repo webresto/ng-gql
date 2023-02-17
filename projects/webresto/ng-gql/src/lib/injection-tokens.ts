@@ -1,3 +1,4 @@
+import { isValue } from '@axrl/common';
 import { User } from './models/user/user';
 import { inject, InjectionToken } from '@angular/core';
 import type {
@@ -18,6 +19,7 @@ import type {
   UserDevice,
   UserLocation,
   UserBonusProgram,
+  OTPResponse,
 } from './models';
 import {
   defaultActionFragments,
@@ -29,6 +31,31 @@ import {
   BonusProgram,
 } from './models';
 import { NgGqlModule } from './ng-gql.module';
+import { DOCUMENT } from '@angular/common';
+
+/**
+ * Метод для генерации orderId
+ */
+export const ORDERID_FACTORY_FN = new InjectionToken<() => string>(
+  'ORDERID_FACTORY_FN',
+  {
+    providedIn: NgGqlModule,
+    factory: () => {
+      const win = inject(DOCUMENT).defaultView;
+      return () => {
+        if (
+          isValue(win) &&
+          isValue(win.crypto) &&
+          isValue(win.crypto.randomUUID)
+        ) {
+          return win.crypto.randomUUID();
+        } else {
+          return `${Date.now()}${String(Math.random()).slice(3)}`;
+        }
+      };
+    },
+  }
+);
 
 /**
  * InjectionToken с объектом ValuesOrBoolean<Image>, используемым в запросе Image с сервера.
@@ -304,6 +331,25 @@ export const PHONE_FRAGMENT = new InjectionToken<ValuesOrBoolean<Phone>>(
     }),
   }
 );
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<OTPResponse>.
+ */
+export const OTP_RESPONSE_FRAGMENTS = new InjectionToken<
+  ValuesOrBoolean<OTPResponse>
+>('OTP_RESPONSE_FRAGMENT', {
+  providedIn: NgGqlModule,
+  factory: () => {
+    const defaultMessageFragments = inject(MESSAGE_FRAGMENTS);
+    const defaultActionFragments = inject(ACTION_FRAGMENTS);
+    return {
+      id: true,
+      nextOTPAfterSeconds: true,
+      message: defaultMessageFragments,
+      action: defaultActionFragments,
+    };
+  },
+});
 
 /**
  * InjectionToken с объектом ValuesOrBoolean<UserDevice>.
