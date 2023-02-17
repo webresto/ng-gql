@@ -47,7 +47,10 @@ export class NgGqlUserService {
         message: this.defaultMessageFragments,
         action: this.defaultActionFragments,
       },
-      data
+      data,
+      {
+        requiredFields: ['login', 'otp', 'firstName', 'captcha'],
+      }
     );
   }
 
@@ -56,7 +59,9 @@ export class NgGqlUserService {
       OTPResponse,
       'registration',
       OTPRequestPayload
-    >('registration', this.defaultOTPResponceFragments, data);
+    >('registration', this.defaultOTPResponceFragments, data, {
+      requiredFields: ['login', 'captcha'],
+    });
   }
 
   login(data: LoginPayload) {
@@ -71,7 +76,10 @@ export class NgGqlUserService {
         message: this.defaultMessageFragments,
         action: this.defaultActionFragments,
       },
-      data
+      data,
+      {
+        requiredFields: ['login', 'deviceName', 'captcha'],
+      }
     );
   }
 

@@ -8,18 +8,23 @@ export interface BaseResponse {
   action: Action;
 }
 
-export interface RegistrationPayload {
+export interface LoginPayload {
   login: string;
-  phone?: Phone;
   password?: string;
+  otp?: string;
+  deviceName: string;
+  captcha: Captcha;
+}
+
+export type RegistrationPayload = Omit<LoginPayload, 'deviceName'|'otp'> & {
+  phone?: Phone;
   otp: string;
   firstName: string;
   lastName?: string;
   customFields?: {
     [key: string]: string | any | null;
   };
-  captcha: Captcha;
-}
+};
 
 export interface RegistrationUserResponse {
   user: User;
@@ -37,14 +42,6 @@ export interface OTPResponse {
   nextOTPAfterSeconds: number;
   message: Message;
   action: Action;
-}
-
-export interface LoginPayload {
-  login: string;
-  password?: string;
-  otp?: string;
-  deviceName: string;
-  captcha: Captcha;
 }
 
 export interface LogoutPayload {
