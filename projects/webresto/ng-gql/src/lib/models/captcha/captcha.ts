@@ -1,6 +1,12 @@
 export interface CaptchaJob {
   id: string;
-  task: string;
+  task: CaptchaTask;
+}
+
+export interface CaptchaTask {
+  difficulty: bigint;
+  salt: string;
+  hash: string;
 }
 
 export interface CaptchaJobPayload {

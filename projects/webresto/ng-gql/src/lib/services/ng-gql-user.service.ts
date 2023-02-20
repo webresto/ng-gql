@@ -14,6 +14,7 @@ import {
   CaptchaJob,
   CaptchaJobPayload,
   NgGqlConfig,
+  CaptchaTask,
 } from '../models';
 import {
   ACTION_FRAGMENTS,
@@ -25,6 +26,7 @@ import {
 import type { BehaviorSubject, Subscription } from 'rxjs';
 import { concatMap, map, catchError, of } from 'rxjs';
 import { isValue } from '@axrl/common';
+import Puzzle from 'crypto-puzzle';
 
 type UserBusEvent = {
   /** Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции */
@@ -36,9 +38,7 @@ type UserBusEvent = {
   | {
       type: 'captchaGetJob';
       payload: CaptchaJobPayload;
-      successCb?: (
-        result: Record<'captchaGetJob', CaptchaJob | CaptchaJob[]>
-      ) => void;
+      successCb?: (result: Record<'captchaGetJob', CaptchaJob>) => void;
     }
   | {
       type: 'registration';
@@ -176,24 +176,39 @@ export class NgGqlUserService {
   }
 
   private _captchaGetJob(data: CaptchaJobPayload) {
-    return this.ngGqlService.customQuery$<
-      CaptchaJob,
-      'captchaGetJob',
-      CaptchaJobPayload
-    >('captchaGetJob', this.defaultCaptchaGetJobFragments, data);
+    return this.ngGqlService
+      .customQuery$<CaptchaJob, 'captchaGetJob', CaptchaJobPayload>(
+        'captchaGetJob',
+        this.defaultCaptchaGetJobFragments,
+        data
+      )
+      .pipe(
+        map((data) => {
+          const job = Array.isArray(data.captchaGetJob)
+            ? data.captchaGetJob[0]
+            : data.captchaGetJob;
+          const task = <string>(<unknown>job.task);
+          job.task = <CaptchaTask>JSON.parse(task);
+          return {
+            ['captchaGetJob']: job,
+          };
+        })
+      );
   }
 
   captchaGetJob(
     label: string,
-    successCb?: (
-      result: Record<'captchaGetJob', CaptchaJob | CaptchaJob[]>
-    ) => void
+    successCb?: (result: Record<'captchaGetJob', CaptchaJob>) => void
   ): void {
     this._userBus.emit({
       type: 'captchaGetJob',
       payload: { label },
       successCb,
     });
+  }
+
+  getCaptchaSolution(task:CaptchaTask) {
+    return Puzzle.solve(task);
   }
 
   private _userBus = new EventEmitter<UserBusEvent>();
