@@ -1,3 +1,4 @@
+import { User } from './../models/user/user';
 import { Injectable } from '@angular/core';
 import { NgGqlModule } from '../ng-gql.module';
 import { Dish, Group, NavigationBase, Order, PaymentMethod } from '../models';
@@ -42,5 +43,12 @@ export class NgGqlStorageService {
 
   updatePaymentMethods<T extends PaymentMethod>(methods: T[]) {
     this._paymentMethods.next(methods);
+  }
+
+  private _user = createSubject<User | null>(null);
+  user = getFilteredData(this._user);
+
+  updateUser<T extends User>(user: T) {
+    this._user.next(user);
   }
 }

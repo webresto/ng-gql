@@ -43,6 +43,7 @@
 
 - [BaseModelWithCustomData](interfaces/BaseModelWithCustomData.md)
 - [CaptchaJob](interfaces/CaptchaJob.md)
+- [CaptchaTask](interfaces/CaptchaTask.md)
 - [CaptchaJobPayload](interfaces/CaptchaJobPayload.md)
 - [Captcha](interfaces/Captcha.md)
 - [Customer](interfaces/Customer.md)
@@ -446,7 +447,7 @@ ___
 
 ### RegistrationPayload
 
-Ƭ **RegistrationPayload**: `Omit`<[`LoginPayload`](interfaces/LoginPayload.md), ``"deviceName"`` \| ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName`: `string` ; `lastName?`: `string` ; `customFields?`: { `[key: string]`: `string` \| `any` \| ``null``;  }  }
+Ƭ **RegistrationPayload**: `Omit`<[`LoginPayload`](interfaces/LoginPayload.md), ``"deviceName"`` \| ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName?`: `string` ; `lastName?`: `string` ; `customFields?`: { `[key: string]`: `string` \| `any` \| ``null``;  }  }
 
 ___
 

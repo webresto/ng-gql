@@ -17,4 +17,4 @@ ___
 
 ### task
 
-• **task**: `string`
+• **task**: [`CaptchaTask`](CaptchaTask.md)

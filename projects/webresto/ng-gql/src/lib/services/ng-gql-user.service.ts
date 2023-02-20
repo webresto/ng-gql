@@ -94,7 +94,7 @@ export class NgGqlUserService {
       },
       data,
       {
-        requiredFields: ['login', 'otp', 'firstName', 'captcha'],
+        requiredFields: ['login', 'otp', 'captcha'],
       }
     );
   }
@@ -163,16 +163,17 @@ export class NgGqlUserService {
   }
 
   getUser(userId: string) {
-    return this.ngGqlService.queryAndSubscribe(
-      'user',
-      'user',
-      this.defaultUserFragments,
-      'id',
-      {
+    return this.ngGqlService
+      .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id', {
         query: { userId },
         subscribe: { userId },
-      }
-    );
+      })
+      .pipe(
+        map((result) => {
+          this.ngGqlStorage.updateUser(result[0]);
+          return result;
+        })
+      );
   }
 
   private _captchaGetJob(data: CaptchaJobPayload) {
@@ -207,7 +208,7 @@ export class NgGqlUserService {
     });
   }
 
-  getCaptchaSolution(task:CaptchaTask) {
+  getCaptchaSolution(task: CaptchaTask) {
     return Puzzle.solve(task);
   }
 
@@ -220,9 +221,6 @@ export class NgGqlUserService {
           case 'OTPRequest':
             return this._otpRequest(busEvent.payload).pipe(
               map((result) => {
-                if (isValue(busEvent.loading)) {
-                  busEvent.loading.next(false);
-                }
                 if (isValue(busEvent.successCb)) {
                   busEvent.successCb(result);
                 }
@@ -231,9 +229,6 @@ export class NgGqlUserService {
           case 'login':
             return this._login(busEvent.payload).pipe(
               map((result) => {
-                if (isValue(busEvent.loading)) {
-                  busEvent.loading.next(false);
-                }
                 if (isValue(busEvent.successCb)) {
                   busEvent.successCb(result);
                 }
@@ -242,9 +237,6 @@ export class NgGqlUserService {
           case 'registration':
             return this._registration(busEvent.payload).pipe(
               map((result) => {
-                if (isValue(busEvent.loading)) {
-                  busEvent.loading.next(false);
-                }
                 if (isValue(busEvent.successCb)) {
                   busEvent.successCb(result);
                 }
@@ -253,9 +245,6 @@ export class NgGqlUserService {
           case 'captchaGetJob':
             return this._captchaGetJob(busEvent.payload).pipe(
               map((result) => {
-                if (isValue(busEvent.loading)) {
-                  busEvent.loading.next(false);
-                }
                 if (isValue(busEvent.successCb)) {
                   busEvent.successCb(result);
                 }
@@ -264,6 +253,11 @@ export class NgGqlUserService {
         }
       };
       return reducer(event).pipe(
+        map(() => {
+          if (isValue(event.loading)) {
+            event.loading.next(false);
+          }
+        }),
         catchError((err: unknown) => {
           if (isValue(event.loading)) {
             event.loading.next(false);

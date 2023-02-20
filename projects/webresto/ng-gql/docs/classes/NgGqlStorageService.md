@@ -13,6 +13,7 @@
 - [menu](NgGqlStorageService.md#menu)
 - [navigation](NgGqlStorageService.md#navigation)
 - [paymentMethods](NgGqlStorageService.md#paymentmethods)
+- [user](NgGqlStorageService.md#user)
 
 ### Methods
 
@@ -21,6 +22,7 @@
 - [updateMenuGroups](NgGqlStorageService.md#updatemenugroups)
 - [updateNavigation](NgGqlStorageService.md#updatenavigation)
 - [updatePaymentMethods](NgGqlStorageService.md#updatepaymentmethods)
+- [updateUser](NgGqlStorageService.md#updateuser)
 
 ## Constructors
 
@@ -57,6 +59,12 @@ ___
 ### paymentMethods
 
 • **paymentMethods**: `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
+
+___
+
+### user
+
+• **user**: `Observable`<[`User`](../interfaces/User.md)\>
 
 ## Methods
 
@@ -163,6 +171,28 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `methods` | `T`[] |
+
+#### Returns
+
+`void`
+
+___
+
+### updateUser
+
+▸ **updateUser**<`T`\>(`user`): `void`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`User`](../interfaces/User.md) |
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `user` | `T` |
 
 #### Returns
 

@@ -13,6 +13,7 @@
 - [login](NgGqlUserService.md#login)
 - [getUser](NgGqlUserService.md#getuser)
 - [captchaGetJob](NgGqlUserService.md#captchagetjob)
+- [getCaptchaSolution](NgGqlUserService.md#getcaptchasolution)
 
 ## Constructors
 
@@ -37,13 +38,14 @@
 
 ### registration
 
-▸ **registration**(`data`): `void`
+▸ **registration**(`data`, `successCb?`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | [`RegistrationPayload`](../README.md#registrationpayload) |
+| `successCb?` | (`result`: `Record`<``"registration"``, [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>) => `void` |
 
 #### Returns
 
@@ -53,13 +55,14 @@ ___
 
 ### otpRequest
 
-▸ **otpRequest**(`data`): `void`
+▸ **otpRequest**(`data`, `successCb?`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | [`OTPRequestPayload`](../interfaces/OTPRequestPayload.md) |
+| `successCb?` | (`result`: `Record`<``"OTPRequest"``, [`OTPResponse`](../interfaces/OTPResponse.md)\>) => `void` |
 
 #### Returns
 
@@ -69,13 +72,14 @@ ___
 
 ### login
 
-▸ **login**(`data`): `void`
+▸ **login**(`data`, `successCb?`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | [`LoginPayload`](../interfaces/LoginPayload.md) |
+| `successCb?` | (`result`: `Record`<``"login"``, [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>) => `void` |
 
 #### Returns
 
@@ -101,14 +105,31 @@ ___
 
 ### captchaGetJob
 
-▸ **captchaGetJob**(`label`): `void`
+▸ **captchaGetJob**(`label`, `successCb?`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `label` | `string` |
+| `successCb?` | (`result`: `Record`<``"captchaGetJob"``, [`CaptchaJob`](../interfaces/CaptchaJob.md)\>) => `void` |
 
 #### Returns
 
 `void`
+
+___
+
+### getCaptchaSolution
+
+▸ **getCaptchaSolution**(`task`): `Promise`<`bigint`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `task` | [`CaptchaTask`](../interfaces/CaptchaTask.md) |
+
+#### Returns
+
+`Promise`<`bigint`\>
