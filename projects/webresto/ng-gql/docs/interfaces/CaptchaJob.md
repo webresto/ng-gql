@@ -1,4 +1,10 @@
-# Interface: CaptchaJob
+# Interface: CaptchaJob<T\>
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | `string` |
 
 ## Table of contents
 
@@ -17,4 +23,4 @@ ___
 
 ### task
 
-• **task**: [`CaptchaTask`](CaptchaTask.md)
+• **task**: `T`

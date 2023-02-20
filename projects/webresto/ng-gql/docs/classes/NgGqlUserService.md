@@ -105,14 +105,20 @@ ___
 
 ### captchaGetJob
 
-▸ **captchaGetJob**(`label`, `successCb?`): `void`
+▸ **captchaGetJob**<`T`\>(`label`, `successCb?`): `void`
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`CaptchaTask`](../interfaces/CaptchaTask.md) |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `label` | `string` |
-| `successCb?` | (`result`: `Record`<``"captchaGetJob"``, [`CaptchaJob`](../interfaces/CaptchaJob.md)\>) => `void` |
+| `successCb?` | (`result`: `Record`<``"captchaGetJob"``, [`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>\>) => `void` |
 
 #### Returns
 

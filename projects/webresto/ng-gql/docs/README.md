@@ -287,7 +287,7 @@ ___
 
 ### CAPTCHA\_GET\_JOB\_FRAGMENTS
 
-• `Const` **CAPTCHA\_GET\_JOB\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`CaptchaJob`](interfaces/CaptchaJob.md)\>\>
+• `Const` **CAPTCHA\_GET\_JOB\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`CaptchaJob`](interfaces/CaptchaJob.md)<`string`\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<CaptchaJob>.
 

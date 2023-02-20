@@ -38,7 +38,7 @@ type UserBusEvent = {
   | {
       type: 'captchaGetJob';
       payload: CaptchaJobPayload;
-      successCb?: (result: Record<'captchaGetJob', CaptchaJob>) => void;
+      successCb?: (result: Record<'captchaGetJob', CaptchaJob<any>>) => void;
     }
   | {
       type: 'registration';
@@ -176,20 +176,25 @@ export class NgGqlUserService {
       );
   }
 
-  private _captchaGetJob(data: CaptchaJobPayload) {
+  private _captchaGetJob<T extends CaptchaTask>(data: CaptchaJobPayload) {
     return this.ngGqlService
-      .customQuery$<CaptchaJob, 'captchaGetJob', CaptchaJobPayload>(
+      .customQuery$<CaptchaJob<T>, 'captchaGetJob', CaptchaJobPayload>(
         'captchaGetJob',
         this.defaultCaptchaGetJobFragments,
         data
       )
       .pipe(
         map((data) => {
-          const job = Array.isArray(data.captchaGetJob)
+          const job: CaptchaJob<T> = Array.isArray(data.captchaGetJob)
             ? data.captchaGetJob[0]
             : data.captchaGetJob;
-          const task = <string>(<unknown>job.task);
-          job.task = <CaptchaTask>JSON.parse(task);
+          if (typeof job.task === 'string') {
+            try {
+              job.task = JSON.parse(job.task);
+            } catch (err) {
+              console.log(err);
+            }
+          }
           return {
             ['captchaGetJob']: job,
           };
@@ -197,9 +202,9 @@ export class NgGqlUserService {
       );
   }
 
-  captchaGetJob(
+  captchaGetJob<T extends CaptchaTask>(
     label: string,
-    successCb?: (result: Record<'captchaGetJob', CaptchaJob>) => void
+    successCb?: (result: Record<'captchaGetJob', CaptchaJob<T>>) => void
   ): void {
     this._userBus.emit({
       type: 'captchaGetJob',
