@@ -99,10 +99,16 @@ export class NgGqlUserService {
     );
   }
 
-  registration(data: RegistrationPayload): void {
+  registration(
+    data: RegistrationPayload,
+    successCb?: (
+      result: Record<'registration', RegistrationUserResponse>
+    ) => void
+  ): void {
     this._userBus.emit({
       type: 'registration',
       payload: data,
+      successCb,
     });
   }
 
@@ -115,10 +121,14 @@ export class NgGqlUserService {
       requiredFields: ['login', 'captcha'],
     });
   }
-  otpRequest(data: OTPRequestPayload): void {
+  otpRequest(
+    data: OTPRequestPayload,
+    successCb?: (result: Record<'OTPRequest', OTPResponse>) => void
+  ): void {
     this._userBus.emit({
       type: 'OTPRequest',
       payload: data,
+      successCb,
     });
   }
 
@@ -141,10 +151,14 @@ export class NgGqlUserService {
     );
   }
 
-  login(data: LoginPayload): void {
+  login(
+    data: LoginPayload,
+    successCb?: (result: Record<'login', RegistrationUserResponse>) => void
+  ): void {
     this._userBus.emit({
       type: 'login',
       payload: data,
+      successCb,
     });
   }
 
@@ -169,10 +183,16 @@ export class NgGqlUserService {
     >('captchaGetJob', this.defaultCaptchaGetJobFragments, data);
   }
 
-  captchaGetJob(label: string): void {
+  captchaGetJob(
+    label: string,
+    successCb?: (
+      result: Record<'captchaGetJob', CaptchaJob | CaptchaJob[]>
+    ) => void
+  ): void {
     this._userBus.emit({
       type: 'captchaGetJob',
       payload: { label },
+      successCb,
     });
   }
 
@@ -251,7 +271,4 @@ export class NgGqlUserService {
     error: () => {},
     complete: () => this._userBusSubscription$.unsubscribe(),
   });
-
-  
-
 }
