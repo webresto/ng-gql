@@ -47,7 +47,7 @@ interface SlugAndConcept {
   concept: string | 'origin';
 }
 
-/** @private */
+/** @inheritdoc */
 type PartialGroupNullable = Pick<Group, 'slug'> & {
   id: string | null;
 };

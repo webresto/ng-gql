@@ -38,14 +38,14 @@
 
 ### registration
 
-▸ **registration**(`data`, `successCb?`): `void`
+▸ **registration**(`data`, `successCb`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | [`RegistrationPayload`](../README.md#registrationpayload) |
-| `successCb?` | (`result`: `Record`<``"registration"``, [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>) => `void` |
+| `successCb` | (`result`: `Record`<``"registration"``, [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>) => `void` |
 
 #### Returns
 
@@ -55,14 +55,14 @@ ___
 
 ### otpRequest
 
-▸ **otpRequest**(`data`, `successCb?`): `void`
+▸ **otpRequest**(`data`, `successCb`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | [`OTPRequestPayload`](../interfaces/OTPRequestPayload.md) |
-| `successCb?` | (`result`: `Record`<``"OTPRequest"``, [`OTPResponse`](../interfaces/OTPResponse.md)\>) => `void` |
+| `successCb` | (`result`: `Record`<``"OTPRequest"``, [`OTPResponse`](../interfaces/OTPResponse.md)\>) => `void` |
 
 #### Returns
 
@@ -72,14 +72,14 @@ ___
 
 ### login
 
-▸ **login**(`data`, `successCb?`): `void`
+▸ **login**(`data`, `successCb`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | [`LoginPayload`](../interfaces/LoginPayload.md) |
-| `successCb?` | (`result`: `Record`<``"login"``, [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>) => `void` |
+| `successCb` | (`result`: `Record`<``"login"``, [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>) => `void` |
 
 #### Returns
 
@@ -105,7 +105,7 @@ ___
 
 ### captchaGetJob
 
-▸ **captchaGetJob**<`T`\>(`label`, `successCb?`): `void`
+▸ **captchaGetJob**<`T`\>(`label`, `successCb`): `void`
 
 #### Type parameters
 
@@ -118,7 +118,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `label` | `string` |
-| `successCb?` | (`result`: `Record`<``"captchaGetJob"``, [`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>\>) => `void` |
+| `successCb` | (`result`: `Record`<``"captchaGetJob"``, [`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>\>) => `void` |
 
 #### Returns
 

@@ -2,24 +2,18 @@
 {
   "extends": "./tsconfig.lib.json",
   "compilerOptions": {
-    "declarationMap": false
+    "declarationMap": false,
   },
   "angularCompilerOptions": {
     "compilationMode": "partial"
   },
   "typedocOptions": {
-    "entryPoints": [
-      "./src/public-api.ts"
-    ],
+    "entryPoints": ["./src/public-api.ts"],
     "out": "docs",
-    "plugin": [
-      "typedoc-plugin-markdown"
-    ],
+    "plugin": ["typedoc-plugin-markdown"],
     "excludePrivate": true,
     "categorizeByGroup": false,
-    "exclude": [
-      "**/*+(.spec|.module).ts"
-    ],
+    "exclude": ["**/*+(.spec|.module).ts"],
     "disableSources": true,
     "readme": "none",
     "emit": "docs",
@@ -30,6 +24,6 @@
     "darkHighlightTheme": "material-theme-darker",
     "theme": "markdown",
     "entryPointStrategy": "expand",
-    "pretty": true,
+    "pretty": true
   }
 }

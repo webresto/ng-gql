@@ -25,37 +25,37 @@ import {
 } from '../injection-tokens';
 import type { BehaviorSubject, Subscription } from 'rxjs';
 import { concatMap, map, catchError, of } from 'rxjs';
-import { isValue } from '@axrl/common';
+import { deepClone, isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
 
 type UserBusEvent = {
   /** Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции */
   errorCb?: (err: unknown) => void;
 
-  /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
+  /** BehaviorSubject, отслеживающий состояние выполняемого действия. */
   loading?: BehaviorSubject<boolean>;
 } & (
   | {
       type: 'captchaGetJob';
       payload: CaptchaJobPayload;
-      successCb?: (result: Record<'captchaGetJob', CaptchaJob<any>>) => void;
+      successCb: (result: Record<'captchaGetJob', CaptchaJob<any>>) => void;
     }
   | {
       type: 'registration';
       payload: RegistrationPayload;
-      successCb?: (
+      successCb: (
         result: Record<'registration', RegistrationUserResponse>
       ) => void;
     }
   | {
       type: 'OTPRequest';
       payload: OTPRequestPayload;
-      successCb?: (result: Record<'OTPRequest', OTPResponse>) => void;
+      successCb: (result: Record<'OTPRequest', OTPResponse>) => void;
     }
   | {
       type: 'login';
       payload: LoginPayload;
-      successCb?: (result: Record<'login', RegistrationUserResponse>) => void;
+      successCb: (result: Record<'login', RegistrationUserResponse>) => void;
     }
 );
 
@@ -101,7 +101,7 @@ export class NgGqlUserService {
 
   registration(
     data: RegistrationPayload,
-    successCb?: (
+    successCb: (
       result: Record<'registration', RegistrationUserResponse>
     ) => void
   ): void {
@@ -123,7 +123,7 @@ export class NgGqlUserService {
   }
   otpRequest(
     data: OTPRequestPayload,
-    successCb?: (result: Record<'OTPRequest', OTPResponse>) => void
+    successCb: (result: Record<'OTPRequest', OTPResponse>) => void
   ): void {
     this._userBus.emit({
       type: 'OTPRequest',
@@ -153,7 +153,7 @@ export class NgGqlUserService {
 
   login(
     data: LoginPayload,
-    successCb?: (result: Record<'login', RegistrationUserResponse>) => void
+    successCb: (result: Record<'login', RegistrationUserResponse>) => void
   ): void {
     this._userBus.emit({
       type: 'login',
@@ -185,9 +185,11 @@ export class NgGqlUserService {
       )
       .pipe(
         map((data) => {
-          const job: CaptchaJob<T> = Array.isArray(data.captchaGetJob)
-            ? data.captchaGetJob[0]
-            : data.captchaGetJob;
+          const job: CaptchaJob<T> = deepClone(
+            Array.isArray(data.captchaGetJob)
+              ? data.captchaGetJob[0]
+              : data.captchaGetJob
+          );
           if (typeof job.task === 'string') {
             try {
               job.task = JSON.parse(job.task);
@@ -204,7 +206,7 @@ export class NgGqlUserService {
 
   captchaGetJob<T extends CaptchaTask>(
     label: string,
-    successCb?: (result: Record<'captchaGetJob', CaptchaJob<T>>) => void
+    successCb: (result: Record<'captchaGetJob', CaptchaJob<T>>) => void
   ): void {
     this._userBus.emit({
       type: 'captchaGetJob',
@@ -226,33 +228,25 @@ export class NgGqlUserService {
           case 'OTPRequest':
             return this._otpRequest(busEvent.payload).pipe(
               map((result) => {
-                if (isValue(busEvent.successCb)) {
-                  busEvent.successCb(result);
-                }
+                busEvent.successCb(result);
               })
             );
           case 'login':
             return this._login(busEvent.payload).pipe(
               map((result) => {
-                if (isValue(busEvent.successCb)) {
-                  busEvent.successCb(result);
-                }
+                busEvent.successCb(result);
               })
             );
           case 'registration':
             return this._registration(busEvent.payload).pipe(
               map((result) => {
-                if (isValue(busEvent.successCb)) {
-                  busEvent.successCb(result);
-                }
+                busEvent.successCb(result);
               })
             );
           case 'captchaGetJob':
             return this._captchaGetJob(busEvent.payload).pipe(
               map((result) => {
-                if (isValue(busEvent.successCb)) {
-                  busEvent.successCb(result);
-                }
+                busEvent.successCb(result);
               })
             );
         }
