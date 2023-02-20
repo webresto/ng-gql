@@ -10,6 +10,8 @@
     "apollo-angular",
     "graphql",
     "subscriptions-transport-ws",
-    "apollo3-cache-persist"
+    "apollo3-cache-persist",
+    "@axrl/common",
+    "crypto-puzzle"
   ]
 }

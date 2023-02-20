@@ -23,8 +23,8 @@ import {
   OTP_RESPONSE_FRAGMENTS,
   CAPTCHA_GET_JOB_FRAGMENTS,
 } from '../injection-tokens';
-import type { BehaviorSubject, Subscription } from 'rxjs';
-import { concatMap, map, catchError, of } from 'rxjs';
+import { BehaviorSubject, Subscription,  } from 'rxjs';
+import { concatMap,switchMap, map, catchError, of } from 'rxjs';
 import { deepClone, isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
 
@@ -94,7 +94,11 @@ export class NgGqlUserService {
       },
       data,
       {
-        requiredFields: ['login', 'otp', 'captcha'],
+        requiredFields: ['login', 'otp'],
+        fieldsTypeMap: new Map([
+          ['phone', 'InputPhone!'],
+          ['captcha', 'Captcha!'],
+        ]),
       }
     );
   }
@@ -105,6 +109,7 @@ export class NgGqlUserService {
       result: Record<'registration', RegistrationUserResponse>
     ) => void
   ): void {
+    console.log(data);
     this._userBus.emit({
       type: 'registration',
       payload: data,
@@ -118,7 +123,10 @@ export class NgGqlUserService {
       'OTPRequest',
       OTPRequestPayload
     >('OTPRequest', this.defaultOTPResponceFragments, data, {
-      requiredFields: ['login', 'captcha'],
+      requiredFields: ['login'],
+      fieldsTypeMap: new Map([
+        ['captcha', 'Captcha!'],
+      ]),
     });
   }
   otpRequest(
@@ -146,7 +154,10 @@ export class NgGqlUserService {
       },
       data,
       {
-        requiredFields: ['login', 'deviceName', 'captcha'],
+        requiredFields: ['login', 'deviceName'],
+        fieldsTypeMap: new Map([
+          ['captcha', 'Captcha!'],
+        ]),
       }
     );
   }
@@ -222,41 +233,56 @@ export class NgGqlUserService {
   private _userBus = new EventEmitter<UserBusEvent>();
 
   private userHttpBus$ = this._userBus.asObservable().pipe(
-    concatMap((event) => {
+    switchMap((event) => {
       const reducer = (busEvent: UserBusEvent) => {
         switch (busEvent.type) {
           case 'OTPRequest':
             return this._otpRequest(busEvent.payload).pipe(
               map((result) => {
-                busEvent.successCb(result);
+                if (isValue(event.loading)) {
+                  event.loading.next(false);
+                }
+                setTimeout(() => {
+                  busEvent.successCb(result);
+                }, 100);
               })
             );
           case 'login':
             return this._login(busEvent.payload).pipe(
               map((result) => {
-                busEvent.successCb(result);
+                if (isValue(event.loading)) {
+                  event.loading.next(false);
+                }
+                setTimeout(() => {
+                  busEvent.successCb(result);
+                }, 100);
               })
             );
           case 'registration':
             return this._registration(busEvent.payload).pipe(
               map((result) => {
-                busEvent.successCb(result);
+                if (isValue(event.loading)) {
+                  event.loading.next(false);
+                }
+                setTimeout(() => {
+                  busEvent.successCb(result);
+                }, 100);
               })
             );
           case 'captchaGetJob':
             return this._captchaGetJob(busEvent.payload).pipe(
               map((result) => {
-                busEvent.successCb(result);
+                if (isValue(event.loading)) {
+                  event.loading.next(false);
+                }
+                setTimeout(() => {
+                  busEvent.successCb(result);
+                }, 100);
               })
             );
         }
       };
       return reducer(event).pipe(
-        map(() => {
-          if (isValue(event.loading)) {
-            event.loading.next(false);
-          }
-        }),
         catchError((err: unknown) => {
           if (isValue(event.loading)) {
             event.loading.next(false);
