@@ -31,13 +31,14 @@
 
 ### constructor
 
-• **new NqGqlLocalStorageWrapper**(`config`)
+• **new NqGqlLocalStorageWrapper**(`config`, `orderIdFactoryFn`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
+| `orderIdFactoryFn` | () => `string` |
 
 ## Methods
 
@@ -92,14 +93,15 @@ ___
 
 ### setToStorage
 
-▸ **setToStorage**(`key`, `orderId`): `void`
+▸ **setToStorage**(`key`, `orderId`, `emitEvent?`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `key` | `string` |
-| `orderId` | `string` |
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `key` | `string` | `undefined` | ключ, с которым данные будут записаны в Storage |
+| `orderId` | `string` | `undefined` | сохраняемое значение |
+| `emitEvent` | `boolean` | `true` | требуется ли создавать StorageEvent для подписчиков об изменении значения |
 
 #### Returns
 
@@ -141,7 +143,7 @@ ___
 
 ### getOrderId
 
-▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`): `undefined` \| `string`
+▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`): `string`
 
 **`Method`**
 
@@ -163,7 +165,7 @@ Id хранится в виде обьекта, содержащего поми�
 
 #### Returns
 
-`undefined` \| `string`
+`string`
 
 Возвращает orderId, сохраненный ранее в localStorage с ключом
 

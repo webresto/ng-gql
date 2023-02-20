@@ -81,7 +81,7 @@ ___
 
 ### getOrderId
 
-▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`): `undefined` \| `string`
+▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`): `string`
 
 **`Method`**
 
@@ -100,7 +100,7 @@ this.StorageWrapper.getOrderId()
 
 #### Returns
 
-`undefined` \| `string`
+`string`
 
 ___
 

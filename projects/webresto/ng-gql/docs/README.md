@@ -4,6 +4,7 @@
 
 ### Variables
 
+- [ORDERID\_FACTORY\_FN](README.md#orderid_factory_fn)
 - [IMAGE\_FRAGMENTS](README.md#image_fragments)
 - [MESSAGE\_FRAGMENTS](README.md#message_fragments)
 - [ACTION\_FRAGMENTS](README.md#action_fragments)
@@ -17,10 +18,12 @@
 - [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
 - [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
 - [PHONE\_FRAGMENT](README.md#phone_fragment)
+- [OTP\_RESPONSE\_FRAGMENTS](README.md#otp_response_fragments)
 - [USER\_DEVICES\_FRAGMENTS](README.md#user_devices_fragments)
 - [USER\_LOCATION\_FRAGMENTS](README.md#user_location_fragments)
 - [BONUS\_PROGRAM\_FRAGMENTS](README.md#bonus_program_fragments)
 - [USER\_BONUS\_PROGRAM\_FRAGMENTS](README.md#user_bonus_program_fragments)
+- [CAPTCHA\_GET\_JOB\_FRAGMENTS](README.md#captcha_get_job_fragments)
 - [USER\_FRAGMENTS](README.md#user_fragments)
 - [defaultDishFragments](README.md#defaultdishfragments)
 - [defaultMessageFragments](README.md#defaultmessagefragments)
@@ -40,6 +43,7 @@
 
 - [BaseModelWithCustomData](interfaces/BaseModelWithCustomData.md)
 - [CaptchaJob](interfaces/CaptchaJob.md)
+- [CaptchaJobPayload](interfaces/CaptchaJobPayload.md)
 - [Captcha](interfaces/Captcha.md)
 - [Customer](interfaces/Customer.md)
 - [Phone](interfaces/Phone.md)
@@ -76,11 +80,10 @@
 - [OrderAdditionalFields](interfaces/OrderAdditionalFields.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
 - [BaseResponse](interfaces/BaseResponse.md)
-- [RegistrationPayload](interfaces/RegistrationPayload.md)
+- [LoginPayload](interfaces/LoginPayload.md)
 - [RegistrationUserResponse](interfaces/RegistrationUserResponse.md)
 - [OTPRequestPayload](interfaces/OTPRequestPayload.md)
 - [OTPResponse](interfaces/OTPResponse.md)
-- [LoginPayload](interfaces/LoginPayload.md)
 - [LogoutPayload](interfaces/LogoutPayload.md)
 - [User](interfaces/User.md)
 - [BonusProgram](interfaces/BonusProgram.md)
@@ -98,6 +101,7 @@
 - [GQLRequestVariables](README.md#gqlrequestvariables)
 - [OrderState](README.md#orderstate)
 - [OrderForm](README.md#orderform)
+- [RegistrationPayload](README.md#registrationpayload)
 - [ValuesOrBoolean](README.md#valuesorboolean)
 
 ### Classes
@@ -127,6 +131,14 @@
 - [CartBusEventSend](interfaces/CartBusEventSend.md)
 
 ## Variables
+
+### ORDERID\_FACTORY\_FN
+
+• `Const` **ORDERID\_FACTORY\_FN**: `InjectionToken`<() => `string`\>
+
+Метод для генерации orderId
+
+___
 
 ### IMAGE\_FRAGMENTS
 
@@ -232,6 +244,14 @@ InjectionToken с объектом ValuesOrBoolean<Phone>.
 
 ___
 
+### OTP\_RESPONSE\_FRAGMENTS
+
+• `Const` **OTP\_RESPONSE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OTPResponse`](interfaces/OTPResponse.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<OTPResponse>.
+
+___
+
 ### USER\_DEVICES\_FRAGMENTS
 
 • `Const` **USER\_DEVICES\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserDevice`](interfaces/UserDevice.md)\>\>
@@ -261,6 +281,14 @@ ___
 • `Const` **USER\_BONUS\_PROGRAM\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserBonusProgram`](interfaces/UserBonusProgram.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<UserBonusProgram>.
+
+___
+
+### CAPTCHA\_GET\_JOB\_FRAGMENTS
+
+• `Const` **CAPTCHA\_GET\_JOB\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`CaptchaJob`](interfaces/CaptchaJob.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<CaptchaJob>.
 
 ___
 
@@ -413,6 +441,12 @@ ___
 ### OrderForm
 
 Ƭ **OrderForm**: [`Order`](interfaces/Order.md) & [`OrderAdditionalFields`](interfaces/OrderAdditionalFields.md)
+
+___
+
+### RegistrationPayload
+
+Ƭ **RegistrationPayload**: `Omit`<[`LoginPayload`](interfaces/LoginPayload.md), ``"deviceName"`` \| ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName`: `string` ; `lastName?`: `string` ; `customFields?`: { `[key: string]`: `string` \| `any` \| ``null``;  }  }
 
 ___
 

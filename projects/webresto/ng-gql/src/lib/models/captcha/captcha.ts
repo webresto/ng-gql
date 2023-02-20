@@ -1,16 +1,20 @@
 export interface CaptchaJob {
-  id: string
-  task: string
+  id: string;
+  task: string;
+}
+
+export interface CaptchaJobPayload {
+  label: string;
 }
 
 export interface Captcha {
   /**
    * Captcha job ID
-  */
-  id: string
+   */
+  id: string;
 
   /**
    * Resolved captcha
    *  */
-  solution: string
+  solution: string;
 }

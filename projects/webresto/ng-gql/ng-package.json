@@ -11,6 +11,7 @@
     "graphql",
     "subscriptions-transport-ws",
     "apollo3-cache-persist",
-    "@axrl/common"
+    "@axrl/common",
+    "crypto-puzzle"
   ]
 }

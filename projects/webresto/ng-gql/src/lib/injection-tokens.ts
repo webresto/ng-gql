@@ -1,3 +1,4 @@
+import { CaptchaJob } from './models/captcha/captcha';
 import { isValue } from '@axrl/common';
 import { User } from './models/user/user';
 import { inject, InjectionToken } from '@angular/core';
@@ -428,6 +429,21 @@ export const USER_BONUS_PROGRAM_FRAGMENTS = new InjectionToken<
       BonusProgram: bonusProgramFragments,
       BonusProgramId: true,
       syncedToTime: true,
+    };
+  },
+});
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<CaptchaJob>.
+ */
+export const CAPTCHA_GET_JOB_FRAGMENTS = new InjectionToken<
+  ValuesOrBoolean<CaptchaJob>
+>('CAPTCHA_GET_JOB_FRAGMENTS', {
+  providedIn: NgGqlModule,
+  factory: () => {
+    return {
+      id: true,
+      task: true,
     };
   },
 });
