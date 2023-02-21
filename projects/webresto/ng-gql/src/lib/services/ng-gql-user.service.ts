@@ -23,8 +23,8 @@ import {
   OTP_RESPONSE_FRAGMENTS,
   CAPTCHA_GET_JOB_FRAGMENTS,
 } from '../injection-tokens';
-import { BehaviorSubject, Subscription,  } from 'rxjs';
-import { concatMap,switchMap, map, catchError, of } from 'rxjs';
+import type { BehaviorSubject, Observable } from 'rxjs';
+import { map, catchError, EMPTY, switchMap } from 'rxjs';
 import { deepClone, isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
 
@@ -38,24 +38,22 @@ type UserBusEvent = {
   | {
       type: 'captchaGetJob';
       payload: CaptchaJobPayload;
-      successCb: (result: Record<'captchaGetJob', CaptchaJob<any>>) => void;
+      successCb: (result: CaptchaJob<any>) => void;
     }
   | {
       type: 'registration';
       payload: RegistrationPayload;
-      successCb: (
-        result: Record<'registration', RegistrationUserResponse>
-      ) => void;
+      successCb: (result: RegistrationUserResponse) => void;
     }
   | {
       type: 'OTPRequest';
       payload: OTPRequestPayload;
-      successCb: (result: Record<'OTPRequest', OTPResponse>) => void;
+      successCb: (result: OTPResponse) => void;
     }
   | {
       type: 'login';
       payload: LoginPayload;
-      successCb: (result: Record<'login', RegistrationUserResponse>) => void;
+      successCb: (result: RegistrationUserResponse) => void;
     }
 );
 
@@ -81,33 +79,33 @@ export class NgGqlUserService {
   ) {}
 
   private _registration(data: RegistrationPayload) {
-    return this.ngGqlService.customMutation$<
-      RegistrationUserResponse,
-      'registration',
-      RegistrationPayload
-    >(
-      'registration',
-      {
-        user: this.defaultUserFragments,
-        message: this.defaultMessageFragments,
-        action: this.defaultActionFragments,
-      },
-      data,
-      {
-        requiredFields: ['login', 'otp'],
-        fieldsTypeMap: new Map([
-          ['phone', 'InputPhone!'],
-          ['captcha', 'Captcha!'],
-        ]),
-      }
-    );
+    return this.ngGqlService
+      .customMutation$<
+        RegistrationUserResponse,
+        'registration',
+        RegistrationPayload
+      >(
+        'registration',
+        {
+          user: this.defaultUserFragments,
+          message: this.defaultMessageFragments,
+          action: this.defaultActionFragments,
+        },
+        data,
+        {
+          requiredFields: ['login', 'otp'],
+          fieldsTypeMap: new Map([
+            ['phone', 'InputPhone!'],
+            ['captcha', 'Captcha!'],
+          ]),
+        }
+      )
+      .pipe(map((record) => record.registration));
   }
 
   registration(
     data: RegistrationPayload,
-    successCb: (
-      result: Record<'registration', RegistrationUserResponse>
-    ) => void
+    successCb: (result: RegistrationUserResponse) => void
   ): void {
     console.log(data);
     this._userBus.emit({
@@ -118,20 +116,22 @@ export class NgGqlUserService {
   }
 
   private _otpRequest(data: OTPRequestPayload) {
-    return this.ngGqlService.customMutation$<
-      OTPResponse,
-      'OTPRequest',
-      OTPRequestPayload
-    >('OTPRequest', this.defaultOTPResponceFragments, data, {
-      requiredFields: ['login'],
-      fieldsTypeMap: new Map([
-        ['captcha', 'Captcha!'],
-      ]),
-    });
+    return this.ngGqlService
+      .customMutation$<OTPResponse, 'OTPRequest', OTPRequestPayload>(
+        'OTPRequest',
+        this.defaultOTPResponceFragments,
+        data,
+        {
+          requiredFields: ['login'],
+          fieldsTypeMap: new Map([['captcha', 'Captcha!']]),
+        }
+      )
+      .pipe(map((record) => record.OTPRequest));
   }
+
   otpRequest(
     data: OTPRequestPayload,
-    successCb: (result: Record<'OTPRequest', OTPResponse>) => void
+    successCb: (result: OTPResponse) => void
   ): void {
     this._userBus.emit({
       type: 'OTPRequest',
@@ -141,30 +141,26 @@ export class NgGqlUserService {
   }
 
   private _login(data: LoginPayload) {
-    return this.ngGqlService.customMutation$<
-      RegistrationUserResponse,
-      'login',
-      LoginPayload
-    >(
-      'login',
-      {
-        user: this.defaultUserFragments,
-        message: this.defaultMessageFragments,
-        action: this.defaultActionFragments,
-      },
-      data,
-      {
-        requiredFields: ['login', 'deviceName'],
-        fieldsTypeMap: new Map([
-          ['captcha', 'Captcha!'],
-        ]),
-      }
-    );
+    return this.ngGqlService
+      .customMutation$<RegistrationUserResponse, 'login', LoginPayload>(
+        'login',
+        {
+          user: this.defaultUserFragments,
+          message: this.defaultMessageFragments,
+          action: this.defaultActionFragments,
+        },
+        data,
+        {
+          requiredFields: ['login', 'deviceName'],
+          fieldsTypeMap: new Map([['captcha', 'Captcha!']]),
+        }
+      )
+      .pipe(map((record) => record.login));
   }
 
   login(
     data: LoginPayload,
-    successCb: (result: Record<'login', RegistrationUserResponse>) => void
+    successCb: (result: RegistrationUserResponse) => void
   ): void {
     this._userBus.emit({
       type: 'login',
@@ -204,20 +200,21 @@ export class NgGqlUserService {
           if (typeof job.task === 'string') {
             try {
               job.task = JSON.parse(job.task);
+              const difficulty = job.task.difficulty;
+              job.task.difficulty = BigInt(String(difficulty).replace('n', ''));
             } catch (err) {
               console.log(err);
+              return job;
             }
           }
-          return {
-            ['captchaGetJob']: job,
-          };
+          return job;
         })
       );
   }
 
   captchaGetJob<T extends CaptchaTask>(
     label: string,
-    successCb: (result: Record<'captchaGetJob', CaptchaJob<T>>) => void
+    successCb: (result: CaptchaJob<T>) => void
   ): void {
     this._userBus.emit({
       type: 'captchaGetJob',
@@ -232,57 +229,41 @@ export class NgGqlUserService {
 
   private _userBus = new EventEmitter<UserBusEvent>();
 
-  private userHttpBus$ = this._userBus.asObservable().pipe(
+  private userReducer(
+    busEvent: UserBusEvent
+  ): Observable<Parameters<UserBusEvent['successCb']>[0]> {
+    switch (busEvent.type) {
+      case 'OTPRequest':
+        return this._otpRequest(busEvent.payload);
+      case 'login':
+        return this._login(busEvent.payload);
+      case 'registration':
+        return this._registration(busEvent.payload);
+      case 'captchaGetJob':
+        return this._captchaGetJob(busEvent.payload);
+    }
+  }
+
+  userBus$ = this._userBus.asObservable().pipe(
     switchMap((event) => {
-      const reducer = (busEvent: UserBusEvent) => {
-        switch (busEvent.type) {
-          case 'OTPRequest':
-            return this._otpRequest(busEvent.payload).pipe(
-              map((result) => {
-                if (isValue(event.loading)) {
-                  event.loading.next(false);
-                }
-                setTimeout(() => {
-                  busEvent.successCb(result);
-                }, 100);
-              })
-            );
-          case 'login':
-            return this._login(busEvent.payload).pipe(
-              map((result) => {
-                if (isValue(event.loading)) {
-                  event.loading.next(false);
-                }
-                setTimeout(() => {
-                  busEvent.successCb(result);
-                }, 100);
-              })
-            );
-          case 'registration':
-            return this._registration(busEvent.payload).pipe(
-              map((result) => {
-                if (isValue(event.loading)) {
-                  event.loading.next(false);
-                }
-                setTimeout(() => {
-                  busEvent.successCb(result);
-                }, 100);
-              })
-            );
-          case 'captchaGetJob':
-            return this._captchaGetJob(busEvent.payload).pipe(
-              map((result) => {
-                if (isValue(event.loading)) {
-                  event.loading.next(false);
-                }
-                setTimeout(() => {
-                  busEvent.successCb(result);
-                }, 100);
-              })
-            );
-        }
-      };
-      return reducer(event).pipe(
+      return this.userReducer(event).pipe(
+        map((result) => {
+          if (isValue(event.loading)) {
+            event.loading.next(false);
+          }
+          setTimeout(
+            () =>
+              (<
+                (
+                  result:
+                    | CaptchaJob<any>
+                    | RegistrationUserResponse
+                    | OTPResponse
+                ) => void
+              >event.successCb)(result),
+            1
+          );
+        }),
         catchError((err: unknown) => {
           if (isValue(event.loading)) {
             event.loading.next(false);
@@ -294,15 +275,9 @@ export class NgGqlUserService {
             alert(JSON.stringify(err));
           }
           console.log(err);
-          return of(() => {});
+          return EMPTY;
         })
       );
     })
   );
-
-  private _userBusSubscription$: Subscription = this.userHttpBus$.subscribe({
-    next: () => {},
-    error: () => {},
-    complete: () => this._userBusSubscription$.unsubscribe(),
-  });
 }

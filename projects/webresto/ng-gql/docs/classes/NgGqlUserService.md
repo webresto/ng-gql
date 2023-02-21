@@ -45,7 +45,7 @@
 | Name | Type |
 | :------ | :------ |
 | `data` | [`RegistrationPayload`](../README.md#registrationpayload) |
-| `successCb` | (`result`: `Record`<``"registration"``, [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>) => `void` |
+| `successCb` | (`result`: [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)) => `void` |
 
 #### Returns
 
@@ -62,7 +62,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `data` | [`OTPRequestPayload`](../interfaces/OTPRequestPayload.md) |
-| `successCb` | (`result`: `Record`<``"OTPRequest"``, [`OTPResponse`](../interfaces/OTPResponse.md)\>) => `void` |
+| `successCb` | (`result`: [`OTPResponse`](../interfaces/OTPResponse.md)) => `void` |
 
 #### Returns
 
@@ -79,7 +79,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `data` | [`LoginPayload`](../interfaces/LoginPayload.md) |
-| `successCb` | (`result`: `Record`<``"login"``, [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>) => `void` |
+| `successCb` | (`result`: [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)) => `void` |
 
 #### Returns
 
@@ -118,7 +118,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `label` | `string` |
-| `successCb` | (`result`: `Record`<``"captchaGetJob"``, [`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>\>) => `void` |
+| `successCb` | (`result`: [`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>) => `void` |
 
 #### Returns
 
