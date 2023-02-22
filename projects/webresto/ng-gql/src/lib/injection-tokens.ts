@@ -346,8 +346,8 @@ export const OTP_RESPONSE_FRAGMENTS = new InjectionToken<
     return {
       id: true,
       nextOTPAfterSeconds: true,
-      message: defaultMessageFragments,
-      action: defaultActionFragments,
+      //message: defaultMessageFragments,
+      //action: defaultActionFragments,
     };
   },
 });

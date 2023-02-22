@@ -133,7 +133,7 @@ export class NgOrderService {
             title: 'Не удалось отправить ссылку для оплаты.',
             message: error.message,
           });
-          return of(null);
+          return of(() => {});
         })
       );
   }

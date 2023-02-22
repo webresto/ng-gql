@@ -44,7 +44,7 @@ export class ApolloService {
         if (this.config.debugMode) {
           alert(error);
         }
-        return of(null);
+        return of(() => {});
       }),
       filter((value): value is ApolloQueryResult<TData> => !!value)
     );
@@ -64,7 +64,7 @@ export class ApolloService {
         if (this.config.debugMode) {
           alert(error);
         }
-        return of(null);
+        return of(() => {});
       }),
       filter((value): value is ApolloQueryResult<T> => !!value)
     );
@@ -77,7 +77,7 @@ export class ApolloService {
         if (this.config.debugMode) {
           alert(error);
         }
-        return of(null);
+        return of(() => {});
       }),
       filter((value): value is MutationResult<T> => !!value)
     );
@@ -100,7 +100,7 @@ export class ApolloService {
         if (this.config.debugMode) {
           alert(error);
         }
-        return of(null);
+        return of(() => {});
       }),
       filter((value): value is FetchResult<T> => !!value)
     );

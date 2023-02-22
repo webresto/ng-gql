@@ -7,6 +7,7 @@
     "updatePackageVersion": "node updatePackageVersion.js ./projects/webresto/ng-gql/package.json",
     "build": "ng build",
     "upd": "npm update --save --force",
+    "upd-and-up": "npm run upd && npm run updatePackageVersion",
     "build:local": "ng build && npm run gen-doc",
     "watch:axrl": "ng build --watch --configuration axrl",
     "watch:axrl:nadym": "ng build --watch --configuration axrl-nadym",
@@ -35,7 +36,7 @@
     "@angular/cli": "^15.1.6",
     "@angular/compiler-cli": "^15.1.5",
     "@types/node": "^18.14.0",
-    "ng-packagr": "^15.1.2",
+    "ng-packagr": "^15.2.2",
     "typedoc": "^0.23.25",
     "typedoc-plugin-markdown": "^3.14.0",
     "typescript": "^4.9.5"
