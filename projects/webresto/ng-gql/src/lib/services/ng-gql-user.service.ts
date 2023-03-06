@@ -6,7 +6,7 @@ import {
   Action,
   Message,
   ValuesOrBoolean,
-  RegistrationUserResponse,
+  UserResponse,
   OTPResponse,
   LoginPayload,
   OTPRequestPayload,
@@ -46,7 +46,7 @@ type UserBusEvent = {
   | {
       type: 'login';
       payload: LoginPayload;
-      successCb: (result: RegistrationUserResponse) => void;
+      successCb: (result: UserResponse) => void;
     }
 );
 
@@ -103,7 +103,7 @@ export class NgGqlUserService {
 
   login$(data: LoginPayload) {
     return this.ngGqlService
-      .customMutation$<RegistrationUserResponse, 'login', LoginPayload>(
+      .customMutation$<UserResponse, 'login', LoginPayload>(
         'login',
         {
           user: this.defaultUserFragments,
@@ -122,11 +122,11 @@ export class NgGqlUserService {
   login(
     data: LoginPayload,
     loading?: BehaviorSubject<boolean>
-  ): Promise<RegistrationUserResponse> {
+  ): Promise<UserResponse> {
     if (isValue(loading)) {
       loading.next(true);
     }
-    return new Promise<RegistrationUserResponse>((resolve, reject) => {
+    return new Promise<UserResponse>((resolve, reject) => {
       this._userBus.emit({
         type: 'login',
         payload: data,
@@ -141,7 +141,6 @@ export class NgGqlUserService {
     return this.ngGqlService
       .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id', {
         query: { userId },
-        subscribe: { userId },
       })
       .pipe(
         map((result) => {
@@ -224,7 +223,7 @@ export class NgGqlUserService {
           setTimeout(() => {
             const successCb = <
               (
-                result: CaptchaJob<any> | RegistrationUserResponse | OTPResponse
+                result: CaptchaJob<any> | UserResponse | OTPResponse
               ) => void
             >event.successCb;
             successCb(result);

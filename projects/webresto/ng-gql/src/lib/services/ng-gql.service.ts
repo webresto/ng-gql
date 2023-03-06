@@ -75,7 +75,7 @@ export class NgGqlService {
   constructor(
     private apollo: ApolloService,
     private storage: NgGqlStorageService,
-    @Inject('config') private config: NgGqlConfig,
+    @Inject('NG_GQL_CONFIG') private config: NgGqlConfig,
     @Inject(NAVIGATION_FRAGMENTS)
     private defaultNavigationFragments: ValuesOrBoolean<Navigation>,
     @Inject(MAINTENANCE_FRAGMENTS)

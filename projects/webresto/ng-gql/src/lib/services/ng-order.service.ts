@@ -10,7 +10,6 @@ import {
   startWith,
   catchError,
   concatMap,
-  distinctUntilKeyChanged,
   distinctUntilChanged,
   mergeWith,
 } from 'rxjs';
@@ -56,7 +55,7 @@ export class NgOrderService {
     private storage: NgGqlStorageService,
     private storageWrapper: NqGqlLocalStorageWrapper,
     private userService: NgGqlUserService,
-    @Inject('config') private config: NgGqlConfig,
+    @Inject('NG_GQL_CONFIG') private config: NgGqlConfig,
     @Inject(PAYMENT_METHOD_FRAGMENTS)
     private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
     @Inject(ACTION_FRAGMENTS)
@@ -233,40 +232,21 @@ export class NgOrderService {
    * Для получения потока используется метод @method this.getActionEmitter()
    * Для отправки в поток кастомных сообщений испльзуется @method this.emitActionEvent()
    */
-  private _actions$ = this.getOrder().pipe(
-    distinctUntilKeyChanged('id'),
-    switchMap((order) =>
-      this.ngGqlService.customSubscribe$<
-        Action,
-        'action',
-        {
-          orderId: string;
-        }
-      >('action', this.defaultActionFragments, { orderId: order.id })
-    ),
-    mergeWith(this._eventAction.asObservable()),
-    shareReplay(1)
-  );
+  private _actions$ = this.ngGqlService
+    .customSubscribe$<Action, 'action'>('action', this.defaultActionFragments)
+    .pipe(mergeWith(this._eventAction.asObservable()), shareReplay(1));
 
   /**
    * Поток Observable, в который будут поступать информационные сообщения по текущему заказу (блюдо добавлено/удалено/заказ оформлен).
    * Для получения потока используется метод @method this.getMessageEmitter()
    * Для отправки в поток кастомных сообщений испльзуется @method this.emitMessageEvent()
    */
-  private _messages$ = this.getOrder().pipe(
-    distinctUntilKeyChanged('id'),
-    switchMap((order) =>
-      this.ngGqlService.customSubscribe$<
-        Message,
-        'message',
-        {
-          orderId: string;
-        }
-      >('message', this.defaultMessageFragments, { orderId: order.id })
-    ),
-    mergeWith(this._eventMessage.asObservable()),
-    shareReplay(1)
-  );
+  private _messages$ = this.ngGqlService
+    .customSubscribe$<Message, 'message'>(
+      'message',
+      this.defaultMessageFragments
+    )
+    .pipe(mergeWith(this._eventMessage.asObservable()), shareReplay(1));
 
   /**
    * @method loadOrder$()
@@ -295,7 +275,6 @@ export class NgOrderService {
         id
           ? {
               query: isShort ? { shortId: id } : { orderId: id },
-              subscribe: isShort ? { shortId: id } : { orderId: id },
             }
           : undefined,
         undefined

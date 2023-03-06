@@ -28,16 +28,23 @@ export class NgGqlModule {
 
       providers: [
         {
-          provide: 'config',
+          provide: 'NG_GQL_CONFIG',
           useValue: config,
         },
         {
           provide: APOLLO_OPTIONS,
           useFactory: (httpLink: HttpLink) => {
             const win = inject(DOCUMENT).defaultView;
+            const savedDeviceId = localStorage.getItem('deviceId');
+            const deviceId =savedDeviceId ?? generateUUID(win);
+
+            if (!isValue(savedDeviceId)) {
+              localStorage.setItem('deviceId',deviceId);
+            };
+
             const basic = setContext((operation, context) => ({
               headers: {
-                'X-Device-Id': generateUUID(win),
+                'X-Device-Id': deviceId,
                 Accept: 'charset=utf-8',
               },
             }));

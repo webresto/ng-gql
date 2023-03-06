@@ -25,7 +25,7 @@ import type { EmptyObject } from 'apollo-angular/types';
 export class ApolloService {
   constructor(
     private apollo: Apollo,
-    @Inject('config') private config: NgGqlConfig
+    @Inject('NG_GQL_CONFIG') private config: NgGqlConfig
   ) {}
 
   watchQuery<TData, TVariables extends OperationVariables = EmptyObject>(

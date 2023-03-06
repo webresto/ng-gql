@@ -16,7 +16,7 @@ export interface LoginPayload {
   captcha: Captcha;
 }
 
-export interface RegistrationUserResponse {
+export interface UserResponse {
   user: User;
   message: Message;
   action: Action;

@@ -41,7 +41,7 @@ export interface StorageOrderTokenRemoveOrderId {
 })
 export class NqGqlLocalStorageWrapper {
   constructor(
-    @Inject('config') private config: NgGqlConfig,
+    @Inject('NG_GQL_CONFIG') private config: NgGqlConfig,
     @Inject(ORDERID_FACTORY_FN) private orderIdFactoryFn: () => string
   ) {}
 
