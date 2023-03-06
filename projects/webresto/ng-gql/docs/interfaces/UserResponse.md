@@ -1,12 +1,12 @@
-# Interface: RegistrationUserResponse
+# Interface: UserResponse
 
 ## Table of contents
 
 ### Properties
 
-- [user](RegistrationUserResponse.md#user)
-- [message](RegistrationUserResponse.md#message)
-- [action](RegistrationUserResponse.md#action)
+- [user](UserResponse.md#user)
+- [message](UserResponse.md#message)
+- [action](UserResponse.md#action)
 
 ## Properties
 

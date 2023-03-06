@@ -82,7 +82,7 @@
 - [PaymentMethod](interfaces/PaymentMethod.md)
 - [BaseResponse](interfaces/BaseResponse.md)
 - [LoginPayload](interfaces/LoginPayload.md)
-- [RegistrationUserResponse](interfaces/RegistrationUserResponse.md)
+- [UserResponse](interfaces/UserResponse.md)
 - [OTPRequestPayload](interfaces/OTPRequestPayload.md)
 - [OTPResponse](interfaces/OTPResponse.md)
 - [LogoutPayload](interfaces/LogoutPayload.md)

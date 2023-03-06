@@ -76,7 +76,7 @@ ___
 
 ### login$
 
-▸ **login$**(`data`): `Observable`<[`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>
+▸ **login$**(`data`): `Observable`<[`UserResponse`](../interfaces/UserResponse.md)\>
 
 #### Parameters
 
@@ -86,13 +86,13 @@ ___
 
 #### Returns
 
-`Observable`<[`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>
+`Observable`<[`UserResponse`](../interfaces/UserResponse.md)\>
 
 ___
 
 ### login
 
-▸ **login**(`data`, `loading?`): `Promise`<[`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>
+▸ **login**(`data`, `loading?`): `Promise`<[`UserResponse`](../interfaces/UserResponse.md)\>
 
 #### Parameters
 
@@ -103,7 +103,7 @@ ___
 
 #### Returns
 
-`Promise`<[`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>
+`Promise`<[`UserResponse`](../interfaces/UserResponse.md)\>
 
 ___
 
