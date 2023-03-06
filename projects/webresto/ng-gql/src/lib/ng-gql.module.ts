@@ -1,117 +1,149 @@
-import { Inject, NgModule } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import type { ModuleWithProviders } from '@angular/core';
-import { Apollo, ApolloModule } from 'apollo-angular';
+import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { split, InMemoryCache } from '@apollo/client/core';
+import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
 import type { InMemoryCacheConfig } from '@apollo/client/core';
+import { setContext } from '@apollo/client/link/context';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { NgGqlConfig } from './models';
+import { generateUUID, NgGqlConfig } from './models';
 import { isValue } from '@axrl/common';
 import type { OperationDefinitionNode } from 'graphql';
 import { persistCacheSync, LocalStorageWrapper } from 'apollo3-cache-persist';
+import { HttpClientModule } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
 
 @NgModule({
-  imports: [
-    ApolloModule
-  ],
-  exports: [],
-  declarations: []
+  imports: [ApolloModule, HttpClientModule],
+  exports: [HttpClientModule, ApolloModule],
+  declarations: [],
 })
 export class NgGqlModule {
-
-  constructor(
-    apollo: Apollo,
-    httpLink: HttpLink,
-    @Inject('config') config: NgGqlConfig
-  ) {
-
-    // Create an http link:
-    const http = httpLink.create({
-      uri: config.url
-    });
-
-    // Create a WebSocket link:
-    const ws = new WebSocketLink({
-      uri: config.url.replace('http', 'ws'),
-      options: {
-        reconnect: true,
-      }
-    });
-
-    // using the ability to split links, you can send data to each link
-    // depending on what kind of operation is being sent
-    const link = split(
-      // split based on operation type
-      ({ query }) => {
-        const { kind, operation } = <OperationDefinitionNode>getMainDefinition(query);
-        return (
-          kind === 'OperationDefinition' && operation === 'subscription'
-        );
-      },
-      ws,
-      http,
-    );
-
-    if (!apollo.client) {
-      const defaultCacheConfig: InMemoryCacheConfig = {
-        addTypename: true,
-        resultCaching: true,
-        typePolicies: {
-          GroupModifier: {
-            keyFields: ['modifierId', 'maxAmount', 'minAmount', 'required'],
-            fields: {
-              childModifiers: {
-                merge(existing, incoming) {
-                  return [...incoming];
-                }
-              }
-            }
-          },
-          Modifier: {
-            keyFields: ['modifierId', 'maxAmount', 'minAmount', 'defaultAmount']
-          },
-          Order: {
-            fields: {
-              dishes: {
-                merge(existing, incoming) {
-                  return [...incoming];
-                }
-              }
-            }
-          },
-        }
-
-      };
-      const cache = new InMemoryCache(
-        isValue(config.apolloCacheConfig) ?
-          { ...defaultCacheConfig, ...config.apolloCacheConfig }
-          : { ...defaultCacheConfig }
-      );
-      if (!isValue(config.usePersistCache) || config.usePersistCache) {
-        persistCacheSync({
-          cache,
-          serialize: true,
-          storage: new LocalStorageWrapper(window.localStorage),
-        });
-      };
-
-      apollo.create({
-        link,
-        cache
-      });
-    };
-  }
+  constructor() {}
 
   static forRoot(config: NgGqlConfig): ModuleWithProviders<NgGqlModule> {
     return {
       ngModule: NgGqlModule,
+
       providers: [
         {
           provide: 'config',
-          useValue: config
-        }
-      ]
+          useValue: config,
+        },
+        {
+          provide: APOLLO_OPTIONS,
+          useFactory: (httpLink: HttpLink) => {
+            const win = inject(DOCUMENT).defaultView;
+            const basic = setContext((operation, context) => ({
+              headers: {
+                'X-Device-Id': generateUUID(win),
+                Accept: 'charset=utf-8',
+              },
+            }));
+
+            const auth = setContext((operation, context) => {
+              const token = localStorage.getItem('token');
+
+              if (token === null) {
+                return {};
+              } else {
+                return {
+                  headers: {
+                    Authorization: token,
+                  },
+                };
+              }
+            });
+
+            const http = httpLink.create({
+              uri: config.url,
+            });
+
+            // Create a WebSocket link:
+            const ws = new WebSocketLink({
+              uri: config.url.replace('http', 'ws'),
+              options: {
+                reconnect: true,
+              },
+            });
+
+            // using the ability to split links, you can send data to each link
+            // depending on what kind of operation is being sent
+            const linkSplit = split(
+              // split based on operation type
+              ({ query }) => {
+                const { kind, operation } = <OperationDefinitionNode>(
+                  getMainDefinition(query)
+                );
+                return (
+                  kind === 'OperationDefinition' && operation === 'subscription'
+                );
+              },
+              ws,
+              http
+            );
+
+            const link = ApolloLink.from([basic, auth, linkSplit, http]);
+            const defaultCacheConfig: InMemoryCacheConfig = {
+              addTypename: true,
+              resultCaching: true,
+              typePolicies: {
+                GroupModifier: {
+                  keyFields: [
+                    'modifierId',
+                    'maxAmount',
+                    'minAmount',
+                    'required',
+                  ],
+                  fields: {
+                    childModifiers: {
+                      merge(existing, incoming) {
+                        return [...incoming];
+                      },
+                    },
+                  },
+                },
+                Modifier: {
+                  keyFields: [
+                    'modifierId',
+                    'maxAmount',
+                    'minAmount',
+                    'defaultAmount',
+                  ],
+                },
+                Order: {
+                  fields: {
+                    dishes: {
+                      merge(existing, incoming) {
+                        return [...incoming];
+                      },
+                    },
+                  },
+                },
+              },
+            };
+            const cache = new InMemoryCache(
+              isValue(config.apolloCacheConfig)
+                ? { ...defaultCacheConfig, ...config.apolloCacheConfig }
+                : { ...defaultCacheConfig }
+            );
+            if (!isValue(config.usePersistCache) || config.usePersistCache) {
+              persistCacheSync({
+                cache,
+                serialize: true,
+                storage: new LocalStorageWrapper(window.localStorage),
+              });
+            }
+
+            return {
+              link,
+              cache,
+            };
+          },
+          deps: [HttpLink],
+        },
+      ],
     };
   }
 }
