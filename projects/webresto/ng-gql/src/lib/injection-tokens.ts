@@ -1,8 +1,7 @@
 import { CaptchaJob } from './models/captcha/captcha';
-import { isValue } from '@axrl/common';
 import { User } from './models/user/user';
 import { inject, InjectionToken } from '@angular/core';
-import type {
+import {
   ValuesOrBoolean,
   Dish,
   Image,
@@ -21,6 +20,7 @@ import type {
   UserLocation,
   UserBonusProgram,
   OTPResponse,
+  generateUUID,
 } from './models';
 import {
   defaultActionFragments,
@@ -43,17 +43,7 @@ export const ORDERID_FACTORY_FN = new InjectionToken<() => string>(
     providedIn: NgGqlModule,
     factory: () => {
       const win = inject(DOCUMENT).defaultView;
-      return () => {
-        if (
-          isValue(win) &&
-          isValue(win.crypto) &&
-          isValue(win.crypto.randomUUID)
-        ) {
-          return win.crypto.randomUUID();
-        } else {
-          return `${Date.now()}${String(Math.random()).slice(3)}`;
-        }
-      };
+      return () => generateUUID(win);
     },
   }
 );
