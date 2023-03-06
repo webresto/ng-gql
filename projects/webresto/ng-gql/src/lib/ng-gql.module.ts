@@ -36,11 +36,11 @@ export class NgGqlModule {
           useFactory: (httpLink: HttpLink) => {
             const win = inject(DOCUMENT).defaultView;
             const savedDeviceId = localStorage.getItem('deviceId');
-            const deviceId =savedDeviceId ?? generateUUID(win);
+            const deviceId = savedDeviceId ?? generateUUID(win);
 
             if (!isValue(savedDeviceId)) {
-              localStorage.setItem('deviceId',deviceId);
-            };
+              localStorage.setItem('deviceId', deviceId);
+            }
 
             const basic = setContext((operation, context) => ({
               headers: {
@@ -74,10 +74,9 @@ export class NgGqlModule {
                 reconnect: true,
               },
             });
-
             // using the ability to split links, you can send data to each link
             // depending on what kind of operation is being sent
-            const linkSplit = split(
+            const link = split(
               // split based on operation type
               ({ query }) => {
                 const { kind, operation } = <OperationDefinitionNode>(
@@ -88,10 +87,9 @@ export class NgGqlModule {
                 );
               },
               ws,
-              http
+              ApolloLink.from([basic,auth,http])
             );
 
-            const link = ApolloLink.from([basic, auth, linkSplit, http]);
             const defaultCacheConfig: InMemoryCacheConfig = {
               addTypename: true,
               resultCaching: true,
