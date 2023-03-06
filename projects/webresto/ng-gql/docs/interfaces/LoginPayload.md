@@ -5,9 +5,9 @@
 ### Properties
 
 - [login](LoginPayload.md#login)
+- [phone](LoginPayload.md#phone)
 - [password](LoginPayload.md#password)
 - [otp](LoginPayload.md#otp)
-- [deviceName](LoginPayload.md#devicename)
 - [captcha](LoginPayload.md#captcha)
 
 ## Properties
@@ -15,6 +15,12 @@
 ### login
 
 • **login**: `string`
+
+___
+
+### phone
+
+• `Optional` **phone**: [`Phone`](Phone.md)
 
 ___
 
@@ -27,12 +33,6 @@ ___
 ### otp
 
 • `Optional` **otp**: `string`
-
-___
-
-### deviceName
-
-• **deviceName**: `string`
 
 ___
 

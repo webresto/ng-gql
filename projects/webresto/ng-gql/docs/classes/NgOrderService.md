@@ -38,7 +38,7 @@
 
 ### constructor
 
-• **new NgOrderService**(`ngGqlService`, `storage`, `storageWrapper`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
+• **new NgOrderService**(`ngGqlService`, `storage`, `storageWrapper`, `userService`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
 
 #### Parameters
 
@@ -47,6 +47,7 @@
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
 | `storage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
 | `storageWrapper` | [`NqGqlLocalStorageWrapper`](NqGqlLocalStorageWrapper.md) |
+| `userService` | [`NgGqlUserService`](NgGqlUserService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 | `defaultPaymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
 | `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
@@ -502,7 +503,7 @@ ___
 
 ### orderBus$
 
-• **orderBus$**: `Observable`<`void` \| () => `void`\>
+• **orderBus$**: `Observable`<`void` \| () => `void` \| () => `void`\>
 
 Внутренний поток-шина для событий, ассоциированных с действиями, которыми необходимо выполнить с заказом (добавить/удалить блюдо, проверить заказ, отправить на проверку и тп.).
 Используется только в случае, если в

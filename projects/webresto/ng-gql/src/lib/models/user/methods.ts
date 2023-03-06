@@ -10,21 +10,11 @@ export interface BaseResponse {
 
 export interface LoginPayload {
   login: string;
+  phone?: Phone;
   password?: string;
   otp?: string;
-  deviceName: string;
   captcha: Captcha;
 }
-
-export type RegistrationPayload = Omit<LoginPayload, 'deviceName' | 'otp'> & {
-  phone?: Phone;
-  otp: string;
-  firstName?: string;
-  lastName?: string;
-  customFields?: {
-    [key: string]: string | any | null;
-  };
-};
 
 export interface RegistrationUserResponse {
   user: User;

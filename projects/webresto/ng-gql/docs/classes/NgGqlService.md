@@ -415,4 +415,4 @@ ___
 
 ### rootGroups$
 
-• **rootGroups$**: `Observable`<{ `concept`: `string` ; `groups`: `PartialGroupNullable`[]  }\>
+• **rootGroups$**: `Observable`<{ `concept`: `string` ; `groups`: [`PartialGroupNullable`](../README.md#partialgroupnullable)[]  }\>

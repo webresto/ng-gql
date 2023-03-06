@@ -100,14 +100,15 @@
 - [DiscountType](README.md#discounttype)
 - [VCriteria](README.md#vcriteria)
 - [GQLRequestVariables](README.md#gqlrequestvariables)
+- [PartialGroupNullable](README.md#partialgroupnullable)
 - [OrderState](README.md#orderstate)
 - [OrderForm](README.md#orderform)
-- [RegistrationPayload](README.md#registrationpayload)
 - [ValuesOrBoolean](README.md#valuesorboolean)
 
 ### Classes
 
 - [EventMessage](classes/EventMessage.md)
+- [GenerateUUIDHelper](classes/GenerateUUIDHelper.md)
 - [NqGqlLocalStorageWrapper](classes/NqGqlLocalStorageWrapper.md)
 - [ApolloService](classes/ApolloService.md)
 - [NgGqlStorageService](classes/NgGqlStorageService.md)
@@ -118,6 +119,7 @@
 ### Functions
 
 - [generateQueryString](README.md#generatequerystring)
+- [generateUUID](README.md#generateuuid)
 
 ### Events
 
@@ -417,6 +419,12 @@ GQLRequestVariables
 
 ___
 
+### PartialGroupNullable
+
+Ƭ **PartialGroupNullable**: `Pick`<[`Group`](interfaces/Group.md), ``"slug"``\> & { `id`: `string` \| ``null``  }
+
+___
+
 ### OrderState
 
 Ƭ **OrderState**: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"``
@@ -442,12 +450,6 @@ ___
 ### OrderForm
 
 Ƭ **OrderForm**: [`Order`](interfaces/Order.md) & [`OrderAdditionalFields`](interfaces/OrderAdditionalFields.md)
-
-___
-
-### RegistrationPayload
-
-Ƭ **RegistrationPayload**: `Omit`<[`LoginPayload`](interfaces/LoginPayload.md), ``"deviceName"`` \| ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName?`: `string` ; `lastName?`: `string` ; `customFields?`: { `[key: string]`: `string` \| `any` \| ``null``;  }  }
 
 ___
 
@@ -513,6 +515,22 @@ generateQueryString()
 
 часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V.
  НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription
+
+___
+
+### generateUUID
+
+▸ **generateUUID**(`win`): `string`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `win` | ``null`` \| `Window` & typeof `globalThis` |
+
+#### Returns
+
+`string`
 
 ## Events
 

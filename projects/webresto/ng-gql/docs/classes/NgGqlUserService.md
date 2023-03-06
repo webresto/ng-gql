@@ -8,18 +8,24 @@
 
 ### Methods
 
-- [registration](NgGqlUserService.md#registration)
+- [otpRequest$](NgGqlUserService.md#otprequest$)
 - [otpRequest](NgGqlUserService.md#otprequest)
+- [login$](NgGqlUserService.md#login$)
 - [login](NgGqlUserService.md#login)
-- [getUser](NgGqlUserService.md#getuser)
+- [getUser$](NgGqlUserService.md#getuser$)
+- [captchaGetJob$](NgGqlUserService.md#captchagetjob$)
 - [captchaGetJob](NgGqlUserService.md#captchagetjob)
 - [getCaptchaSolution](NgGqlUserService.md#getcaptchasolution)
+
+### Properties
+
+- [userBus$](NgGqlUserService.md#userbus$)
 
 ## Constructors
 
 ### constructor
 
-• **new NgGqlUserService**(`ngGqlService`, `ngGqlStorage`, `config`, `defaultActionFragments`, `defaultMessageFragments`, `defaultCaptchaGetJobFragments`, `defaultUserFragments`, `defaultOTPResponceFragments`)
+• **new NgGqlUserService**(`ngGqlService`, `ngGqlStorage`, `defaultActionFragments`, `defaultMessageFragments`, `defaultCaptchaGetJobFragments`, `defaultUserFragments`, `defaultOTPResponceFragments`)
 
 #### Parameters
 
@@ -27,7 +33,6 @@
 | :------ | :------ |
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
 | `ngGqlStorage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
-| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 | `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
 | `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |
 | `defaultCaptchaGetJobFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |
@@ -36,60 +41,75 @@
 
 ## Methods
 
-### registration
+### otpRequest$
 
-▸ **registration**(`data`, `successCb`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `data` | [`RegistrationPayload`](../README.md#registrationpayload) |
-| `successCb` | (`result`: [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)) => `void` |
-
-#### Returns
-
-`void`
-
-___
-
-### otpRequest
-
-▸ **otpRequest**(`data`, `successCb`): `void`
+▸ **otpRequest$**(`data`): `Observable`<[`OTPResponse`](../interfaces/OTPResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | [`OTPRequestPayload`](../interfaces/OTPRequestPayload.md) |
-| `successCb` | (`result`: [`OTPResponse`](../interfaces/OTPResponse.md)) => `void` |
 
 #### Returns
 
-`void`
+`Observable`<[`OTPResponse`](../interfaces/OTPResponse.md)\>
 
 ___
 
-### login
+### otpRequest
 
-▸ **login**(`data`, `successCb`): `void`
+▸ **otpRequest**(`data`, `loading?`): `Promise`<[`OTPResponse`](../interfaces/OTPResponse.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`OTPRequestPayload`](../interfaces/OTPRequestPayload.md) |
+| `loading?` | `BehaviorSubject`<`boolean`\> |
+
+#### Returns
+
+`Promise`<[`OTPResponse`](../interfaces/OTPResponse.md)\>
+
+___
+
+### login$
+
+▸ **login$**(`data`): `Observable`<[`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `data` | [`LoginPayload`](../interfaces/LoginPayload.md) |
-| `successCb` | (`result`: [`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)) => `void` |
 
 #### Returns
 
-`void`
+`Observable`<[`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>
 
 ___
 
-### getUser
+### login
 
-▸ **getUser**(`userId`): `Observable`<[`User`](../interfaces/User.md)[]\>
+▸ **login**(`data`, `loading?`): `Promise`<[`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`LoginPayload`](../interfaces/LoginPayload.md) |
+| `loading?` | `BehaviorSubject`<`boolean`\> |
+
+#### Returns
+
+`Promise`<[`RegistrationUserResponse`](../interfaces/RegistrationUserResponse.md)\>
+
+___
+
+### getUser$
+
+▸ **getUser$**(`userId`): `Observable`<[`User`](../interfaces/User.md)[]\>
 
 #### Parameters
 
@@ -103,9 +123,31 @@ ___
 
 ___
 
+### captchaGetJob$
+
+▸ **captchaGetJob$**<`T`\>(`data`): `Observable`<[`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>\>
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`CaptchaTask`](../interfaces/CaptchaTask.md) |
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`CaptchaJobPayload`](../interfaces/CaptchaJobPayload.md) |
+
+#### Returns
+
+`Observable`<[`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>\>
+
+___
+
 ### captchaGetJob
 
-▸ **captchaGetJob**<`T`\>(`label`, `successCb`): `void`
+▸ **captchaGetJob**<`T`\>(`label`, `loading?`): `Promise`<[`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>\>
 
 #### Type parameters
 
@@ -118,11 +160,11 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `label` | `string` |
-| `successCb` | (`result`: [`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>) => `void` |
+| `loading?` | `BehaviorSubject`<`boolean`\> |
 
 #### Returns
 
-`void`
+`Promise`<[`CaptchaJob`](../interfaces/CaptchaJob.md)<`T`\>\>
 
 ___
 
@@ -139,3 +181,9 @@ ___
 #### Returns
 
 `Promise`<`bigint`\>
+
+## Properties
+
+### userBus$
+
+• **userBus$**: `Observable`<`void` \| () => `void`\>

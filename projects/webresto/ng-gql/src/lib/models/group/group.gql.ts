@@ -16,6 +16,9 @@ export interface Group {
 	childGroups: Partial<Group>[];
 	dishesPlaceholder: Partial<Image> | null;
 }
+export type PartialGroupNullable = Pick<Group, 'slug'> & {
+  id: string | null;
+};
 
 export const defaultGroupFragments: ValuesOrBoolean<Group> = {
 	id: true,

@@ -9,7 +9,6 @@ import {
   RegistrationUserResponse,
   OTPResponse,
   LoginPayload,
-  RegistrationPayload,
   OTPRequestPayload,
   CaptchaJob,
   CaptchaJobPayload,
@@ -38,11 +37,6 @@ type UserBusEvent = {
       type: 'captchaGetJob';
       payload: CaptchaJobPayload;
       successCb: (result: CaptchaJob<any>) => void;
-    }
-  | {
-      type: 'registration';
-      payload: RegistrationPayload;
-      successCb: (result: RegistrationUserResponse) => void;
     }
   | {
       type: 'OTPRequest';
@@ -74,49 +68,6 @@ export class NgGqlUserService {
     @Inject(OTP_RESPONSE_FRAGMENTS)
     private defaultOTPResponceFragments: ValuesOrBoolean<OTPResponse>
   ) {}
-
-  registration$(data: RegistrationPayload) {
-    return this.ngGqlService
-      .customMutation$<
-        RegistrationUserResponse,
-        'registration',
-        RegistrationPayload
-      >(
-        'registration',
-        {
-          user: this.defaultUserFragments,
-          //message: this.defaultMessageFragments,
-          //action: this.defaultActionFragments,
-        },
-        data,
-        {
-          requiredFields: ['login', 'otp'],
-          fieldsTypeMap: new Map([
-            ['phone', 'InputPhone!'],
-            ['captcha', 'Captcha!'],
-          ]),
-        }
-      )
-      .pipe(map((record) => record.registration));
-  }
-
-  registration(
-    data: RegistrationPayload,
-    loading?: BehaviorSubject<boolean>
-  ): Promise<RegistrationUserResponse> {
-    if (isValue(loading)) {
-      loading.next(true);
-    }
-    return new Promise<RegistrationUserResponse>((resolve, reject) => {
-      this._userBus.emit({
-        type: 'registration',
-        payload: data,
-        loading,
-        successCb: (res) => resolve(res),
-        errorCb: (err) => reject(err),
-      });
-    });
-  }
 
   otpRequest$(data: OTPRequestPayload) {
     return this.ngGqlService
@@ -161,7 +112,7 @@ export class NgGqlUserService {
         },
         data,
         {
-          requiredFields: ['login', 'deviceName'],
+          requiredFields: ['login', 'otp'],
           fieldsTypeMap: new Map([['captcha', 'Captcha!']]),
         }
       )
@@ -261,8 +212,6 @@ export class NgGqlUserService {
         return this.otpRequest$(busEvent.payload);
       case 'login':
         return this.login$(busEvent.payload);
-      case 'registration':
-        return this.registration$(busEvent.payload);
       case 'captchaGetJob':
         return this.captchaGetJob$(busEvent.payload);
     }

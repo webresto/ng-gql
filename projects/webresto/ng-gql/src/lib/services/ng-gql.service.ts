@@ -16,6 +16,7 @@ import type {
   NgGqlConfig,
   GQLRequestVariables,
   Group,
+  PartialGroupNullable,
   ValuesOrBoolean,
   Dish,
   PhoneKnowledge,
@@ -46,11 +47,6 @@ interface SlugAndConcept {
   slug: string;
   concept: string | 'origin';
 }
-
-/** @inheritdoc */
-type PartialGroupNullable = Pick<Group, 'slug'> & {
-  id: string | null;
-};
 
 /**
  * Объект настройки генерации части строки запроса с описанием типов параметров операции.
