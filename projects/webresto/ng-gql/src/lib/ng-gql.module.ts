@@ -6,12 +6,13 @@ import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
 import type { InMemoryCacheConfig } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 import { WebSocketLink } from '@apollo/client/link/ws';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { generateUUID, NgGqlConfig } from './models';
 import { isValue } from '@axrl/common';
 import type { OperationDefinitionNode } from 'graphql';
 import { persistCacheSync, LocalStorageWrapper } from 'apollo3-cache-persist';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 
 @NgModule({
@@ -42,13 +43,6 @@ export class NgGqlModule {
               localStorage.setItem('deviceId', deviceId);
             }
 
-            const basic = setContext((operation, context) => ({
-              headers: {
-                'X-Device-Id': deviceId,
-                Accept: 'charset=utf-8',
-              },
-            }));
-
             const auth = setContext((operation, context) => {
               const token = localStorage.getItem('token');
 
@@ -57,23 +51,23 @@ export class NgGqlModule {
               } else {
                 return {
                   headers: {
-                    Authorization: token,
+                    authorization: token,
                   },
                 };
               }
             });
 
-            const http = httpLink.create({
-              uri: config.url,
-            });
-
             // Create a WebSocket link:
-            const ws = new WebSocketLink({
-              uri: config.url.replace('http', 'ws'),
-              options: {
+            const ws = new WebSocketLink(
+              new SubscriptionClient(config.url.replace('http', 'ws'), {
                 reconnect: true,
-              },
-            });
+                connectionParams: {
+                  'X-Device-Id': deviceId,
+                  authToken: localStorage.getItem('token'),
+                  authorization: localStorage.getItem('token'),
+                },
+              })
+            );
             // using the ability to split links, you can send data to each link
             // depending on what kind of operation is being sent
             const link = split(
@@ -87,7 +81,15 @@ export class NgGqlModule {
                 );
               },
               ws,
-              ApolloLink.from([basic,auth,http])
+              ApolloLink.from([
+                auth,
+                httpLink.create({
+                  headers: new HttpHeaders({
+                    'X-Device-Id': deviceId,
+                  }),
+                  uri: config.url,
+                }),
+              ])
             );
 
             const defaultCacheConfig: InMemoryCacheConfig = {
