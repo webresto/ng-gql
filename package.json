@@ -7,7 +7,7 @@
     "updatePackageVersion": "node updatePackageVersion.js ./projects/webresto/ng-gql/package.json",
     "build": "ng build",
     "upd": "npm update --save --force",
-    "upd-and-up": "npm run upd && npm run updatePackageVersion",
+    "upd-up": "npm run upd && npm run updatePackageVersion",
     "build:local": "ng build && npm run gen-doc",
     "watch:axrl": "ng build --watch --configuration axrl",
     "watch:axrl:nadym": "ng build --watch --configuration axrl-nadym",

@@ -8,6 +8,7 @@
 
 ### Methods
 
+- [getNgGqlConfig](NgGqlService.md#getnggqlconfig)
 - [updateInitGroupSlug](NgGqlService.md#updateinitgroupslug)
 - [getNavigation$](NgGqlService.md#getnavigation$)
 - [getMaintenance$](NgGqlService.md#getmaintenance$)
@@ -46,6 +47,16 @@
 | `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Dish`](../interfaces/Dish.md)\> |
 
 ## Methods
+
+### getNgGqlConfig
+
+▸ **getNgGqlConfig**(): [`NgGqlConfig`](../interfaces/NgGqlConfig.md)
+
+#### Returns
+
+[`NgGqlConfig`](../interfaces/NgGqlConfig.md)
+
+___
 
 ### updateInitGroupSlug
 

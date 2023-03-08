@@ -107,13 +107,16 @@ export class NgGqlUserService {
         'login',
         {
           user: this.defaultUserFragments,
-          //message: this.defaultMessageFragments,
-          //action: this.defaultActionFragments,
+          message: this.defaultMessageFragments,
+          action: this.defaultActionFragments,
         },
         data,
         {
           requiredFields: ['login', 'otp'],
-          fieldsTypeMap: new Map([['captcha', 'Captcha!']]),
+          fieldsTypeMap: new Map([
+            ['phone', 'InputPhone'],
+            ['captcha', 'Captcha!'],
+          ]),
         }
       )
       .pipe(map((record) => record.login));
@@ -222,9 +225,7 @@ export class NgGqlUserService {
         map((result) => {
           setTimeout(() => {
             const successCb = <
-              (
-                result: CaptchaJob<any> | UserResponse | OTPResponse
-              ) => void
+              (result: CaptchaJob<any> | UserResponse | OTPResponse) => void
             >event.successCb;
             successCb(result);
 

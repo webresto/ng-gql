@@ -336,8 +336,8 @@ export const OTP_RESPONSE_FRAGMENTS = new InjectionToken<
     return {
       id: true,
       nextOTPAfterSeconds: true,
-      //message: defaultMessageFragments,
-      //action: defaultActionFragments,
+      message: defaultMessageFragments,
+      action: defaultActionFragments,
     };
   },
 });
@@ -452,7 +452,7 @@ export const USER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<User>>(
       const ueserDevicesFragments = inject(USER_DEVICES_FRAGMENTS);
       const userLocationFragments = inject(USER_LOCATION_FRAGMENTS);
       const userBonusProgramFragments = inject(USER_BONUS_PROGRAM_FRAGMENTS);
-      return {
+      const fragments : ValuesOrBoolean<User>  = {
         id: true,
         login: true,
         firstName: true,
@@ -465,10 +465,10 @@ export const USER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<User>>(
         history: orderFragments,
         locations: userLocationFragments,
         devices: ueserDevicesFragments,
-        verified: true,
         lastPasswordChange: true,
         temporaryCode: true,
       };
+      return fragments;
     },
   }
 );

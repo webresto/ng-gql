@@ -85,6 +85,10 @@ export class NgGqlService {
     @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>
   ) {}
 
+  getNgGqlConfig(): NgGqlConfig {
+    return deepClone(this.config);
+  };
+ 
   private _initGroupSlug$ = new BehaviorSubject<SlugAndConcept | null>(null);
 
   updateInitGroupSlug(initGroupSlug: string, concept: string | 'origin') {

@@ -1,8 +1,8 @@
 import type { Dish } from '../dish/dish.gql';
 import type { Order } from '../order';
-import { Phone } from './../customer/customer';
+import type { Phone } from './../customer/customer';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
-import { ValuesOrBoolean } from '../values-or-boolean';
+import type { ValuesOrBoolean } from '../values-or-boolean';
 
 /**
  *  Модели, описывающие авторизованного пользователя и его данные
@@ -21,7 +21,6 @@ export interface User extends BaseModelWithCustomData {
   history: Order[];
   locations: UserLocation[];
   devices: UserDevice[];
-  verified: boolean;
   lastPasswordChange: number;
   temporaryCode: string;
 }

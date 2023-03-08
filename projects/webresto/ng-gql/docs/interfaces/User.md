@@ -25,7 +25,6 @@
 - [history](User.md#history)
 - [locations](User.md#locations)
 - [devices](User.md#devices)
-- [verified](User.md#verified)
 - [lastPasswordChange](User.md#lastpasswordchange)
 - [temporaryCode](User.md#temporarycode)
 
@@ -110,12 +109,6 @@ ___
 ### devices
 
 • **devices**: [`UserDevice`](UserDevice.md)[]
-
-___
-
-### verified
-
-• **verified**: `boolean`
 
 ___
 
