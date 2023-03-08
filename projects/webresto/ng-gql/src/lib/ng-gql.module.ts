@@ -12,12 +12,12 @@ import { generateUUID, NgGqlConfig } from './models';
 import { isValue } from '@axrl/common';
 import type { OperationDefinitionNode } from 'graphql';
 import { persistCacheSync, LocalStorageWrapper } from 'apollo3-cache-persist';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 
 @NgModule({
-  imports: [ApolloModule, HttpClientModule],
-  exports: [HttpClientModule, ApolloModule],
+  imports: [ApolloModule],
+  exports: [ApolloModule],
   declarations: [],
 })
 export class NgGqlModule {
@@ -26,7 +26,6 @@ export class NgGqlModule {
   static forRoot(config: NgGqlConfig): ModuleWithProviders<NgGqlModule> {
     return {
       ngModule: NgGqlModule,
-
       providers: [
         {
           provide: 'NG_GQL_CONFIG',
@@ -61,10 +60,18 @@ export class NgGqlModule {
             const ws = new WebSocketLink(
               new SubscriptionClient(config.url.replace('http', 'ws'), {
                 reconnect: true,
-                connectionParams: {
-                  'X-Device-Id': deviceId,
-                  authToken: localStorage.getItem('token'),
-                  authorization: localStorage.getItem('token'),
+                connectionParams: () => {
+                  const token = localStorage.getItem('token');
+
+                  return isValue(token)
+                    ? {
+                        'X-Device-Id': deviceId,
+                        authToken: localStorage.getItem('token'),
+                        authorization: localStorage.getItem('token'),
+                      }
+                    : {
+                        'X-Device-Id': deviceId,
+                      };
                 },
               })
             );
