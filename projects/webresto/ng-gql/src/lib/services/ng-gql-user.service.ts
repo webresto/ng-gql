@@ -9,6 +9,7 @@ import {
   UserResponse,
   OTPResponse,
   LoginPayload,
+  RegistrationPayload,
   OTPRequestPayload,
   CaptchaJob,
   CaptchaJobPayload,
@@ -37,6 +38,11 @@ type UserBusEvent = {
       type: 'captchaGetJob';
       payload: CaptchaJobPayload;
       successCb: (result: CaptchaJob<any>) => void;
+    }
+  | {
+      type: 'registration';
+      payload: RegistrationPayload;
+      successCb: (result: UserResponse) => void;
     }
   | {
       type: 'OTPRequest';
@@ -68,6 +74,51 @@ export class NgGqlUserService {
     @Inject(OTP_RESPONSE_FRAGMENTS)
     private defaultOTPResponceFragments: ValuesOrBoolean<OTPResponse>
   ) {}
+
+  registration$(data: RegistrationPayload) {
+    return this.ngGqlService
+      .customMutation$<
+        UserResponse,
+        'registration',
+        RegistrationPayload
+      >(
+        'registration',
+        {
+          user: this.defaultUserFragments,
+          message: this.defaultMessageFragments,
+          action: this.defaultActionFragments,
+        },
+        data,
+        {
+          requiredFields: ['login', 'otp'],
+          fieldsTypeMap: new Map([
+            ['phone', 'InputPhone'],
+            ['captcha', 'Captcha!'],
+          ]),
+        }
+      )
+      .pipe(map((record) => record.registration));
+  }
+
+  registration(
+    data: RegistrationPayload,
+    loading?: BehaviorSubject<boolean>
+  ): Promise<UserResponse> {
+    if (isValue(loading)) {
+      loading.next(true);
+    }
+    return new Promise<UserResponse>((resolve, reject) => {
+      this._userBus.emit({
+        type: 'registration',
+        payload: data,
+        loading,
+        successCb: (res) => resolve(res),
+        errorCb: (err) => reject(err),
+      });
+    });
+  }
+
+
 
   otpRequest$(data: OTPRequestPayload) {
     return this.ngGqlService
@@ -216,6 +267,8 @@ export class NgGqlUserService {
         return this.login$(busEvent.payload);
       case 'captchaGetJob':
         return this.captchaGetJob$(busEvent.payload);
+        case 'registration':
+          return this.registration$(busEvent.payload);
     }
   }
 

@@ -16,6 +16,17 @@ export interface LoginPayload {
   captcha: Captcha;
 }
 
+export type RegistrationPayload = Omit<LoginPayload, 'otp'> & {
+  phone?: Phone;
+  otp: string;
+  firstName?: string;
+  lastName?: string;
+  customFields?: {
+    [key: string]: string | any | null;
+  };
+};
+
+
 export interface UserResponse {
   user: User;
   message: Message;
