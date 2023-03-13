@@ -40,7 +40,6 @@ import { DOCUMENT } from '@angular/common';
 export const ORDERID_FACTORY_FN = new InjectionToken<() => string>(
   'ORDERID_FACTORY_FN',
   {
-    providedIn: NgGqlModule,
     factory: () => {
       const win = inject(DOCUMENT).defaultView;
       return () => generateUUID(win);
@@ -54,7 +53,6 @@ export const ORDERID_FACTORY_FN = new InjectionToken<() => string>(
 export const IMAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Image>>(
   'IMAGE_FRAGMENTS',
   {
-    providedIn: NgGqlModule,
     factory: () => ({ ...defaultImageFragments }),
   }
 );
@@ -65,7 +63,6 @@ export const IMAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Image>>(
 export const MESSAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Message>>(
   'MESSAGE_FRAGMENTS',
   {
-    providedIn: NgGqlModule,
     factory: () => ({ ...defaultMessageFragments }),
   }
 );
@@ -76,7 +73,6 @@ export const MESSAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Message>>(
 export const ACTION_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Action>>(
   'ACTION_FRAGMENTS',
   {
-    providedIn: NgGqlModule,
     factory: () => ({ ...defaultActionFragments }),
   }
 );
@@ -87,7 +83,6 @@ export const ACTION_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Action>>(
 export const MAINTENANCE_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<Maintenance>
 >('MAINTENANCE_FRAGMENTS', {
-  providedIn: NgGqlModule,
   factory: () => ({ ...defaultMaintenanceFragments }),
 });
 
@@ -97,7 +92,6 @@ export const MAINTENANCE_FRAGMENTS = new InjectionToken<
 export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
   'MODIFIER_FRAGMENTS',
   {
-    providedIn: NgGqlModule,
     factory: () => {
       const imageFragments = inject(IMAGE_FRAGMENTS);
       return {
@@ -131,7 +125,6 @@ export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
 export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>(
   'DISH_FRAGMENTS',
   {
-    providedIn: NgGqlModule,
     factory: () => {
       const imageFragments = inject(IMAGE_FRAGMENTS);
       const groupModifierFragments = inject(GROUP_MODIFIER_FRAGMENTS);
@@ -174,7 +167,6 @@ export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>(
 export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>(
   'GROUP_FRAGMENTS',
   {
-    providedIn: NgGqlModule,
     factory: () => {
       const imageFragments = inject(IMAGE_FRAGMENTS);
       return {
@@ -201,7 +193,6 @@ export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>(
 export const GROUP_MODIFIER_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<GroupModifier>
 >('GROUP_MODIFIER_FRAGMENTS', {
-  providedIn: NgGqlModule,
   factory: () => {
     const modifierFragments = inject(MODIFIER_FRAGMENTS);
     return {
@@ -224,7 +215,6 @@ export const GROUP_MODIFIER_FRAGMENTS = new InjectionToken<
 export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>(
   'ORDER_FRAGMENTS',
   {
-    providedIn: NgGqlModule,
     factory: () => {
       const orderDishFragments = inject(ORDER_DISH_FRAGMENTS);
       return {
@@ -264,7 +254,6 @@ export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>(
 export const ORDER_DISH_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<OrderDish>
 >('ORDER_DISH_FRAGMENTS', {
-  providedIn: NgGqlModule,
   factory: () => {
     const dishFragments = inject(DISH_FRAGMENTS);
     return {
@@ -294,7 +283,6 @@ export const ORDER_DISH_FRAGMENTS = new InjectionToken<
 export const PAYMENT_METHOD_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<PaymentMethod>
 >('PAYMENT_METHOD_FRAGMENTS', {
-  providedIn: NgGqlModule,
   factory: () => ({ ...defaultPaymentMethodFragments }),
 });
 
@@ -304,7 +292,6 @@ export const PAYMENT_METHOD_FRAGMENTS = new InjectionToken<
 export const NAVIGATION_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<Navigation>
 >('NAVIGATION_FRAGMENTS', {
-  providedIn: NgGqlModule,
   factory: () => ({ ...defaultNavigationFragments }),
 });
 
@@ -314,7 +301,6 @@ export const NAVIGATION_FRAGMENTS = new InjectionToken<
 export const PHONE_FRAGMENT = new InjectionToken<ValuesOrBoolean<Phone>>(
   'PHONE_FRAGMENTS',
   {
-    providedIn: NgGqlModule,
     factory: () => ({
       number: true,
       code: true,
@@ -329,7 +315,6 @@ export const PHONE_FRAGMENT = new InjectionToken<ValuesOrBoolean<Phone>>(
 export const OTP_RESPONSE_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<OTPResponse>
 >('OTP_RESPONSE_FRAGMENT', {
-  providedIn: NgGqlModule,
   factory: () => {
     const defaultMessageFragments = inject(MESSAGE_FRAGMENTS);
     const defaultActionFragments = inject(ACTION_FRAGMENTS);
@@ -348,7 +333,6 @@ export const OTP_RESPONSE_FRAGMENTS = new InjectionToken<
 export const USER_DEVICES_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<UserDevice>
 >('USER_DEVICES_FRAGMENT', {
-  providedIn: NgGqlModule,
   factory: () => ({
     id: true,
     name: true,
@@ -368,7 +352,6 @@ export const USER_DEVICES_FRAGMENTS = new InjectionToken<
 export const USER_LOCATION_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<UserLocation>
 >('USER_LOCATION_FRAGMENTS', {
-  providedIn: NgGqlModule,
   factory: () => ({
     id: true,
     name: true,
@@ -392,7 +375,6 @@ export const USER_LOCATION_FRAGMENTS = new InjectionToken<
 export const BONUS_PROGRAM_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<BonusProgram>
 >('BONUS_PROGRAM_FRAGMENTS', {
-  providedIn: NgGqlModule,
   factory: () => ({
     id: true,
     adapter: true,
@@ -408,7 +390,6 @@ export const BONUS_PROGRAM_FRAGMENTS = new InjectionToken<
 export const USER_BONUS_PROGRAM_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<UserBonusProgram>
 >('USER_BONUS_PROGRAM_FRAGMENTS', {
-  providedIn: NgGqlModule,
   factory: () => {
     const bonusProgramFragments = inject(BONUS_PROGRAM_FRAGMENTS);
     return {
@@ -429,7 +410,6 @@ export const USER_BONUS_PROGRAM_FRAGMENTS = new InjectionToken<
 export const CAPTCHA_GET_JOB_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<CaptchaJob>
 >('CAPTCHA_GET_JOB_FRAGMENTS', {
-  providedIn: NgGqlModule,
   factory: () => {
     return {
       id: true,
@@ -444,7 +424,6 @@ export const CAPTCHA_GET_JOB_FRAGMENTS = new InjectionToken<
 export const USER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<User>>(
   'USER_FRAGMENTS',
   {
-    providedIn: NgGqlModule,
     factory: () => {
       const dishFragments = inject(DISH_FRAGMENTS);
       const phoneFragments = inject(PHONE_FRAGMENT);
@@ -452,7 +431,7 @@ export const USER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<User>>(
       const ueserDevicesFragments = inject(USER_DEVICES_FRAGMENTS);
       const userLocationFragments = inject(USER_LOCATION_FRAGMENTS);
       const userBonusProgramFragments = inject(USER_BONUS_PROGRAM_FRAGMENTS);
-      const fragments : ValuesOrBoolean<User>  = {
+      const fragments: ValuesOrBoolean<User> = {
         id: true,
         login: true,
         firstName: true,

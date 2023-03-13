@@ -62,9 +62,7 @@ type UserBusEvent = {
     }
 );
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class NgGqlUserService {
   constructor(
     private ngGqlService: NgGqlService,

@@ -42,13 +42,10 @@ import {
 } from '../injection-tokens';
 import { NgGqlService } from './ng-gql.service';
 import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
-import { NgGqlModule } from '../ng-gql.module';
 import { NgGqlStorageService } from './ng-gql-storage.service';
 import { NgGqlUserService } from './ng-gql-user.service';
 
-@Injectable({
-  providedIn: NgGqlModule,
-})
+@Injectable()
 export class NgOrderService {
   constructor(
     private ngGqlService: NgGqlService,

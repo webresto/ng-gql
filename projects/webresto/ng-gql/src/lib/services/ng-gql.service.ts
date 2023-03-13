@@ -38,7 +38,6 @@ import {
   DISH_FRAGMENTS,
 } from '../injection-tokens';
 import { ApolloService } from './apollo.service';
-import { NgGqlModule } from '../ng-gql.module';
 import { NgGqlStorageService } from './ng-gql-storage.service';
 import { OperationVariables } from '@apollo/client';
 
@@ -67,9 +66,7 @@ export interface QueryGenerationParam<V> {
   fieldsTypeMap?: Map<keyof V, string>;
 }
 
-@Injectable({
-  providedIn: NgGqlModule,
-})
+@Injectable()
 /** Основной сервис для работы с библиотекой. Содержит все необходимые методы для управления сайтом. */
 export class NgGqlService {
   constructor(

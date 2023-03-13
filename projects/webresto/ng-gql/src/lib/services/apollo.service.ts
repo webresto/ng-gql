@@ -16,12 +16,9 @@ import type {
 } from '@apollo/client/core';
 import { isValue } from '@axrl/common';
 import type { NgGqlConfig } from '../models';
-import { NgGqlModule } from '../ng-gql.module';
 import type { EmptyObject } from 'apollo-angular/types';
 
-@Injectable({
-  providedIn: NgGqlModule,
-})
+@Injectable()
 export class ApolloService {
   constructor(
     private apollo: Apollo,

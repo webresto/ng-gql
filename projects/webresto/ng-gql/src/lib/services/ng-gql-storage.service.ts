@@ -1,12 +1,9 @@
 import { User } from './../models/user/user';
 import { Injectable } from '@angular/core';
-import { NgGqlModule } from '../ng-gql.module';
 import { Dish, Group, NavigationBase, Order, PaymentMethod } from '../models';
 import { getFilteredData, createSubject } from '@axrl/common';
 
-@Injectable({
-  providedIn: NgGqlModule,
-})
+@Injectable()
 export class NgGqlStorageService {
   constructor() {}
 

@@ -35,7 +35,7 @@
     "@angular-devkit/build-angular": "^15.2.2",
     "@angular/cli": "^15.2.2",
     "@angular/compiler-cli": "^15.2.2",
-    "@types/node": "^18.15.1",
+    "@types/node": "^18.15.2",
     "ng-packagr": "^15.2.2",
     "typedoc": "^0.23.26",
     "typedoc-plugin-markdown": "^3.14.0",
