@@ -1,14 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
-import { catchError, filter, of, map } from 'rxjs';
+import { catchError, map, throwError } from 'rxjs';
 import {
   Apollo,
   ExtraSubscriptionOptions,
-  MutationResult,
   WatchQueryOptions,
 } from 'apollo-angular';
 import type {
-  ApolloQueryResult,
-  FetchResult,
   MutationOptions,
   OperationVariables,
   QueryOptions,
@@ -41,9 +38,8 @@ export class ApolloService {
         if (this.config.debugMode) {
           alert(error);
         }
-        return of(() => {});
-      }),
-      filter((value): value is ApolloQueryResult<TData> => !!value)
+        return throwError(() => error);
+      })
     );
   }
 
@@ -61,9 +57,8 @@ export class ApolloService {
         if (this.config.debugMode) {
           alert(error);
         }
-        return of(() => {});
-      }),
-      filter((value): value is ApolloQueryResult<T> => !!value)
+        return throwError(() => error);
+      })
     );
   }
 
@@ -74,9 +69,8 @@ export class ApolloService {
         if (this.config.debugMode) {
           alert(error);
         }
-        return of(() => {});
-      }),
-      filter((value): value is MutationResult<T> => !!value)
+        return throwError(() => error);
+      })
     );
   }
 
@@ -97,9 +91,8 @@ export class ApolloService {
         if (this.config.debugMode) {
           alert(error);
         }
-        return of(() => {});
-      }),
-      filter((value): value is FetchResult<T> => !!value)
+        return throwError(() => error);
+      })
     );
   }
 }
