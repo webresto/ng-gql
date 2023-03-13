@@ -7,14 +7,18 @@ export interface BaseResponse {
   message: Message;
   action: Action;
 }
-
-export interface LoginPayload {
+export interface RestorePasswordPayload {
   login: string;
+  password: string;
+  otp: string;
+  captcha: Captcha;
+}
+
+export type LoginPayload = Omit<RestorePasswordPayload, 'password' | 'otp'> & {
   phone?: Phone;
   password?: string;
   otp?: string;
-  captcha: Captcha;
-}
+};
 
 export type RegistrationPayload = Omit<LoginPayload, 'otp'> & {
   phone?: Phone;
@@ -25,7 +29,6 @@ export type RegistrationPayload = Omit<LoginPayload, 'otp'> & {
     [key: string]: string | any | null;
   };
 };
-
 
 export interface UserResponse {
   user: User;

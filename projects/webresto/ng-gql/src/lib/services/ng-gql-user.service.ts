@@ -14,6 +14,7 @@ import {
   CaptchaJob,
   CaptchaJobPayload,
   CaptchaTask,
+  RestorePasswordPayload,
 } from '../models';
 import {
   ACTION_FRAGMENTS,
@@ -40,7 +41,7 @@ type UserBusEvent = {
       successCb: (result: CaptchaJob<any>) => void;
     }
   | {
-      type: 'registration';
+      type: 'registrationApp';
       payload: RegistrationPayload;
       successCb: (result: UserResponse) => void;
     }
@@ -52,6 +53,11 @@ type UserBusEvent = {
   | {
       type: 'login';
       payload: LoginPayload;
+      successCb: (result: UserResponse) => void;
+    }
+  | {
+      type: 'RestorePassword';
+      payload: RestorePasswordPayload;
       successCb: (result: UserResponse) => void;
     }
 );
@@ -75,13 +81,9 @@ export class NgGqlUserService {
     private defaultOTPResponceFragments: ValuesOrBoolean<OTPResponse>
   ) {}
 
-  registration$(data: RegistrationPayload) {
+  registrationApp$(data: RegistrationPayload) {
     return this.ngGqlService
-      .customMutation$<
-        UserResponse,
-        'registration',
-        RegistrationPayload
-      >(
+      .customMutation$<UserResponse, 'registration', RegistrationPayload>(
         'registration',
         {
           user: this.defaultUserFragments,
@@ -100,7 +102,7 @@ export class NgGqlUserService {
       .pipe(map((record) => record.registration));
   }
 
-  registration(
+  registrationApp(
     data: RegistrationPayload,
     loading?: BehaviorSubject<boolean>
   ): Promise<UserResponse> {
@@ -109,7 +111,7 @@ export class NgGqlUserService {
     }
     return new Promise<UserResponse>((resolve, reject) => {
       this._userBus.emit({
-        type: 'registration',
+        type: 'registrationApp',
         payload: data,
         loading,
         successCb: (res) => resolve(res),
@@ -117,8 +119,6 @@ export class NgGqlUserService {
       });
     });
   }
-
-
 
   otpRequest$(data: OTPRequestPayload) {
     return this.ngGqlService
@@ -183,6 +183,42 @@ export class NgGqlUserService {
     return new Promise<UserResponse>((resolve, reject) => {
       this._userBus.emit({
         type: 'login',
+        payload: data,
+        loading,
+        successCb: (res) => resolve(res),
+        errorCb: (err) => reject(err),
+      });
+    });
+  }
+
+  restorePassword$(data: RestorePasswordPayload): Observable<UserResponse> {
+    return this.ngGqlService
+      .customMutation$<UserResponse, 'restorePassword', RestorePasswordPayload>(
+        'restorePassword',
+        {
+          user: this.defaultUserFragments,
+          message: this.defaultMessageFragments,
+          action: this.defaultActionFragments,
+        },
+        data,
+        {
+          requiredFields: ['login', 'otp', 'password'],
+          fieldsTypeMap: new Map([['captcha', 'Captcha!']]),
+        }
+      )
+      .pipe(map((record) => record.restorePassword));
+  }
+
+  restorePassword(
+    data: RestorePasswordPayload,
+    loading?: BehaviorSubject<boolean>
+  ): Promise<UserResponse> {
+    if (isValue(loading)) {
+      loading.next(true);
+    }
+    return new Promise<UserResponse>((resolve, reject) => {
+      this._userBus.emit({
+        type: 'RestorePassword',
         payload: data,
         loading,
         successCb: (res) => resolve(res),
@@ -267,8 +303,10 @@ export class NgGqlUserService {
         return this.login$(busEvent.payload);
       case 'captchaGetJob':
         return this.captchaGetJob$(busEvent.payload);
-        case 'registration':
-          return this.registration$(busEvent.payload);
+      case 'registrationApp':
+        return this.registrationApp$(busEvent.payload);
+      case 'RestorePassword':
+        return this.restorePassword$(busEvent.payload);
     }
   }
 

@@ -8,10 +8,14 @@
 
 ### Methods
 
+- [registrationApp$](NgGqlUserService.md#registrationapp$)
+- [registrationApp](NgGqlUserService.md#registrationapp)
 - [otpRequest$](NgGqlUserService.md#otprequest$)
 - [otpRequest](NgGqlUserService.md#otprequest)
 - [login$](NgGqlUserService.md#login$)
 - [login](NgGqlUserService.md#login)
+- [restorePassword$](NgGqlUserService.md#restorepassword$)
+- [restorePassword](NgGqlUserService.md#restorepassword)
 - [getUser$](NgGqlUserService.md#getuser$)
 - [captchaGetJob$](NgGqlUserService.md#captchagetjob$)
 - [captchaGetJob](NgGqlUserService.md#captchagetjob)
@@ -40,6 +44,39 @@
 | `defaultOTPResponceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`OTPResponse`](../interfaces/OTPResponse.md)\> |
 
 ## Methods
+
+### registrationApp$
+
+▸ **registrationApp$**(`data`): `Observable`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`RegistrationPayload`](../README.md#registrationpayload) |
+
+#### Returns
+
+`Observable`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+___
+
+### registrationApp
+
+▸ **registrationApp**(`data`, `loading?`): `Promise`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`RegistrationPayload`](../README.md#registrationpayload) |
+| `loading?` | `BehaviorSubject`<`boolean`\> |
+
+#### Returns
+
+`Promise`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+___
 
 ### otpRequest$
 
@@ -82,7 +119,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`LoginPayload`](../interfaces/LoginPayload.md) |
+| `data` | [`LoginPayload`](../README.md#loginpayload) |
 
 #### Returns
 
@@ -98,7 +135,40 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `data` | [`LoginPayload`](../interfaces/LoginPayload.md) |
+| `data` | [`LoginPayload`](../README.md#loginpayload) |
+| `loading?` | `BehaviorSubject`<`boolean`\> |
+
+#### Returns
+
+`Promise`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+___
+
+### restorePassword$
+
+▸ **restorePassword$**(`data`): `Observable`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`RestorePasswordPayload`](../interfaces/RestorePasswordPayload.md) |
+
+#### Returns
+
+`Observable`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+___
+
+### restorePassword
+
+▸ **restorePassword**(`data`, `loading?`): `Promise`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`RestorePasswordPayload`](../interfaces/RestorePasswordPayload.md) |
 | `loading?` | `BehaviorSubject`<`boolean`\> |
 
 #### Returns

@@ -81,7 +81,7 @@
 - [OrderAdditionalFields](interfaces/OrderAdditionalFields.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
 - [BaseResponse](interfaces/BaseResponse.md)
-- [LoginPayload](interfaces/LoginPayload.md)
+- [RestorePasswordPayload](interfaces/RestorePasswordPayload.md)
 - [UserResponse](interfaces/UserResponse.md)
 - [OTPRequestPayload](interfaces/OTPRequestPayload.md)
 - [OTPResponse](interfaces/OTPResponse.md)
@@ -103,6 +103,8 @@
 - [PartialGroupNullable](README.md#partialgroupnullable)
 - [OrderState](README.md#orderstate)
 - [OrderForm](README.md#orderform)
+- [LoginPayload](README.md#loginpayload)
+- [RegistrationPayload](README.md#registrationpayload)
 - [ValuesOrBoolean](README.md#valuesorboolean)
 
 ### Classes
@@ -450,6 +452,18 @@ ___
 ### OrderForm
 
 Ƭ **OrderForm**: [`Order`](interfaces/Order.md) & [`OrderAdditionalFields`](interfaces/OrderAdditionalFields.md)
+
+___
+
+### LoginPayload
+
+Ƭ **LoginPayload**: `Omit`<[`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), ``"password"`` \| ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `password?`: `string` ; `otp?`: `string`  }
+
+___
+
+### RegistrationPayload
+
+Ƭ **RegistrationPayload**: `Omit`<[`LoginPayload`](README.md#loginpayload), ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName?`: `string` ; `lastName?`: `string` ; `customFields?`: { `[key: string]`: `string` \| `any` \| ``null``;  }  }
 
 ___
 
