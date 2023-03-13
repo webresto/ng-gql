@@ -14,6 +14,7 @@
 - [navigation](NgGqlStorageService.md#navigation)
 - [paymentMethods](NgGqlStorageService.md#paymentmethods)
 - [user](NgGqlStorageService.md#user)
+- [token](NgGqlStorageService.md#token)
 
 ### Methods
 
@@ -23,6 +24,7 @@
 - [updateNavigation](NgGqlStorageService.md#updatenavigation)
 - [updatePaymentMethods](NgGqlStorageService.md#updatepaymentmethods)
 - [updateUser](NgGqlStorageService.md#updateuser)
+- [updateToken](NgGqlStorageService.md#updatetoken)
 
 ## Constructors
 
@@ -65,6 +67,12 @@ ___
 ### user
 
 • **user**: `Observable`<[`User`](../interfaces/User.md)\>
+
+___
+
+### token
+
+• **token**: `Observable`<`string`\>
 
 ## Methods
 
@@ -193,6 +201,22 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `user` | `T` |
+
+#### Returns
+
+`void`
+
+___
+
+### updateToken
+
+▸ **updateToken**(`newToken`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `newToken` | ``null`` \| `string` |
 
 #### Returns
 

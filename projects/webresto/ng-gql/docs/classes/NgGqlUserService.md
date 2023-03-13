@@ -16,7 +16,10 @@
 - [login](NgGqlUserService.md#login)
 - [restorePassword$](NgGqlUserService.md#restorepassword$)
 - [restorePassword](NgGqlUserService.md#restorepassword)
+- [loadUser$](NgGqlUserService.md#loaduser$)
+- [updateUser](NgGqlUserService.md#updateuser)
 - [getUser$](NgGqlUserService.md#getuser$)
+- [updateToken](NgGqlUserService.md#updatetoken)
 - [captchaGetJob$](NgGqlUserService.md#captchagetjob$)
 - [captchaGetJob](NgGqlUserService.md#captchagetjob)
 - [getCaptchaSolution](NgGqlUserService.md#getcaptchasolution)
@@ -177,9 +180,9 @@ ___
 
 ___
 
-### getUser$
+### loadUser$
 
-▸ **getUser$**(`userId`): `Observable`<[`User`](../interfaces/User.md)[]\>
+▸ **loadUser$**(`userId`): `Observable`<[`User`](../interfaces/User.md)[]\>
 
 #### Parameters
 
@@ -190,6 +193,48 @@ ___
 #### Returns
 
 `Observable`<[`User`](../interfaces/User.md)[]\>
+
+___
+
+### updateUser
+
+▸ **updateUser**(`newUser`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `newUser` | [`User`](../interfaces/User.md) |
+
+#### Returns
+
+`void`
+
+___
+
+### getUser$
+
+▸ **getUser$**(): `Observable`<[`User`](../interfaces/User.md)\>
+
+#### Returns
+
+`Observable`<[`User`](../interfaces/User.md)\>
+
+___
+
+### updateToken
+
+▸ **updateToken**(`newToken`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `newToken` | `string` |
+
+#### Returns
+
+`void`
 
 ___
 

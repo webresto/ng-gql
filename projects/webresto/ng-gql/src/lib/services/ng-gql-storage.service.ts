@@ -1,7 +1,7 @@
 import { User } from './../models/user/user';
 import { Injectable } from '@angular/core';
 import { Dish, Group, NavigationBase, Order, PaymentMethod } from '../models';
-import { getFilteredData, createSubject } from '@axrl/common';
+import { getFilteredData, createSubject, isValue } from '@axrl/common';
 
 @Injectable()
 export class NgGqlStorageService {
@@ -47,5 +47,17 @@ export class NgGqlStorageService {
 
   updateUser<T extends User>(user: T) {
     this._user.next(user);
+  }
+
+  private _token = createSubject<string>(null);
+  token = getFilteredData(this._token);
+
+  updateToken(newToken: string | null) {
+    if (isValue(newToken)) {
+      localStorage.setItem('token', newToken);
+    } else {
+      localStorage.removeItem('token');
+    };
+    this._token.next(newToken);
   }
 }

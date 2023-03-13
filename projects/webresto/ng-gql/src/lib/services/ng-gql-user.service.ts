@@ -168,7 +168,13 @@ export class NgGqlUserService {
           ]),
         }
       )
-      .pipe(map((record) => record.login));
+      .pipe(map((record) => {
+        if ( isValue( record.login.action) ) {
+          const token = record.login.action?.data?.token;
+          this.updateToken(token ?? null);
+        };
+        return record.login;
+      }));
   }
 
   login(
@@ -225,7 +231,7 @@ export class NgGqlUserService {
     });
   }
 
-  getUser$(userId: string) {
+  loadUser$(userId: string) {
     return this.ngGqlService
       .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id', {
         query: { userId },
@@ -236,6 +242,18 @@ export class NgGqlUserService {
           return result;
         })
       );
+  }
+
+  updateUser(newUser:User) {
+    this.ngGqlStorage.updateUser(newUser);
+  }
+
+  getUser$() {
+    return this.ngGqlStorage.user;
+  }
+
+  updateToken(newToken:string) {
+    this.ngGqlStorage.updateToken(newToken);
   }
 
   captchaGetJob$<T extends CaptchaTask>(data: CaptchaJobPayload) {
@@ -291,7 +309,7 @@ export class NgGqlUserService {
 
   private _userBus = new EventEmitter<UserBusEvent>();
 
-  private userReducer(
+  private userServiceReducer(
     busEvent: UserBusEvent
   ): Observable<Parameters<UserBusEvent['successCb']>[0]> {
     switch (busEvent.type) {
@@ -310,7 +328,7 @@ export class NgGqlUserService {
 
   userBus$ = this._userBus.asObservable().pipe(
     switchMap((event) => {
-      return this.userReducer(event).pipe(
+      return this.userServiceReducer(event).pipe(
         map((result) => {
           setTimeout(() => {
             const successCb = <

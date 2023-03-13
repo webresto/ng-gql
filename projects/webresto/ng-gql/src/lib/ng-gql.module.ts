@@ -2,9 +2,8 @@ import { inject, NgModule } from '@angular/core';
 import type { ModuleWithProviders } from '@angular/core';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLink } from 'apollo-angular/http';
-import { ApolloLink, InMemoryCache, split } from '@apollo/client/core';
+import { InMemoryCache, split } from '@apollo/client/core';
 import type { InMemoryCacheConfig } from '@apollo/client/core';
-import { setContext } from '@apollo/client/link/context';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
@@ -24,7 +23,7 @@ import {
   NgGqlService,
   NgGqlUserService,
   NgGqlStorageService,
-  ApolloService
+  ApolloService,
 } from './services';
 
 @NgModule({
@@ -66,35 +65,15 @@ export class NgGqlModule {
             const savedDeviceId = localStorage.getItem('deviceId');
             const deviceId = savedDeviceId ?? generateUUID(win);
 
-            if (!isValue(savedDeviceId)) {
-              localStorage.setItem('deviceId', deviceId);
-            }
-
-            const auth = setContext((operation, context) => {
-              const token = localStorage.getItem('token');
-
-              if (token === null) {
-                return {};
-              } else {
-                return {
-                  headers: {
-                    authorization: token,
-                  },
-                };
-              }
-            });
-
             // Create a WebSocket link:
             const ws = new WebSocketLink(
               new SubscriptionClient(config.url.replace('http', 'ws'), {
                 reconnect: true,
                 connectionParams: () => {
                   const token = localStorage.getItem('token');
-
                   return isValue(token)
                     ? {
                         'X-Device-Id': deviceId,
-                        authToken: localStorage.getItem('token'),
                         authorization: localStorage.getItem('token'),
                       }
                     : {
@@ -116,15 +95,9 @@ export class NgGqlModule {
                 );
               },
               ws,
-              ApolloLink.from([
-                auth,
-                httpLink.create({
-                  headers: new HttpHeaders({
-                    'X-Device-Id': deviceId,
-                  }),
-                  uri: config.url,
-                }),
-              ])
+              httpLink.create({
+                uri: config.url,
+              })
             );
 
             const defaultCacheConfig: InMemoryCacheConfig = {
