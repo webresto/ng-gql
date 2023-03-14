@@ -252,7 +252,11 @@ export class NgGqlUserService {
     return this.ngGqlStorage.user;
   }
 
-  updateToken(newToken:string) {
+  getToken$() {
+    return this.ngGqlStorage.token;
+  }
+
+  updateToken(newToken:string|null) {
     this.ngGqlStorage.updateToken(newToken);
   }
 

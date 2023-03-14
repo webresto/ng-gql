@@ -50,14 +50,14 @@ export class NgGqlStorageService {
   }
 
   private _token = createSubject<string>(null);
-  token = getFilteredData(this._token);
+  token = this._token.asObservable();
 
   updateToken(newToken: string | null) {
     if (isValue(newToken)) {
       localStorage.setItem('token', newToken);
     } else {
       localStorage.removeItem('token');
-    };
+    }
     this._token.next(newToken);
   }
 }

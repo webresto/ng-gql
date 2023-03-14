@@ -19,6 +19,7 @@
 - [loadUser$](NgGqlUserService.md#loaduser$)
 - [updateUser](NgGqlUserService.md#updateuser)
 - [getUser$](NgGqlUserService.md#getuser$)
+- [getToken$](NgGqlUserService.md#gettoken$)
 - [updateToken](NgGqlUserService.md#updatetoken)
 - [captchaGetJob$](NgGqlUserService.md#captchagetjob$)
 - [captchaGetJob](NgGqlUserService.md#captchagetjob)
@@ -222,6 +223,16 @@ ___
 
 ___
 
+### getToken$
+
+▸ **getToken$**(): `Observable`<``null`` \| `string`\>
+
+#### Returns
+
+`Observable`<``null`` \| `string`\>
+
+___
+
 ### updateToken
 
 ▸ **updateToken**(`newToken`): `void`
@@ -230,7 +241,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `newToken` | `string` |
+| `newToken` | ``null`` \| `string` |
 
 #### Returns
 

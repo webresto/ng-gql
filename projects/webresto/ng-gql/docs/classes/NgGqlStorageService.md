@@ -72,7 +72,7 @@ ___
 
 ### token
 
-• **token**: `Observable`<`string`\>
+• **token**: `Observable`<``null`` \| `string`\>
 
 ## Methods
 
