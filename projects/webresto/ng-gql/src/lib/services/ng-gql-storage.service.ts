@@ -43,13 +43,13 @@ export class NgGqlStorageService {
   }
 
   private _user = createSubject<User | null>(null);
-  user = getFilteredData(this._user);
+  user = this._user;
 
   updateUser<T extends User>(user: T) {
     this._user.next(user);
   }
 
-  private _token = createSubject<string>(null);
+  private _token = createSubject<string | null>(localStorage.getItem('token'));
   token = this._token.asObservable();
 
   updateToken(newToken: string | null) {

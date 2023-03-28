@@ -25,8 +25,8 @@ import {
   CAPTCHA_GET_JOB_FRAGMENTS,
   USER_ORDER_HYSTORY_FRAGMENTS,
 } from '../injection-tokens';
-import type { BehaviorSubject, Observable } from 'rxjs';
-import { map, catchError, of, switchMap } from 'rxjs';
+import { BehaviorSubject, concatMap, Observable } from 'rxjs';
+import { map, catchError, of, switchMap, exhaustMap } from 'rxjs';
 import { deepClone, isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
 
@@ -174,9 +174,12 @@ export class NgGqlUserService {
       )
       .pipe(
         map((record) => {
-          if (isValue(record.login.action)) {
-            const token = record.login.action?.data?.token;
-            this.updateToken(token ?? null);
+          const userResponse = record.login;
+          if (isValue(userResponse.action)) {
+            const token = userResponse.action.data?.token;
+            setTimeout(() => {
+              this.updateToken(token ?? null);
+            }, 100);
           }
           if (isValue(record.login.user)) {
             this.updateUser(record.login.user);
@@ -240,11 +243,9 @@ export class NgGqlUserService {
     });
   }
 
-  loadUser$(userId: string) {
+  loadUser$() {
     return this.ngGqlService
-      .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id', {
-        query: { userId },
-      })
+      .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
       .pipe(
         map((result) => {
           this.ngGqlStorage.updateUser(result[0]);
@@ -258,7 +259,26 @@ export class NgGqlUserService {
   }
 
   getUser$() {
-    return this.ngGqlStorage.user;
+    return this.ngGqlStorage.user.pipe(
+      exhaustMap((user) =>
+        isValue(user)
+          ? this.ngGqlStorage.user
+          : this.ngGqlStorage.token.pipe(
+              switchMap((userToken) => {
+                if (isValue(userToken)) {
+                  return this.loadUser$().pipe(
+                    switchMap((user) => {
+                      this.updateUser(user[0]);
+                      return this.ngGqlStorage.user;
+                    })
+                  );
+                } else {
+                  return this.ngGqlStorage.user;
+                }
+              })
+            )
+      )
+    );
   }
 
   getToken$() {
@@ -270,7 +290,8 @@ export class NgGqlUserService {
   }
 
   loadUserOrderHistory(userId: string): Observable<UserOrderHystory[]> {
-    return this.ngGqlService.queryAndSubscribe<
+    return this.ngGqlService
+      .queryAndSubscribe<
         UserOrderHystory,
         'userOrderHistory',
         'userOrderHistory'
@@ -368,7 +389,7 @@ export class NgGqlUserService {
   userBus$ = this._userBus.asObservable().pipe(
     switchMap((event) => {
       return this.userServiceReducer(event).pipe(
-        map((result) => {
+        concatMap((result) => {
           setTimeout(() => {
             const successCb = <
               (result: CaptchaJob<any> | UserResponse | OTPResponse) => void
@@ -379,6 +400,7 @@ export class NgGqlUserService {
               event.loading.next(false);
             }
           }, 1);
+          return of(() => {});
         }),
         catchError((err: unknown) => {
           if (isValue(event.loading)) {

@@ -23,7 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
           const payloadEncoded = userToken.split('.')[1];
           try {
             const payload = JSON.parse(atob(payloadEncoded));
-            if (Date.now() > payload.exp) {
+            if (Date.now() / 1000 > payload.exp) {
               this.ngGqlUser.updateToken(null);
               return next.handle(request);
             } else {

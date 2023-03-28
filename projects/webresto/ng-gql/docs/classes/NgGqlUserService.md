@@ -185,13 +185,7 @@ ___
 
 ### loadUser$
 
-▸ **loadUser$**(`userId`): `Observable`<[`User`](../interfaces/User.md)[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `userId` | `string` |
+▸ **loadUser$**(): `Observable`<[`User`](../interfaces/User.md)[]\>
 
 #### Returns
 
@@ -217,11 +211,11 @@ ___
 
 ### getUser$
 
-▸ **getUser$**(): `Observable`<[`User`](../interfaces/User.md)\>
+▸ **getUser$**(): `Observable`<``null`` \| [`User`](../interfaces/User.md)\>
 
 #### Returns
 
-`Observable`<[`User`](../interfaces/User.md)\>
+`Observable`<``null`` \| [`User`](../interfaces/User.md)\>
 
 ___
 
@@ -330,4 +324,4 @@ ___
 
 ### userBus$
 
-• **userBus$**: `Observable`<`void` \| () => `void`\>
+• **userBus$**: `Observable`<() => `void` \| () => `void`\>

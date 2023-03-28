@@ -66,7 +66,7 @@ ___
 
 ### user
 
-• **user**: `Observable`<[`User`](../interfaces/User.md)\>
+• **user**: `BehaviorSubject`<``null`` \| [`User`](../interfaces/User.md)\>
 
 ___
 
