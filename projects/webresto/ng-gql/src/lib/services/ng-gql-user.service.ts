@@ -26,7 +26,7 @@ import {
   USER_ORDER_HYSTORY_FRAGMENTS,
 } from '../injection-tokens';
 import { BehaviorSubject, concatMap, Observable } from 'rxjs';
-import { map, catchError, of, switchMap, exhaustMap } from 'rxjs';
+import { map, catchError, of, switchMap } from 'rxjs';
 import { deepClone, isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
 
@@ -181,7 +181,7 @@ export class NgGqlUserService {
               this.updateToken(token ?? null);
             }, 100);
           }
-          if (isValue(record.login.user)) {
+          if (isValue(userResponse.user)) {
             this.updateUser(record.login.user);
           }
           return record.login;
@@ -248,7 +248,7 @@ export class NgGqlUserService {
       .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
       .pipe(
         map((result) => {
-          this.ngGqlStorage.updateUser(result[0]);
+          console.log(result);
           return result;
         })
       );
@@ -259,26 +259,7 @@ export class NgGqlUserService {
   }
 
   getUser$() {
-    return this.ngGqlStorage.user.pipe(
-      exhaustMap((user) =>
-        isValue(user)
-          ? this.ngGqlStorage.user
-          : this.ngGqlStorage.token.pipe(
-              switchMap((userToken) => {
-                if (isValue(userToken)) {
-                  return this.loadUser$().pipe(
-                    switchMap((user) => {
-                      this.updateUser(user[0]);
-                      return this.ngGqlStorage.user;
-                    })
-                  );
-                } else {
-                  return this.ngGqlStorage.user;
-                }
-              })
-            )
-      )
-    );
+    return this.ngGqlStorage.user;
   }
 
   getToken$() {

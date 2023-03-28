@@ -211,11 +211,11 @@ ___
 
 ### getUser$
 
-▸ **getUser$**(): `Observable`<``null`` \| [`User`](../interfaces/User.md)\>
+▸ **getUser$**(): `BehaviorSubject`<``null`` \| [`User`](../interfaces/User.md)\>
 
 #### Returns
 
-`Observable`<``null`` \| [`User`](../interfaces/User.md)\>
+`BehaviorSubject`<``null`` \| [`User`](../interfaces/User.md)\>
 
 ___
 
