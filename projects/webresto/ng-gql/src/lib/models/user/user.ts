@@ -2,7 +2,6 @@ import type { Dish } from '../dish/dish.gql';
 import type { Order } from '../order';
 import type { Phone } from './../customer/customer';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
-import type { ValuesOrBoolean } from '../values-or-boolean';
 
 /**
  *  Модели, описывающие авторизованного пользователя и его данные
@@ -24,8 +23,6 @@ export interface User extends BaseModelWithCustomData {
   lastPasswordChange: number;
   temporaryCode: string;
 }
-
-export const defaultUserFragments: ValuesOrBoolean<User> = {};
 
 export interface BonusProgram extends BaseModelWithCustomData {
   id: string;
@@ -92,4 +89,16 @@ export interface OneTimePassword extends BaseModelWithCustomData {
   login: string;
   password: string;
   expires: number;
+}
+
+export interface UserOrderHystory extends BaseModelWithCustomData {
+  id: string;
+  uniqueItems: number;
+  orderTotal: number;
+  total: number;
+  order: Order;
+  discountTotal: number;
+  comment: string;
+  totalWeight: number;
+  userId: string;
 }

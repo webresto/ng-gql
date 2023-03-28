@@ -31,6 +31,8 @@
 
   ↳ [`OneTimePassword`](OneTimePassword.md)
 
+  ↳ [`UserOrderHystory`](UserOrderHystory.md)
+
 ## Table of contents
 
 ### Properties

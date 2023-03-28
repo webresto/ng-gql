@@ -21,6 +21,7 @@
 - [getUser$](NgGqlUserService.md#getuser$)
 - [getToken$](NgGqlUserService.md#gettoken$)
 - [updateToken](NgGqlUserService.md#updatetoken)
+- [loadUserOrderHistory](NgGqlUserService.md#loaduserorderhistory)
 - [captchaGetJob$](NgGqlUserService.md#captchagetjob$)
 - [captchaGetJob](NgGqlUserService.md#captchagetjob)
 - [getCaptchaSolution](NgGqlUserService.md#getcaptchasolution)
@@ -33,7 +34,7 @@
 
 ### constructor
 
-• **new NgGqlUserService**(`ngGqlService`, `ngGqlStorage`, `defaultActionFragments`, `defaultMessageFragments`, `defaultCaptchaGetJobFragments`, `defaultUserFragments`, `defaultOTPResponceFragments`)
+• **new NgGqlUserService**(`ngGqlService`, `ngGqlStorage`, `defaultActionFragments`, `defaultUserOrderHystoryFragments`, `defaultMessageFragments`, `defaultCaptchaGetJobFragments`, `defaultUserFragments`, `defaultOTPResponceFragments`)
 
 #### Parameters
 
@@ -42,6 +43,7 @@
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
 | `ngGqlStorage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
 | `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
+| `defaultUserOrderHystoryFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)\> |
 | `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |
 | `defaultCaptchaGetJobFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |
 | `defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |
@@ -246,6 +248,22 @@ ___
 #### Returns
 
 `void`
+
+___
+
+### loadUserOrderHistory
+
+▸ **loadUserOrderHistory**(`userId`): `Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `userId` | `string` |
+
+#### Returns
+
+`Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
 
 ___
 

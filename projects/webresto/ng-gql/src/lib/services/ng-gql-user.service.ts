@@ -15,6 +15,7 @@ import {
   CaptchaJobPayload,
   CaptchaTask,
   RestorePasswordPayload,
+  UserOrderHystory,
 } from '../models';
 import {
   ACTION_FRAGMENTS,
@@ -22,6 +23,7 @@ import {
   USER_FRAGMENTS,
   OTP_RESPONSE_FRAGMENTS,
   CAPTCHA_GET_JOB_FRAGMENTS,
+  USER_ORDER_HYSTORY_FRAGMENTS,
 } from '../injection-tokens';
 import type { BehaviorSubject, Observable } from 'rxjs';
 import { map, catchError, of, switchMap } from 'rxjs';
@@ -69,6 +71,8 @@ export class NgGqlUserService {
     private ngGqlStorage: NgGqlStorageService,
     @Inject(ACTION_FRAGMENTS)
     private defaultActionFragments: ValuesOrBoolean<Action>,
+    @Inject(USER_ORDER_HYSTORY_FRAGMENTS)
+    private defaultUserOrderHystoryFragments: ValuesOrBoolean<UserOrderHystory>,
     @Inject(MESSAGE_FRAGMENTS)
     private defaultMessageFragments: ValuesOrBoolean<Message>,
     @Inject(CAPTCHA_GET_JOB_FRAGMENTS)
@@ -168,13 +172,18 @@ export class NgGqlUserService {
           ]),
         }
       )
-      .pipe(map((record) => {
-        if ( isValue( record.login.action) ) {
-          const token = record.login.action?.data?.token;
-          this.updateToken(token ?? null);
-        };
-        return record.login;
-      }));
+      .pipe(
+        map((record) => {
+          if (isValue(record.login.action)) {
+            const token = record.login.action?.data?.token;
+            this.updateToken(token ?? null);
+          }
+          if (isValue(record.login.user)) {
+            this.updateUser(record.login.user);
+          }
+          return record.login;
+        })
+      );
   }
 
   login(
@@ -244,7 +253,7 @@ export class NgGqlUserService {
       );
   }
 
-  updateUser(newUser:User) {
+  updateUser(newUser: User) {
     this.ngGqlStorage.updateUser(newUser);
   }
 
@@ -256,8 +265,34 @@ export class NgGqlUserService {
     return this.ngGqlStorage.token;
   }
 
-  updateToken(newToken:string|null) {
+  updateToken(newToken: string | null) {
     this.ngGqlStorage.updateToken(newToken);
+  }
+
+  loadUserOrderHistory(userId: string): Observable<UserOrderHystory[]> {
+    return this.ngGqlService.queryAndSubscribe<
+        UserOrderHystory,
+        'userOrderHistory',
+        'userOrderHistory'
+      >(
+        'userOrderHistory',
+        'userOrderHistory',
+        this.defaultUserOrderHystoryFragments,
+        'id',
+        {
+          query: {
+            criteria: {
+              userId,
+            },
+          },
+          subscribe: {
+            criteria: {
+              userId,
+            },
+          },
+        }
+      )
+      .pipe(map((result) => result));
   }
 
   captchaGetJob$<T extends CaptchaTask>(data: CaptchaJobPayload) {

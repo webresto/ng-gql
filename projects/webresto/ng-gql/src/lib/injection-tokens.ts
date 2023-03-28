@@ -1,5 +1,5 @@
 import { CaptchaJob } from './models/captcha/captcha';
-import { User } from './models/user/user';
+import { User, UserOrderHystory } from './models/user/user';
 import { inject, InjectionToken } from '@angular/core';
 import {
   ValuesOrBoolean,
@@ -451,3 +451,25 @@ export const USER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<User>>(
     },
   }
 );
+
+/**
+ * InjectionToken с объектом ValuesOrBoolean<UserOrderHystory>.
+ */
+export const USER_ORDER_HYSTORY_FRAGMENTS = new InjectionToken<
+  ValuesOrBoolean<UserOrderHystory>
+>('USER_ORDER_HYSTORY_FRAGMENTS', {
+  factory: () => {
+    const fragments: ValuesOrBoolean<UserOrderHystory> = {
+      id: true,
+      uniqueItems: true,
+      orderTotal: true,
+      total: true,
+      order: true,
+      discountTotal: true,
+      comment: true,
+      totalWeight: true,
+      userId: true,
+    };
+    return fragments;
+  },
+});

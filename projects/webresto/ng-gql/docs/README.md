@@ -25,6 +25,7 @@
 - [USER\_BONUS\_PROGRAM\_FRAGMENTS](README.md#user_bonus_program_fragments)
 - [CAPTCHA\_GET\_JOB\_FRAGMENTS](README.md#captcha_get_job_fragments)
 - [USER\_FRAGMENTS](README.md#user_fragments)
+- [USER\_ORDER\_HYSTORY\_FRAGMENTS](README.md#user_order_hystory_fragments)
 - [defaultDishFragments](README.md#defaultdishfragments)
 - [defaultMessageFragments](README.md#defaultmessagefragments)
 - [defaultActionFragments](README.md#defaultactionfragments)
@@ -37,7 +38,6 @@
 - [defaultOrderDishFragments](README.md#defaultorderdishfragments)
 - [defaultOrderFragments](README.md#defaultorderfragments)
 - [defaultPaymentMethodFragments](README.md#defaultpaymentmethodfragments)
-- [defaultUserFragments](README.md#defaultuserfragments)
 
 ### Interfaces
 
@@ -93,6 +93,7 @@
 - [UserDevice](interfaces/UserDevice.md)
 - [UserLocation](interfaces/UserLocation.md)
 - [OneTimePassword](interfaces/OneTimePassword.md)
+- [UserOrderHystory](interfaces/UserOrderHystory.md)
 - [QueryGenerationParam](interfaces/QueryGenerationParam.md)
 
 ### Type Aliases
@@ -305,6 +306,14 @@ InjectionToken с объектом ValuesOrBoolean<User>.
 
 ___
 
+### USER\_ORDER\_HYSTORY\_FRAGMENTS
+
+• `Const` **USER\_ORDER\_HYSTORY\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserOrderHystory`](interfaces/UserOrderHystory.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<UserOrderHystory>.
+
+___
+
 ### defaultDishFragments
 
 • `Const` **defaultDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>
@@ -374,12 +383,6 @@ ___
 ### defaultPaymentMethodFragments
 
 • `Const` **defaultPaymentMethodFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>
-
-___
-
-### defaultUserFragments
-
-• `Const` **defaultUserFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`User`](interfaces/User.md)\> = `{}`
 
 ## Type Aliases
 
