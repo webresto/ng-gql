@@ -96,7 +96,7 @@ ___
 
 ### history
 
-• **history**: [`Order`](Order.md)<[`Dish`](Dish.md)\>[]
+• **history**: [`UserOrderHystory`](UserOrderHystory.md)[]
 
 ___
 

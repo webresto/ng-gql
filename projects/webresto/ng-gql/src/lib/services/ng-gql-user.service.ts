@@ -16,6 +16,7 @@ import {
   CaptchaTask,
   RestorePasswordPayload,
   UserOrderHystory,
+  UpdateUserDataPayload,
 } from '../models';
 import {
   ACTION_FRAGMENTS,
@@ -58,9 +59,19 @@ type UserBusEvent = {
       successCb: (result: UserResponse) => void;
     }
   | {
+      type: 'UpdateUserData';
+      payload: UpdateUserDataPayload;
+      successCb: (result: UserResponse) => void;
+    }
+  | {
       type: 'RestorePassword';
       payload: RestorePasswordPayload;
       successCb: (result: UserResponse) => void;
+    }
+  | {
+      type: 'AddDishFavor';
+      payload: string;
+      successCb: (result: boolean) => void;
     }
 );
 
@@ -178,11 +189,11 @@ export class NgGqlUserService {
           if (isValue(userResponse.action)) {
             const token = userResponse.action.data?.token;
             setTimeout(() => {
-              this.updateToken(token ?? null);
+              this.updateStorageToken(token ?? null);
             }, 100);
           }
           if (isValue(userResponse.user)) {
-            this.updateUser(record.login.user);
+            this.updateStorageUser(record.login.user);
           }
           return record.login;
         })
@@ -254,7 +265,7 @@ export class NgGqlUserService {
       );
   }
 
-  updateUser(newUser: User) {
+  updateStorageUser(newUser: User) {
     this.ngGqlStorage.updateUser(newUser);
   }
 
@@ -266,11 +277,87 @@ export class NgGqlUserService {
     return this.ngGqlStorage.token;
   }
 
-  updateToken(newToken: string | null) {
+  updateStorageToken(newToken: string | null) {
     this.ngGqlStorage.updateToken(newToken);
   }
 
-  loadUserOrderHistory(userId: string): Observable<UserOrderHystory[]> {
+  /** Добавляет блюдо в избранное */
+  addDishFavor$(dishId: string): Observable<boolean> {
+    return this.ngGqlService
+      .customMutation$<boolean, 'favoriteDish'>('favoriteDish', true, {
+        dishId,
+      })
+      .pipe(map((record) => record.favoriteDish));
+  }
+
+  /** Добавляет блюдо в избранное */
+  addDishFavor(
+    dishId: string,
+    loading?: BehaviorSubject<boolean>
+  ): Promise<boolean> {
+    if (isValue(loading)) {
+      loading.next(true);
+    }
+    return new Promise<boolean>((resolve, reject) => {
+      this._userBus.emit({
+        type: 'AddDishFavor',
+        payload: dishId,
+        loading,
+        successCb: (res) => resolve(res),
+        errorCb: (err) => reject(err),
+      });
+    });
+  }
+
+  /** Добавляет блюдо в избранное */
+  updateUserData$(data: UpdateUserDataPayload): Observable<UserResponse> {
+    return this.ngGqlService
+      .customMutation$<UserResponse, 'login', UpdateUserDataPayload>(
+        'login',
+        {
+          user: this.defaultUserFragments,
+          message: this.defaultMessageFragments,
+          action: this.defaultActionFragments,
+        },
+        data
+      )
+      .pipe(
+        map((record) => {
+          const userResponse = record.login;
+          if (isValue(userResponse.action)) {
+            const token = userResponse.action.data?.token;
+            setTimeout(() => {
+              this.updateStorageToken(token ?? null);
+            }, 100);
+          }
+          if (isValue(userResponse.user)) {
+            this.updateStorageUser(record.login.user);
+          }
+          return record.login;
+        })
+      );
+  }
+
+  /** Добавляет блюдо в избранное */
+  updateUserData(
+    data: UpdateUserDataPayload,
+    loading?: BehaviorSubject<boolean>
+  ): Promise<UserResponse> {
+    if (isValue(loading)) {
+      loading.next(true);
+    }
+    return new Promise<UserResponse>((resolve, reject) => {
+      this._userBus.emit({
+        type: 'UpdateUserData',
+        payload: data,
+        loading,
+        successCb: (res) => resolve(res),
+        errorCb: (err) => reject(err),
+      });
+    });
+  }
+
+  loadUserOrderHistory$(userId: string): Observable<UserOrderHystory[]> {
     return this.ngGqlService
       .queryAndSubscribe<
         UserOrderHystory,
@@ -364,6 +451,10 @@ export class NgGqlUserService {
         return this.registrationApp$(busEvent.payload);
       case 'RestorePassword':
         return this.restorePassword$(busEvent.payload);
+      case 'AddDishFavor':
+        return this.addDishFavor$(busEvent.payload);
+      case 'UpdateUserData':
+        return this.updateUserData$(busEvent.payload);
     }
   }
 
@@ -373,7 +464,9 @@ export class NgGqlUserService {
         concatMap((result) => {
           setTimeout(() => {
             const successCb = <
-              (result: CaptchaJob<any> | UserResponse | OTPResponse) => void
+              (
+                result: CaptchaJob<any> | UserResponse | OTPResponse | boolean
+              ) => void
             >event.successCb;
             successCb(result);
 

@@ -17,11 +17,15 @@
 - [restorePassword$](NgGqlUserService.md#restorepassword$)
 - [restorePassword](NgGqlUserService.md#restorepassword)
 - [loadUser$](NgGqlUserService.md#loaduser$)
-- [updateUser](NgGqlUserService.md#updateuser)
+- [updateStorageUser](NgGqlUserService.md#updatestorageuser)
 - [getUser$](NgGqlUserService.md#getuser$)
 - [getToken$](NgGqlUserService.md#gettoken$)
-- [updateToken](NgGqlUserService.md#updatetoken)
-- [loadUserOrderHistory](NgGqlUserService.md#loaduserorderhistory)
+- [updateStorageToken](NgGqlUserService.md#updatestoragetoken)
+- [addDishFavor$](NgGqlUserService.md#adddishfavor$)
+- [addDishFavor](NgGqlUserService.md#adddishfavor)
+- [updateUserData$](NgGqlUserService.md#updateuserdata$)
+- [updateUserData](NgGqlUserService.md#updateuserdata)
+- [loadUserOrderHistory$](NgGqlUserService.md#loaduserorderhistory$)
 - [captchaGetJob$](NgGqlUserService.md#captchagetjob$)
 - [captchaGetJob](NgGqlUserService.md#captchagetjob)
 - [getCaptchaSolution](NgGqlUserService.md#getcaptchasolution)
@@ -193,9 +197,9 @@ ___
 
 ___
 
-### updateUser
+### updateStorageUser
 
-▸ **updateUser**(`newUser`): `void`
+▸ **updateStorageUser**(`newUser`): `void`
 
 #### Parameters
 
@@ -229,9 +233,9 @@ ___
 
 ___
 
-### updateToken
+### updateStorageToken
 
-▸ **updateToken**(`newToken`): `void`
+▸ **updateStorageToken**(`newToken`): `void`
 
 #### Parameters
 
@@ -245,9 +249,83 @@ ___
 
 ___
 
-### loadUserOrderHistory
+### addDishFavor$
 
-▸ **loadUserOrderHistory**(`userId`): `Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
+▸ **addDishFavor$**(`dishId`): `Observable`<`boolean`\>
+
+Добавляет блюдо в избранное
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `dishId` | `string` |
+
+#### Returns
+
+`Observable`<`boolean`\>
+
+___
+
+### addDishFavor
+
+▸ **addDishFavor**(`dishId`, `loading?`): `Promise`<`boolean`\>
+
+Добавляет блюдо в избранное
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `dishId` | `string` |
+| `loading?` | `BehaviorSubject`<`boolean`\> |
+
+#### Returns
+
+`Promise`<`boolean`\>
+
+___
+
+### updateUserData$
+
+▸ **updateUserData$**(`data`): `Observable`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+Добавляет блюдо в избранное
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`UpdateUserDataPayload`](../README.md#updateuserdatapayload) |
+
+#### Returns
+
+`Observable`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+___
+
+### updateUserData
+
+▸ **updateUserData**(`data`, `loading?`): `Promise`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+Добавляет блюдо в избранное
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `data` | [`UpdateUserDataPayload`](../README.md#updateuserdatapayload) |
+| `loading?` | `BehaviorSubject`<`boolean`\> |
+
+#### Returns
+
+`Promise`<[`UserResponse`](../interfaces/UserResponse.md)\>
+
+___
+
+### loadUserOrderHistory$
+
+▸ **loadUserOrderHistory$**(`userId`): `Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
 
 #### Parameters
 

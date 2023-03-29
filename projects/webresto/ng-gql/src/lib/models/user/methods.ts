@@ -30,6 +30,14 @@ export type RegistrationPayload = Omit<LoginPayload, 'otp'> & {
   };
 };
 
+export type UpdateUserDataPayload = {
+  firstName: string;
+  lastName: string;
+  birthday: string;
+  customData: any;
+  customFields: any;
+};
+
 export interface UserResponse {
   user: User;
   message: Message;

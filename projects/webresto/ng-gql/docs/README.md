@@ -106,6 +106,7 @@
 - [OrderForm](README.md#orderform)
 - [LoginPayload](README.md#loginpayload)
 - [RegistrationPayload](README.md#registrationpayload)
+- [UpdateUserDataPayload](README.md#updateuserdatapayload)
 - [ValuesOrBoolean](README.md#valuesorboolean)
 
 ### Classes
@@ -467,6 +468,22 @@ ___
 ### RegistrationPayload
 
 Ƭ **RegistrationPayload**: `Omit`<[`LoginPayload`](README.md#loginpayload), ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName?`: `string` ; `lastName?`: `string` ; `customFields?`: { `[key: string]`: `string` \| `any` \| ``null``;  }  }
+
+___
+
+### UpdateUserDataPayload
+
+Ƭ **UpdateUserDataPayload**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `firstName` | `string` |
+| `lastName` | `string` |
+| `birthday` | `string` |
+| `customData` | `any` |
+| `customFields` | `any` |
 
 ___
 

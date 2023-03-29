@@ -17,7 +17,7 @@ export interface User extends BaseModelWithCustomData {
   birthday: string;
   favorites: Dish[];
   bonusProgram: UserBonusProgram[];
-  history: Order[];
+  history: UserOrderHystory[];
   locations: UserLocation[];
   devices: UserDevice[];
   lastPasswordChange: number;

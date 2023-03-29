@@ -24,7 +24,7 @@ export class AuthInterceptor implements HttpInterceptor {
           try {
             const payload = JSON.parse(atob(payloadEncoded));
             if (Date.now() / 1000 > payload.exp) {
-              this.ngGqlUser.updateToken(null);
+              this.ngGqlUser.updateStorageToken(null);
               return next.handle(request);
             } else {
               return next.handle(
@@ -36,7 +36,7 @@ export class AuthInterceptor implements HttpInterceptor {
               );
             }
           } catch (error) {
-            this.ngGqlUser.updateToken(null);
+            this.ngGqlUser.updateStorageToken(null);
             return next.handle(request);
           }
         } else {
