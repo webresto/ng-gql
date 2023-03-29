@@ -200,7 +200,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `user` | `T` |
+| `user` | ``null`` \| `T` |
 
 #### Returns
 

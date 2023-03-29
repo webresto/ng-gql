@@ -254,29 +254,59 @@ export class NgGqlUserService {
     });
   }
 
-  loadUser$() {
+  loadUser$(token: string | null): Observable<User | null> {
+    const payloadEncoded = token ? token.split('.')[1] : null;
+    const payload = payloadEncoded ? JSON.parse(atob(payloadEncoded)) : null;
+    const id = payload ? payload?.data.userId : null;
+
     return this.ngGqlService
-      .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
+      .queryAndSubscribe(
+        'user',
+        'user',
+        this.defaultUserFragments,
+        'id',
+        id
+          ? {
+              query: {
+                criteria: {
+                  id,
+                },
+              },
+              subscribe: {
+                criteria: {
+                  id,
+                },
+              },
+            }
+          : undefined
+      )
       .pipe(
         map((result) => {
           console.log(result);
-          return result[0];
+          return result[0] ?? null;
         })
       );
   }
 
-  updateStorageUser(newUser: User) {
+  updateStorageUser(newUser: User | null) {
     this.ngGqlStorage.updateUser(newUser);
   }
 
-  getUser$() {
+  getUser$(): Observable<User | null> {
     return this.ngGqlStorage.user.pipe(
       exhaustMap((user) =>
         isValue(user)
           ? this.ngGqlStorage.user
           : this.getToken$().pipe(
               switchMap((token) =>
-                isValue(token) ? this.loadUser$() : this.ngGqlStorage.user
+                isValue(token)
+                  ? this.loadUser$(token).pipe(
+                      switchMap((user) => {
+                        this.updateStorageUser(user);
+                        return this.ngGqlStorage.user;
+                      })
+                    )
+                  : this.ngGqlStorage.user
               )
             )
       ),

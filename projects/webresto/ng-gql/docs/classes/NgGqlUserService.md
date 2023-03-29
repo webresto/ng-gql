@@ -189,11 +189,17 @@ ___
 
 ### loadUser$
 
-▸ **loadUser$**(): `Observable`<[`User`](../interfaces/User.md)\>
+▸ **loadUser$**(`token`): `Observable`<``null`` \| [`User`](../interfaces/User.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `token` | ``null`` \| `string` |
 
 #### Returns
 
-`Observable`<[`User`](../interfaces/User.md)\>
+`Observable`<``null`` \| [`User`](../interfaces/User.md)\>
 
 ___
 
@@ -205,7 +211,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `newUser` | [`User`](../interfaces/User.md) |
+| `newUser` | ``null`` \| [`User`](../interfaces/User.md) |
 
 #### Returns
 

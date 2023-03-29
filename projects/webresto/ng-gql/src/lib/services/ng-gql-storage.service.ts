@@ -45,7 +45,7 @@ export class NgGqlStorageService {
   private _user = createSubject<User | null>(null);
   user = this._user;
 
-  updateUser<T extends User>(user: T) {
+  updateUser<T extends User>(user: T|null) {
     this._user.next(user);
   }
 
