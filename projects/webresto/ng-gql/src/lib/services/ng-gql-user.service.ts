@@ -26,7 +26,7 @@ import {
   CAPTCHA_GET_JOB_FRAGMENTS,
   USER_ORDER_HYSTORY_FRAGMENTS,
 } from '../injection-tokens';
-import { BehaviorSubject, concatMap, Observable } from 'rxjs';
+import { BehaviorSubject, concatMap, Observable, exhaustMap } from 'rxjs';
 import { map, catchError, of, switchMap } from 'rxjs';
 import { deepClone, isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
@@ -260,7 +260,7 @@ export class NgGqlUserService {
       .pipe(
         map((result) => {
           console.log(result);
-          return result;
+          return result[0];
         })
       );
   }
@@ -270,7 +270,18 @@ export class NgGqlUserService {
   }
 
   getUser$() {
-    return this.ngGqlStorage.user;
+    return this.ngGqlStorage.user.pipe(
+      exhaustMap((user) =>
+        isValue(user)
+          ? this.ngGqlStorage.user
+          : this.getToken$().pipe(
+              switchMap((token) =>
+                isValue(token) ? this.loadUser$() : this.ngGqlStorage.user
+              )
+            )
+      ),
+      catchError((err) => this.ngGqlStorage.user)
+    );
   }
 
   getToken$() {

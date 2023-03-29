@@ -189,11 +189,11 @@ ___
 
 ### loadUser$
 
-▸ **loadUser$**(): `Observable`<[`User`](../interfaces/User.md)[]\>
+▸ **loadUser$**(): `Observable`<[`User`](../interfaces/User.md)\>
 
 #### Returns
 
-`Observable`<[`User`](../interfaces/User.md)[]\>
+`Observable`<[`User`](../interfaces/User.md)\>
 
 ___
 
@@ -215,11 +215,11 @@ ___
 
 ### getUser$
 
-▸ **getUser$**(): `BehaviorSubject`<``null`` \| [`User`](../interfaces/User.md)\>
+▸ **getUser$**(): `Observable`<``null`` \| [`User`](../interfaces/User.md)\>
 
 #### Returns
 
-`BehaviorSubject`<``null`` \| [`User`](../interfaces/User.md)\>
+`Observable`<``null`` \| [`User`](../interfaces/User.md)\>
 
 ___
 
