@@ -21,6 +21,7 @@
 - [oldPrice](Dish.md#oldprice)
 - [weight](Dish.md#weight)
 - [balance](Dish.md#balance)
+- [sortOrder](Dish.md#sortorder)
 - [tags](Dish.md#tags)
 - [additionalInfo](Dish.md#additionalinfo)
 - [images](Dish.md#images)
@@ -91,6 +92,12 @@ ___
 ### balance
 
 • **balance**: `number`
+
+___
+
+### sortOrder
+
+• **sortOrder**: `number`
 
 ___
 

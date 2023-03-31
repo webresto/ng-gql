@@ -5,7 +5,7 @@
 
 ## Hierarchy
 
-- [`BaseModelWithCustomData`](BaseModelWithCustomData.md)
+- [`InputLocation`](InputLocation.md)
 
   ↳ **`UserLocation`**
 
@@ -14,20 +14,21 @@
 ### Properties
 
 - [customData](UserLocation.md#customdata)
-- [id](UserLocation.md#id)
+- [street](UserLocation.md#street)
+- [home](UserLocation.md#home)
 - [name](UserLocation.md#name)
 - [city](UserLocation.md#city)
-- [home](UserLocation.md#home)
 - [housing](UserLocation.md#housing)
 - [index](UserLocation.md#index)
 - [entrance](UserLocation.md#entrance)
 - [floor](UserLocation.md#floor)
 - [apartment](UserLocation.md#apartment)
 - [doorphone](UserLocation.md#doorphone)
-- [street](UserLocation.md#street)
+- [comment](UserLocation.md#comment)
+- [customFields](UserLocation.md#customfields)
+- [id](UserLocation.md#id)
 - [user](UserLocation.md#user)
 - [userId](UserLocation.md#userid)
-- [comment](UserLocation.md#comment)
 
 ## Properties
 
@@ -37,25 +38,17 @@
 
 #### Inherited from
 
-[BaseModelWithCustomData](BaseModelWithCustomData.md).[customData](BaseModelWithCustomData.md#customdata)
+[InputLocation](InputLocation.md).[customData](InputLocation.md#customdata)
 
 ___
 
-### id
+### street
 
-• **id**: `string`
+• **street**: `string`
 
-___
+#### Inherited from
 
-### name
-
-• **name**: `string`
-
-___
-
-### city
-
-• **city**: `string`
+[InputLocation](InputLocation.md).[street](InputLocation.md#street)
 
 ___
 
@@ -63,11 +56,39 @@ ___
 
 • **home**: `string`
 
+#### Inherited from
+
+[InputLocation](InputLocation.md).[home](InputLocation.md#home)
+
+___
+
+### name
+
+• **name**: `string`
+
+#### Inherited from
+
+[InputLocation](InputLocation.md).[name](InputLocation.md#name)
+
+___
+
+### city
+
+• **city**: `string`
+
+#### Inherited from
+
+[InputLocation](InputLocation.md).[city](InputLocation.md#city)
+
 ___
 
 ### housing
 
 • **housing**: `string`
+
+#### Inherited from
+
+[InputLocation](InputLocation.md).[housing](InputLocation.md#housing)
 
 ___
 
@@ -75,11 +96,19 @@ ___
 
 • **index**: `string`
 
+#### Inherited from
+
+[InputLocation](InputLocation.md).[index](InputLocation.md#index)
+
 ___
 
 ### entrance
 
 • **entrance**: `string`
+
+#### Inherited from
+
+[InputLocation](InputLocation.md).[entrance](InputLocation.md#entrance)
 
 ___
 
@@ -87,11 +116,19 @@ ___
 
 • **floor**: `string`
 
+#### Inherited from
+
+[InputLocation](InputLocation.md).[floor](InputLocation.md#floor)
+
 ___
 
 ### apartment
 
 • **apartment**: `string`
+
+#### Inherited from
+
+[InputLocation](InputLocation.md).[apartment](InputLocation.md#apartment)
 
 ___
 
@@ -99,11 +136,35 @@ ___
 
 • **doorphone**: `string`
 
+#### Inherited from
+
+[InputLocation](InputLocation.md).[doorphone](InputLocation.md#doorphone)
+
 ___
 
-### street
+### comment
 
-• **street**: `string`
+• **comment**: `string`
+
+#### Inherited from
+
+[InputLocation](InputLocation.md).[comment](InputLocation.md#comment)
+
+___
+
+### customFields
+
+• **customFields**: `any`
+
+#### Inherited from
+
+[InputLocation](InputLocation.md).[customFields](InputLocation.md#customfields)
+
+___
+
+### id
+
+• **id**: `string`
 
 ___
 
@@ -116,9 +177,3 @@ ___
 ### userId
 
 • **userId**: `string`
-
-___
-
-### comment
-
-• **comment**: `string`

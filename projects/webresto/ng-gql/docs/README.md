@@ -26,18 +26,6 @@
 - [CAPTCHA\_GET\_JOB\_FRAGMENTS](README.md#captcha_get_job_fragments)
 - [USER\_FRAGMENTS](README.md#user_fragments)
 - [USER\_ORDER\_HYSTORY\_FRAGMENTS](README.md#user_order_hystory_fragments)
-- [defaultDishFragments](README.md#defaultdishfragments)
-- [defaultMessageFragments](README.md#defaultmessagefragments)
-- [defaultActionFragments](README.md#defaultactionfragments)
-- [defaultGroupModifierFragments](README.md#defaultgroupmodifierfragments)
-- [defaultGroupFragments](README.md#defaultgroupfragments)
-- [defaultImageFragments](README.md#defaultimagefragments)
-- [defaultMaintenanceFragments](README.md#defaultmaintenancefragments)
-- [defaultModifierFragments](README.md#defaultmodifierfragments)
-- [defaultNavigationFragments](README.md#defaultnavigationfragments)
-- [defaultOrderDishFragments](README.md#defaultorderdishfragments)
-- [defaultOrderFragments](README.md#defaultorderfragments)
-- [defaultPaymentMethodFragments](README.md#defaultpaymentmethodfragments)
 
 ### Interfaces
 
@@ -82,6 +70,7 @@
 - [PaymentMethod](interfaces/PaymentMethod.md)
 - [BaseResponse](interfaces/BaseResponse.md)
 - [RestorePasswordPayload](interfaces/RestorePasswordPayload.md)
+- [Response](interfaces/Response.md)
 - [UserResponse](interfaces/UserResponse.md)
 - [OTPRequestPayload](interfaces/OTPRequestPayload.md)
 - [OTPResponse](interfaces/OTPResponse.md)
@@ -91,6 +80,7 @@
 - [UserBonusProgram](interfaces/UserBonusProgram.md)
 - [UserBonusTransaction](interfaces/UserBonusTransaction.md)
 - [UserDevice](interfaces/UserDevice.md)
+- [InputLocation](interfaces/InputLocation.md)
 - [UserLocation](interfaces/UserLocation.md)
 - [OneTimePassword](interfaces/OneTimePassword.md)
 - [UserOrderHystory](interfaces/UserOrderHystory.md)
@@ -312,78 +302,6 @@ ___
 • `Const` **USER\_ORDER\_HYSTORY\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserOrderHystory`](interfaces/UserOrderHystory.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<UserOrderHystory>.
-
-___
-
-### defaultDishFragments
-
-• `Const` **defaultDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>
-
-___
-
-### defaultMessageFragments
-
-• `Const` **defaultMessageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\>
-
-___
-
-### defaultActionFragments
-
-• `Const` **defaultActionFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)\>
-
-___
-
-### defaultGroupModifierFragments
-
-• `Const` **defaultGroupModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>
-
-___
-
-### defaultGroupFragments
-
-• `Const` **defaultGroupFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>
-
-___
-
-### defaultImageFragments
-
-• `Const` **defaultImageFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>
-
-___
-
-### defaultMaintenanceFragments
-
-• `Const` **defaultMaintenanceFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\>
-
-___
-
-### defaultModifierFragments
-
-• `Const` **defaultModifierFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>\>
-
-___
-
-### defaultNavigationFragments
-
-• `Const` **defaultNavigationFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>
-
-___
-
-### defaultOrderDishFragments
-
-• `Const` **defaultOrderDishFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>\>
-
-___
-
-### defaultOrderFragments
-
-• `Const` **defaultOrderFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)\>
-
-___
-
-### defaultPaymentMethodFragments
-
-• `Const` **defaultPaymentMethodFragments**: [`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>
 
 ## Type Aliases
 

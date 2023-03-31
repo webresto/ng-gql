@@ -27,7 +27,7 @@
 
   ↳ [`UserDevice`](UserDevice.md)
 
-  ↳ [`UserLocation`](UserLocation.md)
+  ↳ [`InputLocation`](InputLocation.md)
 
   ↳ [`OneTimePassword`](OneTimePassword.md)
 

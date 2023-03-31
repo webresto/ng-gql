@@ -9,7 +9,7 @@
 - [name](Group.md#name)
 - [slug](Group.md#slug)
 - [visible](Group.md#visible)
-- [order](Group.md#order)
+- [sortOrder](Group.md#sortorder)
 - [dishes](Group.md#dishes)
 - [discount](Group.md#discount)
 - [parentGroup](Group.md#parentgroup)
@@ -48,9 +48,9 @@ ___
 
 ___
 
-### order
+### sortOrder
 
-• **order**: `number`
+• **sortOrder**: `number`
 
 ___
 

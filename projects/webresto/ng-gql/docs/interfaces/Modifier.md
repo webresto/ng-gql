@@ -58,4 +58,4 @@ ___
 
 ### dish
 
-• **dish**: `Pick`<`T`, ``"id"`` \| ``"images"`` \| ``"additionalInfo"`` \| ``"name"`` \| ``"description"`` \| ``"oldPrice"`` \| ``"price"`` \| ``"weight"`` \| ``"balance"`` \| ``"tags"`` \| ``"groupId"`` \| ``"parentGroup"``\>
+• **dish**: `Pick`<`T`, ``"id"`` \| ``"additionalInfo"`` \| ``"name"`` \| ``"description"`` \| ``"oldPrice"`` \| ``"price"`` \| ``"weight"`` \| ``"balance"`` \| ``"tags"`` \| ``"groupId"`` \| ``"parentGroup"`` \| ``"images"``\>

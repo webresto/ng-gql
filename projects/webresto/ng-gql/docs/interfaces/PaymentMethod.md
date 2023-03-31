@@ -20,7 +20,7 @@
 - [description](PaymentMethod.md#description)
 - [isCash](PaymentMethod.md#iscash)
 - [adapter](PaymentMethod.md#adapter)
-- [order](PaymentMethod.md#order)
+- [sortOrder](PaymentMethod.md#sortorder)
 - [enable](PaymentMethod.md#enable)
 
 ## Properties
@@ -71,9 +71,9 @@ ___
 
 ___
 
-### order
+### sortOrder
 
-• **order**: `number`
+• **sortOrder**: `number`
 
 ___
 

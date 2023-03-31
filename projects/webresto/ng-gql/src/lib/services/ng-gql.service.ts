@@ -437,12 +437,12 @@ export class NgGqlService {
               } else {
                 return slug
                   .map((s) => groupsById[groupIdsBySlug[s]])
-                  .sort((g1, g2) => (g1.order ?? 0) - (g2.order ?? 0));
+                  .sort((g1, g2) => (g1.sortOrder ?? 0) - (g2.sortOrder ?? 0));
               }
             }
           } else {
             return Object.values(groupsById).sort(
-              (g1, g2) => (g1.order ?? 0) - (g2.order ?? 0)
+              (g1, g2) => (g1.sortOrder ?? 0) - (g2.sortOrder ?? 0)
             );
           }
         })

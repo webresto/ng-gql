@@ -22,7 +22,7 @@
 - [birthday](User.md#birthday)
 - [favorites](User.md#favorites)
 - [bonusProgram](User.md#bonusprogram)
-- [history](User.md#history)
+- [orderCount](User.md#ordercount)
 - [locations](User.md#locations)
 - [devices](User.md#devices)
 - [lastPasswordChange](User.md#lastpasswordchange)
@@ -94,9 +94,9 @@ ___
 
 ___
 
-### history
+### orderCount
 
-• **history**: [`UserOrderHystory`](UserOrderHystory.md)[]
+• **orderCount**: `number`
 
 ___
 

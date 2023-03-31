@@ -16,7 +16,7 @@
 - [customData](BonusProgram.md#customdata)
 - [id](BonusProgram.md#id)
 - [adapter](BonusProgram.md#adapter)
-- [order](BonusProgram.md#order)
+- [sortOrder](BonusProgram.md#sortorder)
 - [description](BonusProgram.md#description)
 - [enable](BonusProgram.md#enable)
 
@@ -44,9 +44,9 @@ ___
 
 ___
 
-### order
+### sortOrder
 
-• **order**: `number`
+• **sortOrder**: `number`
 
 ___
 

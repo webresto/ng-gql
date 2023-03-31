@@ -67,21 +67,25 @@ export interface UserDevice extends BaseModelWithCustomData {
   sessionId: string;
 }
 
-export interface UserLocation extends BaseModelWithCustomData {
-  id: string;
+export interface InputLocation extends BaseModelWithCustomData {
+  street: string;
+  home: string;
   name: string;
   city: string;
-  home: string;
   housing: string;
   index: string;
   entrance: string;
   floor: string;
   apartment: string;
   doorphone: string;
-  street: string;
+  comment: string;
+  customFields: any;
+}
+
+export interface UserLocation extends InputLocation {
+  id: string;
   user: User;
   userId: string;
-  comment: string;
 }
 
 export interface OneTimePassword extends BaseModelWithCustomData {

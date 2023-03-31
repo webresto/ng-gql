@@ -38,10 +38,13 @@ export type UpdateUserDataPayload = {
   customFields: any;
 };
 
-export interface UserResponse {
-  user: User;
+export interface Response {
   message: Message;
   action: Action;
+}
+
+export interface UserResponse extends Response {
+  user: User;
 }
 
 export interface OTPRequestPayload {

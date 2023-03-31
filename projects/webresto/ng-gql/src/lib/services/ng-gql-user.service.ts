@@ -14,6 +14,7 @@ import {
   RestorePasswordPayload,
   UserOrderHystory,
   UpdateUserDataPayload,
+  InputLocation,
 } from '../models';
 import {
   USER_FRAGMENTS,
@@ -37,32 +38,9 @@ export class NgGqlUserService {
     private defaultUserFragments: ValuesOrBoolean<User>
   ) {}
 
-  loadUser$(token: string | null): Observable<User | null> {
-    const payloadEncoded = token ? token.split('.')[1] : null;
-    const payload = payloadEncoded ? JSON.parse(atob(payloadEncoded)) : null;
-    const id = payload ? payload?.data.userId : null;
-
+  loadUser$(): Observable<User | null> {
     return this.ngGqlService
-      .queryAndSubscribe(
-        'user',
-        'user',
-        this.defaultUserFragments,
-        'id',
-        id
-          ? {
-              query: {
-                criteria: {
-                  id,
-                },
-              },
-              subscribe: {
-                criteria: {
-                  id,
-                },
-              },
-            }
-          : undefined
-      )
+      .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
       .pipe(
         map((result) => {
           console.log(result);
@@ -71,35 +49,38 @@ export class NgGqlUserService {
       );
   }
 
-  updateStorageUser(newUser: User | null) {
+  updateStorageUser(newUser: User | null): void {
     this.ngGqlStorage.updateUser(newUser);
   }
-  loadUserOrderHistory$(userId: string): Observable<UserOrderHystory[]> {
+
+  loadUserOrderHistory$(options: {
+    skip: number;
+    limit: number;
+    sort: string;
+  }): Observable<UserOrderHystory[]> {
     return this.ngGqlService
-      .queryAndSubscribe<
+      .customQuery$<
         UserOrderHystory,
         'userOrderHistory',
-        'userOrderHistory'
-      >(
-        'userOrderHistory',
-        'userOrderHistory',
-        this.defaultUserOrderHystoryFragments,
-        'id',
         {
-          query: {
-            criteria: {
-              userId,
-            },
-          },
-          subscribe: {
-            criteria: {
-              userId,
-            },
-          },
+          skip: number;
+          limit: number;
+          sort: string;
         }
-      )
-      .pipe(map((result) => result));
+      >('userOrderHistory', this.defaultUserOrderHystoryFragments, {
+        skip: options.skip,
+        limit: options.limit,
+        sort: options.sort,
+      })
+      .pipe(
+        map((result) =>
+          Array.isArray(result.userOrderHistory)
+            ? result.userOrderHistory
+            : [result.userOrderHistory]
+        )
+      );
   }
+
   getUser$(): Observable<User | null> {
     return this.ngGqlStorage.user.pipe(
       exhaustMap((user) =>
@@ -108,7 +89,7 @@ export class NgGqlUserService {
           : this.getToken$().pipe(
               switchMap((token) =>
                 isValue(token)
-                  ? this.loadUser$(token).pipe(
+                  ? this.loadUser$().pipe(
                       switchMap((user) => {
                         this.updateStorageUser(user);
                         return this.ngGqlStorage.user;
@@ -122,7 +103,7 @@ export class NgGqlUserService {
     );
   }
 
-  getToken$() {
+  getToken$(): Observable<string | null> {
     return this.ngGqlStorage.token;
   }
 
@@ -161,7 +142,7 @@ export class NgGqlUserService {
     });
   }
 
-  async getCaptchaSolution(task: CaptchaTask) {
+  async getCaptchaSolution(task: CaptchaTask): Promise<bigint> {
     return await Puzzle.solve(task);
   }
 
@@ -209,4 +190,54 @@ export class NgGqlUserService {
     });
   }
 
+  async logout$(loading?: BehaviorSubject<boolean>): Promise<Response> {
+    const res = await this._userBus.emitToBus<'logout', null, Response>({
+      type: 'logout',
+      payload: null,
+      loading,
+    });
+
+    this.ngGqlStorage.updateToken(null);
+    this.ngGqlStorage.updateUser(null);
+
+    return res;
+  }
+
+  async userDelete$(
+    otp: string,
+    loading?: BehaviorSubject<boolean>
+  ): Promise<Response> {
+    const res = await this._userBus.emitToBus<'userDelete', string, Response>({
+      type: 'userDelete',
+      payload: otp,
+      loading,
+    });
+
+    this.ngGqlStorage.updateToken(null);
+    this.ngGqlStorage.updateUser(null);
+
+    return res;
+  }
+
+  locationCreate$(
+    location: InputLocation,
+    loading?: BehaviorSubject<boolean>
+  ): Promise<boolean> {
+    return this._userBus.emitToBus<'locationCreate', InputLocation, boolean>({
+      type: 'locationCreate',
+      payload: location,
+      loading,
+    });
+  }
+
+  locationDelete$(
+    locationId: string,
+    loading?: BehaviorSubject<boolean>
+  ): Promise<boolean> {
+    return this._userBus.emitToBus<'locationDelete', string, boolean>({
+      type: 'locationDelete',
+      payload: locationId,
+      loading,
+    });
+  }
 }
