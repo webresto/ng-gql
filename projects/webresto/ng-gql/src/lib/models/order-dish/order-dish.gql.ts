@@ -1,6 +1,4 @@
-import { defaultDishFragments } from '../dish/dish.gql';
 import type { OrderModifier } from '../modifier/modifier.gql';
-import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish, DiscountType } from '../dish/dish.gql';
 import type { BehaviorSubject } from 'rxjs';
 
@@ -20,23 +18,3 @@ export interface OrderDish<T extends Dish = Dish> {
 	modifiers: Partial<OrderModifier<T>>[];
 	isLoading?: BehaviorSubject<boolean>;
 }
-
-export const defaultOrderDishFragments: ValuesOrBoolean<OrderDish<Dish>> = {
-	id: true,
-	amount: true,
-	dish: defaultDishFragments,
-	modifiers: {
-		id: true,
-		dish: defaultDishFragments,
-		amount: true,
-		groupId: true,
-	},
-	discountTotal: true,
-	discountType: true,
-	discountAmount: true,
-	discountMessage: true,
-	comment: true,
-	totalWeight: true,
-	itemTotal: true,
-};
-

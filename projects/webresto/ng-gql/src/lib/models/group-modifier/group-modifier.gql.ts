@@ -1,6 +1,4 @@
-import { defaultModifierFragments } from '../modifier/modifier.gql';
 import type { Modifier } from '../modifier/modifier.gql';
-import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { Dish } from '../dish/dish.gql';
 
 export interface GroupModifier<T extends Dish = Dish> extends Exclude<Modifier<T>, 'amount' | 'defaultAmount' | 'hideIfDefaultAmount' | 'groupId' | 'dish'> {
@@ -12,17 +10,4 @@ export interface GroupModifier<T extends Dish = Dish> extends Exclude<Modifier<T
 	}>;
 	totalAmount: number;
 }
-
-export const defaultGroupModifierFragments: ValuesOrBoolean<GroupModifier<Dish>> = {
-	modifierId: true,
-	maxAmount: true,
-	minAmount: true,
-	required: true,
-	childModifiers: defaultModifierFragments,
-	group: {
-		id: true,
-		name: true,
-	}
-};
-
 

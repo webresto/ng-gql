@@ -17,7 +17,7 @@ export interface User extends BaseModelWithCustomData {
   birthday: string;
   favorites: Dish[];
   bonusProgram: UserBonusProgram[];
-  history: UserOrderHystory[];
+  orderCount: number;
   locations: UserLocation[];
   devices: UserDevice[];
   lastPasswordChange: number;
@@ -27,7 +27,7 @@ export interface User extends BaseModelWithCustomData {
 export interface BonusProgram extends BaseModelWithCustomData {
   id: string;
   adapter: string;
-  order: number;
+  sortOrder: number;
   description: string;
   enable: boolean;
 }

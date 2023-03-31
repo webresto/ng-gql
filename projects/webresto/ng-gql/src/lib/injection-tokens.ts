@@ -1,5 +1,3 @@
-import { CaptchaJob } from './models/captcha/captcha';
-import { User, UserOrderHystory } from './models/user/user';
 import { inject, InjectionToken } from '@angular/core';
 import {
   ValuesOrBoolean,
@@ -21,17 +19,11 @@ import {
   UserBonusProgram,
   OTPResponse,
   generateUUID,
+  User,
+  UserOrderHystory,
+  CaptchaJob,
 } from './models';
-import {
-  defaultActionFragments,
-  defaultImageFragments,
-  defaultMaintenanceFragments,
-  defaultMessageFragments,
-  defaultNavigationFragments,
-  defaultPaymentMethodFragments,
-  BonusProgram,
-} from './models';
-import { NgGqlModule } from './ng-gql.module';
+import { BonusProgram } from './models';
 import { DOCUMENT } from '@angular/common';
 
 /**
@@ -53,7 +45,7 @@ export const ORDERID_FACTORY_FN = new InjectionToken<() => string>(
 export const IMAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Image>>(
   'IMAGE_FRAGMENTS',
   {
-    factory: () => ({ ...defaultImageFragments }),
+    factory: () => ({ id: true, uploadDate: true, images: true }),
   }
 );
 
@@ -63,7 +55,7 @@ export const IMAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Image>>(
 export const MESSAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Message>>(
   'MESSAGE_FRAGMENTS',
   {
-    factory: () => ({ ...defaultMessageFragments }),
+    factory: () => ({ type: true, title: true, message: true }),
   }
 );
 
@@ -73,7 +65,7 @@ export const MESSAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Message>>(
 export const ACTION_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Action>>(
   'ACTION_FRAGMENTS',
   {
-    factory: () => ({ ...defaultActionFragments }),
+    factory: () => ({ data: true, type: true }),
   }
 );
 
@@ -83,7 +75,15 @@ export const ACTION_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Action>>(
 export const MAINTENANCE_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<Maintenance>
 >('MAINTENANCE_FRAGMENTS', {
-  factory: () => ({ ...defaultMaintenanceFragments }),
+  factory: () => ({
+    id: true,
+    title: true,
+    description: true,
+    enable: true,
+    startDate: true,
+    stopDate: true,
+    customData: true,
+  }),
 });
 
 /**
@@ -136,6 +136,7 @@ export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>(
         price: true,
         weight: true,
         balance: true,
+        sortOrder: true,
         tags: true,
         additionalInfo: true,
         carbohydrateAmount: true,
@@ -283,7 +284,19 @@ export const ORDER_DISH_FRAGMENTS = new InjectionToken<
 export const PAYMENT_METHOD_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<PaymentMethod>
 >('PAYMENT_METHOD_FRAGMENTS', {
-  factory: () => ({ ...defaultPaymentMethodFragments }),
+  factory: () => ({
+    ...{
+      id: true,
+      type: true,
+      title: true,
+      description: true,
+      isCash: true,
+      adapter: true,
+      sortOrder: true,
+      enable: true,
+      customData: true,
+    },
+  }),
 });
 
 /**
@@ -292,7 +305,13 @@ export const PAYMENT_METHOD_FRAGMENTS = new InjectionToken<
 export const NAVIGATION_FRAGMENTS = new InjectionToken<
   ValuesOrBoolean<Navigation>
 >('NAVIGATION_FRAGMENTS', {
-  factory: () => ({ ...defaultNavigationFragments }),
+  factory: () => ({
+    mnemonicId: true,
+    description: true,
+    options: true,
+    id: true,
+    navigation_menu: true,
+  }),
 });
 
 /**
@@ -427,7 +446,6 @@ export const USER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<User>>(
     factory: () => {
       const dishFragments = inject(DISH_FRAGMENTS);
       const phoneFragments = inject(PHONE_FRAGMENT);
-      const orderFragments = inject(USER_ORDER_HYSTORY_FRAGMENTS);
       const ueserDevicesFragments = inject(USER_DEVICES_FRAGMENTS);
       const userLocationFragments = inject(USER_LOCATION_FRAGMENTS);
       const userBonusProgramFragments = inject(USER_BONUS_PROGRAM_FRAGMENTS);
@@ -441,7 +459,7 @@ export const USER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<User>>(
         birthday: true,
         favorites: dishFragments,
         bonusProgram: userBonusProgramFragments,
-        history: orderFragments,
+        orderCount: true,
         locations: userLocationFragments,
         devices: ueserDevicesFragments,
         lastPasswordChange: true,

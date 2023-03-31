@@ -1,5 +1,3 @@
-import type { ValuesOrBoolean } from '../values-or-boolean';
-
 export class EventMessage {
   type: string;
   title: string;
@@ -22,15 +20,3 @@ export interface Action<T = any> {
   type: string;
   data: T;
 }
-
-export const defaultMessageFragments: ValuesOrBoolean<Message> = {
-  type: true,
-  title: true,
-  message: true
-};
-
-export const defaultActionFragments: ValuesOrBoolean<Action> = {
-  data: true,
-  type: true
-};
-

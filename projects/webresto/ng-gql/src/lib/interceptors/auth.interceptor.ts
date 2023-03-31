@@ -1,4 +1,4 @@
-import { NgGqlUserService } from './../services/ng-gql-user.service';
+import { NgGqlUserService, NgGqlStorageService } from './../services';
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
@@ -11,7 +11,10 @@ import { isValue } from '@axrl/common';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private ngGqlUser: NgGqlUserService) {}
+  constructor(
+    private ngGqlUser: NgGqlUserService,
+    private storage: NgGqlStorageService
+  ) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -23,7 +26,8 @@ export class AuthInterceptor implements HttpInterceptor {
         ? body.operationName
         : '';
 
-    return operationName === 'loadLogin' || operationName === 'loadRestorePassword'
+    return operationName === 'loadLogin' ||
+      operationName === 'loadRestorePassword'
       ? next.handle(request)
       : this.ngGqlUser.getToken$().pipe(
           exhaustMap((userToken) => {
@@ -32,7 +36,7 @@ export class AuthInterceptor implements HttpInterceptor {
               try {
                 const payload = JSON.parse(atob(payloadEncoded));
                 if (Date.now() / 1000 > payload.exp) {
-                  this.ngGqlUser.updateStorageToken(null);
+                  this.storage.updateToken(null);
                   return next.handle(request);
                 } else {
                   return next.handle(
@@ -44,7 +48,7 @@ export class AuthInterceptor implements HttpInterceptor {
                   );
                 }
               } catch (error) {
-                this.ngGqlUser.updateStorageToken(null);
+                this.storage.updateToken(null);
                 return next.handle(request);
               }
             } else {

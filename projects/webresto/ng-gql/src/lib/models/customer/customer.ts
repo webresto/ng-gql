@@ -1,4 +1,3 @@
-import { ValuesOrBoolean } from './../values-or-boolean';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 
 export interface Customer {
@@ -25,7 +24,7 @@ export interface PhoneKnowledge extends BaseModelWithCustomData {
 export interface CheckPhoneCodeInput {
   phone: Partial<Phone>;
   code: string;
-};
+}
 
 export interface CheckPhoneResponse {
   type: string;

@@ -43,7 +43,7 @@ import {
 import { NgGqlService } from './ng-gql.service';
 import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
 import { NgGqlStorageService } from './ng-gql-storage.service';
-import { NgGqlUserService } from './ng-gql-user.service';
+import { NgGqlUserBusService } from './ng-gql-user-bus.service';
 
 @Injectable()
 export class NgOrderService {
@@ -51,7 +51,7 @@ export class NgOrderService {
     private ngGqlService: NgGqlService,
     private storage: NgGqlStorageService,
     private storageWrapper: NqGqlLocalStorageWrapper,
-    private userService: NgGqlUserService,
+    private userBusService: NgGqlUserBusService,
     @Inject('NG_GQL_CONFIG') private config: NgGqlConfig,
     @Inject(PAYMENT_METHOD_FRAGMENTS)
     private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
@@ -407,7 +407,7 @@ export class NgOrderService {
         })
       );
     }),
-    mergeWith(this.userService.userBus$)
+    mergeWith(this.userBusService.userBus$)
   );
 
   private _orderBusSubscription$ =

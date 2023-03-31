@@ -55,12 +55,3 @@ export interface NavigationsOptions {
 	| `newpagebynavigationmenu`   //Построение из меню которое пришло в navigation_menu где каждый раздел создается на своей странице
 	| `onepagebynavigationmenu`; //Построение из меню которое пришло в navigation_menu где все разделы аккамулируются на одной странице, акамуляция происходит по массиву из `navigation_menu` с учетом очереди
 }
-
-export const defaultNavigationFragments: ValuesOrBoolean<Navigation> = {
-	mnemonicId: true,
-	description: true,
-	options: true,
-	id: true,
-	navigation_menu: true
-};
-

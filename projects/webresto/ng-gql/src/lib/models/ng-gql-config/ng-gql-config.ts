@@ -1,5 +1,4 @@
 import type { InMemoryCacheConfig } from '@apollo/client';
-import type { ValuesOrBoolean } from '../values-or-boolean';
 
 /**
  * Обьект с параметрами настройки библиотеки для определенного сервера-API

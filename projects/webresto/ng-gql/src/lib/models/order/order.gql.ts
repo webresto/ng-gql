@@ -1,11 +1,9 @@
 import type { PaymentMethod } from '../payment-method/payment-method.gql';
 import type { Modifier, OrderModifier } from '../modifier/modifier.gql';
 import type { Message, Action } from '../event-message/event-message';
-import type { ValuesOrBoolean } from '../values-or-boolean';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 import type { Customer } from '../customer/customer';
 import { OrderDish } from '../order-dish/order-dish.gql';
-import { defaultOrderDishFragments } from '../order-dish/order-dish.gql';
 import type { Dish } from '../dish/dish.gql';
 
 /**
@@ -115,32 +113,3 @@ export interface OrderAdditionalFields {
 };
 
 export type OrderForm = Order & OrderAdditionalFields;
-
-export const defaultOrderFragments: ValuesOrBoolean<Order> = {
-	id: true,
-	shortId: true,
-	dishesCount: true,
-	comment: true,
-	deliveryDescription: true,
-	message: true,
-	deliveryCost: true,
-	totalWeight: true,
-	total: true,
-	orderTotal: true,
-	discountTotal: true,
-	state: true,
-	trifleFrom: true,
-	customData: true,
-	customer: true,
-	address: true,
-	rmsId: true,
-	rmsOrderNumber: true,
-	rmsDeliveryDate: true,
-	dishes: defaultOrderDishFragments,
-	rmsDelivered: true,
-	paymentMethod: {
-		id: true,
-		title: true
-	}
-};
-
