@@ -98,6 +98,8 @@
 - [RegistrationPayload](README.md#registrationpayload)
 - [UpdateUserDataPayload](README.md#updateuserdatapayload)
 - [ValuesOrBoolean](README.md#valuesorboolean)
+- [UserBusEventType](README.md#userbuseventtype)
+- [UserBusEvent](README.md#userbusevent)
 
 ### Classes
 
@@ -106,6 +108,7 @@
 - [NqGqlLocalStorageWrapper](classes/NqGqlLocalStorageWrapper.md)
 - [ApolloService](classes/ApolloService.md)
 - [NgGqlStorageService](classes/NgGqlStorageService.md)
+- [NgGqlUserBusService](classes/NgGqlUserBusService.md)
 - [NgGqlUserService](classes/NgGqlUserService.md)
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
@@ -430,6 +433,18 @@ ValuesOrBoolean<T>
 | Name |
 | :------ |
 | `T` |
+
+___
+
+### UserBusEventType
+
+Ƭ **UserBusEventType**: ``"OTPRequest"`` \| ``"login"`` \| ``"UpdateUserData"`` \| ``"RestorePassword"`` \| ``"AddDishFavor"`` \| ``"captchaGetJob"`` \| ``"registrationApp"`` \| ``"logout"`` \| ``"userDelete"`` \| ``"locationCreate"`` \| ``"locationDelete"``
+
+___
+
+### UserBusEvent
+
+Ƭ **UserBusEvent**: { `errorCb`: (`err`: `unknown`) => `void` ; `loading?`: `BehaviorSubject`<`boolean`\>  } & `UserBusEventMixin`<``"captchaGetJob"``, [`CaptchaJobPayload`](interfaces/CaptchaJobPayload.md), [`CaptchaJob`](interfaces/CaptchaJob.md)<`any`\>\> \| `UserBusEventMixin`<``"registrationApp"``, [`RegistrationPayload`](README.md#registrationpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"OTPRequest"``, [`OTPRequestPayload`](interfaces/OTPRequestPayload.md), [`OTPResponse`](interfaces/OTPResponse.md)\> \| `UserBusEventMixin`<``"login"``, [`LoginPayload`](README.md#loginpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"UpdateUserData"``, [`UpdateUserDataPayload`](README.md#updateuserdatapayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"RestorePassword"``, [`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"AddDishFavor"``, `string`, `boolean`\> \| `UserBusEventMixin`<``"logout"``, ``null``, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"userDelete"``, `string`, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"locationCreate"``, [`InputLocation`](interfaces/InputLocation.md), `boolean`\> \| `UserBusEventMixin`<``"locationDelete"``, `string`, `boolean`\>
 
 ## Functions
 

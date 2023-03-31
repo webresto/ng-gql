@@ -47,7 +47,7 @@
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
 | `storage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
 | `storageWrapper` | [`NqGqlLocalStorageWrapper`](NqGqlLocalStorageWrapper.md) |
-| `userBusService` | `NgGqlUserBusService` |
+| `userBusService` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 | `defaultPaymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
 | `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |

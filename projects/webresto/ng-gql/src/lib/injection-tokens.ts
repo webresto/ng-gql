@@ -174,7 +174,7 @@ export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>(
         id: true,
         description: true,
         name: true,
-        order: true,
+        sortOrder: true,
         visible: true,
         slug: true,
         discount: true,

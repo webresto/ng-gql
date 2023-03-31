@@ -11,11 +11,7 @@ import { generateUUID, NgGqlConfig } from './models';
 import { isValue } from '@axrl/common';
 import type { OperationDefinitionNode } from 'graphql';
 import { persistCacheSync, LocalStorageWrapper } from 'apollo3-cache-persist';
-import {
-  HttpClientModule,
-  HttpHeaders,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 import { XDeviceIdInterceptor, AuthInterceptor } from './interceptors';
 import {
@@ -24,6 +20,7 @@ import {
   NgGqlUserService,
   NgGqlStorageService,
   ApolloService,
+  NgGqlUserBusService,
 } from './services';
 
 @NgModule({
@@ -48,6 +45,7 @@ export class NgGqlModule {
         NgGqlService,
         NgGqlUserService,
         NgGqlStorageService,
+        NgGqlUserBusService,
         {
           provide: HTTP_INTERCEPTORS,
           useClass: XDeviceIdInterceptor,
