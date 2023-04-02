@@ -1,6 +1,5 @@
-import { User } from './../models/user/user';
 import { Injectable } from '@angular/core';
-import { Dish, Group, NavigationBase, Order, PaymentMethod } from '../models';
+import { Dish, Group, NavigationBase, Order, PaymentMethod, User, UserOrderHystory } from '../models';
 import { getFilteredData, createSubject, isValue } from '@axrl/common';
 
 @Injectable()
@@ -59,5 +58,14 @@ export class NgGqlStorageService {
       localStorage.removeItem('token');
     }
     this._token.next(newToken);
+  }
+
+  private _orderHystory = createSubject<UserOrderHystory[]>([]);
+  orderHystory = this._orderHystory.asObservable();
+
+  updateOrderHystory(newPart:UserOrderHystory[]) {
+    const hystory = [...this._orderHystory.value];
+    hystory.push(...newPart);
+    this._orderHystory.next(hystory)
   }
 }

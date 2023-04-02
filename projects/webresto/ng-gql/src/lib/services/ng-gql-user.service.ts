@@ -15,13 +15,21 @@ import {
   UserOrderHystory,
   UpdateUserDataPayload,
   InputLocation,
+  UserLocation,
 } from '../models';
 import {
   USER_FRAGMENTS,
   USER_ORDER_HYSTORY_FRAGMENTS,
+  USER_LOCATION_FRAGMENTS,
 } from '../injection-tokens';
-import { BehaviorSubject, Observable, exhaustMap } from 'rxjs';
-import { map, catchError, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  exhaustMap,
+  map,
+  catchError,
+  switchMap,
+} from 'rxjs';
 import { isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
 import { NgGqlUserBusService } from './ng-gql-user-bus.service';
@@ -35,7 +43,9 @@ export class NgGqlUserService {
     @Inject(USER_ORDER_HYSTORY_FRAGMENTS)
     private defaultUserOrderHystoryFragments: ValuesOrBoolean<UserOrderHystory>,
     @Inject(USER_FRAGMENTS)
-    private defaultUserFragments: ValuesOrBoolean<User>
+    private defaultUserFragments: ValuesOrBoolean<User>,
+    @Inject(USER_LOCATION_FRAGMENTS)
+    private defaultuserLocationFragments: ValuesOrBoolean<UserLocation>
   ) {}
 
   loadUser$(): Observable<User | null> {
@@ -56,29 +66,36 @@ export class NgGqlUserService {
   loadUserOrderHistory$(options: {
     skip: number;
     limit: number;
-    sort: string;
   }): Observable<UserOrderHystory[]> {
-    return this.ngGqlService
-      .customQuery$<
-        UserOrderHystory,
-        'userOrderHistory',
-        {
-          skip: number;
-          limit: number;
-          sort: string;
+    return this.ngGqlStorage.orderHystory.pipe(
+      exhaustMap((hystory) => {
+        if (hystory.length >= options.skip + options.limit) {
+          return this.ngGqlStorage.orderHystory;
+        } else {
+          return this.ngGqlService
+            .customQuery$<
+              UserOrderHystory,
+              'userOrderHistory',
+              {
+                skip: number;
+                limit: number;
+              }
+            >('userOrderHistory', this.defaultUserOrderHystoryFragments, {
+              skip: options.skip,
+              limit: options.limit,
+            })
+            .pipe(
+              switchMap((data) => {
+                const result = Array.isArray(data.userOrderHistory)
+                  ? data.userOrderHistory
+                  : [data.userOrderHistory];
+                this.ngGqlStorage.updateOrderHystory(result);
+                return this.ngGqlStorage.orderHystory;
+              })
+            );
         }
-      >('userOrderHistory', this.defaultUserOrderHystoryFragments, {
-        skip: options.skip,
-        limit: options.limit,
-        sort: options.sort,
       })
-      .pipe(
-        map((result) =>
-          Array.isArray(result.userOrderHistory)
-            ? result.userOrderHistory
-            : [result.userOrderHistory]
-        )
-      );
+    );
   }
 
   getUser$(): Observable<User | null> {
@@ -217,6 +234,18 @@ export class NgGqlUserService {
     this.ngGqlStorage.updateUser(null);
 
     return res;
+  }
+
+  getUserLocations(): Observable<UserLocation[]> {
+    return this.ngGqlService
+      .customQuery$('userLocation', this.defaultuserLocationFragments)
+      .pipe(
+        map((data) =>
+          Array.isArray(data.userLocation)
+            ? data.userLocation
+            : [data.userLocation]
+        )
+      );
   }
 
   locationCreate$(

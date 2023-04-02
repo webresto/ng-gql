@@ -23,6 +23,7 @@
 - [restorePassword](NgGqlUserService.md#restorepassword)
 - [logout$](NgGqlUserService.md#logout$)
 - [userDelete$](NgGqlUserService.md#userdelete$)
+- [getUserLocations](NgGqlUserService.md#getuserlocations)
 - [locationCreate$](NgGqlUserService.md#locationcreate$)
 - [locationDelete$](NgGqlUserService.md#locationdelete$)
 
@@ -30,7 +31,7 @@
 
 ### constructor
 
-• **new NgGqlUserService**(`ngGqlService`, `ngGqlStorage`, `_userBus`, `defaultUserOrderHystoryFragments`, `defaultUserFragments`)
+• **new NgGqlUserService**(`ngGqlService`, `ngGqlStorage`, `_userBus`, `defaultUserOrderHystoryFragments`, `defaultUserFragments`, `defaultuserLocationFragments`)
 
 #### Parameters
 
@@ -41,6 +42,7 @@
 | `_userBus` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
 | `defaultUserOrderHystoryFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)\> |
 | `defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |
+| `defaultuserLocationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`UserLocation`](../interfaces/UserLocation.md)\> |
 
 ## Methods
 
@@ -81,7 +83,6 @@ ___
 | `options` | `Object` |
 | `options.skip` | `number` |
 | `options.limit` | `number` |
-| `options.sort` | `string` |
 
 #### Returns
 
@@ -284,6 +285,16 @@ ___
 #### Returns
 
 `Promise`<`Response`\>
+
+___
+
+### getUserLocations
+
+▸ **getUserLocations**(): `Observable`<[`UserLocation`](../interfaces/UserLocation.md)[]\>
+
+#### Returns
+
+`Observable`<[`UserLocation`](../interfaces/UserLocation.md)[]\>
 
 ___
 

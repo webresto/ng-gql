@@ -17,13 +17,13 @@ import {
   UserDevice,
   UserLocation,
   UserBonusProgram,
+  BonusProgram,
   OTPResponse,
   generateUUID,
   User,
   UserOrderHystory,
   CaptchaJob,
 } from './models';
-import { BonusProgram } from './models';
 import { DOCUMENT } from '@angular/common';
 
 /**
@@ -397,7 +397,7 @@ export const BONUS_PROGRAM_FRAGMENTS = new InjectionToken<
   factory: () => ({
     id: true,
     adapter: true,
-    order: true,
+    sortOrder: true,
     description: true,
     enable: true,
   }),
@@ -447,7 +447,6 @@ export const USER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<User>>(
       const dishFragments = inject(DISH_FRAGMENTS);
       const phoneFragments = inject(PHONE_FRAGMENT);
       const ueserDevicesFragments = inject(USER_DEVICES_FRAGMENTS);
-      const userLocationFragments = inject(USER_LOCATION_FRAGMENTS);
       const userBonusProgramFragments = inject(USER_BONUS_PROGRAM_FRAGMENTS);
       const fragments: ValuesOrBoolean<User> = {
         id: true,
@@ -460,7 +459,6 @@ export const USER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<User>>(
         favorites: dishFragments,
         bonusProgram: userBonusProgramFragments,
         orderCount: true,
-        locations: userLocationFragments,
         devices: ueserDevicesFragments,
         lastPasswordChange: true,
         temporaryCode: true,

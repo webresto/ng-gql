@@ -15,6 +15,7 @@
 - [paymentMethods](NgGqlStorageService.md#paymentmethods)
 - [user](NgGqlStorageService.md#user)
 - [token](NgGqlStorageService.md#token)
+- [orderHystory](NgGqlStorageService.md#orderhystory)
 
 ### Methods
 
@@ -25,6 +26,7 @@
 - [updatePaymentMethods](NgGqlStorageService.md#updatepaymentmethods)
 - [updateUser](NgGqlStorageService.md#updateuser)
 - [updateToken](NgGqlStorageService.md#updatetoken)
+- [updateOrderHystory](NgGqlStorageService.md#updateorderhystory)
 
 ## Constructors
 
@@ -73,6 +75,12 @@ ___
 ### token
 
 • **token**: `Observable`<``null`` \| `string`\>
+
+___
+
+### orderHystory
+
+• **orderHystory**: `Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
 
 ## Methods
 
@@ -217,6 +225,22 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `newToken` | ``null`` \| `string` |
+
+#### Returns
+
+`void`
+
+___
+
+### updateOrderHystory
+
+▸ **updateOrderHystory**(`newPart`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `newPart` | [`UserOrderHystory`](../interfaces/UserOrderHystory.md)[] |
 
 #### Returns
 
