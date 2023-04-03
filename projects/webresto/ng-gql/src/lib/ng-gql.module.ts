@@ -13,7 +13,11 @@ import type { OperationDefinitionNode } from 'graphql';
 import { persistCacheSync, LocalStorageWrapper } from 'apollo3-cache-persist';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
-import { XDeviceIdInterceptor, AuthInterceptor } from './interceptors';
+import {
+  XDeviceIdInterceptor,
+  AuthInterceptor,
+  MemoryInterceptor,
+} from './interceptors';
 import {
   NgOrderService,
   NgGqlService,
@@ -46,6 +50,11 @@ export class NgGqlModule {
         NgGqlUserService,
         NgGqlStorageService,
         NgGqlUserBusService,
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: MemoryInterceptor,
+          multi: true,
+        },
         {
           provide: HTTP_INTERCEPTORS,
           useClass: XDeviceIdInterceptor,

@@ -16,6 +16,7 @@
 - [user](NgGqlStorageService.md#user)
 - [token](NgGqlStorageService.md#token)
 - [orderHystory](NgGqlStorageService.md#orderhystory)
+- [userLocations](NgGqlStorageService.md#userlocations)
 
 ### Methods
 
@@ -27,6 +28,7 @@
 - [updateUser](NgGqlStorageService.md#updateuser)
 - [updateToken](NgGqlStorageService.md#updatetoken)
 - [updateOrderHystory](NgGqlStorageService.md#updateorderhystory)
+- [updateUserLocations](NgGqlStorageService.md#updateuserlocations)
 
 ## Constructors
 
@@ -81,6 +83,12 @@ ___
 ### orderHystory
 
 • **orderHystory**: `Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
+
+___
+
+### userLocations
+
+• **userLocations**: `Observable`<``null`` \| [`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
 
 ## Methods
 
@@ -241,6 +249,22 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `newPart` | [`UserOrderHystory`](../interfaces/UserOrderHystory.md)[] |
+
+#### Returns
+
+`void`
+
+___
+
+### updateUserLocations
+
+▸ **updateUserLocations**(`newValue`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `newValue` | [`UserLocationResponse`](../interfaces/UserLocationResponse.md) |
 
 #### Returns
 

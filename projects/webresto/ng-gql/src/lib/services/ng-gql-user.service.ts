@@ -16,6 +16,7 @@ import {
   UpdateUserDataPayload,
   InputLocation,
   UserLocation,
+  UserLocationResponse,
 } from '../models';
 import {
   USER_FRAGMENTS,
@@ -71,7 +72,7 @@ export class NgGqlUserService {
     return this.ngGqlStorage.orderHystory.pipe(
       exhaustMap((hystory) => {
         if (hystory.length >= options.skip + options.limit) {
-          return of(hystory.slice(0,options.skip + options.limit));
+          return of(hystory.slice(0, options.skip + options.limit));
         } else {
           return this.ngGqlService
             .customQuery$<
@@ -94,6 +95,62 @@ export class NgGqlUserService {
                 return this.ngGqlStorage.orderHystory;
               })
             );
+        }
+      })
+    );
+  }
+
+  private _getUserLocations(options: {
+    skip: number;
+    limit: number;
+  }): Observable<UserLocationResponse> {
+    return this.ngGqlService.customQuery$('userLocationCount', {}).pipe(
+      switchMap((data) => {
+        const userLocationCount = Array.isArray(data.userLocationCount)
+          ? data.userLocationCount[0]
+          : data.userLocationCount;
+        return this.ngGqlService
+          .customQuery$(
+            'userLocation',
+            this.defaultuserLocationFragments,
+            options
+          )
+          .pipe(
+            map((data) => {
+              const userLocation = Array.isArray(data.userLocation)
+                ? data.userLocation
+                : [data.userLocation];
+              const result = {
+                userLocationCount,
+                userLocation,
+              };
+              this.ngGqlStorage.updateUserLocations(result);
+              return result;
+            })
+          );
+      })
+    );
+  }
+
+  getUserLocations$(options: {
+    skip: number;
+    limit: number;
+  }): Observable<UserLocationResponse> {
+    return this.ngGqlStorage.userLocations.pipe(
+      exhaustMap((data) => {
+        if (
+          isValue(data) &&
+          data.userLocation.length >= options.skip + options.limit
+        ) {
+          return of({
+            userLocationCount: data.userLocationCount,
+            userLocation: data.userLocation.slice(
+              0,
+              options.skip + options.limit
+            ),
+          });
+        } else {
+          return this._getUserLocations(options);
         }
       })
     );
@@ -208,7 +265,7 @@ export class NgGqlUserService {
     });
   }
 
-  async logout$(loading?: BehaviorSubject<boolean>): Promise<Response> {
+  async logout(loading?: BehaviorSubject<boolean>): Promise<Response> {
     const res = await this._userBus.emitToBus<'logout', null, Response>({
       type: 'logout',
       payload: null,
@@ -221,7 +278,7 @@ export class NgGqlUserService {
     return res;
   }
 
-  async userDelete$(
+  async userDelete(
     otp: string,
     loading?: BehaviorSubject<boolean>
   ): Promise<Response> {
@@ -237,19 +294,7 @@ export class NgGqlUserService {
     return res;
   }
 
-  getUserLocations(): Observable<UserLocation[]> {
-    return this.ngGqlService
-      .customQuery$('userLocation', this.defaultuserLocationFragments)
-      .pipe(
-        map((data) =>
-          Array.isArray(data.userLocation)
-            ? data.userLocation
-            : [data.userLocation]
-        )
-      );
-  }
-
-  locationCreate$(
+  locationCreate(
     location: InputLocation,
     loading?: BehaviorSubject<boolean>
   ): Promise<boolean> {
@@ -260,7 +305,7 @@ export class NgGqlUserService {
     });
   }
 
-  locationDelete$(
+  locationDelete(
     locationId: string,
     loading?: BehaviorSubject<boolean>
   ): Promise<boolean> {

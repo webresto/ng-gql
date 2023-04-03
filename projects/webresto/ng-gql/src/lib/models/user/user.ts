@@ -88,6 +88,11 @@ export interface UserLocation extends InputLocation {
   userId: string;
 }
 
+export interface UserLocationResponse {
+  userLocationCount: number;
+  userLocation: UserLocation[];
+}
+
 export interface OneTimePassword extends BaseModelWithCustomData {
   id: number;
   login: string;

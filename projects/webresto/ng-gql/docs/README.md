@@ -82,6 +82,7 @@
 - [UserDevice](interfaces/UserDevice.md)
 - [InputLocation](interfaces/InputLocation.md)
 - [UserLocation](interfaces/UserLocation.md)
+- [UserLocationResponse](interfaces/UserLocationResponse.md)
 - [OneTimePassword](interfaces/OneTimePassword.md)
 - [UserOrderHystory](interfaces/UserOrderHystory.md)
 - [QueryGenerationParam](interfaces/QueryGenerationParam.md)

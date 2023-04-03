@@ -11,6 +11,7 @@
 - [loadUser$](NgGqlUserService.md#loaduser$)
 - [updateStorageUser](NgGqlUserService.md#updatestorageuser)
 - [loadUserOrderHistory$](NgGqlUserService.md#loaduserorderhistory$)
+- [getUserLocations$](NgGqlUserService.md#getuserlocations$)
 - [getUser$](NgGqlUserService.md#getuser$)
 - [getToken$](NgGqlUserService.md#gettoken$)
 - [addDishFavor](NgGqlUserService.md#adddishfavor)
@@ -21,11 +22,10 @@
 - [otpRequest](NgGqlUserService.md#otprequest)
 - [login](NgGqlUserService.md#login)
 - [restorePassword](NgGqlUserService.md#restorepassword)
-- [logout$](NgGqlUserService.md#logout$)
-- [userDelete$](NgGqlUserService.md#userdelete$)
-- [getUserLocations](NgGqlUserService.md#getuserlocations)
-- [locationCreate$](NgGqlUserService.md#locationcreate$)
-- [locationDelete$](NgGqlUserService.md#locationdelete$)
+- [logout](NgGqlUserService.md#logout)
+- [userDelete](NgGqlUserService.md#userdelete)
+- [locationCreate](NgGqlUserService.md#locationcreate)
+- [locationDelete](NgGqlUserService.md#locationdelete)
 
 ## Constructors
 
@@ -87,6 +87,24 @@ ___
 #### Returns
 
 `Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
+
+___
+
+### getUserLocations$
+
+▸ **getUserLocations$**(`options`): `Observable`<[`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `options` | `Object` |
+| `options.skip` | `number` |
+| `options.limit` | `number` |
+
+#### Returns
+
+`Observable`<[`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
 
 ___
 
@@ -255,9 +273,9 @@ ___
 
 ___
 
-### logout$
+### logout
 
-▸ **logout$**(`loading?`): `Promise`<`Response`\>
+▸ **logout**(`loading?`): `Promise`<`Response`\>
 
 #### Parameters
 
@@ -271,9 +289,9 @@ ___
 
 ___
 
-### userDelete$
+### userDelete
 
-▸ **userDelete$**(`otp`, `loading?`): `Promise`<`Response`\>
+▸ **userDelete**(`otp`, `loading?`): `Promise`<`Response`\>
 
 #### Parameters
 
@@ -288,19 +306,9 @@ ___
 
 ___
 
-### getUserLocations
+### locationCreate
 
-▸ **getUserLocations**(): `Observable`<[`UserLocation`](../interfaces/UserLocation.md)[]\>
-
-#### Returns
-
-`Observable`<[`UserLocation`](../interfaces/UserLocation.md)[]\>
-
-___
-
-### locationCreate$
-
-▸ **locationCreate$**(`location`, `loading?`): `Promise`<`boolean`\>
+▸ **locationCreate**(`location`, `loading?`): `Promise`<`boolean`\>
 
 #### Parameters
 
@@ -315,9 +323,9 @@ ___
 
 ___
 
-### locationDelete$
+### locationDelete
 
-▸ **locationDelete$**(`locationId`, `loading?`): `Promise`<`boolean`\>
+▸ **locationDelete**(`locationId`, `loading?`): `Promise`<`boolean`\>
 
 #### Parameters
 

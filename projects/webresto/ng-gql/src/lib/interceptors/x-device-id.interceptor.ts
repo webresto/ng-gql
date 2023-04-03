@@ -5,7 +5,7 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { generateUUID } from '../models';
 import { isValue } from '@axrl/common';

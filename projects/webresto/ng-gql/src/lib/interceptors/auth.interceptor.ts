@@ -6,8 +6,9 @@ import {
   HttpEvent,
   HttpInterceptor,
 } from '@angular/common/http';
-import { exhaustMap, Observable } from 'rxjs';
+import { exhaustMap } from 'rxjs';
 import { isValue } from '@axrl/common';
+import type { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

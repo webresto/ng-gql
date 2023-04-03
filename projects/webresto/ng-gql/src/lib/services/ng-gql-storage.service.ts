@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Dish, Group, NavigationBase, Order, PaymentMethod, User, UserOrderHystory } from '../models';
+import {
+  Dish,
+  Group,
+  NavigationBase,
+  Order,
+  PaymentMethod,
+  User,
+  UserLocationResponse,
+  UserOrderHystory,
+} from '../models';
 import { getFilteredData, createSubject, isValue } from '@axrl/common';
 
 @Injectable()
@@ -44,7 +53,7 @@ export class NgGqlStorageService {
   private _user = createSubject<User | null>(null);
   user = this._user;
 
-  updateUser<T extends User>(user: T|null) {
+  updateUser<T extends User>(user: T | null) {
     this._user.next(user);
   }
 
@@ -63,9 +72,24 @@ export class NgGqlStorageService {
   private _orderHystory = createSubject<UserOrderHystory[]>([]);
   orderHystory = this._orderHystory.asObservable();
 
-  updateOrderHystory(newPart:UserOrderHystory[]) {
+  updateOrderHystory(newPart: UserOrderHystory[]) {
     const hystory = [...this._orderHystory.value];
     hystory.push(...newPart);
-    this._orderHystory.next(hystory)
+    this._orderHystory.next(hystory);
+  }
+
+  private _userLocations = createSubject<UserLocationResponse>(null);
+  userLocations = this._userLocations.asObservable();
+
+  updateUserLocations(newValue: UserLocationResponse) {
+    const current = this._userLocations.value;
+    if (current) {
+      const userLocations = [...current.userLocation];
+      userLocations.push(...newValue.userLocation);
+      this._userLocations.next({
+        userLocationCount: newValue.userLocationCount,
+        userLocation: userLocations,
+      });
+    }
   }
 }
