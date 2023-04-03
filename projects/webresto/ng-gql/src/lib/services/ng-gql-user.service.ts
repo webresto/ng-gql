@@ -29,6 +29,7 @@ import {
   map,
   catchError,
   switchMap,
+  of,
 } from 'rxjs';
 import { isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
@@ -70,7 +71,7 @@ export class NgGqlUserService {
     return this.ngGqlStorage.orderHystory.pipe(
       exhaustMap((hystory) => {
         if (hystory.length >= options.skip + options.limit) {
-          return this.ngGqlStorage.orderHystory;
+          return of(hystory.slice(0,options.skip + options.limit));
         } else {
           return this.ngGqlService
             .customQuery$<
