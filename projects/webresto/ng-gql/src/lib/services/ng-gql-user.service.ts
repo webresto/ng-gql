@@ -104,32 +104,42 @@ export class NgGqlUserService {
     skip: number;
     limit: number;
   }): Observable<UserLocationResponse> {
-    return this.ngGqlService.customQuery$('userLocationCount', {}).pipe(
-      switchMap((data) => {
-        const userLocationCount = Array.isArray(data.userLocationCount)
-          ? data.userLocationCount[0]
-          : data.userLocationCount;
-        return this.ngGqlService
-          .customQuery$(
-            'userLocation',
-            this.defaultuserLocationFragments,
-            options
-          )
-          .pipe(
-            map((data) => {
-              const userLocation = Array.isArray(data.userLocation)
-                ? data.userLocation
-                : [data.userLocation];
-              const result = {
-                userLocationCount,
-                userLocation,
-              };
-              this.ngGqlStorage.updateUserLocations(result);
-              return result;
-            })
-          );
+    return this.ngGqlService
+      .customQuery$<
+        number,
+        'userLocationCount',
+        {
+          criteria: {};
+        }
+      >('userLocationCount', 1, {
+        criteria: {},
       })
-    );
+      .pipe(
+        switchMap((data) => {
+          const userLocationCount = Array.isArray(data.userLocationCount)
+            ? data.userLocationCount[0]
+            : data.userLocationCount;
+          return this.ngGqlService
+            .customQuery$(
+              'userLocation',
+              this.defaultuserLocationFragments,
+              options
+            )
+            .pipe(
+              map((data) => {
+                const userLocation = Array.isArray(data.userLocation)
+                  ? data.userLocation
+                  : [data.userLocation];
+                const result = {
+                  userLocationCount,
+                  userLocation,
+                };
+                this.ngGqlStorage.updateUserLocations(result);
+                return result;
+              })
+            );
+        })
+      );
   }
 
   getUserLocations$(options: {
