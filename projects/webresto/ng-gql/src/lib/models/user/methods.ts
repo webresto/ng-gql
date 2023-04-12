@@ -34,8 +34,8 @@ export type UpdateUserDataPayload = {
   firstName: string;
   lastName: string;
   birthday: string;
-  customData: any;
-  customFields: any;
+  customData?: any;
+  customFields?: any;
 };
 
 export interface Response {

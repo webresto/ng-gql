@@ -15,12 +15,12 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^15.2.5",
-    "@angular/compiler": "^15.2.5",
-    "@angular/core": "^15.2.5",
-    "@angular/forms": "^15.2.5",
+    "@angular/common": "^15.2.6",
+    "@angular/compiler": "^15.2.6",
+    "@angular/core": "^15.2.6",
+    "@angular/forms": "^15.2.6",
     "@apollo/client": "^3.7.11",
-    "@axrl/common": "^1.0.26",
+    "@axrl/common": "^1.0.27",
     "@axrl/ngx-extended-form-builder": "^1.2.9",
     "apollo-angular": "^4.2.1",
     "apollo3-cache-persist": "^0.14.1",
@@ -32,13 +32,13 @@
     "zone.js": "^0.13.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^15.2.4",
-    "@angular/cli": "^15.2.4",
-    "@angular/compiler-cli": "^15.2.5",
+    "@angular-devkit/build-angular": "^15.2.5",
+    "@angular/cli": "^15.2.5",
+    "@angular/compiler-cli": "^15.2.6",
     "@types/node": "^18.15.11",
     "ng-packagr": "^15.2.2",
     "typedoc": "^0.23.28",
-    "typedoc-plugin-markdown": "^3.14.0",
+    "typedoc-plugin-markdown": "^3.15.1",
     "typescript": "^4.9.5"
   }
 }

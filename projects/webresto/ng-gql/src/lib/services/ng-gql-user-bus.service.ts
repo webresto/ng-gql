@@ -184,7 +184,9 @@ export class NgGqlUserBusService {
     })
   );
 
-  private captchaGetJob$<T extends CaptchaTask>(data: CaptchaJobPayload): Observable<CaptchaJob<T>> {
+  private captchaGetJob$<T extends CaptchaTask>(
+    data: CaptchaJobPayload
+  ): Observable<CaptchaJob<T>> {
     return this.ngGqlService
       .customQuery$<CaptchaJob<T>, 'captchaGetJob', CaptchaJobPayload>(
         'captchaGetJob',
@@ -218,8 +220,8 @@ export class NgGqlUserBusService {
     data: UpdateUserDataPayload
   ): Observable<UserResponse> {
     return this.ngGqlService
-      .customMutation$<UserResponse, 'login', UpdateUserDataPayload>(
-        'login',
+      .customMutation$<UserResponse, 'userUpdate', UpdateUserDataPayload>(
+        'userUpdate',
         {
           user: this.defaultUserFragments,
           message: this.defaultMessageFragments,
@@ -229,7 +231,7 @@ export class NgGqlUserBusService {
       )
       .pipe(
         map((record) => {
-          const userResponse = record.login;
+          const userResponse = record.userUpdate;
           if (isValue(userResponse.action)) {
             const token = userResponse.action.data?.token;
             setTimeout(() => {
@@ -237,9 +239,9 @@ export class NgGqlUserBusService {
             }, 100);
           }
           if (isValue(userResponse.user)) {
-            this.ngGqlStorage.updateUser(record.login.user);
+            this.ngGqlStorage.updateUser(record.userUpdate.user);
           }
-          return record.login;
+          return record.userUpdate;
         })
       );
   }
@@ -322,7 +324,9 @@ export class NgGqlUserBusService {
       .pipe(map((record) => record.OTPRequest));
   }
 
-  private registrationApp$(data: RegistrationPayload): Observable<UserResponse> {
+  private registrationApp$(
+    data: RegistrationPayload
+  ): Observable<UserResponse> {
     return this.ngGqlService
       .customMutation$<UserResponse, 'registration', RegistrationPayload>(
         'registration',

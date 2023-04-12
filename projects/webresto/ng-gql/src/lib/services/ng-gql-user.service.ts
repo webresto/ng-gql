@@ -194,7 +194,7 @@ export class NgGqlUserService {
     });
   }
 
-  /** Добавляет блюдо в избранное */
+  /** Обновление данных о пользователе */
   updateUserData(
     data: UpdateUserDataPayload,
     loading?: BehaviorSubject<boolean>
