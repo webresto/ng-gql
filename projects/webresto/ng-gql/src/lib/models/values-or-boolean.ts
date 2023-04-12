@@ -17,12 +17,24 @@ import type { Observable } from 'rxjs';
  *   3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.
  */
 export type ValuesOrBoolean<T> = {
-  [K in keyof Partial<T>]: true | (
-    T[K] extends Observable<unknown> | AbstractControl<unknown> ? never :
-    T[K] extends string | number | bigint | symbol | boolean | undefined | null ?
-    true :
-    T[K] extends (Array<infer U> | undefined | null) ?
-    ValuesOrBoolean<U> :
-    ValuesOrBoolean<T[K]>
-  )
+  [K in keyof T]+?:
+    | true
+    | (T[K] extends Observable<unknown> | AbstractControl<unknown>
+        ? never
+        : T[K] extends
+            | string
+            | number
+            | bigint
+            | symbol
+            | boolean
+            | undefined
+            | null
+        ? true
+        : T[K] extends Array<infer U> | undefined | null
+        ? ValuesOrBoolean<U>
+        : ValuesOrBoolean<T[K]>);
 };
+
+type ReturnResult<T> = T extends ValuesOrBoolean<infer S>
+  ? Omit<S, keyof Omit<S, keyof T> > 
+  : never;
