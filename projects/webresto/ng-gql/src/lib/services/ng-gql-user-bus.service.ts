@@ -220,14 +220,23 @@ export class NgGqlUserBusService {
     data: UpdateUserDataPayload
   ): Observable<UserResponse> {
     return this.ngGqlService
-      .customMutation$<UserResponse, 'userUpdate', UpdateUserDataPayload>(
+      .customMutation$<
+        UserResponse,
+        'userUpdate',
+        { user: UpdateUserDataPayload }
+      >(
         'userUpdate',
         {
           user: this.defaultUserFragments,
           message: this.defaultMessageFragments,
           action: this.defaultActionFragments,
         },
-        data
+        {
+          user: data,
+        },
+        {
+          fieldsTypeMap: new Map([['user', 'InputUser!']]),
+        }
       )
       .pipe(
         map((record) => {

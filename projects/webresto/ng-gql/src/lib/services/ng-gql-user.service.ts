@@ -31,6 +31,7 @@ import {
   catchError,
   switchMap,
   of,
+  shareReplay,
 } from 'rxjs';
 import { isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
@@ -166,26 +167,29 @@ export class NgGqlUserService {
     );
   }
 
-  getUser$(): Observable<User | null> {
-    return this.ngGqlStorage.user.pipe(
-      exhaustMap((user) =>
-        isValue(user)
-          ? this.ngGqlStorage.user
-          : this.getToken$().pipe(
-              switchMap((token) =>
-                isValue(token)
-                  ? this.loadUser$().pipe(
-                      switchMap((user) => {
-                        this.updateStorageUser(user);
-                        return this.ngGqlStorage.user;
-                      })
-                    )
-                  : this.ngGqlStorage.user
-              )
+  private readonly _user$ = this.ngGqlStorage.user.pipe(
+    exhaustMap((user) =>
+      isValue(user)
+        ? this.ngGqlStorage.user
+        : this.getToken$().pipe(
+            switchMap((token) =>
+              isValue(token)
+                ? this.loadUser$().pipe(
+                    switchMap((user) => {
+                      this.updateStorageUser(user);
+                      return this.ngGqlStorage.user;
+                    })
+                  )
+                : this.ngGqlStorage.user
             )
-      ),
-      catchError((err) => this.ngGqlStorage.user)
-    );
+          )
+    ),
+    catchError((err) => this.ngGqlStorage.user),
+    shareReplay(1)
+  );
+
+  getUser$(): Observable<User | null> {
+    return this._user$;
   }
 
   getToken$(): Observable<string | null> {
