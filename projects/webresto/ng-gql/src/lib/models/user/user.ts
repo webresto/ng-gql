@@ -1,5 +1,5 @@
 import type { Dish } from '../dish/dish.gql';
-import type { Order } from '../order';
+import type { Address, Order } from '../order';
 import type { Phone } from './../customer/customer';
 import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
 
@@ -67,19 +67,12 @@ export interface UserDevice extends BaseModelWithCustomData {
   sessionId: string;
 }
 
-export interface InputLocation extends BaseModelWithCustomData {
-  street: string;
-  home: string;
-  name: string;
-  city: string;
-  housing: string;
-  index: string;
-  entrance: string;
-  floor: string;
-  apartment: string;
-  doorphone: string;
-  comment: string;
-  customFields: any;
+export interface InputLocation extends Address {
+  customData: {
+    [key: string]: string | any | null;
+  } | null;
+  name?: string | null;
+  customFields?: any | null;
 }
 
 export interface UserLocation extends InputLocation {

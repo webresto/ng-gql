@@ -1,11 +1,8 @@
 # Interface: InputLocation
 
-Базовый интерфейс. описывающий содержимаое свойства customData в той или иной конкретной реализации сервера.
-Т.к. структура customData будет одинакова для всех содержащих ее моделей, другие модели наследуюттся от этого базового интерфейса.
-
 ## Hierarchy
 
-- [`BaseModelWithCustomData`](BaseModelWithCustomData.md)
+- [`Address`](Address.md)
 
   ↳ **`InputLocation`**
 
@@ -15,98 +12,145 @@
 
 ### Properties
 
-- [customData](InputLocation.md#customdata)
-- [street](InputLocation.md#street)
+- [streetId](InputLocation.md#streetid)
 - [home](InputLocation.md#home)
-- [name](InputLocation.md#name)
+- [comment](InputLocation.md#comment)
 - [city](InputLocation.md#city)
+- [street](InputLocation.md#street)
 - [housing](InputLocation.md#housing)
 - [index](InputLocation.md#index)
 - [entrance](InputLocation.md#entrance)
 - [floor](InputLocation.md#floor)
 - [apartment](InputLocation.md#apartment)
 - [doorphone](InputLocation.md#doorphone)
-- [comment](InputLocation.md#comment)
+- [customData](InputLocation.md#customdata)
+- [name](InputLocation.md#name)
 - [customFields](InputLocation.md#customfields)
 
 ## Properties
 
-### customData
+### streetId
 
-• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+• **streetId**: ``null`` \| `string`
 
 #### Inherited from
 
-[BaseModelWithCustomData](BaseModelWithCustomData.md).[customData](BaseModelWithCustomData.md#customdata)
-
-___
-
-### street
-
-• **street**: `string`
+[Address](Address.md).[streetId](Address.md#streetid)
 
 ___
 
 ### home
 
-• **home**: `string`
+• **home**: ``null`` \| `string`
 
-___
+#### Inherited from
 
-### name
-
-• **name**: `string`
-
-___
-
-### city
-
-• **city**: `string`
-
-___
-
-### housing
-
-• **housing**: `string`
-
-___
-
-### index
-
-• **index**: `string`
-
-___
-
-### entrance
-
-• **entrance**: `string`
-
-___
-
-### floor
-
-• **floor**: `string`
-
-___
-
-### apartment
-
-• **apartment**: `string`
-
-___
-
-### doorphone
-
-• **doorphone**: `string`
+[Address](Address.md).[home](Address.md#home)
 
 ___
 
 ### comment
 
-• **comment**: `string`
+• `Optional` **comment**: ``null`` \| `string`
+
+#### Inherited from
+
+[Address](Address.md).[comment](Address.md#comment)
+
+___
+
+### city
+
+• `Optional` **city**: ``null`` \| `string`
+
+#### Inherited from
+
+[Address](Address.md).[city](Address.md#city)
+
+___
+
+### street
+
+• **street**: ``null`` \| `string`
+
+#### Inherited from
+
+[Address](Address.md).[street](Address.md#street)
+
+___
+
+### housing
+
+• `Optional` **housing**: ``null`` \| `string`
+
+#### Inherited from
+
+[Address](Address.md).[housing](Address.md#housing)
+
+___
+
+### index
+
+• `Optional` **index**: ``null`` \| `string`
+
+#### Inherited from
+
+[Address](Address.md).[index](Address.md#index)
+
+___
+
+### entrance
+
+• `Optional` **entrance**: ``null`` \| `string`
+
+#### Inherited from
+
+[Address](Address.md).[entrance](Address.md#entrance)
+
+___
+
+### floor
+
+• `Optional` **floor**: ``null`` \| `string`
+
+#### Inherited from
+
+[Address](Address.md).[floor](Address.md#floor)
+
+___
+
+### apartment
+
+• `Optional` **apartment**: ``null`` \| `string`
+
+#### Inherited from
+
+[Address](Address.md).[apartment](Address.md#apartment)
+
+___
+
+### doorphone
+
+• `Optional` **doorphone**: ``null`` \| `string`
+
+#### Inherited from
+
+[Address](Address.md).[doorphone](Address.md#doorphone)
+
+___
+
+### customData
+
+• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+
+___
+
+### name
+
+• `Optional` **name**: ``null`` \| `string`
 
 ___
 
 ### customFields
 
-• **customFields**: `any`
+• `Optional` **customFields**: `any`

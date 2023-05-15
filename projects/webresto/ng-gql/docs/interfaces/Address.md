@@ -1,5 +1,11 @@
 # Interface: Address
 
+## Hierarchy
+
+- **`Address`**
+
+  ↳ [`InputLocation`](InputLocation.md)
+
 ## Table of contents
 
 ### Properties
@@ -32,13 +38,13 @@ ___
 
 ### comment
 
-• `Optional` **comment**: `string`
+• `Optional` **comment**: ``null`` \| `string`
 
 ___
 
 ### city
 
-• `Optional` **city**: `string`
+• `Optional` **city**: ``null`` \| `string`
 
 ___
 
@@ -50,34 +56,34 @@ ___
 
 ### housing
 
-• `Optional` **housing**: `string`
+• `Optional` **housing**: ``null`` \| `string`
 
 ___
 
 ### index
 
-• `Optional` **index**: `string`
+• `Optional` **index**: ``null`` \| `string`
 
 ___
 
 ### entrance
 
-• `Optional` **entrance**: `string`
+• `Optional` **entrance**: ``null`` \| `string`
 
 ___
 
 ### floor
 
-• `Optional` **floor**: `string`
+• `Optional` **floor**: ``null`` \| `string`
 
 ___
 
 ### apartment
 
-• `Optional` **apartment**: `string`
+• `Optional` **apartment**: ``null`` \| `string`
 
 ___
 
 ### doorphone
 
-• `Optional` **doorphone**: `string`
+• `Optional` **doorphone**: ``null`` \| `string`

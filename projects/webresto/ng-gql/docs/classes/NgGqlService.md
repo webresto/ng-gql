@@ -6,6 +6,10 @@
 
 - [constructor](NgGqlService.md#constructor)
 
+### Properties
+
+- [rootGroups$](NgGqlService.md#rootgroups$)
+
 ### Methods
 
 - [getNgGqlConfig](NgGqlService.md#getnggqlconfig)
@@ -24,10 +28,6 @@
 - [queryAndSubscribe](NgGqlService.md#queryandsubscribe)
 - [destroy](NgGqlService.md#destroy)
 
-### Properties
-
-- [rootGroups$](NgGqlService.md#rootgroups$)
-
 ## Constructors
 
 ### constructor
@@ -45,6 +45,12 @@
 | `defaultMaintenanceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Maintenance`](../interfaces/Maintenance.md)\> |
 | `defaultGroupFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Group`](../interfaces/Group.md)\> |
 | `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Dish`](../interfaces/Dish.md)\> |
+
+## Properties
+
+### rootGroups$
+
+• **rootGroups$**: `Observable`<{ `concept`: `string` ; `groups`: [`PartialGroupNullable`](../README.md#partialgroupnullable)[]  }\>
 
 ## Methods
 
@@ -85,8 +91,6 @@ getNavigation$()
 Используется для получения массива обьектов навигации для различных компонентов приложения.
 
 **`See`**
-
-**`Interface`**
 
 NavigationLoader<T>
 
@@ -421,9 +425,3 @@ ___
 #### Returns
 
 `void`
-
-## Properties
-
-### rootGroups$
-
-• **rootGroups$**: `Observable`<{ `concept`: `string` ; `groups`: [`PartialGroupNullable`](../README.md#partialgroupnullable)[]  }\>

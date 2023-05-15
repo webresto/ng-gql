@@ -27,8 +27,6 @@
 
   ↳ [`UserDevice`](UserDevice.md)
 
-  ↳ [`InputLocation`](InputLocation.md)
-
   ↳ [`OneTimePassword`](OneTimePassword.md)
 
   ↳ [`UserOrderHystory`](UserOrderHystory.md)

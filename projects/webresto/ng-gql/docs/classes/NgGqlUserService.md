@@ -151,7 +151,7 @@ ___
 
 ▸ **updateUserData**(`data`, `loading?`): `Promise`<[`UserResponse`](../interfaces/UserResponse.md)\>
 
-Добавляет блюдо в избранное
+Обновление данных о пользователе
 
 #### Parameters
 

@@ -1,7 +1,5 @@
 # Interface: SendOrderInput
 
-**`Interface`**
-
 SendOrderInput
 Данные для отправки оформленного заказа
 orderId - id оформляемого заказа

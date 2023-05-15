@@ -2,15 +2,29 @@
 
 ## Table of contents
 
+### Constructors
+
+- [constructor](EventMessage.md#constructor)
+
 ### Properties
 
 - [type](EventMessage.md#type)
 - [title](EventMessage.md#title)
 - [body](EventMessage.md#body)
 
-### Constructors
+## Constructors
 
-- [constructor](EventMessage.md#constructor)
+### constructor
+
+• **new EventMessage**(`type`, `title`, `body`)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `type` | `string` |
+| `title` | `string` |
+| `body` | `string` |
 
 ## Properties
 
@@ -29,17 +43,3 @@ ___
 ### body
 
 • **body**: `string`
-
-## Constructors
-
-### constructor
-
-• **new EventMessage**(`type`, `title`, `body`)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `type` | `string` |
-| `title` | `string` |
-| `body` | `string` |

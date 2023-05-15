@@ -21,95 +21,95 @@ import type { Dish } from '../dish/dish.gql';
 export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER';
 
 export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
-	id: string;
-	shortId: string;
-	dishes: Partial<OrderDish<T>>[];
-	dishesCount: number;
-	comment: string;
-	deliveryDescription: string;
-	message: string | null;
-	deliveryCost: number;
-	totalWeight: number;
-	trifleFrom: number;
-	total: number;
-	orderTotal: number;
-	discountTotal: number;
-	state: OrderState;
-	rmsId?: string;
-	rmsOrderNumber?: string;
-	rmsDeliveryDate?: string;
-	rmsDelivered?: boolean;
-	customer: Partial<Customer> | null;
-	address: Partial<Address> | null;
-	paid?: boolean;
-	paymentMethod: Partial<PaymentMethod> | null;
+  id: string;
+  shortId: string;
+  dishes: Partial<OrderDish<T>>[];
+  dishesCount: number;
+  comment: string;
+  deliveryDescription: string;
+  message: string | null;
+  deliveryCost: number;
+  totalWeight: number;
+  trifleFrom: number;
+  total: number;
+  orderTotal: number;
+  discountTotal: number;
+  state: OrderState;
+  rmsId?: string;
+  rmsOrderNumber?: string;
+  rmsDeliveryDate?: string;
+  rmsDelivered?: boolean;
+  customer: Partial<Customer> | null;
+  address: Partial<Address> | null;
+  paid?: boolean;
+  paymentMethod: Partial<PaymentMethod> | null;
 }
 
 export interface Address {
-	streetId: string | null;
-	home: string | null;
-	comment?: string;
-	city?: string;
-	street: string | null;
-	housing?: string;
-	index?: string;
-	entrance?: string;
-	floor?: string;
-	apartment?: string;
-	doorphone?: string;
+  streetId: string | null;
+  home: string | null;
+  comment?: string | null;
+  city?: string | null;
+  street: string | null;
+  housing?: string | null;
+  index?: string | null;
+  entrance?: string | null;
+  floor?: string | null;
+  apartment?: string | null;
+  doorphone?: string | null;
 }
 
 export interface AddToOrderInput {
-	orderId: string,
-	dishId: string,
-	amount?: number,
-	modifiers?: Partial<OrderModifier>[] | Partial<Modifier>[],
-	comment?: string,
-	replace?: boolean,
-	orderDishId?: number;
-};
+  orderId: string;
+  dishId: string;
+  amount?: number;
+  modifiers?: Partial<OrderModifier>[] | Partial<Modifier>[];
+  comment?: string;
+  replace?: boolean;
+  orderDishId?: number;
+}
 
 export interface RemoveOrSetAmountToDish {
-	orderDishId?: number;
-	amount?: number;
-	id: string;
-};
+  orderDishId?: number;
+  amount?: number;
+  id: string;
+}
 
 export interface SetDishCommentInput {
-	id?: string,
-	comment?: string;
-	orderDishId: number;
-};
+  id?: string;
+  comment?: string;
+  orderDishId: number;
+}
 
 export interface CheckOrderInput extends Partial<BaseModelWithCustomData> {
-	orderId: string,
-	paymentMethodId?: string,
-	selfService: boolean,
-	pickupAddressId?: string,
-	locationId?: string,
-	date?: string,
-	address: Partial<Address> | null,
-	customer: Partial<Customer> | null,
-	comment?: string,
-	notifyMethodId?: string,
-};
+  orderId: string;
+  paymentMethodId?: string;
+  selfService: boolean;
+  pickupAddressId?: string;
+  locationId?: string;
+  date?: string;
+  address: Partial<Address> | null;
+  customer: Partial<Customer> | null;
+  comment?: string;
+  notifyMethodId?: string;
+}
 
 export interface CheckResponse {
-	order: Partial<Order>;
-	message: Partial<Message> | null;
-	action: Partial<Action> | null;
+  order: Partial<Order>;
+  message: Partial<Message> | null;
+  action: Partial<Action> | null;
 }
 
 export interface OrderAdditionalFields {
-	selfService: boolean,
-	pickupAddressId?: string | undefined,
-	locationId?: string | undefined,
-	promocode?: string | undefined;
-	deliveryTimeInfo?: {
-		deliveryType: 'fast' | 'date-time' | undefined,
-		deliveryDate: string | undefined,
-		deliveryTime: string | undefined;
-	};
-};
+  selfService: boolean;
+  pickupAddressId?: string | undefined;
+  locationId?: string | undefined;
+  promocode?: string | undefined;
+  deliveryTimeInfo?: {
+    deliveryType: 'fast' | 'date-time' | undefined;
+    deliveryDate: string | undefined;
+    deliveryTime: string | undefined;
+  };
+}
 
 export type OrderForm = Order & OrderAdditionalFields;

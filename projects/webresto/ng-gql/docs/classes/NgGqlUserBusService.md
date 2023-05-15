@@ -10,13 +10,13 @@
 
 - [constructor](NgGqlUserBusService.md#constructor)
 
-### Methods
-
-- [emitToBus](NgGqlUserBusService.md#emittobus)
-
 ### Properties
 
 - [userBus$](NgGqlUserBusService.md#userbus$)
+
+### Methods
+
+- [emitToBus](NgGqlUserBusService.md#emittobus)
 
 ## Constructors
 
@@ -35,6 +35,12 @@
 | `defaultCaptchaGetJobFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |
 | `defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |
 | `defaultOTPResponceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`OTPResponse`](../interfaces/OTPResponse.md)\> |
+
+## Properties
+
+### userBus$
+
+• **userBus$**: `Observable`<() => `void` \| () => `void`\>
 
 ## Methods
 
@@ -62,9 +68,3 @@
 #### Returns
 
 `Promise`<`R`\>
-
-## Properties
-
-### userBus$
-
-• **userBus$**: `Observable`<() => `void` \| () => `void`\>

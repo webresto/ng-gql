@@ -2,30 +2,17 @@
 
 ## Table of contents
 
-### Variables
+### Classes
 
-- [ORDERID\_FACTORY\_FN](README.md#orderid_factory_fn)
-- [IMAGE\_FRAGMENTS](README.md#image_fragments)
-- [MESSAGE\_FRAGMENTS](README.md#message_fragments)
-- [ACTION\_FRAGMENTS](README.md#action_fragments)
-- [MAINTENANCE\_FRAGMENTS](README.md#maintenance_fragments)
-- [MODIFIER\_FRAGMENTS](README.md#modifier_fragments)
-- [DISH\_FRAGMENTS](README.md#dish_fragments)
-- [GROUP\_FRAGMENTS](README.md#group_fragments)
-- [GROUP\_MODIFIER\_FRAGMENTS](README.md#group_modifier_fragments)
-- [ORDER\_FRAGMENTS](README.md#order_fragments)
-- [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
-- [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
-- [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
-- [PHONE\_FRAGMENT](README.md#phone_fragment)
-- [OTP\_RESPONSE\_FRAGMENTS](README.md#otp_response_fragments)
-- [USER\_DEVICES\_FRAGMENTS](README.md#user_devices_fragments)
-- [USER\_LOCATION\_FRAGMENTS](README.md#user_location_fragments)
-- [BONUS\_PROGRAM\_FRAGMENTS](README.md#bonus_program_fragments)
-- [USER\_BONUS\_PROGRAM\_FRAGMENTS](README.md#user_bonus_program_fragments)
-- [CAPTCHA\_GET\_JOB\_FRAGMENTS](README.md#captcha_get_job_fragments)
-- [USER\_FRAGMENTS](README.md#user_fragments)
-- [USER\_ORDER\_HYSTORY\_FRAGMENTS](README.md#user_order_hystory_fragments)
+- [EventMessage](classes/EventMessage.md)
+- [GenerateUUIDHelper](classes/GenerateUUIDHelper.md)
+- [NqGqlLocalStorageWrapper](classes/NqGqlLocalStorageWrapper.md)
+- [ApolloService](classes/ApolloService.md)
+- [NgGqlStorageService](classes/NgGqlStorageService.md)
+- [NgGqlUserBusService](classes/NgGqlUserBusService.md)
+- [NgGqlUserService](classes/NgGqlUserService.md)
+- [NgGqlService](classes/NgGqlService.md)
+- [NgOrderService](classes/NgOrderService.md)
 
 ### Interfaces
 
@@ -102,17 +89,30 @@
 - [UserBusEventType](README.md#userbuseventtype)
 - [UserBusEvent](README.md#userbusevent)
 
-### Classes
+### Variables
 
-- [EventMessage](classes/EventMessage.md)
-- [GenerateUUIDHelper](classes/GenerateUUIDHelper.md)
-- [NqGqlLocalStorageWrapper](classes/NqGqlLocalStorageWrapper.md)
-- [ApolloService](classes/ApolloService.md)
-- [NgGqlStorageService](classes/NgGqlStorageService.md)
-- [NgGqlUserBusService](classes/NgGqlUserBusService.md)
-- [NgGqlUserService](classes/NgGqlUserService.md)
-- [NgGqlService](classes/NgGqlService.md)
-- [NgOrderService](classes/NgOrderService.md)
+- [ORDERID\_FACTORY\_FN](README.md#orderid_factory_fn)
+- [IMAGE\_FRAGMENTS](README.md#image_fragments)
+- [MESSAGE\_FRAGMENTS](README.md#message_fragments)
+- [ACTION\_FRAGMENTS](README.md#action_fragments)
+- [MAINTENANCE\_FRAGMENTS](README.md#maintenance_fragments)
+- [MODIFIER\_FRAGMENTS](README.md#modifier_fragments)
+- [DISH\_FRAGMENTS](README.md#dish_fragments)
+- [GROUP\_FRAGMENTS](README.md#group_fragments)
+- [GROUP\_MODIFIER\_FRAGMENTS](README.md#group_modifier_fragments)
+- [ORDER\_FRAGMENTS](README.md#order_fragments)
+- [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
+- [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
+- [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
+- [PHONE\_FRAGMENT](README.md#phone_fragment)
+- [OTP\_RESPONSE\_FRAGMENTS](README.md#otp_response_fragments)
+- [USER\_DEVICES\_FRAGMENTS](README.md#user_devices_fragments)
+- [USER\_LOCATION\_FRAGMENTS](README.md#user_location_fragments)
+- [BONUS\_PROGRAM\_FRAGMENTS](README.md#bonus_program_fragments)
+- [USER\_BONUS\_PROGRAM\_FRAGMENTS](README.md#user_bonus_program_fragments)
+- [CAPTCHA\_GET\_JOB\_FRAGMENTS](README.md#captcha_get_job_fragments)
+- [USER\_FRAGMENTS](README.md#user_fragments)
+- [USER\_ORDER\_HYSTORY\_FRAGMENTS](README.md#user_order_hystory_fragments)
 
 ### Functions
 
@@ -130,6 +130,146 @@
 - [CartBusEventSetCommentToDish](interfaces/CartBusEventSetCommentToDish.md)
 - [CartBusEventCheck](interfaces/CartBusEventCheck.md)
 - [CartBusEventSend](interfaces/CartBusEventSend.md)
+
+## Type Aliases
+
+### DiscountType
+
+Ƭ **DiscountType**: ``"FIXED"`` \| ``"PERCENT"``
+
+___
+
+### VCriteria
+
+Ƭ **VCriteria**: `Object`
+
+**`Alias`**
+
+VCriteria
+Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
+Формируется по правилам Waterline query language.
+Подробнее: https://docs.webresto.org/docs/data/criteria/
+
+#### Type declaration
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `criteria` | { `[key: string]`: `any`;  } | Объект Waterline query language |
+
+___
+
+### GQLRequestVariables
+
+Ƭ **GQLRequestVariables**: [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
+
+**`Alias`**
+
+GQLRequestVariables
+Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описаны для запроса в схеме GraphQL сервера, с соответствующими им значениями.
+В качестве ключей выступают строки, соответствующие названиям параметров.
+Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
+
+___
+
+### PartialGroupNullable
+
+Ƭ **PartialGroupNullable**: `Pick`<[`Group`](interfaces/Group.md), ``"slug"``\> & { `id`: `string` \| ``null``  }
+
+___
+
+### OrderState
+
+Ƭ **OrderState**: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"``
+
+**`Alias`**
+
+OrderState
+Возможные состояния заказа.
+ `CART` - начальное состояние заказа
+ `CHECKOUT` - заказ проверен и готов к оформлению.
+В заказе еще возможны изменения, но после любых изменений требуется повторно выполнять проверку.
+
+**`See`**
+
+'NgOrderService.checkOrder'
+ `PAYMENT` - заказ переходит в это состояние при выборе онлайн оплаты или через внутреннюю платежную систему (бонусами и т.п.),
+	Состояние сохраняется, пока оплата не будет завершена, после чего заказ перейдет в состояние `ORDER`.
+ `ORDER` - заказ успешно оформлен. Это финальный статус и он не подразумевает, что заказ также был доставлен.
+	Данные о выполненной доставке могут быть получены от RMS (`Order.rmsDelivered`).
+
+___
+
+### OrderForm
+
+Ƭ **OrderForm**: [`Order`](interfaces/Order.md) & [`OrderAdditionalFields`](interfaces/OrderAdditionalFields.md)
+
+___
+
+### LoginPayload
+
+Ƭ **LoginPayload**: `Omit`<[`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), ``"password"`` \| ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `password?`: `string` ; `otp?`: `string`  }
+
+___
+
+### RegistrationPayload
+
+Ƭ **RegistrationPayload**: `Omit`<[`LoginPayload`](README.md#loginpayload), ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName?`: `string` ; `lastName?`: `string` ; `customFields?`: { `[key: string]`: `string` \| `any` \| ``null``;  }  }
+
+___
+
+### UpdateUserDataPayload
+
+Ƭ **UpdateUserDataPayload**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `firstName` | `string` |
+| `lastName` | `string` |
+| `birthday` | `string` |
+| `customData?` | `any` |
+| `customFields?` | `any` |
+
+___
+
+### ValuesOrBoolean
+
+Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof T]?: true \| (T[K] extends Observable<unknown\> \| AbstractControl<unknown\> ? never : T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
+
+**`Alias`**
+
+ValuesOrBoolean<T>
+
+Тип, описывающий объект-конфигуратор запроса к серверу GraphQL для данных типа T.
+Данный обьект будет использоваться в качестве источника информации о требуемых данных при генерации строки-запроса.
+Сервер вернет данные только для полей, присутсвующих в этом обьекте, с сохранением структуры по всем уровням вложенности.
+В качестве ключей (K) необходимо указать ключи из типа T, данные для которых необходимо получить.
+Ключи, значения которых являются любыми развновидностями Observable или AbstractControl (все виды реактивных форм Ангуляр) - не принимаются.
+Структура возвращаемых данных будет соответствовать структуре, переданной в данном объекте, а не типе Т.
+То есть, даже если некие ключи-свойства в типе T указаны как обязательные, их все равно можно не указывать в данном обьекте, но и в возвращаемых API данных эти данные будут отсутствовать.
+В качестве значений:
+  1. true или T[K] - в случае, если T[K] принадлежит примитивным типам, undefined или null.
+  2. Если значение T[K] - "сложный" тип обьекта (НО НЕ МАССИВ!) - вложенный объект, формируемый по аналогичной схеме.
+  3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+___
+
+### UserBusEventType
+
+Ƭ **UserBusEventType**: ``"OTPRequest"`` \| ``"login"`` \| ``"UpdateUserData"`` \| ``"RestorePassword"`` \| ``"AddDishFavor"`` \| ``"captchaGetJob"`` \| ``"registrationApp"`` \| ``"logout"`` \| ``"userDelete"`` \| ``"locationCreate"`` \| ``"locationDelete"``
+
+___
+
+### UserBusEvent
+
+Ƭ **UserBusEvent**: { `errorCb`: (`err`: `unknown`) => `void` ; `loading?`: `BehaviorSubject`<`boolean`\>  } & `UserBusEventMixin`<``"captchaGetJob"``, [`CaptchaJobPayload`](interfaces/CaptchaJobPayload.md), [`CaptchaJob`](interfaces/CaptchaJob.md)<`any`\>\> \| `UserBusEventMixin`<``"registrationApp"``, [`RegistrationPayload`](README.md#registrationpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"OTPRequest"``, [`OTPRequestPayload`](interfaces/OTPRequestPayload.md), [`OTPResponse`](interfaces/OTPResponse.md)\> \| `UserBusEventMixin`<``"login"``, [`LoginPayload`](README.md#loginpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"UpdateUserData"``, [`UpdateUserDataPayload`](README.md#updateuserdatapayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"RestorePassword"``, [`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"AddDishFavor"``, `string`, `boolean`\> \| `UserBusEventMixin`<``"logout"``, ``null``, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"userDelete"``, `string`, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"locationCreate"``, [`InputLocation`](interfaces/InputLocation.md), `boolean`\> \| `UserBusEventMixin`<``"locationDelete"``, `string`, `boolean`\>
 
 ## Variables
 
@@ -306,146 +446,6 @@ ___
 • `Const` **USER\_ORDER\_HYSTORY\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserOrderHystory`](interfaces/UserOrderHystory.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<UserOrderHystory>.
-
-## Type Aliases
-
-### DiscountType
-
-Ƭ **DiscountType**: ``"FIXED"`` \| ``"PERCENT"``
-
-___
-
-### VCriteria
-
-Ƭ **VCriteria**: `Object`
-
-**`Alias`**
-
-VCriteria
-Обобщенный тип для объекта criteria, передаваемого в качестве параметра для некоторых запросов к серверу GraphQL.
-Формируется по правилам Waterline query language.
-Подробнее: https://docs.webresto.org/docs/data/criteria/
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `criteria` | { `[key: string]`: `any`;  } | Объект Waterline query language |
-
-___
-
-### GQLRequestVariables
-
-Ƭ **GQLRequestVariables**: [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
-
-**`Alias`**
-
-GQLRequestVariables
-Тип, описывающий необязательный обьект переменных-параметров запроса к серверу GraphQL API, ключи которого , описаны для запроса в схеме GraphQL сервера, с соответствующими им значениями.
-В качестве ключей выступают строки, соответствующие названиям параметров.
-Значения - соответствующие им значения, при этом значения должны принадлежать типам number, string, object или boolean
-
-___
-
-### PartialGroupNullable
-
-Ƭ **PartialGroupNullable**: `Pick`<[`Group`](interfaces/Group.md), ``"slug"``\> & { `id`: `string` \| ``null``  }
-
-___
-
-### OrderState
-
-Ƭ **OrderState**: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"``
-
-**`Alias`**
-
-OrderState
-Возможные состояния заказа.
- `CART` - начальное состояние заказа
- `CHECKOUT` - заказ проверен и готов к оформлению.
-В заказе еще возможны изменения, но после любых изменений требуется повторно выполнять проверку.
-
-**`See`**
-
-'NgOrderService.checkOrder'
- `PAYMENT` - заказ переходит в это состояние при выборе онлайн оплаты или через внутреннюю платежную систему (бонусами и т.п.),
-	Состояние сохраняется, пока оплата не будет завершена, после чего заказ перейдет в состояние `ORDER`.
- `ORDER` - заказ успешно оформлен. Это финальный статус и он не подразумевает, что заказ также был доставлен.
-	Данные о выполненной доставке могут быть получены от RMS (`Order.rmsDelivered`).
-
-___
-
-### OrderForm
-
-Ƭ **OrderForm**: [`Order`](interfaces/Order.md) & [`OrderAdditionalFields`](interfaces/OrderAdditionalFields.md)
-
-___
-
-### LoginPayload
-
-Ƭ **LoginPayload**: `Omit`<[`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), ``"password"`` \| ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `password?`: `string` ; `otp?`: `string`  }
-
-___
-
-### RegistrationPayload
-
-Ƭ **RegistrationPayload**: `Omit`<[`LoginPayload`](README.md#loginpayload), ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName?`: `string` ; `lastName?`: `string` ; `customFields?`: { `[key: string]`: `string` \| `any` \| ``null``;  }  }
-
-___
-
-### UpdateUserDataPayload
-
-Ƭ **UpdateUserDataPayload**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `firstName` | `string` |
-| `lastName` | `string` |
-| `birthday` | `string` |
-| `customData` | `any` |
-| `customFields` | `any` |
-
-___
-
-### ValuesOrBoolean
-
-Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof T]?: true \| (T[K] extends Observable<unknown\> \| AbstractControl<unknown\> ? never : T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
-
-**`Alias`**
-
-ValuesOrBoolean<T>
-
-Тип, описывающий объект-конфигуратор запроса к серверу GraphQL для данных типа T.
-Данный обьект будет использоваться в качестве источника информации о требуемых данных при генерации строки-запроса.
-Сервер вернет данные только для полей, присутсвующих в этом обьекте, с сохранением структуры по всем уровням вложенности.
-В качестве ключей (K) необходимо указать ключи из типа T, данные для которых необходимо получить.
-Ключи, значения которых являются любыми развновидностями Observable или AbstractControl (все виды реактивных форм Ангуляр) - не принимаются.
-Структура возвращаемых данных будет соответствовать структуре, переданной в данном объекте, а не типе Т.
-То есть, даже если некие ключи-свойства в типе T указаны как обязательные, их все равно можно не указывать в данном обьекте, но и в возвращаемых API данных эти данные будут отсутствовать.
-В качестве значений:
-  1. true или T[K] - в случае, если T[K] принадлежит примитивным типам, undefined или null.
-  2. Если значение T[K] - "сложный" тип обьекта (НО НЕ МАССИВ!) - вложенный объект, формируемый по аналогичной схеме.
-  3. Если значение T[K] - массив элементов некоего типа U - вложенный обьект, формируемый для типа U по аналогичной схеме.
-
-#### Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-___
-
-### UserBusEventType
-
-Ƭ **UserBusEventType**: ``"OTPRequest"`` \| ``"login"`` \| ``"UpdateUserData"`` \| ``"RestorePassword"`` \| ``"AddDishFavor"`` \| ``"captchaGetJob"`` \| ``"registrationApp"`` \| ``"logout"`` \| ``"userDelete"`` \| ``"locationCreate"`` \| ``"locationDelete"``
-
-___
-
-### UserBusEvent
-
-Ƭ **UserBusEvent**: { `errorCb`: (`err`: `unknown`) => `void` ; `loading?`: `BehaviorSubject`<`boolean`\>  } & `UserBusEventMixin`<``"captchaGetJob"``, [`CaptchaJobPayload`](interfaces/CaptchaJobPayload.md), [`CaptchaJob`](interfaces/CaptchaJob.md)<`any`\>\> \| `UserBusEventMixin`<``"registrationApp"``, [`RegistrationPayload`](README.md#registrationpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"OTPRequest"``, [`OTPRequestPayload`](interfaces/OTPRequestPayload.md), [`OTPResponse`](interfaces/OTPResponse.md)\> \| `UserBusEventMixin`<``"login"``, [`LoginPayload`](README.md#loginpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"UpdateUserData"``, [`UpdateUserDataPayload`](README.md#updateuserdatapayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"RestorePassword"``, [`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"AddDishFavor"``, `string`, `boolean`\> \| `UserBusEventMixin`<``"logout"``, ``null``, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"userDelete"``, `string`, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"locationCreate"``, [`InputLocation`](interfaces/InputLocation.md), `boolean`\> \| `UserBusEventMixin`<``"locationDelete"``, `string`, `boolean`\>
 
 ## Functions
 

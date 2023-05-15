@@ -6,6 +6,10 @@
 
 - [constructor](NgOrderService.md#constructor)
 
+### Properties
+
+- [orderBus$](NgOrderService.md#orderbus$)
+
 ### Methods
 
 - [updateStorageOrderIdToken](NgOrderService.md#updatestorageorderidtoken)
@@ -30,10 +34,6 @@
 - [getMessageEmitter](NgOrderService.md#getmessageemitter)
 - [getActionEmitter](NgOrderService.md#getactionemitter)
 
-### Properties
-
-- [orderBus$](NgOrderService.md#orderbus$)
-
 ## Constructors
 
 ### constructor
@@ -53,6 +53,27 @@
 | `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
 | `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |
 | `defaultOrderFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\> |
+
+## Properties
+
+### orderBus$
+
+• **orderBus$**: `Observable`<`void` \| () => `void` \| () => `void` \| () => `void`\>
+
+Внутренний поток-шина для событий, ассоциированных с действиями, которыми необходимо выполнить с заказом (добавить/удалить блюдо, проверить заказ, отправить на проверку и тп.).
+Используется только в случае, если в
+
+**`See`**
+
+ - this.config параметр busSubscribeMode установлен в значении 'custom' для самостоятельного управления подпиской на стороне приложения.
+Использование этого потока и событий внутри него извне не подразумевается и не предусматривается,
+Для выполнения действий с заказом, необходимо использовать соответствующие методы:
+ - this.addToOrder
+ - this.removeFromOrder
+ - this.checkOrder
+ - this.sendOrder
+ - this.setDishAmount
+ - this.setDishComment
 
 ## Methods
 
@@ -498,24 +519,3 @@ ___
 #### Returns
 
 `Observable`<[`Action`](../interfaces/Action.md)<`any`\>\>
-
-## Properties
-
-### orderBus$
-
-• **orderBus$**: `Observable`<`void` \| () => `void` \| () => `void` \| () => `void`\>
-
-Внутренний поток-шина для событий, ассоциированных с действиями, которыми необходимо выполнить с заказом (добавить/удалить блюдо, проверить заказ, отправить на проверку и тп.).
-Используется только в случае, если в
-
-**`See`**
-
- - this.config параметр busSubscribeMode установлен в значении 'custom' для самостоятельного управления подпиской на стороне приложения.
-Использование этого потока и событий внутри него извне не подразумевается и не предусматривается,
-Для выполнения действий с заказом, необходимо использовать соответствующие методы:
- - this.addToOrder
- - this.removeFromOrder
- - this.checkOrder
- - this.sendOrder
- - this.setDishAmount
- - this.setDishComment
