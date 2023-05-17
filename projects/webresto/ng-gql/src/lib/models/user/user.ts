@@ -67,19 +67,27 @@ export interface UserDevice extends BaseModelWithCustomData {
   sessionId: string;
 }
 
+export interface Street extends BaseModelWithCustomData {
+  id: string;
+  exId: string;
+  name: string;
+}
+
 export interface InputLocation extends Address {
   customData: {
     [key: string]: string | any | null;
   } | null;
   name?: string | null;
+
   customFields?: any | null;
 }
 
-export interface UserLocation extends InputLocation {
+export type UserLocation = Omit<InputLocation, 'street'> & {
   id: string;
   user: User;
   userId: string;
-}
+  street: Street;
+};
 
 export interface UserLocationResponse {
   userLocationCount: number;

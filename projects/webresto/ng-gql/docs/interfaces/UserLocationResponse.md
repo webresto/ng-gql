@@ -17,4 +17,4 @@ ___
 
 ### userLocation
 
-• **userLocation**: [`UserLocation`](UserLocation.md)[]
+• **userLocation**: [`UserLocation`](../README.md#userlocation)[]

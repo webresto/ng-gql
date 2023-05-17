@@ -382,7 +382,11 @@ export const USER_LOCATION_FRAGMENTS = new InjectionToken<
     floor: true,
     apartment: true,
     doorphone: true,
-    street: true,
+    streetId:true,
+    street: {
+      name: true,
+      id: true,
+    },
     userId: true,
     comment: true,
   }),

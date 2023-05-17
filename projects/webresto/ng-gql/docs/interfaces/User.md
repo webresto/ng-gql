@@ -102,7 +102,7 @@ ___
 
 ### locations
 
-• **locations**: [`UserLocation`](UserLocation.md)[]
+• **locations**: [`UserLocation`](../README.md#userlocation)[]
 
 ___
 

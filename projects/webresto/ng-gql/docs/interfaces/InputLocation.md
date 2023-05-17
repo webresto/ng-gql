@@ -6,8 +6,6 @@
 
   ↳ **`InputLocation`**
 
-  ↳↳ [`UserLocation`](UserLocation.md)
-
 ## Table of contents
 
 ### Properties

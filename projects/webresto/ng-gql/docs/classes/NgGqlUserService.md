@@ -42,7 +42,7 @@
 | `_userBus` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
 | `defaultUserOrderHystoryFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)\> |
 | `defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |
-| `defaultuserLocationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`UserLocation`](../interfaces/UserLocation.md)\> |
+| `defaultuserLocationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`UserLocation`](../README.md#userlocation)\> |
 
 ## Methods
 

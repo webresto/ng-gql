@@ -67,8 +67,8 @@
 - [UserBonusProgram](interfaces/UserBonusProgram.md)
 - [UserBonusTransaction](interfaces/UserBonusTransaction.md)
 - [UserDevice](interfaces/UserDevice.md)
+- [Street](interfaces/Street.md)
 - [InputLocation](interfaces/InputLocation.md)
-- [UserLocation](interfaces/UserLocation.md)
 - [UserLocationResponse](interfaces/UserLocationResponse.md)
 - [OneTimePassword](interfaces/OneTimePassword.md)
 - [UserOrderHystory](interfaces/UserOrderHystory.md)
@@ -85,6 +85,7 @@
 - [LoginPayload](README.md#loginpayload)
 - [RegistrationPayload](README.md#registrationpayload)
 - [UpdateUserDataPayload](README.md#updateuserdatapayload)
+- [UserLocation](README.md#userlocation)
 - [ValuesOrBoolean](README.md#valuesorboolean)
 - [UserBusEventType](README.md#userbuseventtype)
 - [UserBusEvent](README.md#userbusevent)
@@ -230,6 +231,12 @@ ___
 | `birthday` | `string` |
 | `customData?` | `any` |
 | `customFields?` | `any` |
+
+___
+
+### UserLocation
+
+Ƭ **UserLocation**: `Omit`<[`InputLocation`](interfaces/InputLocation.md), ``"street"``\> & { `id`: `string` ; `user`: [`User`](interfaces/User.md) ; `userId`: `string` ; `street`: [`Street`](interfaces/Street.md)  }
 
 ___
 
@@ -403,7 +410,7 @@ ___
 
 ### USER\_LOCATION\_FRAGMENTS
 
-• `Const` **USER\_LOCATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserLocation`](interfaces/UserLocation.md)\>\>
+• `Const` **USER\_LOCATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserLocation`](README.md#userlocation)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<UserLocation>.
 

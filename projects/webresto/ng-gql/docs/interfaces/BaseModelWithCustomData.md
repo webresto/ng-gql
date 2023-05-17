@@ -27,6 +27,8 @@
 
   ↳ [`UserDevice`](UserDevice.md)
 
+  ↳ [`Street`](Street.md)
+
   ↳ [`OneTimePassword`](OneTimePassword.md)
 
   ↳ [`UserOrderHystory`](UserOrderHystory.md)
