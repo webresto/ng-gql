@@ -6,7 +6,7 @@ import type { Order, CheckOrderInput, AddToOrderInput, RemoveOrSetAmountToDish, 
  * @alias @event CartBusEvent
  * Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
  */
-export type CartBusEvent = CartBusEventAdd | CartBusEventUpdate | CartBusEventRemove | CartBusEventSetAmountToDish | CartBusEventSetCommentToDish | CartBusEventCheck | CartBusEventSend;
+export type CartBusEvent = CartBusEventAdd | CartBusEventUpdate | CartBusEventRemove | CartBusEventSetAmountToDish | CartBusEventSetCommentToDish | CartBusEventCheck | CartBusEventSend | CartBusEventClone;
 
 /**
  * @event CartBusEventBase Базовый интерфейс событий в шине событий
@@ -96,5 +96,13 @@ export interface SendOrderInput {
  * Отправка заказа на оформление */
 export interface CartBusEventSend extends CartBusEventBase<CheckResponse> {
   event: 'order';
+  data: SendOrderInput;
+} ;
+
+/**
+ * @event CartBusEventSend
+ * Отправка заказа на оформление */
+export interface CartBusEventClone extends CartBusEventBase<CheckResponse> {
+  event: 'clone';
   data: SendOrderInput;
 } ;

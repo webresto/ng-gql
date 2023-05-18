@@ -369,6 +369,8 @@ export class NgOrderService {
             });
           case 'order':
             return this.sendOrder$(busEventData.data);
+          case 'clone':
+            return this.cloneOrder$(busEventData.data);
           case 'update':
             return this.updateOrder$(busEventData.data);
           case 'setDishAmount':
@@ -604,6 +606,32 @@ export class NgOrderService {
   }
 
   /**
+   * @method cloneOrder()
+   * Используется для отправки в шину события повтора уже сделанного ранее заказа.
+   * @param options.orderId - Форма чекаута с данными оформляемего заказа
+   * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+   * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+   */
+  cloneOrder(options: {
+    orderId: string;
+    orderIdFactory?: () => string | undefined;
+    loading?: BehaviorSubject<boolean>;
+    successCb?: (order: CheckResponse) => void;
+    errorCb?: (err: unknown) => void;
+  }) {
+    this._orderBus$.emit({
+      event: 'clone',
+      loading: options.loading,
+      successCb: options.successCb,
+      errorCb: options.errorCb,
+      data: {
+        orderId: options.orderId,
+        orderIdFactory: options.orderIdFactory,
+      },
+    });
+  }
+
+  /**
    * @method setDishAmount()
    * Устанавливает для блюда dish в заказе количество amount.
    * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
@@ -729,6 +757,41 @@ export class NgOrderService {
             }
           }
           return data.sendOrder;
+        })
+      );
+  }
+
+  private cloneOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
+    return this.ngGqlService
+      .customMutation$<CheckResponse, 'orderClone', { orderId: string }>(
+        'orderClone',
+        <ValuesOrBoolean<CheckResponse>>{
+          order: this.defaultOrderFragments,
+          message: this.defaultMessageFragments,
+          action: this.defaultActionFragments,
+        },
+        {
+          orderId: sendOrderData.orderId,
+        },
+        {
+          requiredFields: ['orderId'],
+        }
+      )
+      .pipe(
+        map((data) => {
+          if (isValue(data)) {
+            if (isValue(sendOrderData.orderIdFactory)) {
+              const newOrderId = sendOrderData.orderIdFactory();
+              if (newOrderId) {
+                this.setOrderId(newOrderId);
+              } else {
+                this.removeOrderId(newOrderId);
+              }
+            } else {
+              this.removeOrderId();
+            }
+          }
+          return data.orderClone;
         })
       );
   }

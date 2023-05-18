@@ -26,6 +26,7 @@
 - [updateOrder](NgOrderService.md#updateorder)
 - [checkOrder](NgOrderService.md#checkorder)
 - [sendOrder](NgOrderService.md#sendorder)
+- [cloneOrder](NgOrderService.md#cloneorder)
 - [setDishAmount](NgOrderService.md#setdishamount)
 - [setDishComment](NgOrderService.md#setdishcomment)
 - [destroy](NgOrderService.md#destroy)
@@ -390,6 +391,32 @@ ___
 sendOrder()
 Используется для отправки в шину события оформления заказа.
 Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | - |
+| `options.orderId` | `string` | Форма чекаута с данными оформляемего заказа |
+| `options.orderIdFactory?` | () => `undefined` \| `string` | - |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> | - |
+| `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
+
+#### Returns
+
+`void`
+
+___
+
+### cloneOrder
+
+▸ **cloneOrder**(`options`): `void`
+
+**`Method`**
+
+cloneOrder()
+Используется для отправки в шину события повтора уже сделанного ранее заказа.
 
 #### Parameters
 

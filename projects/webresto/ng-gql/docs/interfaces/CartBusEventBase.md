@@ -26,6 +26,8 @@ CartBusEventBase Базовый интерфейс событий в шине с
 
   ↳ [`CartBusEventSend`](CartBusEventSend.md)
 
+  ↳ [`CartBusEventClone`](CartBusEventClone.md)
+
 ## Table of contents
 
 ### Properties

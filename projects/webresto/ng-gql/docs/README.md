@@ -131,6 +131,7 @@
 - [CartBusEventSetCommentToDish](interfaces/CartBusEventSetCommentToDish.md)
 - [CartBusEventCheck](interfaces/CartBusEventCheck.md)
 - [CartBusEventSend](interfaces/CartBusEventSend.md)
+- [CartBusEventClone](interfaces/CartBusEventClone.md)
 
 ## Type Aliases
 
@@ -511,7 +512,7 @@ ___
 
 ### CartBusEvent
 
-Ƭ **CartBusEvent**: [`CartBusEventAdd`](interfaces/CartBusEventAdd.md) \| [`CartBusEventUpdate`](interfaces/CartBusEventUpdate.md) \| [`CartBusEventRemove`](interfaces/CartBusEventRemove.md) \| [`CartBusEventSetAmountToDish`](interfaces/CartBusEventSetAmountToDish.md) \| [`CartBusEventSetCommentToDish`](interfaces/CartBusEventSetCommentToDish.md) \| [`CartBusEventCheck`](interfaces/CartBusEventCheck.md) \| [`CartBusEventSend`](interfaces/CartBusEventSend.md)
+Ƭ **CartBusEvent**: [`CartBusEventAdd`](interfaces/CartBusEventAdd.md) \| [`CartBusEventUpdate`](interfaces/CartBusEventUpdate.md) \| [`CartBusEventRemove`](interfaces/CartBusEventRemove.md) \| [`CartBusEventSetAmountToDish`](interfaces/CartBusEventSetAmountToDish.md) \| [`CartBusEventSetCommentToDish`](interfaces/CartBusEventSetCommentToDish.md) \| [`CartBusEventCheck`](interfaces/CartBusEventCheck.md) \| [`CartBusEventSend`](interfaces/CartBusEventSend.md) \| [`CartBusEventClone`](interfaces/CartBusEventClone.md)
 
 **`Alias`**
 
@@ -571,6 +572,11 @@ CartBusEventCheck
 Отправка заказа на проверку перед оформлением.
 
 • **CartBusEventSend**: `Object`
+
+CartBusEventSend
+Отправка заказа на оформление
+
+• **CartBusEventClone**: `Object`
 
 CartBusEventSend
 Отправка заказа на оформление
