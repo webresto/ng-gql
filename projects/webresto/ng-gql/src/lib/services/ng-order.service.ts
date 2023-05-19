@@ -339,7 +339,7 @@ export class NgOrderService {
    * @see this.setDishAmount
    * @see this.setDishComment
    */
-  orderBus$ = this.orderAndPaymentMethods$.pipe(
+  readonly orderBus$ = this.orderAndPaymentMethods$.pipe(
     map((data) => data.order),
     switchMap((order) =>
       this._orderBus$

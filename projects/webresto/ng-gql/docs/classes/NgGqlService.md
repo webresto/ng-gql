@@ -50,7 +50,7 @@
 
 ### rootGroups$
 
-• **rootGroups$**: `Observable`<{ `concept`: `string` ; `groups`: [`PartialGroupNullable`](../README.md#partialgroupnullable)[]  }\>
+• `Readonly` **rootGroups$**: `Observable`<{ `concept`: `string` ; `groups`: [`PartialGroupNullable`](../README.md#partialgroupnullable)[]  }\>
 
 ## Methods
 

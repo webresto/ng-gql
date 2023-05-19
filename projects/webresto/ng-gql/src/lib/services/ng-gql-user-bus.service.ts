@@ -149,7 +149,7 @@ export class NgGqlUserBusService {
     }
   }
 
-  userBus$ = this._userBus.asObservable().pipe(
+  readonly userBus$ = this._userBus.asObservable().pipe(
     switchMap((event) => {
       return this.userServiceReducer(event).pipe(
         concatMap((result) => {

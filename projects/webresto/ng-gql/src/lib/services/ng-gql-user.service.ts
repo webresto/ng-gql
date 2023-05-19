@@ -51,7 +51,7 @@ export class NgGqlUserService {
     private defaultuserLocationFragments: ValuesOrBoolean<UserLocation>
   ) {}
 
-  loadUser$(): Observable<User | null> {
+  private _loadUser$(): Observable<User | null> {
     return this.ngGqlService
       .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
       .pipe(
@@ -70,34 +70,42 @@ export class NgGqlUserService {
     skip: number;
     limit: number;
   }): Observable<UserOrderHystory[]> {
-    return this.ngGqlStorage.orderHystory.pipe(
-      exhaustMap((hystory) => {
-        if (hystory.length >= options.skip + options.limit) {
-          return of(hystory.slice(0, options.skip + options.limit));
-        } else {
-          return this.ngGqlService
-            .customQuery$<
-              UserOrderHystory,
-              'userOrderHistory',
-              {
-                skip: number;
-                limit: number;
+    return this.ngGqlStorage.token.pipe(
+      switchMap((token) =>
+        this.ngGqlStorage.orderHystory.pipe(
+          exhaustMap((hystory) => {
+            if (isValue(token)) {
+              if (hystory.length >= options.skip + options.limit) {
+                return of(hystory.slice(0, options.skip + options.limit));
+              } else {
+                return this.ngGqlService
+                  .customQuery$<
+                    UserOrderHystory,
+                    'userOrderHistory',
+                    {
+                      skip: number;
+                      limit: number;
+                    }
+                  >('userOrderHistory', this.defaultUserOrderHystoryFragments, {
+                    skip: options.skip,
+                    limit: options.limit,
+                  })
+                  .pipe(
+                    switchMap((data) => {
+                      const result = Array.isArray(data.userOrderHistory)
+                        ? data.userOrderHistory
+                        : [data.userOrderHistory];
+                      this.ngGqlStorage.updateOrderHystory(result);
+                      return this.ngGqlStorage.orderHystory;
+                    })
+                  );
               }
-            >('userOrderHistory', this.defaultUserOrderHystoryFragments, {
-              skip: options.skip,
-              limit: options.limit,
-            })
-            .pipe(
-              switchMap((data) => {
-                const result = Array.isArray(data.userOrderHistory)
-                  ? data.userOrderHistory
-                  : [data.userOrderHistory];
-                this.ngGqlStorage.updateOrderHystory(result);
-                return this.ngGqlStorage.orderHystory;
-              })
-            );
-        }
-      })
+            } else {
+              return of([]);
+            }
+          })
+        )
+      )
     );
   }
 
@@ -147,23 +155,34 @@ export class NgGqlUserService {
     skip: number;
     limit: number;
   }): Observable<UserLocationResponse> {
-    return this.ngGqlStorage.userLocations.pipe(
-      exhaustMap((data) => {
-        if (
-          isValue(data) &&
-          data.userLocation.length >= options.skip + options.limit
-        ) {
-          return of({
-            userLocationCount: data.userLocationCount,
-            userLocation: data.userLocation.slice(
-              0,
-              options.skip + options.limit
-            ),
-          });
-        } else {
-          return this._getUserLocations(options);
-        }
-      })
+    return this.ngGqlStorage.token.pipe(
+      switchMap((token) =>
+        this.ngGqlStorage.userLocations.pipe(
+          exhaustMap((data) => {
+            if (isValue(token)) {
+              if (
+                isValue(data) &&
+                data.userLocation.length >= options.skip + options.limit
+              ) {
+                return of({
+                  userLocationCount: data.userLocationCount,
+                  userLocation: data.userLocation.slice(
+                    0,
+                    options.skip + options.limit
+                  ),
+                });
+              } else {
+                return this._getUserLocations(options);
+              }
+            } else {
+              return of({
+                userLocationCount: 0,
+                userLocation: [],
+              });
+            }
+          })
+        )
+      )
     );
   }
 
@@ -174,7 +193,7 @@ export class NgGqlUserService {
         : this.getToken$().pipe(
             switchMap((token) =>
               isValue(token)
-                ? this.loadUser$().pipe(
+                ? this._loadUser$().pipe(
                     switchMap((user) => {
                       this.updateStorageUser(user);
                       return this.ngGqlStorage.user;

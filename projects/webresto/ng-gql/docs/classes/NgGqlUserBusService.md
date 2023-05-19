@@ -40,7 +40,7 @@
 
 ### userBus$
 
-• **userBus$**: `Observable`<() => `void` \| () => `void`\>
+• `Readonly` **userBus$**: `Observable`<() => `void` \| () => `void`\>
 
 ## Methods
 

@@ -8,7 +8,6 @@
 
 ### Methods
 
-- [loadUser$](NgGqlUserService.md#loaduser$)
 - [updateStorageUser](NgGqlUserService.md#updatestorageuser)
 - [loadUserOrderHistory$](NgGqlUserService.md#loaduserorderhistory$)
 - [getUserLocations$](NgGqlUserService.md#getuserlocations$)
@@ -45,16 +44,6 @@
 | `defaultuserLocationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`UserLocation`](../README.md#userlocation)\> |
 
 ## Methods
-
-### loadUser$
-
-▸ **loadUser$**(): `Observable`<``null`` \| [`User`](../interfaces/User.md)\>
-
-#### Returns
-
-`Observable`<``null`` \| [`User`](../interfaces/User.md)\>
-
-___
 
 ### updateStorageUser
 

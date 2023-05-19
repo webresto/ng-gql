@@ -15,6 +15,7 @@
 - [paymentMethods](NgGqlStorageService.md#paymentmethods)
 - [user](NgGqlStorageService.md#user)
 - [token](NgGqlStorageService.md#token)
+- [isAuthenticated$](NgGqlStorageService.md#isauthenticated$)
 - [orderHystory](NgGqlStorageService.md#orderhystory)
 - [userLocations](NgGqlStorageService.md#userlocations)
 
@@ -40,55 +41,61 @@
 
 ### order
 
-• **order**: `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
+• `Readonly` **order**: `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
 
 ___
 
 ### dishes
 
-• **dishes**: `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+• `Readonly` **dishes**: `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
 
 ___
 
 ### menu
 
-• **menu**: `Observable`<[`Group`](../interfaces/Group.md)[]\>
+• `Readonly` **menu**: `Observable`<[`Group`](../interfaces/Group.md)[]\>
 
 ___
 
 ### navigation
 
-• **navigation**: `Observable`<[`NavigationBase`](../interfaces/NavigationBase.md)[]\>
+• `Readonly` **navigation**: `Observable`<[`NavigationBase`](../interfaces/NavigationBase.md)[]\>
 
 ___
 
 ### paymentMethods
 
-• **paymentMethods**: `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
+• `Readonly` **paymentMethods**: `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
 ___
 
 ### user
 
-• **user**: `BehaviorSubject`<``null`` \| [`User`](../interfaces/User.md)\>
+• `Readonly` **user**: `BehaviorSubject`<``null`` \| [`User`](../interfaces/User.md)\>
 
 ___
 
 ### token
 
-• **token**: `Observable`<``null`` \| `string`\>
+• `Readonly` **token**: `Observable`<``null`` \| `string`\>
+
+___
+
+### isAuthenticated$
+
+• `Readonly` **isAuthenticated$**: `Observable`<`string`\>
 
 ___
 
 ### orderHystory
 
-• **orderHystory**: `Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
+• `Readonly` **orderHystory**: `Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
 
 ___
 
 ### userLocations
 
-• **userLocations**: `Observable`<``null`` \| [`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
+• `Readonly` **userLocations**: `Observable`<``null`` \| [`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
 
 ## Methods
 

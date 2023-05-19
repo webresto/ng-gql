@@ -179,11 +179,9 @@ export class NgGqlService {
       }
     ).pipe(
       map((group) => {
-        const array = (<
-          {
-            childGroups: PartialGroupNullable[];
-          }[]
-        >group.group).map((item) => ({ ...item }));
+        const array = (<Array<{ childGroups: PartialGroupNullable[] }>>(
+          group.group
+        )).map((item) => ({ ...item }));
         return {
           concept,
           groups: array.length == 0 ? [] : array[0].childGroups,
@@ -192,7 +190,7 @@ export class NgGqlService {
     );
   }
 
-  rootGroups$: Observable<{
+  readonly rootGroups$: Observable<{
     concept: string | 'origin';
     groups: PartialGroupNullable[];
   }> = this.storage.navigation.pipe(
@@ -508,21 +506,11 @@ export class NgGqlService {
       confirmCode: true,
     };
     const vOb = customvOb ? { ...phonevOb, ...customvOb } : phonevOb;
-    return this.customQuery$<
-      PhoneKnowledge,
-      'isKnownPhone',
-      {
-        phone: Phone;
-      }
-    >(
+    return this.customQuery$<PhoneKnowledge, 'isKnownPhone', { phone: Phone }>(
       'isKnownPhone',
       vOb,
-      {
-        phone,
-      },
-      {
-        fieldsTypeMap: new Map([['phone', 'Phone!']]),
-      }
+      { phone },
+      { fieldsTypeMap: new Map([['phone', 'Phone!']]) }
     ).pipe(
       map((data) =>
         Array.isArray(data.isKnownPhone)
@@ -536,9 +524,7 @@ export class NgGqlService {
     return this.customQuery$<
       CheckPhoneResponse,
       'phoneKnowledgeGetCode',
-      {
-        phone: Phone;
-      }
+      { phone: Phone }
     >(
       'phoneKnowledgeGetCode',
       {
@@ -548,12 +534,8 @@ export class NgGqlService {
         confirmed: true,
         firstbuy: true,
       },
-      {
-        phone,
-      },
-      {
-        fieldsTypeMap: new Map([['phone', 'Phone!']]),
-      }
+      { phone },
+      { fieldsTypeMap: new Map([['phone', 'Phone!']]) }
     ).pipe(
       map((data) =>
         Array.isArray(data.phoneKnowledgeGetCode)
@@ -734,10 +716,7 @@ export class NgGqlService {
     });
     return this.apollo
       .subscribe<Record<N, T>, V>(
-        {
-          query: gql`subscription ${q}`,
-          variables,
-        },
+        { query: gql`subscription ${q}`, variables },
         extra
       )
       .pipe(

@@ -14,7 +14,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
             if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
             if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
@@ -35,20 +35,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var promises_1 = require("fs/promises");
 var path_1 = require("path");
 var libraryPackageJsonPath = process.argv[2];
 if (libraryPackageJsonPath === null || libraryPackageJsonPath === undefined) {
-    throw new Error("Не передан путь к файлу package.json, который требуется обновить.");
+    throw new Error('Не передан путь к файлу package.json, который требуется обновить.');
 }
 else {
     if (typeof libraryPackageJsonPath !== 'string') {
-        throw new Error("Путь к обновляемому файлу package.json должен быть строкой.");
+        throw new Error('Путь к обновляемому файлу package.json должен быть строкой.');
     }
     else {
         if ((0, path_1.extname)(libraryPackageJsonPath) !== '.json') {
-            throw new Error("Указанный файл - не json.");
+            throw new Error('Указанный файл - не json.');
         }
     }
 }
@@ -56,7 +56,7 @@ var mainPackageJsonPath = (0, path_1.join)(process.cwd(), 'package.json');
 function main() {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
-        var libraryPackageJson, _b, _c, mainPackageJson_1, _d, _e, versionArray, libraryDependencies_1, haveChanges_1, message_1;
+        var libraryPackageJson, _b, _c, mainPackageJson_1, _d, _e, versionArray, libraryDependencies_1, haveChanges_1, checkDep_1, message_1;
         return __generator(this, function (_f) {
             switch (_f.label) {
                 case 0:
@@ -72,51 +72,44 @@ function main() {
                     versionArray = (_a = libraryPackageJson === null || libraryPackageJson === void 0 ? void 0 : libraryPackageJson.version) === null || _a === void 0 ? void 0 : _a.split('.');
                     libraryDependencies_1 = libraryPackageJson.peerDependencies;
                     haveChanges_1 = false;
+                    checkDep_1 = function (main, library) {
+                        return main && !library.includes('>=') && main !== library;
+                    };
                     Object.keys(libraryDependencies_1).forEach(function (key) {
-                        if (mainPackageJson_1.dependencies[key] && mainPackageJson_1.dependencies[key] !== libraryDependencies_1[key]) {
+                        if (checkDep_1(mainPackageJson_1.dependencies[key], libraryDependencies_1[key])) {
                             libraryDependencies_1[key] = mainPackageJson_1.dependencies[key];
                             if (!haveChanges_1) {
                                 haveChanges_1 = true;
                             }
-                            ;
                         }
                         else {
-                            if (mainPackageJson_1.devDependencies[key] && mainPackageJson_1.devDependencies[key] !== libraryDependencies_1[key]) {
+                            if (checkDep_1(mainPackageJson_1.devDependencies[key], libraryDependencies_1[key])) {
                                 libraryDependencies_1[key] = mainPackageJson_1.devDependencies[key];
                                 if (!haveChanges_1) {
                                     haveChanges_1 = true;
                                 }
-                                ;
                             }
-                            ;
                         }
-                        ;
                     });
                     if (!(haveChanges_1 || (versionArray && (versionArray === null || versionArray === void 0 ? void 0 : versionArray[2])))) return [3 /*break*/, 4];
-                    if ((versionArray && (versionArray === null || versionArray === void 0 ? void 0 : versionArray[2]))) {
+                    if (versionArray && (versionArray === null || versionArray === void 0 ? void 0 : versionArray[2])) {
                         versionArray[2] = String(+versionArray[2] + 1);
                         libraryPackageJson.version = versionArray.join('.');
                     }
-                    ;
                     return [4 /*yield*/, (0, promises_1.writeFile)(libraryPackageJsonPath, JSON.stringify(libraryPackageJson, null, 2))];
                 case 3:
                     _f.sent();
                     console.log("Successfully update library package.json file!.");
                     return [3 /*break*/, 5];
                 case 4: throw new Error("Error on update version in package.json file!. Current value (need fix) = ".concat(libraryPackageJson.version, "."));
-                case 5:
-                    ;
-                    return [3 /*break*/, 7];
+                case 5: return [3 /*break*/, 7];
                 case 6:
                     message_1 = _f.sent();
                     console.log(message_1);
                     return [3 /*break*/, 7];
-                case 7:
-                    ;
-                    return [2 /*return*/];
+                case 7: return [2 /*return*/];
             }
         });
     });
 }
-;
 main();
