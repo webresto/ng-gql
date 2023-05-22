@@ -140,7 +140,7 @@ ___
 
 ### default
 
-• **default**: `boolean`
+• **default**: ``null`` \| `boolean`
 
 ___
 
