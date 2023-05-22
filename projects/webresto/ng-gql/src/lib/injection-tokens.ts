@@ -373,6 +373,7 @@ export const USER_LOCATION_FRAGMENTS = new InjectionToken<
 >('USER_LOCATION_FRAGMENTS', {
   factory: () => ({
     id: true,
+    default: true,
     name: true,
     city: true,
     home: true,
@@ -382,7 +383,7 @@ export const USER_LOCATION_FRAGMENTS = new InjectionToken<
     floor: true,
     apartment: true,
     doorphone: true,
-    streetId:true,
+    streetId: true,
     street: {
       name: true,
       id: true,

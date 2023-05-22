@@ -5,7 +5,7 @@ CartBusEventSend
 
 ## Hierarchy
 
-- [`CartBusEventBase`](CartBusEventBase.md)<[`CheckResponse`](CheckResponse.md)\>
+- [`CartBusEventBase`](CartBusEventBase.md)<[`Order`](Order.md)\>
 
   ↳ **`CartBusEventClone`**
 
@@ -23,7 +23,7 @@ CartBusEventSend
 
 ### successCb
 
-• `Optional` **successCb**: (`result`: [`CheckResponse`](CheckResponse.md)) => `void`
+• `Optional` **successCb**: (`result`: [`Order`](Order.md)<[`Dish`](Dish.md)\>) => `void`
 
 #### Type declaration
 
@@ -35,7 +35,7 @@ CartBusEventSend
 
 | Name | Type |
 | :------ | :------ |
-| `result` | [`CheckResponse`](CheckResponse.md) |
+| `result` | [`Order`](Order.md)<[`Dish`](Dish.md)\> |
 
 ##### Returns
 

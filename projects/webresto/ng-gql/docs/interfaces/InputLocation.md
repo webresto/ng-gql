@@ -21,6 +21,7 @@
 - [floor](InputLocation.md#floor)
 - [apartment](InputLocation.md#apartment)
 - [doorphone](InputLocation.md#doorphone)
+- [default](InputLocation.md#default)
 - [customData](InputLocation.md#customdata)
 - [name](InputLocation.md#name)
 - [customFields](InputLocation.md#customfields)
@@ -134,6 +135,12 @@ ___
 #### Inherited from
 
 [Address](Address.md).[doorphone](Address.md#doorphone)
+
+___
+
+### default
+
+• **default**: `boolean`
 
 ___
 

@@ -102,7 +102,7 @@ export interface CartBusEventSend extends CartBusEventBase<CheckResponse> {
 /**
  * @event CartBusEventSend
  * Отправка заказа на оформление */
-export interface CartBusEventClone extends CartBusEventBase<CheckResponse> {
+export interface CartBusEventClone extends CartBusEventBase<Order> {
   event: 'clone';
   data: SendOrderInput;
 } ;

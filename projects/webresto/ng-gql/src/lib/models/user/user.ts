@@ -74,6 +74,7 @@ export interface Street extends BaseModelWithCustomData {
 }
 
 export interface InputLocation extends Address {
+  default: boolean;
   customData: {
     [key: string]: string | any | null;
   } | null;

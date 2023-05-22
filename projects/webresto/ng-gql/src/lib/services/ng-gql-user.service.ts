@@ -114,15 +114,11 @@ export class NgGqlUserService {
     limit: number;
   }): Observable<UserLocationResponse> {
     return this.ngGqlService
-      .customQuery$<
-        number,
+      .customQuery$<number, 'userLocationCount', { criteria: {} }>(
         'userLocationCount',
-        {
-          criteria: {};
-        }
-      >('userLocationCount', 1, {
-        criteria: {},
-      })
+        1,
+        { criteria: {} }
+      )
       .pipe(
         switchMap((data) => {
           const userLocationCount = Array.isArray(data.userLocationCount)
@@ -151,16 +147,20 @@ export class NgGqlUserService {
       );
   }
 
-  getUserLocations$(options: {
-    skip: number;
-    limit: number;
-  }): Observable<UserLocationResponse> {
+  getUserLocations$(
+    options: {
+      skip: number;
+      limit: number;
+    },
+    update: boolean = false
+  ): Observable<UserLocationResponse> {
     return this.ngGqlStorage.token.pipe(
       switchMap((token) =>
         this.ngGqlStorage.userLocations.pipe(
           exhaustMap((data) => {
             if (isValue(token)) {
               if (
+                !update &&
                 isValue(data) &&
                 data.userLocation.length >= options.skip + options.limit
               ) {
@@ -327,6 +327,7 @@ export class NgGqlUserService {
     return res;
   }
 
+  /** Добавить адрес у пользователя */
   locationCreate(
     location: InputLocation,
     loading?: BehaviorSubject<boolean>
@@ -338,12 +339,25 @@ export class NgGqlUserService {
     });
   }
 
+  /** Удалить сохраненный у пользователя адрес */
   locationDelete(
     locationId: string,
     loading?: BehaviorSubject<boolean>
   ): Promise<boolean> {
     return this._userBus.emitToBus<'locationDelete', string, boolean>({
       type: 'locationDelete',
+      payload: locationId,
+      loading,
+    });
+  }
+
+  /** Установить адрес в качестве адреса по-умолчанию */
+  locationSetDefault(
+    locationId: string,
+    loading?: BehaviorSubject<boolean>
+  ): Promise<boolean> {
+    return this._userBus.emitToBus<'locationSetDefault', string, boolean>({
+      type: 'locationSetDefault',
       payload: locationId,
       loading,
     });

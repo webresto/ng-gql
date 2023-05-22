@@ -616,7 +616,7 @@ export class NgOrderService {
     orderId: string;
     orderIdFactory?: () => string | undefined;
     loading?: BehaviorSubject<boolean>;
-    successCb?: (order: CheckResponse) => void;
+    successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
   }) {
     this._orderBus$.emit({
@@ -761,15 +761,12 @@ export class NgOrderService {
       );
   }
 
-  private cloneOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
+  private cloneOrder$(sendOrderData: SendOrderInput): Observable<Order> {
     return this.ngGqlService
-      .customMutation$<CheckResponse, 'orderClone', { orderId: string }>(
+      .customMutation$<Order, 'orderClone', { orderId: string }>(
         'orderClone',
-        <ValuesOrBoolean<CheckResponse>>{
-          order: this.defaultOrderFragments,
-          message: this.defaultMessageFragments,
-          action: this.defaultActionFragments,
-        },
+        this.defaultOrderFragments,
+
         {
           orderId: sendOrderData.orderId,
         },

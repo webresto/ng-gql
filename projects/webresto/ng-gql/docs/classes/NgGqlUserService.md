@@ -25,6 +25,7 @@
 - [userDelete](NgGqlUserService.md#userdelete)
 - [locationCreate](NgGqlUserService.md#locationcreate)
 - [locationDelete](NgGqlUserService.md#locationdelete)
+- [locationSetDefault](NgGqlUserService.md#locationsetdefault)
 
 ## Constructors
 
@@ -81,15 +82,16 @@ ___
 
 ### getUserLocations$
 
-▸ **getUserLocations$**(`options`): `Observable`<[`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
+▸ **getUserLocations$**(`options`, `update?`): `Observable`<[`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `options` | `Object` |
-| `options.skip` | `number` |
-| `options.limit` | `number` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `options` | `Object` | `undefined` |
+| `options.skip` | `number` | `undefined` |
+| `options.limit` | `number` | `undefined` |
+| `update` | `boolean` | `false` |
 
 #### Returns
 
@@ -299,6 +301,8 @@ ___
 
 ▸ **locationCreate**(`location`, `loading?`): `Promise`<`boolean`\>
 
+Добавить адрес у пользователя
+
 #### Parameters
 
 | Name | Type |
@@ -315,6 +319,27 @@ ___
 ### locationDelete
 
 ▸ **locationDelete**(`locationId`, `loading?`): `Promise`<`boolean`\>
+
+Удалить сохраненный у пользователя адрес
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `locationId` | `string` |
+| `loading?` | `BehaviorSubject`<`boolean`\> |
+
+#### Returns
+
+`Promise`<`boolean`\>
+
+___
+
+### locationSetDefault
+
+▸ **locationSetDefault**(`locationId`, `loading?`): `Promise`<`boolean`\>
+
+Установить адрес в качестве адреса по-умолчанию
 
 #### Parameters
 

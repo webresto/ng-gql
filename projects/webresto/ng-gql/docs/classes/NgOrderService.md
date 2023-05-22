@@ -426,7 +426,7 @@ cloneOrder()
 | `options.orderId` | `string` | Форма чекаута с данными оформляемего заказа |
 | `options.orderIdFactory?` | () => `undefined` \| `string` | - |
 | `options.loading?` | `BehaviorSubject`<`boolean`\> | - |
-| `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
 
 #### Returns
