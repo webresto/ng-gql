@@ -33,13 +33,13 @@ import type {
   SendOrderInput,
 } from '../models';
 import { isValue } from '@axrl/common';
-import { NqGqlLocalStorageWrapper } from '../models';
 import {
+  NqGqlLocalStorageWrapper,
   PAYMENT_METHOD_FRAGMENTS,
   ACTION_FRAGMENTS,
   MESSAGE_FRAGMENTS,
   ORDER_FRAGMENTS,
-} from '../injection-tokens';
+} from '../models';
 import { NgGqlService } from './ng-gql.service';
 import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
 import { NgGqlStorageService } from './ng-gql-storage.service';

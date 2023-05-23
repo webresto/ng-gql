@@ -17,12 +17,10 @@ import {
   InputLocation,
   UserLocation,
   UserLocationResponse,
-} from '../models';
-import {
   USER_FRAGMENTS,
   USER_ORDER_HYSTORY_FRAGMENTS,
   USER_LOCATION_FRAGMENTS,
-} from '../injection-tokens';
+} from '../models';
 import {
   BehaviorSubject,
   Observable,

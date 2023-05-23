@@ -10,7 +10,7 @@ import {
 import { NgGqlModule } from '../../ng-gql.module';
 import { isValue } from '@axrl/common';
 import type { NgGqlConfig } from '../ng-gql-config/ng-gql-config';
-import { ORDERID_FACTORY_FN } from '../../injection-tokens';
+import { ORDERID_FACTORY_FN } from '../order';
 
 export type StorageOrderTokenEvent =
   | StorageOrderTokenSetOrderId

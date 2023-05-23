@@ -21,7 +21,7 @@
 - [floor](InputLocation.md#floor)
 - [apartment](InputLocation.md#apartment)
 - [doorphone](InputLocation.md#doorphone)
-- [default](InputLocation.md#default)
+- [isDefault](InputLocation.md#isdefault)
 - [customData](InputLocation.md#customdata)
 - [name](InputLocation.md#name)
 - [customFields](InputLocation.md#customfields)
@@ -138,9 +138,9 @@ ___
 
 ___
 
-### default
+### isDefault
 
-• **default**: ``null`` \| `boolean`
+• **isDefault**: ``null`` \| `boolean`
 
 ___
 

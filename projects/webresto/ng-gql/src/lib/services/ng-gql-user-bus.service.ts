@@ -18,16 +18,13 @@ import {
   UpdateUserDataPayload,
   InputLocation,
   Response,
-} from '../models';
-import {
   ACTION_FRAGMENTS,
   MESSAGE_FRAGMENTS,
   USER_FRAGMENTS,
   OTP_RESPONSE_FRAGMENTS,
   CAPTCHA_GET_JOB_FRAGMENTS,
-} from '../injection-tokens';
-import { BehaviorSubject, concatMap, Observable } from 'rxjs';
-import { map, catchError, of, switchMap } from 'rxjs';
+} from '../models';
+import { BehaviorSubject, concatMap, Observable,map, catchError, of, switchMap } from 'rxjs';
 import { deepClone, isValue } from '@axrl/common';
 
 export type UserBusEventType =

@@ -30,13 +30,13 @@ import type {
   Phone,
 } from '../models';
 import { isValue, deepClone } from '@axrl/common';
-import { generateQueryString } from '../models';
 import {
+  generateQueryString,
   NAVIGATION_FRAGMENTS,
-  MAINTENANCE_FRAGMENTS,
   GROUP_FRAGMENTS,
   DISH_FRAGMENTS,
-} from '../injection-tokens';
+  MAINTENANCE_FRAGMENTS,
+} from '../models';
 import { ApolloService } from './apollo.service';
 import { NgGqlStorageService } from './ng-gql-storage.service';
 import { OperationVariables } from '@apollo/client';

@@ -92,26 +92,26 @@
 
 ### Variables
 
-- [ORDERID\_FACTORY\_FN](README.md#orderid_factory_fn)
-- [IMAGE\_FRAGMENTS](README.md#image_fragments)
+- [CAPTCHA\_GET\_JOB\_FRAGMENTS](README.md#captcha_get_job_fragments)
+- [PHONE\_FRAGMENT](README.md#phone_fragment)
+- [DISH\_FRAGMENTS](README.md#dish_fragments)
 - [MESSAGE\_FRAGMENTS](README.md#message_fragments)
 - [ACTION\_FRAGMENTS](README.md#action_fragments)
+- [GROUP\_MODIFIER\_FRAGMENTS](README.md#group_modifier_fragments)
+- [GROUP\_FRAGMENTS](README.md#group_fragments)
+- [IMAGE\_FRAGMENTS](README.md#image_fragments)
 - [MAINTENANCE\_FRAGMENTS](README.md#maintenance_fragments)
 - [MODIFIER\_FRAGMENTS](README.md#modifier_fragments)
-- [DISH\_FRAGMENTS](README.md#dish_fragments)
-- [GROUP\_FRAGMENTS](README.md#group_fragments)
-- [GROUP\_MODIFIER\_FRAGMENTS](README.md#group_modifier_fragments)
-- [ORDER\_FRAGMENTS](README.md#order_fragments)
-- [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
-- [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
 - [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
-- [PHONE\_FRAGMENT](README.md#phone_fragment)
+- [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
+- [ORDERID\_FACTORY\_FN](README.md#orderid_factory_fn)
+- [ORDER\_FRAGMENTS](README.md#order_fragments)
+- [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
 - [OTP\_RESPONSE\_FRAGMENTS](README.md#otp_response_fragments)
 - [USER\_DEVICES\_FRAGMENTS](README.md#user_devices_fragments)
 - [USER\_LOCATION\_FRAGMENTS](README.md#user_location_fragments)
 - [BONUS\_PROGRAM\_FRAGMENTS](README.md#bonus_program_fragments)
 - [USER\_BONUS\_PROGRAM\_FRAGMENTS](README.md#user_bonus_program_fragments)
-- [CAPTCHA\_GET\_JOB\_FRAGMENTS](README.md#captcha_get_job_fragments)
 - [USER\_FRAGMENTS](README.md#user_fragments)
 - [USER\_ORDER\_HYSTORY\_FRAGMENTS](README.md#user_order_hystory_fragments)
 
@@ -281,19 +281,27 @@ ___
 
 ## Variables
 
-### ORDERID\_FACTORY\_FN
+### CAPTCHA\_GET\_JOB\_FRAGMENTS
 
-• `Const` **ORDERID\_FACTORY\_FN**: `InjectionToken`<() => `string`\>
+• `Const` **CAPTCHA\_GET\_JOB\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`CaptchaJob`](interfaces/CaptchaJob.md)<`string`\>\>\>
 
-Метод для генерации orderId
+InjectionToken с объектом ValuesOrBoolean<CaptchaJob>.
 
 ___
 
-### IMAGE\_FRAGMENTS
+### PHONE\_FRAGMENT
 
-• `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>\>
+• `Const` **PHONE\_FRAGMENT**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Phone`](interfaces/Phone.md)\>\>
 
-InjectionToken с объектом ValuesOrBoolean<Image>, используемым в запросе Image с сервера.
+InjectionToken с объектом ValuesOrBoolean<Phone>.
+
+___
+
+### DISH\_FRAGMENTS
+
+• `Const` **DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
 
 ___
 
@@ -313,6 +321,30 @@ InjectionToken с объектом ValuesOrBoolean<Action>, используем
 
 ___
 
+### GROUP\_MODIFIER\_FRAGMENTS
+
+• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+
+InjectionToken с объектом ValuesOrBoolean<GroupModifier>, используемым в запросе GroupModifier с сервера.
+
+___
+
+### GROUP\_FRAGMENTS
+
+• `Const` **GROUP\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Group>, используемым в запросе Group с сервера.
+
+___
+
+### IMAGE\_FRAGMENTS
+
+• `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Image>, используемым в запросе Image с сервера.
+
+___
+
 ### MAINTENANCE\_FRAGMENTS
 
 • `Const` **MAINTENANCE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\>\>
@@ -329,35 +361,11 @@ InjectionToken с объектом ValuesOrBoolean<Modifier>, используе
 
 ___
 
-### DISH\_FRAGMENTS
+### NAVIGATION\_FRAGMENTS
 
-• `Const` **DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>\>
+• `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>\>
 
-InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
-
-___
-
-### GROUP\_FRAGMENTS
-
-• `Const` **GROUP\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Group>, используемым в запросе Group с сервера.
-
-___
-
-### GROUP\_MODIFIER\_FRAGMENTS
-
-• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
-
-InjectionToken с объектом ValuesOrBoolean<GroupModifier>, используемым в запросе GroupModifier с сервера.
-
-___
-
-### ORDER\_FRAGMENTS
-
-• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Order>, используемым в запросе Order с сервера.
+InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
 
 ___
 
@@ -369,27 +377,27 @@ InjectionToken с объектом ValuesOrBoolean<OrderDish>, использу�
 
 ___
 
+### ORDERID\_FACTORY\_FN
+
+• `Const` **ORDERID\_FACTORY\_FN**: `InjectionToken`<() => `string`\>
+
+Метод для генерации orderId
+
+___
+
+### ORDER\_FRAGMENTS
+
+• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+
+InjectionToken с объектом ValuesOrBoolean<Order>, используемым в запросе Order с сервера.
+
+___
+
 ### PAYMENT\_METHOD\_FRAGMENTS
 
 • `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.
-
-___
-
-### NAVIGATION\_FRAGMENTS
-
-• `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
-
-___
-
-### PHONE\_FRAGMENT
-
-• `Const` **PHONE\_FRAGMENT**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Phone`](interfaces/Phone.md)\>\>
-
-InjectionToken с объектом ValuesOrBoolean<Phone>.
 
 ___
 
@@ -430,14 +438,6 @@ ___
 • `Const` **USER\_BONUS\_PROGRAM\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserBonusProgram`](interfaces/UserBonusProgram.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<UserBonusProgram>.
-
-___
-
-### CAPTCHA\_GET\_JOB\_FRAGMENTS
-
-• `Const` **CAPTCHA\_GET\_JOB\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`CaptchaJob`](interfaces/CaptchaJob.md)<`string`\>\>\>
-
-InjectionToken с объектом ValuesOrBoolean<CaptchaJob>.
 
 ___
 
