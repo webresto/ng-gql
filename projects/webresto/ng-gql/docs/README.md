@@ -13,6 +13,7 @@
 - [NgGqlUserService](classes/NgGqlUserService.md)
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
+- [RequestService](classes/RequestService.md)
 
 ### Interfaces
 

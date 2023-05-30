@@ -34,11 +34,12 @@ import {
 import { isValue } from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
 import { NgGqlUserBusService } from './ng-gql-user-bus.service';
+import { RequestService } from './request.service';
 
 @Injectable()
 export class NgGqlUserService {
   constructor(
-    private ngGqlService: NgGqlService,
+    private requestService: RequestService,
     private ngGqlStorage: NgGqlStorageService,
     private _userBus: NgGqlUserBusService,
     @Inject(USER_ORDER_HYSTORY_FRAGMENTS)
@@ -50,7 +51,7 @@ export class NgGqlUserService {
   ) {}
 
   private _loadUser$(): Observable<User | null> {
-    return this.ngGqlService
+    return this.requestService
       .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
       .pipe(
         map((result) => {
@@ -76,7 +77,7 @@ export class NgGqlUserService {
               if (hystory.length >= options.skip + options.limit) {
                 return of(hystory.slice(0, options.skip + options.limit));
               } else {
-                return this.ngGqlService
+                return this.requestService
                   .customQuery$<
                     UserOrderHystory,
                     'userOrderHistory',
@@ -111,7 +112,7 @@ export class NgGqlUserService {
     skip: number;
     limit: number;
   }): Observable<UserLocationResponse> {
-    return this.ngGqlService
+    return this.requestService
       .customQuery$<number, 'userLocationCount', { criteria: {} }>(
         'userLocationCount',
         1,
@@ -122,7 +123,7 @@ export class NgGqlUserService {
           const userLocationCount = Array.isArray(data.userLocationCount)
             ? data.userLocationCount[0]
             : data.userLocationCount;
-          return this.ngGqlService
+          return this.requestService
             .customQuery$(
               'userLocation',
               this.defaultuserLocationFragments,

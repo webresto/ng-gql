@@ -31,13 +31,13 @@
 
 ### constructor
 
-• **new NgGqlUserService**(`ngGqlService`, `ngGqlStorage`, `_userBus`, `defaultUserOrderHystoryFragments`, `defaultUserFragments`, `defaultuserLocationFragments`)
+• **new NgGqlUserService**(`requestService`, `ngGqlStorage`, `_userBus`, `defaultUserOrderHystoryFragments`, `defaultUserFragments`, `defaultuserLocationFragments`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
+| `requestService` | [`RequestService`](RequestService.md) |
 | `ngGqlStorage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
 | `_userBus` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
 | `defaultUserOrderHystoryFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)\> |

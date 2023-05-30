@@ -26,6 +26,7 @@ import {
 } from '../models';
 import { BehaviorSubject, concatMap, Observable,map, catchError, of, switchMap } from 'rxjs';
 import { deepClone, isValue } from '@axrl/common';
+import { RequestService } from './request.service';
 
 export type UserBusEventType =
   | 'OTPRequest'
@@ -80,7 +81,7 @@ export type UserBusEvent = {
 @Injectable()
 export class NgGqlUserBusService {
   constructor(
-    private ngGqlService: NgGqlService,
+    private requestService: RequestService,
     private ngGqlStorage: NgGqlStorageService,
     @Inject(ACTION_FRAGMENTS)
     private defaultActionFragments: ValuesOrBoolean<Action>,
@@ -188,7 +189,7 @@ export class NgGqlUserBusService {
   private captchaGetJob$<T extends CaptchaTask>(
     data: CaptchaJobPayload
   ): Observable<CaptchaJob<T>> {
-    return this.ngGqlService
+    return this.requestService
       .customQuery$<CaptchaJob<T>, 'captchaGetJob', CaptchaJobPayload>(
         'captchaGetJob',
         this.defaultCaptchaGetJobFragments,
@@ -220,7 +221,7 @@ export class NgGqlUserBusService {
   private updateUserData$(
     data: UpdateUserDataPayload
   ): Observable<UserResponse> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<
         UserResponse,
         'userUpdate',
@@ -258,7 +259,7 @@ export class NgGqlUserBusService {
 
   /** Добавляет блюдо в избранное */
   private addDishFavor$(dishId: string): Observable<boolean> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<boolean, 'favoriteDish'>('favoriteDish', true, {
         dishId,
       })
@@ -268,7 +269,7 @@ export class NgGqlUserBusService {
   private restorePassword$(
     data: RestorePasswordPayload
   ): Observable<UserResponse> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<UserResponse, 'restorePassword', RestorePasswordPayload>(
         'restorePassword',
         {
@@ -286,7 +287,7 @@ export class NgGqlUserBusService {
   }
 
   private login$(data: LoginPayload): Observable<UserResponse> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<UserResponse, 'login', LoginPayload>(
         'login',
         {
@@ -321,7 +322,7 @@ export class NgGqlUserBusService {
   }
 
   private otpRequest$(data: OTPRequestPayload): Observable<OTPResponse> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<OTPResponse, 'OTPRequest', OTPRequestPayload>(
         'OTPRequest',
         this.defaultOTPResponceFragments,
@@ -337,7 +338,7 @@ export class NgGqlUserBusService {
   private registrationApp$(
     data: RegistrationPayload
   ): Observable<UserResponse> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<UserResponse, 'registration', RegistrationPayload>(
         'registration',
         {
@@ -358,7 +359,7 @@ export class NgGqlUserBusService {
   }
 
   private logout$(): Observable<Response> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$(
         'logout',
         {
@@ -371,7 +372,7 @@ export class NgGqlUserBusService {
   }
 
   private userDelete$(otp: string): Observable<Response> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$(
         'userDelete',
         {
@@ -385,7 +386,7 @@ export class NgGqlUserBusService {
   }
 
   private locationCreate$(location: InputLocation): Observable<boolean> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<boolean, 'locationCreate', { location: InputLocation }>(
         'locationCreate',
         true,
@@ -398,7 +399,7 @@ export class NgGqlUserBusService {
   }
 
   private locationDelete$(locationId: string): Observable<boolean> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<boolean, 'locationDelete', { locationId: string }>(
         'locationDelete',
         true,
@@ -413,7 +414,7 @@ export class NgGqlUserBusService {
   }
 
   private locationSetDefault$(locationId: string): Observable<boolean> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<boolean, 'locationSetDefault', { locationId: string }>(
         'locationSetDefault',
         true,

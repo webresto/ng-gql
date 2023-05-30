@@ -22,13 +22,13 @@
 
 ### constructor
 
-• **new NgGqlUserBusService**(`ngGqlService`, `ngGqlStorage`, `defaultActionFragments`, `defaultMessageFragments`, `defaultCaptchaGetJobFragments`, `defaultUserFragments`, `defaultOTPResponceFragments`)
+• **new NgGqlUserBusService**(`requestService`, `ngGqlStorage`, `defaultActionFragments`, `defaultMessageFragments`, `defaultCaptchaGetJobFragments`, `defaultUserFragments`, `defaultOTPResponceFragments`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
+| `requestService` | [`RequestService`](RequestService.md) |
 | `ngGqlStorage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
 | `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
 | `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |

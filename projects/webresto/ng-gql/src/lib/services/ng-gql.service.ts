@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@angular/core';
-import { gql } from 'apollo-angular';
 import type { ExtraSubscriptionOptions } from 'apollo-angular';
 import {
   BehaviorSubject,
@@ -7,7 +6,6 @@ import {
   filter,
   map,
   switchMap,
-  startWith,
   mergeWith,
   exhaustMap,
 } from 'rxjs';
@@ -31,15 +29,14 @@ import type {
 } from '../models';
 import { isValue, deepClone } from '@axrl/common';
 import {
-  generateQueryString,
   NAVIGATION_FRAGMENTS,
   GROUP_FRAGMENTS,
   DISH_FRAGMENTS,
   MAINTENANCE_FRAGMENTS,
 } from '../models';
-import { ApolloService } from './apollo.service';
 import { NgGqlStorageService } from './ng-gql-storage.service';
 import { OperationVariables } from '@apollo/client';
+import { QueryGenerationParam, RequestService } from './request.service';
 
 /** @internal */
 interface SlugAndConcept {
@@ -47,30 +44,11 @@ interface SlugAndConcept {
   concept: string | 'origin';
 }
 
-/**
- * Объект настройки генерации части строки запроса с описанием типов параметров операции.
- */
-export interface QueryGenerationParam<V> {
-  /**
-   * Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
-   * (например у параметра указан тип String!, а не String).
-   * ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`.
-   */
-  requiredFields?: (keyof V)[];
-
-  /**
-   * Необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
-   * а в качестве значения - строки-названия соответствующих им типов, определенных в схеме сервера GraphQL.
-   * ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как обязательный.
-   */
-  fieldsTypeMap?: Map<keyof V, string>;
-}
-
 @Injectable()
 /** Основной сервис для работы с библиотекой. Содержит все необходимые методы для управления сайтом. */
 export class NgGqlService {
   constructor(
-    private apollo: ApolloService,
+    private requestService: RequestService,
     private storage: NgGqlStorageService,
     @Inject('NG_GQL_CONFIG') private config: NgGqlConfig,
     @Inject(NAVIGATION_FRAGMENTS)
@@ -124,31 +102,35 @@ export class NgGqlService {
   getNavigation$<T extends NavigationBase = Navigation>(
     options?: NavigationLoader<T>
   ): Observable<T[]> {
-    return this.queryAndSubscribe(
-      options?.nameQuery ?? 'navigation',
-      options?.nameSubscribe ?? 'navigation',
-      options?.queryObject ??
-        <NavigationLoader<T>['queryObject']>this.defaultNavigationFragments,
-      options?.uniqueKeyForCompareItem ??
-        <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId'
-    ).pipe(
-      map((navigationData) => {
-        this.storage.updateNavigation(navigationData);
-        return navigationData;
-      })
-    );
+    return this.requestService
+      .queryAndSubscribe(
+        options?.nameQuery ?? 'navigation',
+        options?.nameSubscribe ?? 'navigation',
+        options?.queryObject ??
+          <NavigationLoader<T>['queryObject']>this.defaultNavigationFragments,
+        options?.uniqueKeyForCompareItem ??
+          <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId'
+      )
+      .pipe(
+        map((navigationData) => {
+          this.storage.updateNavigation(navigationData);
+          return navigationData;
+        })
+      );
   }
 
   getMaintenance$(): Observable<Maintenance> {
-    return this.queryAndSubscribe(
-      'maintenance',
-      'maintenance',
-      this.defaultMaintenanceFragments,
-      'id'
-    ).pipe(
-      filter((result) => result.length > 0),
-      map((res) => res[0])
-    );
+    return this.requestService
+      .queryAndSubscribe(
+        'maintenance',
+        'maintenance',
+        this.defaultMaintenanceFragments,
+        'id'
+      )
+      .pipe(
+        filter((result) => result.length > 0),
+        map((res) => res[0])
+      );
   }
 
   /**
@@ -159,35 +141,37 @@ export class NgGqlService {
    * @returns
    */
   private _loadGroups(slug: string, concept: string | 'origin') {
-    return this.customQuery$<
-      { childGroups: PartialGroupNullable[] },
-      'group',
-      VCriteria
-    >(
-      'group',
-      {
-        childGroups: {
-          slug: true,
-          id: true,
+    return this.requestService
+      .customQuery$<
+        { childGroups: PartialGroupNullable[] },
+        'group',
+        VCriteria
+      >(
+        'group',
+        {
+          childGroups: {
+            slug: true,
+            id: true,
+          },
         },
-      },
-      {
-        criteria: {
-          slug,
-          concept,
-        },
-      }
-    ).pipe(
-      map((group) => {
-        const array = (<Array<{ childGroups: PartialGroupNullable[] }>>(
-          group.group
-        )).map((item) => ({ ...item }));
-        return {
-          concept,
-          groups: array.length == 0 ? [] : array[0].childGroups,
-        };
-      })
-    );
+        {
+          criteria: {
+            slug,
+            concept,
+          },
+        }
+      )
+      .pipe(
+        map((group) => {
+          const array = (<Array<{ childGroups: PartialGroupNullable[] }>>(
+            group.group
+          )).map((item) => ({ ...item }));
+          return {
+            concept,
+            groups: array.length == 0 ? [] : array[0].childGroups,
+          };
+        })
+      );
   }
 
   readonly rootGroups$: Observable<{
@@ -290,25 +274,27 @@ export class NgGqlService {
                 slug: rootGroups.map((rootGroup) => rootGroup.slug),
                 concept: rootGroupsData.concept,
               };
-          return this.queryAndSubscribe<Group, 'group', 'group', VCriteria>(
-            'group',
-            'group',
-            queryObject,
-            'id',
-            {
-              query: {
-                criteria,
-              },
-              subscribe: {
-                criteria,
-              },
-            }
-          ).pipe(
-            map((groups) => ({
-              concept: rootGroupsData.concept,
-              groups,
-            }))
-          );
+          return this.requestService
+            .queryAndSubscribe<Group, 'group', 'group', VCriteria>(
+              'group',
+              'group',
+              queryObject,
+              'id',
+              {
+                query: {
+                  criteria,
+                },
+                subscribe: {
+                  criteria,
+                },
+              }
+            )
+            .pipe(
+              map((groups) => ({
+                concept: rootGroupsData.concept,
+                groups,
+              }))
+            );
         }),
         switchMap((groupsData) => {
           const groups = groupsData.groups;
@@ -330,94 +316,96 @@ export class NgGqlService {
           const allNestingsGroups = getGroups(groups);
           const allNestingsIds = allNestingsGroups.map((group) => group.id);
 
-          return this.queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>(
-            'dish',
-            'dish',
-            this.defaultDishFragments,
-            'id',
-            {
-              query: {
-                criteria: {
-                  parentGroup: allNestingsIds,
-                  concept: groupsData.concept,
+          return this.requestService
+            .queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>(
+              'dish',
+              'dish',
+              this.defaultDishFragments,
+              'id',
+              {
+                query: {
+                  criteria: {
+                    parentGroup: allNestingsIds,
+                    concept: groupsData.concept,
+                  },
                 },
-              },
-              subscribe: {
-                criteria: {
-                  parentGroup: allNestingsIds,
-                  concept: groupsData.concept,
+                subscribe: {
+                  criteria: {
+                    parentGroup: allNestingsIds,
+                    concept: groupsData.concept,
+                  },
                 },
-              },
-            }
-          ).pipe(
-            map((data) => {
-              const dishes = data.map((dataDish) =>
-                this.addAmountToDish(dataDish)
-              );
+              }
+            )
+            .pipe(
+              map((data) => {
+                const dishes = data.map((dataDish) =>
+                  this.addAmountToDish(dataDish)
+                );
 
-              this.storage.updateDishes(dishes);
-              const groupsById = allNestingsGroups.reduce<{
-                [key: string]: Partial<Group>;
-              }>((accumulator, current) => {
-                if (!current.childGroups) {
-                  current.childGroups = [];
-                }
-                if (!current.dishes) {
-                  current.dishes = [];
-                }
-                if (current.id) {
-                  accumulator[current.id] = current;
-                }
-                return accumulator;
-              }, {});
-
-              const groupIdsBySlug: {
-                [key: string]: string;
-              } = {};
-
-              // Inserting dishes by groups
-              for (let dish of dishes) {
-                const groupId = dish.parentGroup?.id || dish.groupId;
-                if (!isValue(groupId)) {
-                  continue;
-                }
-
-                if (!isValue(groupsById[groupId])) {
-                  continue;
-                }
-
-                const groupDishes = groupsById[groupId].dishes;
-                if (isValue(groupDishes)) {
-                  const checkDishIndex = groupDishes.findIndex(
-                    (item) => item.id === dish.id
-                  );
-                  if (checkDishIndex === -1) {
-                    groupDishes.push(dish);
-                  } else {
-                    groupDishes[checkDishIndex] = dish;
+                this.storage.updateDishes(dishes);
+                const groupsById = allNestingsGroups.reduce<{
+                  [key: string]: Partial<Group>;
+                }>((accumulator, current) => {
+                  if (!current.childGroups) {
+                    current.childGroups = [];
                   }
-                } else {
-                  groupsById[groupId].dishes = [dish];
+                  if (!current.dishes) {
+                    current.dishes = [];
+                  }
+                  if (current.id) {
+                    accumulator[current.id] = current;
+                  }
+                  return accumulator;
+                }, {});
+
+                const groupIdsBySlug: {
+                  [key: string]: string;
+                } = {};
+
+                // Inserting dishes by groups
+                for (let dish of dishes) {
+                  const groupId = dish.parentGroup?.id || dish.groupId;
+                  if (!isValue(groupId)) {
+                    continue;
+                  }
+
+                  if (!isValue(groupsById[groupId])) {
+                    continue;
+                  }
+
+                  const groupDishes = groupsById[groupId].dishes;
+                  if (isValue(groupDishes)) {
+                    const checkDishIndex = groupDishes.findIndex(
+                      (item) => item.id === dish.id
+                    );
+                    if (checkDishIndex === -1) {
+                      groupDishes.push(dish);
+                    } else {
+                      groupDishes[checkDishIndex] = dish;
+                    }
+                  } else {
+                    groupsById[groupId].dishes = [dish];
+                  }
                 }
-              }
-              // Create groups hierarchy
-              for (let groupId in groupsById) {
-                const group = groupsById[groupId];
-                const parentGroupId = group.parentGroup?.id;
-                groupIdsBySlug[group.slug!] = groupId;
-                if (!parentGroupId) continue;
-                if (!groupsById[parentGroupId]) continue;
-                if (
-                  groupsById[parentGroupId].childGroups?.find(
-                    (chGroup) => chGroup.id === group.id
+                // Create groups hierarchy
+                for (let groupId in groupsById) {
+                  const group = groupsById[groupId];
+                  const parentGroupId = group.parentGroup?.id;
+                  groupIdsBySlug[group.slug!] = groupId;
+                  if (!parentGroupId) continue;
+                  if (!groupsById[parentGroupId]) continue;
+                  if (
+                    groupsById[parentGroupId].childGroups?.find(
+                      (chGroup) => chGroup.id === group.id
+                    )
                   )
-                )
-                  continue;
-                groupsById[parentGroupId].childGroups?.push(group);
-              }
-              return { groupsById, groupIdsBySlug };
-            })
-          );
+                    continue;
+                  groupsById[parentGroupId].childGroups?.push(group);
+                }
+                return { groupsById, groupIdsBySlug };
+              })
+            );
         })
       )
       .pipe(
@@ -463,24 +451,26 @@ export class NgGqlService {
             const dishesNotInStock = ids.filter(
               (dishId) => !dishes.find((dish) => dish.id === dishId)
             );
-            return this.customQuery$<Dish, 'dish', VCriteria>(
-              'dish',
-              this.defaultDishFragments,
-              {
-                criteria: {
-                  id: dishesNotInStock,
-                },
-              }
-            ).pipe(
-              map((loadedDishes) => {
-                const result = Array.isArray(loadedDishes.dish)
-                  ? loadedDishes.dish
-                  : [loadedDishes.dish];
-                dishes.push(...result);
-                this.storage.updateDishes(dishes);
-                return [...dishesInStock, ...result];
-              })
-            );
+            return this.requestService
+              .customQuery$<Dish, 'dish', VCriteria>(
+                'dish',
+                this.defaultDishFragments,
+                {
+                  criteria: {
+                    id: dishesNotInStock,
+                  },
+                }
+              )
+              .pipe(
+                map((loadedDishes) => {
+                  const result = Array.isArray(loadedDishes.dish)
+                    ? loadedDishes.dish
+                    : [loadedDishes.dish];
+                  dishes.push(...result);
+                  this.storage.updateDishes(dishes);
+                  return [...dishesInStock, ...result];
+                })
+              );
           }
         }
       })
@@ -506,96 +496,87 @@ export class NgGqlService {
       confirmCode: true,
     };
     const vOb = customvOb ? { ...phonevOb, ...customvOb } : phonevOb;
-    return this.customQuery$<PhoneKnowledge, 'isKnownPhone', { phone: Phone }>(
-      'isKnownPhone',
-      vOb,
-      { phone },
-      { fieldsTypeMap: new Map([['phone', 'Phone!']]) }
-    ).pipe(
-      map((data) =>
-        Array.isArray(data.isKnownPhone)
-          ? data.isKnownPhone
-          : [data.isKnownPhone]
+    return this.requestService
+      .customQuery$<PhoneKnowledge, 'isKnownPhone', { phone: Phone }>(
+        'isKnownPhone',
+        vOb,
+        { phone },
+        { fieldsTypeMap: new Map([['phone', 'Phone!']]) }
       )
-    );
+      .pipe(
+        map((data) =>
+          Array.isArray(data.isKnownPhone)
+            ? data.isKnownPhone
+            : [data.isKnownPhone]
+        )
+      );
   }
 
   phoneKnowledgeGetCode$(phone: Phone): Observable<CheckPhoneResponse[]> {
-    return this.customQuery$<
-      CheckPhoneResponse,
-      'phoneKnowledgeGetCode',
-      { phone: Phone }
-    >(
-      'phoneKnowledgeGetCode',
-      {
-        type: true,
-        title: true,
-        message: true,
-        confirmed: true,
-        firstbuy: true,
-      },
-      { phone },
-      { fieldsTypeMap: new Map([['phone', 'Phone!']]) }
-    ).pipe(
-      map((data) =>
-        Array.isArray(data.phoneKnowledgeGetCode)
-          ? data.phoneKnowledgeGetCode
-          : [data.phoneKnowledgeGetCode]
+    return this.requestService
+      .customQuery$<
+        CheckPhoneResponse,
+        'phoneKnowledgeGetCode',
+        { phone: Phone }
+      >(
+        'phoneKnowledgeGetCode',
+        {
+          type: true,
+          title: true,
+          message: true,
+          confirmed: true,
+          firstbuy: true,
+        },
+        { phone },
+        { fieldsTypeMap: new Map([['phone', 'Phone!']]) }
       )
-    );
+      .pipe(
+        map((data) =>
+          Array.isArray(data.phoneKnowledgeGetCode)
+            ? data.phoneKnowledgeGetCode
+            : [data.phoneKnowledgeGetCode]
+        )
+      );
   }
 
   phoneKnowledgeSetCode$(
     data: CheckPhoneCodeInput
   ): Observable<CheckPhoneResponse> {
-    return this.customMutation$<
-      CheckPhoneResponse,
-      'phoneKnowledgeSetCode',
-      CheckPhoneCodeInput
-    >(
-      'phoneKnowledgeSetCode',
-      {
-        type: true,
-        title: true,
-        message: true,
-        confirmed: true,
-        firstbuy: true,
-      },
-      data,
-      {
-        fieldsTypeMap: new Map([
-          ['phone', 'Phone!'],
-          ['code', 'String!'],
-        ]),
-      }
-    ).pipe(map((result) => result.phoneKnowledgeSetCode));
+    return this.requestService
+      .customMutation$<
+        CheckPhoneResponse,
+        'phoneKnowledgeSetCode',
+        CheckPhoneCodeInput
+      >(
+        'phoneKnowledgeSetCode',
+        {
+          type: true,
+          title: true,
+          message: true,
+          confirmed: true,
+          firstbuy: true,
+        },
+        data,
+        {
+          fieldsTypeMap: new Map([
+            ['phone', 'Phone!'],
+            ['code', 'String!'],
+          ]),
+        }
+      )
+      .pipe(map((result) => result.phoneKnowledgeSetCode));
   }
 
-  /**
-   * @method customQuery$() для выполнения запросов типа "query" к серверу API GraphQL
-   * @typeParam T Тип запрашиваемых данных, по которому построен объект @param queryObject.
-   * @typeParam N Строка-название операции из схемы сервера GraphQL.
-   * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
-   * @param name - название операции, объвленное в схеме сервера GraphQL.
-   * @param queryObject - объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>.
-   * @see @alias ValuesOrBoolean<T>
-   *
-   * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
-   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
-   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
-   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
-   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
-   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
-   * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
-   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
-   *    (например у параметра указан тип String!, а не String).
-   * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
-   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
-   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
-   *
-   * @returns - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
-   *  в виде одиночного объекта либо массива.
-   **/
+  destroy() {
+    Object.values(this)
+      .filter(
+        (property): property is BehaviorSubject<unknown> =>
+          property instanceof BehaviorSubject
+      )
+      .forEach((property) => property.complete());
+  }
+
+  /** @deprecated. Use RequestService methods instead */
   customQuery$<
     T extends {},
     N extends `${string}`,
@@ -606,96 +587,30 @@ export class NgGqlService {
     variables?: V,
     paramOptions?: QueryGenerationParam<V>
   ): Observable<Record<N, T | T[]>> {
-    return this.apollo
-      .watchQuery<Record<N, T | T[]>, V>({
-        query: gql`query ${generateQueryString({
-          name,
-          queryObject,
-          variables,
-          requiredFields: paramOptions?.requiredFields,
-          fieldsTypeMap: paramOptions?.fieldsTypeMap,
-        })}`,
-        variables,
-      })
-      .pipe(
-        map((res) => (res.error || res.errors ? null : res.data)),
-        filter((data): data is Record<N, T | T[]> => !!data)
-      );
+    return this.requestService.customQuery$(
+      name,
+      queryObject,
+      variables,
+      paramOptions
+    );
   }
 
-  /**
-   * @method customMutation$() для выполнения запросов типа "mutation" к серверу API GraphQL
-   * @typeParam T Тип мутируемых данных, по которому построен объект @param queryObject
-   * @typeParam N Строка-название операции из схемы сервера GraphQL.
-   * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
-   * @param name - название операции, объвленное в схеме сервера GraphQL.
-   * @param queryObject - объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>.
-   * @see @alias ValuesOrBoolean<T>
-   * @param variables - обязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
-   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
-   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
-   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
-   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
-   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
-   * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
-   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
-   *    (например у параметра указан тип String!, а не String).
-   * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
-   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
-   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
-   *
-   * @returns - Observable поток с результатом выполнения операции в формате объекта с одним ключом N (название операции), значение которого - непосредственно результат операции.
-   **/
+  /** @deprecated. Use RequestService methods instead */
   customMutation$<T extends {}, N extends `${string}`, V = GQLRequestVariables>(
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables: V,
     paramOptions?: QueryGenerationParam<V>
   ): Observable<Record<N, T>> {
-    return this.apollo
-      .mutate<Record<N, T>, V>({
-        mutation: gql`mutation ${generateQueryString({
-          name,
-          queryObject,
-          variables,
-          requiredFields: paramOptions?.requiredFields,
-          fieldsTypeMap: paramOptions?.fieldsTypeMap,
-        })}`,
-        variables,
-      })
-      .pipe(
-        map((result) => (isValue(result) ? result.data : null)),
-        filter((res): res is Record<N, T> => !!res)
-      );
+    return this.requestService.customMutation$(
+      name,
+      queryObject,
+      variables,
+      paramOptions
+    );
   }
 
-  /**
-   * @method customSubscribe$() для выполнения запросов типа "subscription" к серверу API GraphQL
-   * @typeParam T Тип данных, на обновление которых производится подписка и по которому построен объект @param queryObject
-   * @typeParam N Строка-название операции из схемы сервера GraphQL.
-   * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
-   * @param name - название операции, объвленное в схеме сервера GraphQL.
-   * @param queryObject - объект-источник информации о структуре данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>.
-   * @see @alias ValuesOrBoolean<T>
-   * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
-   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
-   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
-   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
-   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
-   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
-   * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
-   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
-   *    (например у параметра указан тип String!, а не String).
-   * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
-   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
-   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
-   *
-   * @returns - Observable поток с данными типа T, которые будут поступать в рамках сделанной подписки.
-   * ВАЖНО! В потоке будут поступать только обновления для данных, на которые сделана подписка.
-   * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
-   * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
-   * @see this.queryAndSubscribe
-   **/
+  /** @deprecated. Use RequestService methods instead */
   customSubscribe$<
     T extends {},
     N extends `${string}`,
@@ -707,50 +622,16 @@ export class NgGqlService {
     paramOptions?: QueryGenerationParam<V>,
     extra?: ExtraSubscriptionOptions
   ): Observable<Record<N, T>[N]> {
-    const q = generateQueryString({
+    return this.requestService.customSubscribe$(
       name,
       queryObject,
       variables,
-      requiredFields: paramOptions?.requiredFields,
-      fieldsTypeMap: paramOptions?.fieldsTypeMap,
-    });
-    return this.apollo
-      .subscribe<Record<N, T>, V>(
-        { query: gql`subscription ${q}`, variables },
-        extra
-      )
-      .pipe(
-        map((result) => result.data),
-        filter((res): res is Record<N, T> => !!res),
-        map((res) => res[name])
-      );
+      paramOptions,
+      extra
+    );
   }
 
-  /**
-   * @method queryAndSubscribe()
-   * Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
-   * @param nameQuery - название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL.
-   * @param nameSubscribe - название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных.
-   * @param queryObject - объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>.
-   * @see @alias ValuesOrBoolean<T>
-   * @param uniqueKeyForCompareItem - наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id').
-   * Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки.
-   * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
-   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
-   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
-   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
-   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
-   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
-   * @param paramOptions.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
-   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
-   *    (например у параметра указан тип String!, а не String).
-   * @param paramOptions.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
-   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
-   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
-   * @returns - Observable поток с данными, которые будут поступать в рамках сделанной подписки.
-   * Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
-   * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
-   **/
+  /** @deprecated. Use RequestService methods instead */
   queryAndSubscribe<
     T extends {},
     NQuery extends `${string}`,
@@ -774,70 +655,13 @@ export class NgGqlService {
       subscribe?: QueryGenerationParam<VS>;
     }
   ): Observable<T[]> {
-    const updateFn: (store: T | T[], subscribeValue: T) => T[] = (
-      store,
-      newValue
-    ) => {
-      const array = Array.isArray(store) ? store : [store];
-      const findItem = array.find(
-        (item) =>
-          newValue[uniqueKeyForCompareItem] === item[uniqueKeyForCompareItem]
-      );
-      if (findItem) {
-        Object.assign(findItem, newValue);
-        return array;
-      } else {
-        return [...array, newValue];
-      }
-    };
-
-    const apolloQueryOptions = {
-      query: gql`query ${generateQueryString<ValuesOrBoolean<T>, NQuery, VQ>({
-        name: nameQuery,
-        queryObject,
-        variables: variables?.query,
-        requiredFields: paramOptions?.query?.requiredFields,
-        fieldsTypeMap: paramOptions?.query?.fieldsTypeMap,
-      })}`,
-      variables: variables?.query,
-    };
-
-    return this.apollo
-      .watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions)
-      .pipe(
-        map((res) => {
-          return res.error ?? res.data;
-        }),
-        filter((data): data is Record<NQuery, T | T[]> => !!data),
-        switchMap((result) =>
-          this.customSubscribe$<T, NSubscribe, VS>(
-            nameSubscribe,
-            queryObject,
-            variables?.subscribe,
-            paramOptions?.subscribe
-          ).pipe(
-            startWith(null),
-            map((updatedValue) => {
-              const store: T | T[] = deepClone(result[nameQuery]);
-              const final = isValue(updatedValue)
-                ? updateFn(store, deepClone(updatedValue))
-                : Array.isArray(store)
-                ? store
-                : <T[]>[store];
-
-              return final;
-            })
-          )
-        )
-      );
-  }
-
-  destroy() {
-    Object.values(this)
-      .filter(
-        (property): property is BehaviorSubject<unknown> =>
-          property instanceof BehaviorSubject
-      )
-      .forEach((property) => property.complete());
+    return this.requestService.queryAndSubscribe(
+      nameQuery,
+      nameSubscribe,
+      queryObject,
+      uniqueKeyForCompareItem,
+      variables,
+      paramOptions
+    );
   }
 }

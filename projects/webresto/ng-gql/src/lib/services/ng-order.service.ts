@@ -40,15 +40,15 @@ import {
   MESSAGE_FRAGMENTS,
   ORDER_FRAGMENTS,
 } from '../models';
-import { NgGqlService } from './ng-gql.service';
 import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
 import { NgGqlStorageService } from './ng-gql-storage.service';
 import { NgGqlUserBusService } from './ng-gql-user-bus.service';
+import { RequestService } from './request.service';
 
 @Injectable()
 export class NgOrderService {
   constructor(
-    private ngGqlService: NgGqlService,
+    private requestService: RequestService,
     private storage: NgGqlStorageService,
     private storageWrapper: NqGqlLocalStorageWrapper,
     private userBusService: NgGqlUserBusService,
@@ -101,7 +101,7 @@ export class NgOrderService {
     orderId: string
   ): Observable<any> {
     console.log('paymentLink', orderId, phone, fromPhone);
-    return this.ngGqlService
+    return this.requestService
       .customMutation$(
         'paymentLink',
         {
@@ -135,7 +135,7 @@ export class NgOrderService {
   }
 
   getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
-    return this.ngGqlService
+    return this.requestService
       .customQuery$<PaymentMethod, 'paymentMethod', { orderId: string }>(
         'paymentMethod',
         this.defaultPaymentMethodFragments,
@@ -229,7 +229,7 @@ export class NgOrderService {
    * Для получения потока используется метод @method this.getActionEmitter()
    * Для отправки в поток кастомных сообщений испльзуется @method this.emitActionEvent()
    */
-  private _actions$ = this.ngGqlService
+  private _actions$ = this.requestService
     .customSubscribe$<Action, 'action'>('action', this.defaultActionFragments)
     .pipe(mergeWith(this._eventAction.asObservable()), shareReplay(1));
 
@@ -238,7 +238,7 @@ export class NgOrderService {
    * Для получения потока используется метод @method this.getMessageEmitter()
    * Для отправки в поток кастомных сообщений испльзуется @method this.emitMessageEvent()
    */
-  private _messages$ = this.ngGqlService
+  private _messages$ = this.requestService
     .customSubscribe$<Message, 'message'>(
       'message',
       this.defaultMessageFragments
@@ -258,7 +258,7 @@ export class NgOrderService {
     id: string | undefined,
     isShort: boolean = false
   ): Observable<Order> {
-    return this.ngGqlService
+    return this.requestService
       .queryAndSubscribe<
         Order,
         'order',
@@ -690,7 +690,7 @@ export class NgOrderService {
   }
 
   private addDishToOrder$(data: AddToOrderInput): Observable<Order> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<Order, 'orderAddDish', AddToOrderInput>(
         'orderAddDish',
         this.defaultOrderFragments,
@@ -702,7 +702,7 @@ export class NgOrderService {
   private removeDishFromOrder$(
     data: RemoveOrSetAmountToDish
   ): Observable<Order> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>(
         'orderRemoveDish',
         this.defaultOrderFragments,
@@ -715,7 +715,7 @@ export class NgOrderService {
   private updateOrder$(
     order: FormGroupType<OrderForm>['value']
   ): Observable<Order> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<
         Order,
         'orderUpdate',
@@ -727,7 +727,7 @@ export class NgOrderService {
   }
 
   private sendOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<CheckResponse, 'sendOrder', { orderId: string }>(
         'sendOrder',
         <ValuesOrBoolean<CheckResponse>>{
@@ -762,7 +762,7 @@ export class NgOrderService {
   }
 
   private cloneOrder$(sendOrderData: SendOrderInput): Observable<Order> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<Order, 'orderClone', { orderId: string }>(
         'orderClone',
         this.defaultOrderFragments,
@@ -794,7 +794,7 @@ export class NgOrderService {
   }
 
   private checkOrder$(data: CheckOrderInput): Observable<CheckResponse> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<CheckResponse, 'checkOrder', CheckOrderInput>(
         'checkOrder',
         {
@@ -815,7 +815,7 @@ export class NgOrderService {
   }
 
   private setDishAmount$(data: RemoveOrSetAmountToDish): Observable<Order> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<Order, 'orderSetDishAmount', RemoveOrSetAmountToDish>(
         'orderSetDishAmount',
         this.defaultOrderFragments,
@@ -825,7 +825,7 @@ export class NgOrderService {
   }
 
   private setDishComment$(data: SetDishCommentInput): Observable<Order> {
-    return this.ngGqlService
+    return this.requestService
       .customMutation$<Order, 'orderSetDishComment', SetDishCommentInput>(
         'orderSetDishComment',
         this.defaultOrderFragments,

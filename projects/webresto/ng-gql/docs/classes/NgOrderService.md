@@ -39,13 +39,13 @@
 
 ### constructor
 
-• **new NgOrderService**(`ngGqlService`, `storage`, `storageWrapper`, `userBusService`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
+• **new NgOrderService**(`requestService`, `storage`, `storageWrapper`, `userBusService`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
+| `requestService` | [`RequestService`](RequestService.md) |
 | `storage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
 | `storageWrapper` | [`NqGqlLocalStorageWrapper`](NqGqlLocalStorageWrapper.md) |
 | `userBusService` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
