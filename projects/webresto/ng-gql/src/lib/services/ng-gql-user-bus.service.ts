@@ -40,7 +40,7 @@ export type UserBusEventType =
   | 'userDelete'
   | 'locationCreate'
   | 'locationDelete'
-  | 'locationSetDefault';
+  | 'locationSetIsDefault';
 
 type UserBusEventMixin<
   T extends UserBusEventType = UserBusEventType,
@@ -69,7 +69,7 @@ export type UserBusEvent = {
   | UserBusEventMixin<'userDelete', string, Response>
   | UserBusEventMixin<'locationCreate', InputLocation, boolean>
   | UserBusEventMixin<'locationDelete', string, boolean>
-  | UserBusEventMixin<'locationSetDefault', string, boolean>
+  | UserBusEventMixin<'locationSetIsDefault', string, boolean>
 );
 
 /**
@@ -146,8 +146,8 @@ export class NgGqlUserBusService {
         return this.locationCreate$(busEvent.payload);
       case 'locationDelete':
         return this.locationDelete$(busEvent.payload);
-      case 'locationSetDefault':
-        return this.locationSetDefault$(busEvent.payload);
+      case 'locationSetIsDefault':
+        return this.locationSetIsDefault$(busEvent.payload);
     }
   }
 
@@ -413,10 +413,10 @@ export class NgGqlUserBusService {
       .pipe(map((record) => record.locationDelete));
   }
 
-  private locationSetDefault$(locationId: string): Observable<boolean> {
+  private locationSetIsDefault$(locationId: string): Observable<boolean> {
     return this.requestService
-      .customMutation$<boolean, 'locationSetDefault', { locationId: string }>(
-        'locationSetDefault',
+      .customMutation$<boolean, 'locationSetIsDefault', { locationId: string }>(
+        'locationSetIsDefault',
         true,
         {
           locationId,
@@ -425,6 +425,6 @@ export class NgGqlUserBusService {
           requiredFields: ['locationId'],
         }
       )
-      .pipe(map((record) => record.locationSetDefault));
+      .pipe(map((record) => record.locationSetIsDefault));
   }
 }

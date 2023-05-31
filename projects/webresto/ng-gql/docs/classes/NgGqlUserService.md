@@ -25,7 +25,7 @@
 - [userDelete](NgGqlUserService.md#userdelete)
 - [locationCreate](NgGqlUserService.md#locationcreate)
 - [locationDelete](NgGqlUserService.md#locationdelete)
-- [locationSetDefault](NgGqlUserService.md#locationsetdefault)
+- [locationSetIsDefault](NgGqlUserService.md#locationsetisdefault)
 
 ## Constructors
 
@@ -335,9 +335,9 @@ ___
 
 ___
 
-### locationSetDefault
+### locationSetIsDefault
 
-▸ **locationSetDefault**(`locationId`, `loading?`): `Promise`<`boolean`\>
+▸ **locationSetIsDefault**(`locationId`, `loading?`): `Promise`<`boolean`\>
 
 Установить адрес в качестве адреса по-умолчанию
 

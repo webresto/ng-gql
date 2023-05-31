@@ -351,12 +351,12 @@ export class NgGqlUserService {
   }
 
   /** Установить адрес в качестве адреса по-умолчанию */
-  locationSetDefault(
+  locationSetIsDefault(
     locationId: string,
     loading?: BehaviorSubject<boolean>
   ): Promise<boolean> {
-    return this._userBus.emitToBus<'locationSetDefault', string, boolean>({
-      type: 'locationSetDefault',
+    return this._userBus.emitToBus<'locationSetIsDefault', string, boolean>({
+      type: 'locationSetIsDefault',
       payload: locationId,
       loading,
     });
