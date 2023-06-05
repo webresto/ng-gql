@@ -560,9 +560,7 @@ export class NgOrderService {
         pickupAddressId: options.orderForm.pickupAddressId,
         locationId: options.orderForm.locationId,
         customData: options.orderForm.customData,
-        date: options.orderForm.deliveryTimeInfo?.deliveryDate
-          ? `${options.orderForm.deliveryTimeInfo.deliveryDate} ${options.orderForm.deliveryTimeInfo.deliveryTime}`
-          : undefined,
+        date: options.orderForm.date,
       };
 
       this._orderBus$.emit({

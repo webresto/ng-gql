@@ -8,20 +8,8 @@ import { isValue, objectEntries, objectKeys } from '@axrl/common';
  */
 export type VCriteria = {
   /** Объект Waterline query language*/
-  criteria: {
-    [key: string]: any;
-  };
+  criteria: Record<string, any>;
 };
-
-type FieldTypes =
-  | Object
-  | number
-  | bigint
-  | Symbol
-  | string
-  | boolean
-  | null
-  | undefined;
 
 /**
  * @alias GQLRequestVariables
@@ -31,10 +19,52 @@ type FieldTypes =
  *
  */
 export type GQLRequestVariables =
-  | VCriteria
-  | {
-      [key: string]: number | string | Object | boolean | null | undefined;
-    };
+  | Record<string, number | string | Object | boolean | null | undefined>
+  | VCriteria;
+
+function makeFieldList<
+  T extends {} | string | boolean | number | bigint | Symbol | null,
+  V
+>(source: T, name: string, indent: number = 1, variables?: V): string {
+  const indentString = new Array<string>(indent * 2).fill(' ').join('');
+  const isObjectWithProperties =
+    typeof source === 'object' &&
+    isValue(source) &&
+    objectKeys(source).length > 0;
+
+  return `${name}${
+    indent === 1 && variables
+      ? `(${objectKeys(variables)
+          .filter((key) => isValue(variables[key]))
+          .map((key) => `${String(key)}:$${String(key)}`)
+          .join(',')})`
+      : ''
+  } ${isObjectWithProperties ? '  {\n' : ''} ${indentString}${
+    isObjectWithProperties
+      ? objectEntries(source)
+          .filter(
+            (entry) =>
+              typeof entry[1] !== 'function' && entry[0] !== '__typename'
+          )
+          .map((entry) =>
+            typeof entry[1] === 'object' &&
+            entry[1] !== undefined &&
+            entry[1] !== null
+              ? makeFieldList(
+                  Array.isArray(entry[1]) && entry[1][0]
+                    ? entry[1][0]
+                    : entry[1],
+                  String(entry[0]),
+                  indent + 1
+                )
+              : typeof entry[1] === 'string' && entry[1].includes('Fragment')
+              ? `${String(entry[0])} : {...${entry[1]}}`
+              : String(entry[0])
+          )
+          .join(`,\n  ${indentString}`)
+      : ''
+  }\n${indentString} ${isObjectWithProperties ? '}' : ''}      `;
+}
 
 /**
  * @function generateQueryString()
@@ -65,53 +95,7 @@ export function generateQueryString<
   fieldsTypeMap?: Map<keyof GQLRequestVariables, string>;
 }) {
   const { name, queryObject, variables } = options;
-  const makeFieldList = <
-    T extends {} | string | boolean | number | bigint | Symbol | null,
-    V
-  >(
-    source: T,
-    name: string,
-    indent: number = 1,
-    variables?: V
-  ): string => {
-    const indentString = new Array<string>(indent * 2).fill(' ').join('');
-    return `${name}${
-      indent === 1 && variables
-        ? `(${objectKeys(variables)
-            .filter((key) => isValue(variables[key]))
-            .map((key) => `${String(key)}:$${String(key)}`)
-            .join(',')})`
-        : ''
-    } ${
-      typeof source === 'object' && source !== null ? '  {\n' : ''
-    } ${indentString}${
-      typeof source === 'object' && source !== null
-        ? objectEntries(source)
-            .filter(
-              (entry) =>
-                typeof entry[1] !== 'function' && entry[0] !== '__typename'
-            )
-            .map((entry) =>
-              typeof entry[1] === 'object' &&
-              entry[1] !== undefined &&
-              entry[1] !== null
-                ? makeFieldList(
-                    Array.isArray(entry[1]) && entry[1][0]
-                      ? entry[1][0]
-                      : entry[1],
-                    String(entry[0]),
-                    indent + 1
-                  )
-                : typeof entry[1] === 'string' && entry[1].includes('Fragment')
-                ? `${String(entry[0])} : {...${entry[1]}}`
-                : String(entry[0])
-            )
-            .join(`,\n  ${indentString}`)
-        : ''
-    }\n${indentString} ${
-      typeof source === 'object' && source !== null ? '}' : ''
-    }      `;
-  };
+
   const getGqlType = <K extends keyof GQLRequestVariables>(
     key: K,
     value: GQLRequestVariables[K],
@@ -136,18 +120,19 @@ export function generateQueryString<
     }
   };
   return ` load${name[0].toUpperCase() + name.slice(1)} ${
-    variables
-      ? `(${(<(keyof GQLRequestVariables)[]>Object.keys(variables))
+    isValue(variables)
+      ? `(${objectKeys(variables)
           .filter((key) => isValue(variables[key]))
-          .map(
-            (key) =>
-              `$${String(key)}:${getGqlType(
-                key,
-                variables[key],
-                options.requiredFields && options.requiredFields.includes(key),
-                options.fieldsTypeMap
-              )}`
-          )
+          .map((k) => {
+            const key = <keyof GQLRequestVariables>k;
+
+            return `$${String(key)}:${getGqlType(
+              key,
+              variables[key],
+              options.requiredFields && options.requiredFields.includes(key),
+              options.fieldsTypeMap
+            )}`;
+          })
           .join(',')})`
       : ''
   } {\n${makeFieldList(queryObject, name, 1, variables)}\n}`;

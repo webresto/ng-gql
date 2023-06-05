@@ -157,13 +157,13 @@ VCriteria
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `criteria` | { `[key: string]`: `any`;  } | Объект Waterline query language |
+| `criteria` | `Record`<`string`, `any`\> | Объект Waterline query language |
 
 ___
 
 ### GQLRequestVariables
 
-Ƭ **GQLRequestVariables**: [`VCriteria`](README.md#vcriteria) \| { `[key: string]`: `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`;  }
+Ƭ **GQLRequestVariables**: `Record`<`string`, `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`\> \| [`VCriteria`](README.md#vcriteria)
 
 **`Alias`**
 

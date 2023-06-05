@@ -1,9 +1,9 @@
-import { DOCUMENT } from "@angular/common";
-import { InjectionToken, inject } from "@angular/core";
-import { generateUUID } from "../get-uuid";
-import { ORDER_DISH_FRAGMENTS } from "../order-dish";
-import { ValuesOrBoolean } from "../values-or-boolean";
-import { Order } from "./order.gql";
+import { DOCUMENT } from '@angular/common';
+import { InjectionToken, inject } from '@angular/core';
+import { generateUUID } from '../get-uuid';
+import { ORDER_DISH_FRAGMENTS } from '../order-dish';
+import { ValuesOrBoolean } from '../values-or-boolean';
+import { Order } from './order.gql';
 
 /**
  * Метод для генерации orderId
@@ -48,6 +48,8 @@ export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>(
         rmsDeliveryDate: true,
         dishes: orderDishFragments,
         rmsDelivered: true,
+        selfService: true,
+        date: true,
         paymentMethod: {
           id: true,
           title: true,

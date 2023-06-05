@@ -42,6 +42,8 @@
 - [address](Order.md#address)
 - [paid](Order.md#paid)
 - [paymentMethod](Order.md#paymentmethod)
+- [selfService](Order.md#selfservice)
+- [date](Order.md#date)
 
 ## Properties
 
@@ -184,3 +186,15 @@ ___
 ### paymentMethod
 
 • **paymentMethod**: ``null`` \| `Partial`<[`PaymentMethod`](PaymentMethod.md)\>
+
+___
+
+### selfService
+
+• **selfService**: `boolean`
+
+___
+
+### date
+
+• **date**: ``null`` \| `string`

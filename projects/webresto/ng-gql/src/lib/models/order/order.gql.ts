@@ -43,6 +43,8 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   address: Partial<Address> | null;
   paid?: boolean;
   paymentMethod: Partial<PaymentMethod> | null;
+  selfService: boolean;
+  date: string | null;
 }
 
 export interface Address {
@@ -101,15 +103,9 @@ export interface CheckResponse {
 }
 
 export interface OrderAdditionalFields {
-  selfService: boolean;
   pickupAddressId?: string | undefined;
   locationId?: string | undefined;
   promocode?: string | undefined;
-  deliveryTimeInfo?: {
-    deliveryType: 'fast' | 'date-time' | undefined;
-    deliveryDate: string | undefined;
-    deliveryTime: string | undefined;
-  };
 }
 
 export type OrderForm = Order & OrderAdditionalFields;
