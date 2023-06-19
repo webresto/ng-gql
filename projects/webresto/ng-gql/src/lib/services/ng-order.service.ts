@@ -31,6 +31,7 @@ import type {
   ValuesOrBoolean,
   OrderModifier,
   SendOrderInput,
+  Dish,
 } from '../models';
 import { isValue } from '@axrl/common';
 import {
@@ -39,6 +40,7 @@ import {
   ACTION_FRAGMENTS,
   MESSAGE_FRAGMENTS,
   ORDER_FRAGMENTS,
+  DISH_FRAGMENTS,
 } from '../models';
 import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
 import { NgGqlStorageService } from './ng-gql-storage.service';
@@ -60,7 +62,8 @@ export class NgOrderService {
     @Inject(MESSAGE_FRAGMENTS)
     private defaultMessageFragments: ValuesOrBoolean<Message>,
     @Inject(ORDER_FRAGMENTS)
-    private defaultOrderFragments: ValuesOrBoolean<Order>
+    private defaultOrderFragments: ValuesOrBoolean<Order>,
+    @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>
   ) {}
 
   /**
@@ -858,5 +861,38 @@ export class NgOrderService {
 
   getActionEmitter() {
     return this._actions$;
+  }
+
+  getDishRecomended(dishId: string) {
+    return this.requestService
+      .customQuery$<Dish, 'recomendedForDish'>(
+        'recomendedForDish',
+        this.defaultDishFragments,
+        { dishId }
+      )
+      .pipe(
+        map((data) => {
+          return Array.isArray(data.recomendedForDish)
+            ? data.recomendedForDish
+            : [data.recomendedForDish];
+        })
+      );
+  }
+
+  getOrderRecommended() {
+    return this.getOrder().pipe(
+      switchMap((order) =>
+        this.requestService.customQuery$<Dish, 'recomendedForOrder'>(
+          'recomendedForOrder',
+          this.defaultDishFragments,
+          { orderId: order.id }
+        )
+      ),
+      map((data) => {
+        return Array.isArray(data.recomendedForOrder)
+          ? data.recomendedForOrder
+          : [data.recomendedForOrder];
+      })
+    );
   }
 }

@@ -34,12 +34,14 @@
 - [emitActionEvent](NgOrderService.md#emitactionevent)
 - [getMessageEmitter](NgOrderService.md#getmessageemitter)
 - [getActionEmitter](NgOrderService.md#getactionemitter)
+- [getDishRecomended](NgOrderService.md#getdishrecomended)
+- [getOrderRecommended](NgOrderService.md#getorderrecommended)
 
 ## Constructors
 
 ### constructor
 
-• **new NgOrderService**(`requestService`, `storage`, `storageWrapper`, `userBusService`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`)
+• **new NgOrderService**(`requestService`, `storage`, `storageWrapper`, `userBusService`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`, `defaultDishFragments`)
 
 #### Parameters
 
@@ -54,6 +56,7 @@
 | `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
 | `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |
 | `defaultOrderFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\> |
+| `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Dish`](../interfaces/Dish.md)\> |
 
 ## Properties
 
@@ -546,3 +549,29 @@ ___
 #### Returns
 
 `Observable`<[`Action`](../interfaces/Action.md)<`any`\>\>
+
+___
+
+### getDishRecomended
+
+▸ **getDishRecomended**(`dishId`): `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `dishId` | `string` |
+
+#### Returns
+
+`Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+
+___
+
+### getOrderRecommended
+
+▸ **getOrderRecommended**(): `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+
+#### Returns
+
+`Observable`<[`Dish`](../interfaces/Dish.md)[]\>
