@@ -882,17 +882,24 @@ export class NgOrderService {
   getOrderRecommended() {
     return this.getOrder().pipe(
       switchMap((order) =>
-        this.requestService.customQuery$<Dish, 'recomendedForOrder'>(
-          'recomendedForOrder',
-          this.defaultDishFragments,
-          { orderId: order.id }
-        )
-      ),
-      map((data) => {
-        return Array.isArray(data.recomendedForOrder)
-          ? data.recomendedForOrder
-          : [data.recomendedForOrder];
-      })
+        this.requestService
+          .customQuery$<Dish, 'recomendedForOrder'>(
+            'recomendedForOrder',
+            this.defaultDishFragments,
+            { orderId: order.id }
+          )
+          .pipe(
+            map((data) => {
+              const orderDishes = order.dishes.map(
+                (orderDish) => orderDish.dish?.id
+              );
+              const array = Array.isArray(data.recomendedForOrder)
+                ? data.recomendedForOrder
+                : [data.recomendedForOrder];
+              return array.filter((dish) => !orderDishes.includes(dish.id));
+            })
+          )
+      )
     );
   }
 }
