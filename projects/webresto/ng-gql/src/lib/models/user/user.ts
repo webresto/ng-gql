@@ -34,12 +34,12 @@ export interface BonusProgram extends BaseModelWithCustomData {
 
 export interface UserBonusProgram extends BaseModelWithCustomData {
   id: string;
-  active: boolean;
+  isActive: boolean;
   balance: number;
   user: User;
   userId: string;
-  BonusProgram: BonusProgram;
-  BonusProgramId: string;
+  bonusProgram: BonusProgram;
+  bonusProgramId: string;
   syncedToTime: string;
 }
 

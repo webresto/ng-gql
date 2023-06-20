@@ -102,11 +102,11 @@ export const USER_BONUS_PROGRAM_FRAGMENTS = new InjectionToken<
     const bonusProgramFragments = inject(BONUS_PROGRAM_FRAGMENTS);
     return {
       id: true,
-      active: true,
+      isActive: true,
       balance: true,
       userId: true,
-      BonusProgram: bonusProgramFragments,
-      BonusProgramId: true,
+      bonusProgram: bonusProgramFragments,
+      bonusProgramId: true,
       syncedToTime: true,
     };
   },

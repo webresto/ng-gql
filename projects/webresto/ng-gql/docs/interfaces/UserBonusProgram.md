@@ -15,12 +15,12 @@
 
 - [customData](UserBonusProgram.md#customdata)
 - [id](UserBonusProgram.md#id)
-- [active](UserBonusProgram.md#active)
+- [isActive](UserBonusProgram.md#isactive)
 - [balance](UserBonusProgram.md#balance)
 - [user](UserBonusProgram.md#user)
 - [userId](UserBonusProgram.md#userid)
-- [BonusProgram](UserBonusProgram.md#bonusprogram)
-- [BonusProgramId](UserBonusProgram.md#bonusprogramid)
+- [bonusProgram](UserBonusProgram.md#bonusprogram)
+- [bonusProgramId](UserBonusProgram.md#bonusprogramid)
 - [syncedToTime](UserBonusProgram.md#syncedtotime)
 
 ## Properties
@@ -41,9 +41,9 @@ ___
 
 ___
 
-### active
+### isActive
 
-• **active**: `boolean`
+• **isActive**: `boolean`
 
 ___
 
@@ -65,15 +65,15 @@ ___
 
 ___
 
-### BonusProgram
+### bonusProgram
 
-• **BonusProgram**: [`BonusProgram`](BonusProgram.md)
+• **bonusProgram**: [`BonusProgram`](BonusProgram.md)
 
 ___
 
-### BonusProgramId
+### bonusProgramId
 
-• **BonusProgramId**: `string`
+• **bonusProgramId**: `string`
 
 ___
 
