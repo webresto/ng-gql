@@ -1,50 +1,51 @@
 import { EventEmitter, Inject, Injectable } from '@angular/core';
+import { isValue } from '@axrl/common';
+import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
+import type { BehaviorSubject, Observable } from 'rxjs';
 import {
-  combineLatest,
-  fromEvent,
-  of,
-  filter,
-  map,
-  switchMap,
-  shareReplay,
-  startWith,
   catchError,
+  combineLatest,
   concatMap,
   distinctUntilChanged,
+  filter,
+  fromEvent,
+  map,
   mergeWith,
+  of,
+  shareReplay,
+  startWith,
+  switchMap,
 } from 'rxjs';
-import type { Observable, BehaviorSubject } from 'rxjs';
 import type {
-  NgGqlConfig,
   Action,
-  Message,
-  CheckOrderInput,
-  Order,
-  PaymentMethod,
   AddToOrderInput,
-  Modifier,
-  CheckResponse,
   CartBusEvent,
-  RemoveOrSetAmountToDish,
+  CheckOrderInput,
+  CheckResponse,
+  Dish,
+  Message,
+  Modifier,
+  NgGqlConfig,
+  Order,
   OrderForm,
+  OrderModifier,
+  PaymentMethod,
+  RemoveOrSetAmountToDish,
+  SendOrderInput,
   SetDishCommentInput,
   ValuesOrBoolean,
-  OrderModifier,
-  SendOrderInput,
-  Dish,
 } from '../models';
-import { isValue } from '@axrl/common';
 import {
-  NqGqlLocalStorageWrapper,
-  PAYMENT_METHOD_FRAGMENTS,
   ACTION_FRAGMENTS,
-  MESSAGE_FRAGMENTS,
-  ORDER_FRAGMENTS,
   DISH_FRAGMENTS,
+  MESSAGE_FRAGMENTS,
+  NqGqlLocalStorageWrapper,
+  ORDER_FRAGMENTS,
+  PAYMENT_METHOD_FRAGMENTS,
 } from '../models';
-import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
 import { NgGqlStorageService } from './ng-gql-storage.service';
 import { NgGqlUserBusService } from './ng-gql-user-bus.service';
+import { NgGqlService } from './ng-gql.service';
 import { RequestService } from './request.service';
 
 @Injectable()
@@ -54,6 +55,7 @@ export class NgOrderService {
     private storage: NgGqlStorageService,
     private storageWrapper: NqGqlLocalStorageWrapper,
     private userBusService: NgGqlUserBusService,
+    private ngGqlService: NgGqlService,
     @Inject('NG_GQL_CONFIG') private config: NgGqlConfig,
     @Inject(PAYMENT_METHOD_FRAGMENTS)
     private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
@@ -281,50 +283,22 @@ export class NgOrderService {
       )
       .pipe(
         map((values) => (values[0] ? values[0] : null)),
-        filter((order): order is Order => isValue(order))
-        /*      switchMap(
-              order => {
-                const dishesIds = order.dishes.map(orderDish => orderDish.dish?.id).filter((id): id is string => isValue(id));
-                return this.ngGqlService.getDishes$(dishesIds).pipe(
-                  map(
-                    dishes => {
-                      return {
-                        ...order,
-                        customer: {
-                          name: order.customer?.name ?? null,
-                          phone: order.customer?.phone ?? {
-                            code: this.config.phoneCode,
-                            number: null,
-                          }
-                        },
-                        address: order.address ?? {
-                          streetId: null,
-                          home: null,
-                          street: null,
-                          comment: undefined,
-                          city: undefined,
-                          housing: undefined,
-                          index: undefined,
-                          entrance: undefined,
-                          floor: undefined,
-                          apartment: undefined,
-                          doorphone: undefined
-                        },
-                        dishes: (order.dishes ?? []).map(
-                          orderDish => ({
-                            ...orderDish, dish: isValue(orderDish.dish) ?
-                              dishes.find(
-                                findedDish => findedDish.id === orderDish.dish!.id
-                              ) ?? orderDish.dish :
-                              orderDish.dish
-                          })
-                        )
-                      };
-                    })
+        filter((order): order is Order => isValue(order)),
+        switchMap((order) => {
+          const dishesIds = order.dishes
+            .map((orderDish) => orderDish.dish?.id)
+            .filter((dishId): dishId is string => isValue(dishId));
+          return this.ngGqlService.getDishes$(dishesIds).pipe(
+            map((dishes) => {
+              order.dishes.forEach((orderDish) => {
+                orderDish.dish = dishes.find(
+                  (dish) => dish.id === orderDish.dish?.id
                 );
-              }
-            )
-            */
+              });
+              return order;
+            })
+          );
+        })
       );
   }
 

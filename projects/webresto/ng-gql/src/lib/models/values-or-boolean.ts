@@ -34,7 +34,3 @@ export type ValuesOrBoolean<T> = {
         ? ValuesOrBoolean<U>
         : ValuesOrBoolean<T[K]>);
 };
-
-type ReturnResult<T> = T extends ValuesOrBoolean<infer S>
-  ? Omit<S, keyof Omit<S, keyof T> > 
-  : never;

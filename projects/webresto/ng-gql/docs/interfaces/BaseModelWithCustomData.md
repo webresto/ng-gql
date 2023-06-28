@@ -7,15 +7,15 @@
 
 - **`BaseModelWithCustomData`**
 
+  ↳ [`PhoneKnowledge`](PhoneKnowledge.md)
+
   ↳ [`Dish`](Dish.md)
+
+  ↳ [`Maintenance`](Maintenance.md)
 
   ↳ [`Order`](Order.md)
 
   ↳ [`PaymentMethod`](PaymentMethod.md)
-
-  ↳ [`Maintenance`](Maintenance.md)
-
-  ↳ [`PhoneKnowledge`](PhoneKnowledge.md)
 
   ↳ [`User`](User.md)
 

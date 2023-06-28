@@ -1,7 +1,7 @@
 import { inject, InjectionToken } from '@angular/core';
+import { DISH_FRAGMENTS } from '../dish';
 import { ValuesOrBoolean } from '../values-or-boolean';
 import { OrderDish } from './order-dish.gql';
-import { DISH_FRAGMENTS } from '../dish';
 
 /**
  * InjectionToken с объектом ValuesOrBoolean<OrderDish>, используемым в запросе OrderDish с сервера.
@@ -15,7 +15,9 @@ export const ORDER_DISH_FRAGMENTS = new InjectionToken<
     return {
       id: true,
       amount: true,
-      dish: dishFragments,
+      dish: {
+        id: true,
+      },
       modifiers: {
         id: true,
         dish: dishFragments,

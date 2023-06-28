@@ -1,31 +1,38 @@
-import { Injectable, Inject, EventEmitter } from '@angular/core';
-import { NgGqlStorageService } from './ng-gql-storage.service';
-import { NgGqlService } from './ng-gql.service';
+import { EventEmitter, Inject, Injectable } from '@angular/core';
+import { deepClone, isValue } from '@axrl/common';
 import {
-  User,
+  BehaviorSubject,
+  Observable,
+  catchError,
+  concatMap,
+  map,
+  of,
+  switchMap,
+} from 'rxjs';
+import {
+  ACTION_FRAGMENTS,
   Action,
-  Message,
-  ValuesOrBoolean,
-  UserResponse,
-  OTPResponse,
-  LoginPayload,
-  RegistrationPayload,
-  OTPRequestPayload,
+  CAPTCHA_GET_JOB_FRAGMENTS,
   CaptchaJob,
   CaptchaJobPayload,
   CaptchaTask,
-  RestorePasswordPayload,
-  UpdateUserDataPayload,
   InputLocation,
-  Response,
-  ACTION_FRAGMENTS,
+  LoginPayload,
   MESSAGE_FRAGMENTS,
-  USER_FRAGMENTS,
+  Message,
+  OTPRequestPayload,
+  OTPResponse,
   OTP_RESPONSE_FRAGMENTS,
-  CAPTCHA_GET_JOB_FRAGMENTS,
+  RegistrationPayload,
+  Response,
+  RestorePasswordPayload,
+  USER_FRAGMENTS,
+  UpdateUserDataPayload,
+  User,
+  UserResponse,
+  ValuesOrBoolean,
 } from '../models';
-import { BehaviorSubject, concatMap, Observable,map, catchError, of, switchMap } from 'rxjs';
-import { deepClone, isValue } from '@axrl/common';
+import { NgGqlStorageService } from './ng-gql-storage.service';
 import { RequestService } from './request.service';
 
 export type UserBusEventType =

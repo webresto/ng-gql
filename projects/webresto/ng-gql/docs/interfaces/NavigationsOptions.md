@@ -24,4 +24,4 @@ ___
 
 ### behavior
 
-• `Optional` **behavior**: ``"newpagebyslug"`` \| ``"onepagebyslug"`` \| ``"newpagebynavigationmenu"`` \| ``"onepagebynavigationmenu"``
+• `Optional` **behavior**: ``"newpagebynavigationmenu"`` \| ``"onepagebynavigationmenu"``

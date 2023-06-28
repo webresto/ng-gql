@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { createSubject, getFilteredData, isValue } from '@axrl/common';
 import {
   Dish,
   Group,
@@ -9,7 +10,6 @@ import {
   UserLocationResponse,
   UserOrderHystory,
 } from '../models';
-import { getFilteredData, createSubject, isValue } from '@axrl/common';
 
 @Injectable()
 export class NgGqlStorageService {
@@ -22,18 +22,18 @@ export class NgGqlStorageService {
     this._order.next(order);
   }
 
-  private _dishes = createSubject<Dish[] | null>(null);
-  readonly dishes = getFilteredData(this._dishes);
+  private _dishes = createSubject<Dish[]>([]);
+  readonly dishes = this._dishes.asObservable();
 
   updateDishes<T extends Dish>(dishes: T[]) {
     this._dishes.next(dishes);
   }
 
-  private _menu = createSubject<Group[] | null>(null);
-  readonly menu = getFilteredData(this._menu);
+  private _groups = createSubject<Group[]>([]);
+  readonly groups = this._groups.asObservable();
 
   updateMenuGroups<T extends Group>(menuGroups: T[]) {
-    this._menu.next(menuGroups);
+    this._groups.next(menuGroups);
   }
 
   private _navigation = createSubject<NavigationBase[] | null>(null);

@@ -11,7 +11,7 @@ export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>(
   {
     factory: () => {
       const imageFragments = inject(IMAGE_FRAGMENTS);
-      return {
+      const groupFragment:ValuesOrBoolean<Group> = {
         id: true,
         description: true,
         name: true,
@@ -20,11 +20,17 @@ export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>(
         slug: true,
         discount: true,
         dishesPlaceholder: imageFragments,
+        dishes: {
+          id: true
+        },
         parentGroup: {
           id: true,
           dishesPlaceholder: imageFragments,
         },
-      };
+      }
+      return {
+        ... groupFragment, childGroups: groupFragment
+      } ;
     },
   }
 );

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ApolloService } from './apollo.service';
-import { gql } from 'apollo-angular';
+import { OperationVariables } from '@apollo/client';
+import { deepClone, isValue } from '@axrl/common';
 import type { ExtraSubscriptionOptions } from 'apollo-angular';
-import { filter, map, switchMap, startWith } from 'rxjs';
+import { gql } from 'apollo-angular';
 import type { Observable } from 'rxjs';
+import { filter, map, startWith, switchMap } from 'rxjs';
 import type { GQLRequestVariables, ValuesOrBoolean } from '../models';
 import { generateQueryString } from '../models';
-import { OperationVariables } from '@apollo/client';
-import { isValue, deepClone } from '@axrl/common';
+import { ApolloService } from './apollo.service';
 
 /**
  * Объект настройки генерации части строки запроса с описанием типов параметров операции.
@@ -32,7 +32,7 @@ export interface QueryGenerationParam<V> {
   providedIn: 'root',
 })
 export class RequestService {
-  constructor(private apollo: ApolloService,) {}
+  constructor(private apollo: ApolloService) {}
 
   /**
    * @method customQuery$() для выполнения запросов типа "query" к серверу API GraphQL
