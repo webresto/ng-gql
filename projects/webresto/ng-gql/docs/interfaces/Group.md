@@ -8,8 +8,10 @@
 - [description](Group.md#description)
 - [name](Group.md#name)
 - [slug](Group.md#slug)
+- [icon](Group.md#icon)
 - [visible](Group.md#visible)
 - [sortOrder](Group.md#sortorder)
+- [dishesIds](Group.md#dishesids)
 - [dishes](Group.md#dishes)
 - [discount](Group.md#discount)
 - [parentGroup](Group.md#parentgroup)
@@ -42,6 +44,18 @@ ___
 
 ___
 
+### icon
+
+• `Optional` **icon**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `images` | `any`[] |
+
+___
+
 ### visible
 
 • **visible**: `boolean`
@@ -51,6 +65,12 @@ ___
 ### sortOrder
 
 • **sortOrder**: `number`
+
+___
+
+### dishesIds
+
+• **dishesIds**: `string`[]
 
 ___
 

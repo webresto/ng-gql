@@ -1,41 +1,32 @@
 import { Inject, Injectable } from '@angular/core';
+import { OperationVariables } from '@apollo/client';
+import { createSubject, deepClone, isValue } from '@axrl/common';
 import type { ExtraSubscriptionOptions } from 'apollo-angular';
-import {
-  BehaviorSubject,
-  of,
-  filter,
-  map,
-  switchMap,
-  mergeWith,
-  exhaustMap,
-} from 'rxjs';
 import type { Observable } from 'rxjs';
+import { BehaviorSubject, exhaustMap, filter, map, of } from 'rxjs';
 import type {
-  NgGqlConfig,
+  CheckPhoneCodeInput,
+  CheckPhoneResponse,
+  Dish,
   GQLRequestVariables,
   Group,
-  PartialGroupNullable,
-  ValuesOrBoolean,
-  Dish,
-  PhoneKnowledge,
-  CheckPhoneResponse,
+  Maintenance,
   Navigation,
   NavigationBase,
   NavigationLoader,
-  CheckPhoneCodeInput,
-  VCriteria,
-  Maintenance,
+  NgGqlConfig,
   Phone,
+  PhoneKnowledge,
+  VCriteria,
+  ValuesOrBoolean,
 } from '../models';
-import { isValue, deepClone } from '@axrl/common';
 import {
-  NAVIGATION_FRAGMENTS,
-  GROUP_FRAGMENTS,
   DISH_FRAGMENTS,
+  GROUP_FRAGMENTS,
   MAINTENANCE_FRAGMENTS,
+  NAVIGATION_FRAGMENTS,
 } from '../models';
 import { NgGqlStorageService } from './ng-gql-storage.service';
-import { OperationVariables } from '@apollo/client';
 import { QueryGenerationParam, RequestService } from './request.service';
 
 /** @internal */
@@ -64,7 +55,7 @@ export class NgGqlService {
     return deepClone(this.config);
   }
 
-  private _initGroupSlug$ = new BehaviorSubject<SlugAndConcept | null>(null);
+  private _initGroupSlug$ = createSubject<SlugAndConcept | null>(null);
 
   updateInitGroupSlug(initGroupSlug: string, concept: string | 'origin') {
     this._initGroupSlug$.next({
@@ -140,79 +131,50 @@ export class NgGqlService {
    * Чтобы обновлять значение в `initGroupSlug$` используется метод `updateInitGroupSlug`
    * @returns
    */
-  private _loadGroups(slug: string, concept: string | 'origin') {
-    return this.requestService
-      .customQuery$<
-        { childGroups: PartialGroupNullable[] },
-        'group',
-        VCriteria
-      >(
-        'group',
-        {
-          childGroups: {
-            slug: true,
-            id: true,
-          },
-        },
-        {
-          criteria: {
-            slug,
-            concept,
-          },
-        }
-      )
-      .pipe(
-        map((group) => {
-          const array = (<Array<{ childGroups: PartialGroupNullable[] }>>(
-            group.group
-          )).map((item) => ({ ...item }));
-          return {
-            concept,
-            groups: array.length == 0 ? [] : array[0].childGroups,
-          };
-        })
-      );
-  }
+  getGroup(slug: string, concept: string = 'origin') {
+    const getIdsFromPartialDish = (dishes?: Partial<Group>[]) =>
+      dishes
+        ?.map((dish) => dish.id)
+        .filter((id): id is string => isValue(id)) ?? [];
 
-  readonly rootGroups$: Observable<{
-    concept: string | 'origin';
-    groups: PartialGroupNullable[];
-  }> = this.storage.navigation.pipe(
-    filter(
-      (navigationData): navigationData is Navigation[] =>
-        !!navigationData &&
-        Array.isArray(navigationData) &&
-        !!navigationData[0] &&
-        'mnemonicId' in navigationData[0]
-    ),
-    switchMap((navigationData) => {
-      const menuItem = navigationData.find(
-        (item) => item.mnemonicId === 'menu'
-      )!;
-      return menuItem.options.behavior?.includes('navigationmenu')
-        ? of({
-            concept: menuItem.options?.concept ?? 'origin',
-            groups: menuItem.navigation_menu.map((item) => ({
-              slug: item.groupSlug,
-              id: null,
-            })),
-          })
-        : this._loadGroups(
-            menuItem.options.initGroupSlug,
-            menuItem.options?.concept ?? 'origin'
-          );
-    }),
-    mergeWith(
-      this._initGroupSlug$.asObservable().pipe(
-        filter(
-          (slugAndConcept): slugAndConcept is SlugAndConcept => !!slugAndConcept
-        ),
-        switchMap((slugAndConcept) =>
-          this._loadGroups(slugAndConcept.slug, slugAndConcept.concept)
-        )
-      )
-    )
-  );
+    return this.storage.groups.pipe(
+      exhaustMap((groups) => {
+        const group = groups.find((g) => g.slug === slug);
+        if (isValue(group)) {
+          return of(group);
+        } else {
+          return this.requestService
+            .customQuery$<Group, 'group', VCriteria>(
+              'group',
+              this.defaultGroupFragments,
+              {
+                criteria: {
+                  slug,
+                  concept,
+                },
+              }
+            )
+            .pipe(
+              map((data) => {
+                const group = deepClone(
+                  Array.isArray(data.group) ? data.group[0] : data.group
+                );
+
+                group.dishesIds = getIdsFromPartialDish(group.dishes);
+                group.childGroups.forEach((childGroup) => {
+                  childGroup.dishesIds = getIdsFromPartialDish(
+                    childGroup.dishes
+                  );
+                });
+                groups.push(group);
+                this.storage.updateMenuGroups(groups);
+                return group;
+              })
+            );
+        }
+      })
+    );
+  }
 
   /**
    * @method addAmountToDish()
@@ -244,237 +206,60 @@ export class NgGqlService {
     };
   }
 
-  getMenu$(
-    slug: string | string[] | undefined
-  ): Observable<Partial<Group>[] | undefined | null> {
-    return this.rootGroups$
-      .pipe(
-        switchMap((rootGroupsData) => {
-          const rootGroups = rootGroupsData.groups;
-          const nesting = this.config.nesting ?? 2;
-          const queryObject: ValuesOrBoolean<Group> = new Array(nesting)
-            .fill(nesting)
-            .reduce(
-              (accumulator: ValuesOrBoolean<Group>) => {
-                const item = { ...this.defaultGroupFragments };
-                item.childGroups = accumulator;
-                return item;
-              },
-              {
-                ...this.defaultGroupFragments,
-                childGroups: { ...this.defaultGroupFragments },
-              }
-            );
-          const criteria = isValue(rootGroups[0]?.id)
-            ? {
-                id: rootGroups.map((rootGroup) => rootGroup.id),
-                concept: rootGroupsData.concept,
-              }
-            : {
-                slug: rootGroups.map((rootGroup) => rootGroup.slug),
-                concept: rootGroupsData.concept,
-              };
-          return this.requestService
-            .queryAndSubscribe<Group, 'group', 'group', VCriteria>(
-              'group',
-              'group',
-              queryObject,
-              'id',
-              {
-                query: {
-                  criteria,
-                },
-                subscribe: {
-                  criteria,
-                },
-              }
-            )
-            .pipe(
-              map((groups) => ({
-                concept: rootGroupsData.concept,
-                groups,
-              }))
-            );
-        }),
-        switchMap((groupsData) => {
-          const groups = groupsData.groups;
-          const addGroup = (items: Partial<Group>[], item: Partial<Group>) => {
-            if (!items.find((value) => value.id === item.id)) {
-              items.push(item);
-            }
-          };
-          const getGroups = (items: Partial<Group>[]) =>
-            items.reduce<Partial<Group>[]>((accumulator, current) => {
-              addGroup(accumulator, current);
-              if (current.childGroups && current.childGroups.length > 0) {
-                getGroups(current.childGroups).forEach((child) =>
-                  addGroup(accumulator, child)
-                );
-              }
-              return accumulator;
-            }, []);
-          const allNestingsGroups = getGroups(groups);
-          const allNestingsIds = allNestingsGroups.map((group) => group.id);
-
-          return this.requestService
-            .queryAndSubscribe<Dish, 'dish', 'dish', VCriteria>(
-              'dish',
-              'dish',
-              this.defaultDishFragments,
-              'id',
-              {
-                query: {
-                  criteria: {
-                    parentGroup: allNestingsIds,
-                    concept: groupsData.concept,
-                  },
-                },
-                subscribe: {
-                  criteria: {
-                    parentGroup: allNestingsIds,
-                    concept: groupsData.concept,
-                  },
-                },
-              }
-            )
-            .pipe(
-              map((data) => {
-                const dishes = data.map((dataDish) =>
-                  this.addAmountToDish(dataDish)
-                );
-
-                this.storage.updateDishes(dishes);
-                const groupsById = allNestingsGroups.reduce<{
-                  [key: string]: Partial<Group>;
-                }>((accumulator, current) => {
-                  if (!current.childGroups) {
-                    current.childGroups = [];
-                  }
-                  if (!current.dishes) {
-                    current.dishes = [];
-                  }
-                  if (current.id) {
-                    accumulator[current.id] = current;
-                  }
-                  return accumulator;
-                }, {});
-
-                const groupIdsBySlug: {
-                  [key: string]: string;
-                } = {};
-
-                // Inserting dishes by groups
-                for (let dish of dishes) {
-                  const groupId = dish.parentGroup?.id || dish.groupId;
-                  if (!isValue(groupId)) {
-                    continue;
-                  }
-
-                  if (!isValue(groupsById[groupId])) {
-                    continue;
-                  }
-
-                  const groupDishes = groupsById[groupId].dishes;
-                  if (isValue(groupDishes)) {
-                    const checkDishIndex = groupDishes.findIndex(
-                      (item) => item.id === dish.id
-                    );
-                    if (checkDishIndex === -1) {
-                      groupDishes.push(dish);
-                    } else {
-                      groupDishes[checkDishIndex] = dish;
-                    }
-                  } else {
-                    groupsById[groupId].dishes = [dish];
-                  }
-                }
-                // Create groups hierarchy
-                for (let groupId in groupsById) {
-                  const group = groupsById[groupId];
-                  const parentGroupId = group.parentGroup?.id;
-                  groupIdsBySlug[group.slug!] = groupId;
-                  if (!parentGroupId) continue;
-                  if (!groupsById[parentGroupId]) continue;
-                  if (
-                    groupsById[parentGroupId].childGroups?.find(
-                      (chGroup) => chGroup.id === group.id
-                    )
-                  )
-                    continue;
-                  groupsById[parentGroupId].childGroups?.push(group);
-                }
-                return { groupsById, groupIdsBySlug };
-              })
-            );
-        })
-      )
-      .pipe(
-        map(({ groupsById, groupIdsBySlug }) => {
-          if (isValue(slug)) {
-            if (typeof slug === 'string') {
-              if (!groupIdsBySlug[slug]) {
-                return [];
-              } else {
-                return groupsById[groupIdsBySlug[slug]].childGroups;
-              }
-            } else {
-              if (slug.length == 0) {
-                return [];
-              } else {
-                return slug
-                  .map((s) => groupsById[groupIdsBySlug[s]])
-                  .sort((g1, g2) => (g1.sortOrder ?? 0) - (g2.sortOrder ?? 0));
-              }
-            }
-          } else {
-            return Object.values(groupsById).sort(
-              (g1, g2) => (g1.sortOrder ?? 0) - (g2.sortOrder ?? 0)
-            );
-          }
-        })
-      );
-  }
-
-  getDishes$(id?: string | string[]): Observable<Dish[]> {
+  getDishes$(ids: string[]): Observable<Dish[]> {
     return this.storage.dishes.pipe(
       exhaustMap((dishes) => {
-        const ids = typeof id === 'string' ? [id] : id;
-        const dishesInStock = dishes.filter((item) =>
-          typeof id === 'string' ? item.id === id : id?.includes(item.id)
-        );
-        if (!ids) {
-          return of(dishes);
+        const dishesInStock = dishes.filter((item) => ids.includes(item.id));
+
+        if (dishesInStock.length == ids.length) {
+          return of(dishesInStock);
         } else {
-          if (dishesInStock.length == ids.length) {
-            return of(dishesInStock);
-          } else {
-            const dishesNotInStock = ids.filter(
-              (dishId) => !dishes.find((dish) => dish.id === dishId)
-            );
-            return this.requestService
-              .customQuery$<Dish, 'dish', VCriteria>(
-                'dish',
-                this.defaultDishFragments,
-                {
-                  criteria: {
-                    id: dishesNotInStock,
-                  },
-                }
-              )
-              .pipe(
-                map((loadedDishes) => {
-                  const result = Array.isArray(loadedDishes.dish)
+          const dishesNotInStock = ids.filter(
+            (dishId) => !dishes.find((dish) => dish.id === dishId)
+          );
+          return this.requestService
+            .customQuery$<Dish, 'dish', VCriteria>(
+              'dish',
+              this.defaultDishFragments,
+              {
+                criteria: {
+                  id: dishesNotInStock,
+                },
+              }
+            )
+            .pipe(
+              map((loadedDishes) => {
+                const result = (
+                  Array.isArray(loadedDishes.dish)
                     ? loadedDishes.dish
-                    : [loadedDishes.dish];
-                  dishes.push(...result);
-                  this.storage.updateDishes(dishes);
-                  return [...dishesInStock, ...result];
-                })
-              );
-          }
+                    : [loadedDishes.dish]
+                ).map((dish) => this.addAmountToDish(dish));
+                dishes.push(...result);
+                this.storage.updateDishes(dishes);
+                return [...dishesInStock, ...result];
+              })
+            );
         }
       })
     );
+  }
+
+  getNavBarMenu(
+    concept?: string,
+    topLevelGroupId?: string
+  ): Observable<Group[]> {
+    return this.requestService
+      .customQuery$<Group, 'menu'>('menu', {
+        name: true,
+        slug: true,
+        id: true,
+        icon: {
+          images: true,
+        },
+      })
+      .pipe(
+        map((data) => (Array.isArray(data.menu) ? data.menu : [data.menu]))
+      );
   }
 
   /**

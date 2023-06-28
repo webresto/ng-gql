@@ -6,19 +6,16 @@
 
 - [constructor](NgGqlService.md#constructor)
 
-### Properties
-
-- [rootGroups$](NgGqlService.md#rootgroups$)
-
 ### Methods
 
 - [getNgGqlConfig](NgGqlService.md#getnggqlconfig)
 - [updateInitGroupSlug](NgGqlService.md#updateinitgroupslug)
 - [getNavigation$](NgGqlService.md#getnavigation$)
 - [getMaintenance$](NgGqlService.md#getmaintenance$)
+- [getGroup](NgGqlService.md#getgroup)
 - [addAmountToDish](NgGqlService.md#addamounttodish)
-- [getMenu$](NgGqlService.md#getmenu$)
 - [getDishes$](NgGqlService.md#getdishes$)
+- [getNavBarMenu](NgGqlService.md#getnavbarmenu)
 - [isKnownPhone$](NgGqlService.md#isknownphone$)
 - [phoneKnowledgeGetCode$](NgGqlService.md#phoneknowledgegetcode$)
 - [phoneKnowledgeSetCode$](NgGqlService.md#phoneknowledgesetcode$)
@@ -45,12 +42,6 @@
 | `defaultMaintenanceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Maintenance`](../interfaces/Maintenance.md)\> |
 | `defaultGroupFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Group`](../interfaces/Group.md)\> |
 | `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Dish`](../interfaces/Dish.md)\> |
-
-## Properties
-
-### rootGroups$
-
-• `Readonly` **rootGroups$**: `Observable`<{ `concept`: `string` ; `groups`: [`PartialGroupNullable`](../README.md#partialgroupnullable)[]  }\>
 
 ## Methods
 
@@ -134,6 +125,25 @@ ___
 
 ___
 
+### getGroup
+
+▸ **getGroup**(`slug`, `concept?`): `Observable`<[`Group`](../interfaces/Group.md)\>
+
+Внутренний метод, используемый для загрузки основного - "корневого" списка групп.
+
+#### Parameters
+
+| Name | Type | Default value | Description |
+| :------ | :------ | :------ | :------ |
+| `slug` | `string` | `undefined` | init- slug. Либо принимается извне через внутренний поток `initGroupSlug$`, либо формируется на основании данных в массиве Navigation[], загруженном на старте приложения. Чтобы обновлять значение в `initGroupSlug$` используется метод `updateInitGroupSlug` |
+| `concept` | `string` | `'origin'` | - |
+
+#### Returns
+
+`Observable`<[`Group`](../interfaces/Group.md)\>
+
+___
+
 ### addAmountToDish
 
 ▸ **addAmountToDish**(`sourceDish`): [`Dish`](../interfaces/Dish.md)
@@ -157,35 +167,36 @@ addAmountToDish()
 
 ___
 
-### getMenu$
-
-▸ **getMenu$**(`slug`): `Observable`<`undefined` \| ``null`` \| `Partial`<[`Group`](../interfaces/Group.md)\>[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `slug` | `undefined` \| `string` \| `string`[] |
-
-#### Returns
-
-`Observable`<`undefined` \| ``null`` \| `Partial`<[`Group`](../interfaces/Group.md)\>[]\>
-
-___
-
 ### getDishes$
 
-▸ **getDishes$**(`id?`): `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+▸ **getDishes$**(`ids`): `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `id?` | `string` \| `string`[] |
+| `ids` | `string`[] |
 
 #### Returns
 
 `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+
+___
+
+### getNavBarMenu
+
+▸ **getNavBarMenu**(`concept?`, `topLevelGroupId?`): `Observable`<[`Group`](../interfaces/Group.md)[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `concept?` | `string` |
+| `topLevelGroupId?` | `string` |
+
+#### Returns
+
+`Observable`<[`Group`](../interfaces/Group.md)[]\>
 
 ___
 

@@ -6,8 +6,12 @@ export interface Group {
   description: string;
   name: string;
   slug?: string;
+  icon?: {
+    images: any[];
+  };
   visible: boolean;
   sortOrder: number;
+  dishesIds: string[];
   dishes?: Partial<Dish>[];
   discount?: string | null;
   parentGroup?: Partial<Pick<Group, 'id' | 'dishesPlaceholder'>>;

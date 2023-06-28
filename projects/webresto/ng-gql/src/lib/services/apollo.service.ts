@@ -1,10 +1,4 @@
 import { Inject, Injectable } from '@angular/core';
-import { catchError, map, throwError } from 'rxjs';
-import {
-  Apollo,
-  ExtraSubscriptionOptions,
-  WatchQueryOptions,
-} from 'apollo-angular';
 import type {
   MutationOptions,
   OperationVariables,
@@ -12,8 +6,14 @@ import type {
   SubscriptionOptions,
 } from '@apollo/client/core';
 import { isValue } from '@axrl/common';
-import type { NgGqlConfig } from '../models';
+import {
+  Apollo,
+  ExtraSubscriptionOptions,
+  WatchQueryOptions,
+} from 'apollo-angular';
 import type { EmptyObject } from 'apollo-angular/types';
+import { catchError, map, throwError } from 'rxjs';
+import type { NgGqlConfig } from '../models';
 
 @Injectable()
 export class ApolloService {

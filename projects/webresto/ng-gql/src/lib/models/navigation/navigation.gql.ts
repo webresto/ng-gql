@@ -5,8 +5,8 @@ import type { ValuesOrBoolean } from '../values-or-boolean';
  * Базовый интерфейс для объектов, содержащих информацию о навигации внутри приложения.
  */
 export interface NavigationBase {
-	id: number;
-	description: string;
+  id: number;
+  description: string;
 }
 
 /**
@@ -17,41 +17,39 @@ export interface NavigationBase {
  * Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки.
  */
 export interface NavigationLoader<T> {
-	nameQuery: string;
-	nameSubscribe: string;
-	queryObject: ValuesOrBoolean<T>;
-	uniqueKeyForCompareItem: keyof {
-		[ K in keyof T ]: K extends string ? K : never
-	};
+  nameQuery: string;
+  nameSubscribe: string;
+  queryObject: ValuesOrBoolean<T>;
+  uniqueKeyForCompareItem: keyof {
+    [K in keyof T]: K extends string ? K : never;
+  };
 }
 
 export interface Navigation extends NavigationBase {
-	mnemonicId: string;
-	options: NavigationsOptions;
-	navigation_menu: NavigationsMenuItem[];
+  mnemonicId: string;
+  options: NavigationsOptions;
+  navigation_menu: NavigationsMenuItem[];
 }
 
 export interface NavigationsMenuItemBase {
-	label: string;
-	link: string;
-	concept: 'origin' | string;
+  label: string;
+  link: string;
+  concept: 'origin' | string;
 
-	active?: boolean;
-	visible?: boolean;
+  active?: boolean;
+  visible?: boolean;
 }
 
 export interface NavigationsMenuItem extends NavigationsMenuItemBase {
-
-	visible?: boolean;
-	icon?: string;
-	groupSlug: string;
+  visible?: boolean;
+  icon?: string;
+  groupSlug: string;
 }
 
 export interface NavigationsOptions {
-	initGroupSlug: string;
-	concept: string | 'origin' | null | undefined;
-	behavior?: `newpagebyslug`  //Построение через initGroupSlug где каждый раздел создается на своей странице
-	| `onepagebyslug`  //Построение через initGroupSlug где все подразделы на одной страницы с навигацией по # (переход реализуется прокруткой)
-	| `newpagebynavigationmenu`   //Построение из меню которое пришло в navigation_menu где каждый раздел создается на своей странице
-	| `onepagebynavigationmenu`; //Построение из меню которое пришло в navigation_menu где все разделы аккамулируются на одной странице, акамуляция происходит по массиву из `navigation_menu` с учетом очереди
+  initGroupSlug: string;
+  concept: string | 'origin' | null | undefined;
+  behavior?:
+    | `newpagebynavigationmenu` //Построение из меню которое пришло в navigation_menu где каждый раздел создается на своей странице
+    | `onepagebynavigationmenu`; //Построение из меню которое пришло в navigation_menu где все разделы аккамулируются на одной странице, акамуляция происходит по массиву из `navigation_menu` с учетом очереди
 }

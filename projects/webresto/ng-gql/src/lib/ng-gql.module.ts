@@ -1,30 +1,30 @@
-import { inject, NgModule } from '@angular/core';
-import type { ModuleWithProviders } from '@angular/core';
-import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
-import { InMemoryCache, split } from '@apollo/client/core';
-import type { InMemoryCacheConfig } from '@apollo/client/core';
-import { WebSocketLink } from '@apollo/client/link/ws';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
-import { getMainDefinition } from '@apollo/client/utilities';
-import { generateUUID, NgGqlConfig } from './models';
-import { isValue } from '@axrl/common';
-import type { OperationDefinitionNode } from 'graphql';
-import { persistCacheSync, LocalStorageWrapper } from 'apollo3-cache-persist';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import type { ModuleWithProviders } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
+import type { InMemoryCacheConfig } from '@apollo/client/core';
+import { InMemoryCache, split } from '@apollo/client/core';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { isValue } from '@axrl/common';
+import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular/http';
+import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
+import type { OperationDefinitionNode } from 'graphql';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
 import {
-  XDeviceIdInterceptor,
   AuthInterceptor,
   MemoryInterceptor,
+  XDeviceIdInterceptor,
 } from './interceptors';
+import { generateUUID, NgGqlConfig } from './models';
 import {
-  NgOrderService,
-  NgGqlService,
-  NgGqlUserService,
-  NgGqlStorageService,
   ApolloService,
+  NgGqlService,
+  NgGqlStorageService,
   NgGqlUserBusService,
+  NgGqlUserService,
+  NgOrderService,
 } from './services';
 
 @NgModule({

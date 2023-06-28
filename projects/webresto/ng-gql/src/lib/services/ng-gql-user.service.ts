@@ -1,38 +1,37 @@
-import { Injectable, Inject } from '@angular/core';
-import { NgGqlStorageService } from './ng-gql-storage.service';
-import { NgGqlService } from './ng-gql.service';
-import {
-  User,
-  ValuesOrBoolean,
-  UserResponse,
-  OTPResponse,
-  LoginPayload,
-  RegistrationPayload,
-  OTPRequestPayload,
-  CaptchaJob,
-  CaptchaTask,
-  RestorePasswordPayload,
-  UserOrderHystory,
-  UpdateUserDataPayload,
-  InputLocation,
-  UserLocation,
-  UserLocationResponse,
-  USER_FRAGMENTS,
-  USER_ORDER_HYSTORY_FRAGMENTS,
-  USER_LOCATION_FRAGMENTS,
-} from '../models';
+import { Inject, Injectable } from '@angular/core';
+import { isValue } from '@axrl/common';
+import Puzzle from 'crypto-puzzle';
 import {
   BehaviorSubject,
   Observable,
+  catchError,
   exhaustMap,
   map,
-  catchError,
-  switchMap,
   of,
   shareReplay,
+  switchMap,
 } from 'rxjs';
-import { isValue } from '@axrl/common';
-import Puzzle from 'crypto-puzzle';
+import {
+  CaptchaJob,
+  CaptchaTask,
+  InputLocation,
+  LoginPayload,
+  OTPRequestPayload,
+  OTPResponse,
+  RegistrationPayload,
+  RestorePasswordPayload,
+  USER_FRAGMENTS,
+  USER_LOCATION_FRAGMENTS,
+  USER_ORDER_HYSTORY_FRAGMENTS,
+  UpdateUserDataPayload,
+  User,
+  UserLocation,
+  UserLocationResponse,
+  UserOrderHystory,
+  UserResponse,
+  ValuesOrBoolean,
+} from '../models';
+import { NgGqlStorageService } from './ng-gql-storage.service';
 import { NgGqlUserBusService } from './ng-gql-user-bus.service';
 import { RequestService } from './request.service';
 

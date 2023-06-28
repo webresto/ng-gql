@@ -10,7 +10,7 @@
 
 - [order](NgGqlStorageService.md#order)
 - [dishes](NgGqlStorageService.md#dishes)
-- [menu](NgGqlStorageService.md#menu)
+- [groups](NgGqlStorageService.md#groups)
 - [navigation](NgGqlStorageService.md#navigation)
 - [paymentMethods](NgGqlStorageService.md#paymentmethods)
 - [user](NgGqlStorageService.md#user)
@@ -51,9 +51,9 @@ ___
 
 ___
 
-### menu
+### groups
 
-• `Readonly` **menu**: `Observable`<[`Group`](../interfaces/Group.md)[]\>
+• `Readonly` **groups**: `Observable`<[`Group`](../interfaces/Group.md)[]\>
 
 ___
 
