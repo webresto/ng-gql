@@ -769,21 +769,22 @@ export class NgOrderService {
   }
 
   private checkOrder$(data: CheckOrderInput): Observable<CheckResponse> {
+
     return this.requestService
-      .customMutation$<CheckResponse, 'checkOrder', CheckOrderInput>(
+      .customMutation$<
+        CheckResponse,
+        'checkOrder',
+        { orderCheckout: CheckOrderInput }
+      >(
         'checkOrder',
         {
           order: this.defaultOrderFragments,
           message: this.defaultMessageFragments,
           action: this.defaultActionFragments,
         },
-        data,
+        { orderCheckout: data },
         {
-          requiredFields: ['orderId', 'paymentMethodId', 'customer'],
-          fieldsTypeMap: new Map([
-            ['address', 'Address'],
-            ['customer', 'Customer!'],
-          ]),
+          fieldsTypeMap: new Map([['orderCheckout', 'InputOrderCheckout']]),
         }
       )
       .pipe(map((data) => data.checkOrder));
