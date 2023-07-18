@@ -11,6 +11,7 @@ import type {
   GQLRequestVariables,
   Group,
   Maintenance,
+  NavbarMenuLink,
   Navigation,
   NavigationBase,
   NavigationLoader,
@@ -247,17 +248,38 @@ export class NgGqlService {
   getNavBarMenu(
     concept?: string,
     topLevelGroupId?: string
-  ): Observable<Group[]> {
-    return this.requestService
-      .customQuery$<Group, 'menu'>('menu', {
-        name: true,
-        slug: true,
-        id: true,
-        icon: true,
+  ): Observable<NavbarMenuLink[]> {
+    return this.storage.navBarMenus.pipe(
+      exhaustMap((items) => {
+        const item = items.find(
+          (element) =>
+            element.concept === concept &&
+            element.topLevelGroupId === topLevelGroupId
+        );
+        return isValue(item)
+          ? of(item.menu)
+          : this.requestService
+              .customQuery$<NavbarMenuLink, 'menu'>('menu', {
+                name: true,
+                slug: true,
+                id: true,
+                icon: true,
+              })
+              .pipe(
+                map((data) => {
+                  const result = Array.isArray(data.menu)
+                    ? data.menu
+                    : [data.menu];
+                  const newItems = [
+                    ...items,
+                    { concept, topLevelGroupId, menu: result },
+                  ];
+                  this.storage.updateNavBarMenus(newItems);
+                  return result;
+                })
+              );
       })
-      .pipe(
-        map((data) => (Array.isArray(data.menu) ? data.menu : [data.menu]))
-      );
+    );
   }
 
   /**

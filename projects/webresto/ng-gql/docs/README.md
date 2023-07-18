@@ -44,6 +44,7 @@
 - [NavigationsMenuItemBase](interfaces/NavigationsMenuItemBase.md)
 - [NavigationsMenuItem](interfaces/NavigationsMenuItem.md)
 - [NavigationsOptions](interfaces/NavigationsOptions.md)
+- [NavBarMenu](interfaces/NavBarMenu.md)
 - [NgGqlConfig](interfaces/NgGqlConfig.md)
 - [SendOrderInput](interfaces/SendOrderInput.md)
 - [OrderDish](interfaces/OrderDish.md)
@@ -81,6 +82,7 @@
 - [VCriteria](README.md#vcriteria)
 - [GQLRequestVariables](README.md#gqlrequestvariables)
 - [PartialGroupNullable](README.md#partialgroupnullable)
+- [NavbarMenuLink](README.md#navbarmenulink)
 - [OrderState](README.md#orderstate)
 - [OrderForm](README.md#orderform)
 - [LoginPayload](README.md#loginpayload)
@@ -177,6 +179,12 @@ ___
 ### PartialGroupNullable
 
 Ƭ **PartialGroupNullable**: `Pick`<[`Group`](interfaces/Group.md), ``"slug"``\> & { `id`: `string` \| ``null``  }
+
+___
+
+### NavbarMenuLink
+
+Ƭ **NavbarMenuLink**: `Pick`<[`Group`](interfaces/Group.md), ``"name"`` \| ``"slug"`` \| ``"id"`` \| ``"icon"``\>
 
 ___
 

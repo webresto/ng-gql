@@ -1,3 +1,4 @@
+import { Group } from '../group';
 import type { ValuesOrBoolean } from '../values-or-boolean';
 
 /**
@@ -52,4 +53,12 @@ export interface NavigationsOptions {
   behavior?:
     | `newpagebynavigationmenu` //Построение из меню которое пришло в navigation_menu где каждый раздел создается на своей странице
     | `onepagebynavigationmenu`; //Построение из меню которое пришло в navigation_menu где все разделы аккамулируются на одной странице, акамуляция происходит по массиву из `navigation_menu` с учетом очереди
+}
+
+export type NavbarMenuLink = Pick<Group, 'name' | 'slug' | 'id' | 'icon'>;
+
+export interface NavBarMenu {
+  concept?: string;
+  topLevelGroupId?: string;
+  menu: NavbarMenuLink[];
 }

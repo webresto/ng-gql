@@ -18,6 +18,7 @@
 - [isAuthenticated$](NgGqlStorageService.md#isauthenticated$)
 - [orderHystory](NgGqlStorageService.md#orderhystory)
 - [userLocations](NgGqlStorageService.md#userlocations)
+- [navBarMenus](NgGqlStorageService.md#navbarmenus)
 
 ### Methods
 
@@ -30,6 +31,7 @@
 - [updateToken](NgGqlStorageService.md#updatetoken)
 - [updateOrderHystory](NgGqlStorageService.md#updateorderhystory)
 - [updateUserLocations](NgGqlStorageService.md#updateuserlocations)
+- [updateNavBarMenus](NgGqlStorageService.md#updatenavbarmenus)
 
 ## Constructors
 
@@ -96,6 +98,12 @@ ___
 ### userLocations
 
 • `Readonly` **userLocations**: `Observable`<``null`` \| [`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
+
+___
+
+### navBarMenus
+
+• `Readonly` **navBarMenus**: `Observable`<[`NavBarMenu`](../interfaces/NavBarMenu.md)[]\>
 
 ## Methods
 
@@ -272,6 +280,22 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `newValue` | [`UserLocationResponse`](../interfaces/UserLocationResponse.md) |
+
+#### Returns
+
+`void`
+
+___
+
+### updateNavBarMenus
+
+▸ **updateNavBarMenus**(`items`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `items` | [`NavBarMenu`](../interfaces/NavBarMenu.md)[] |
 
 #### Returns
 

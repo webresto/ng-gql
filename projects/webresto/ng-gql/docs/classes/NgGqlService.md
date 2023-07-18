@@ -185,7 +185,7 @@ ___
 
 ### getNavBarMenu
 
-▸ **getNavBarMenu**(`concept?`, `topLevelGroupId?`): `Observable`<[`Group`](../interfaces/Group.md)[]\>
+▸ **getNavBarMenu**(`concept?`, `topLevelGroupId?`): `Observable`<[`NavbarMenuLink`](../README.md#navbarmenulink)[]\>
 
 #### Parameters
 
@@ -196,7 +196,7 @@ ___
 
 #### Returns
 
-`Observable`<[`Group`](../interfaces/Group.md)[]\>
+`Observable`<[`NavbarMenuLink`](../README.md#navbarmenulink)[]\>
 
 ___
 

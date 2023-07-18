@@ -3,6 +3,7 @@ import { createSubject, getFilteredData, isValue } from '@axrl/common';
 import {
   Dish,
   Group,
+  NavBarMenu,
   NavigationBase,
   Order,
   PaymentMethod,
@@ -92,5 +93,12 @@ export class NgGqlStorageService {
         userLocation: userLocations,
       });
     }
+  }
+
+  private _navBarMenus = createSubject<NavBarMenu[]>([]);
+  readonly navBarMenus = getFilteredData(this._navBarMenus);
+
+  updateNavBarMenus(items: NavBarMenu[]) {
+    this._navBarMenus.next(items);
   }
 }
