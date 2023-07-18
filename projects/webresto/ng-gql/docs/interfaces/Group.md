@@ -46,13 +46,7 @@ ___
 
 ### icon
 
-• `Optional` **icon**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `images` | `any`[] |
+• `Optional` **icon**: `string`
 
 ___
 

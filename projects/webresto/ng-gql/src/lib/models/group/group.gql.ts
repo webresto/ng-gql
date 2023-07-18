@@ -6,9 +6,7 @@ export interface Group {
   description: string;
   name: string;
   slug?: string;
-  icon?: {
-    images: any[];
-  };
+  icon?: string;
   visible: boolean;
   sortOrder: number;
   dishesIds: string[];

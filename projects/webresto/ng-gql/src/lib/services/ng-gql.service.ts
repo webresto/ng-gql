@@ -253,9 +253,7 @@ export class NgGqlService {
         name: true,
         slug: true,
         id: true,
-        icon: {
-          images: true,
-        },
+        icon: true,
       })
       .pipe(
         map((data) => (Array.isArray(data.menu) ? data.menu : [data.menu]))
