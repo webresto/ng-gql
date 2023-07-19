@@ -57,6 +57,10 @@ export interface NavigationsOptions {
 
 export type NavbarMenuLink = Pick<Group, 'name' | 'slug' | 'id' | 'icon'>;
 
+export type NavBarLinkItem = Omit<NavbarMenuLink, 'slug'> & {
+  link: [string[], string | undefined];
+};
+
 export interface NavBarMenu {
   concept?: string;
   topLevelGroupId?: string;

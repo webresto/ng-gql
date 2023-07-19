@@ -52,6 +52,9 @@ export class NgGqlService {
     @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>
   ) {}
 
+  private _pendingLoadNavBar = createSubject<boolean>(false);
+  private _pendingLoadNavigation = createSubject<boolean>(false);
+
   getNgGqlConfig(): NgGqlConfig {
     return deepClone(this.config);
   }
@@ -249,6 +252,14 @@ export class NgGqlService {
     concept?: string,
     topLevelGroupId?: string
   ): Observable<NavbarMenuLink[]> {
+    return this._pendingLoadNavBar.asObservable().pipe(
+      filter((pending) => !pending),
+      exhaustMap(() => this._loadNavBarMenu(concept, topLevelGroupId))
+    );
+  }
+
+  private _loadNavBarMenu(concept?: string, topLevelGroupId?: string) {
+    this._pendingLoadNavBar.next(true);
     return this.storage.navBarMenus.pipe(
       exhaustMap((items) => {
         const item = items.find(
@@ -275,6 +286,7 @@ export class NgGqlService {
                     { concept, topLevelGroupId, menu: result },
                   ];
                   this.storage.updateNavBarMenus(newItems);
+                  this._pendingLoadNavBar.next(false);
                   return result;
                 })
               );

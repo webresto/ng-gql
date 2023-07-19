@@ -83,6 +83,7 @@
 - [GQLRequestVariables](README.md#gqlrequestvariables)
 - [PartialGroupNullable](README.md#partialgroupnullable)
 - [NavbarMenuLink](README.md#navbarmenulink)
+- [NavBarLinkItem](README.md#navbarlinkitem)
 - [OrderState](README.md#orderstate)
 - [OrderForm](README.md#orderform)
 - [LoginPayload](README.md#loginpayload)
@@ -185,6 +186,12 @@ ___
 ### NavbarMenuLink
 
 Ƭ **NavbarMenuLink**: `Pick`<[`Group`](interfaces/Group.md), ``"name"`` \| ``"slug"`` \| ``"id"`` \| ``"icon"``\>
+
+___
+
+### NavBarLinkItem
+
+Ƭ **NavBarLinkItem**: `Omit`<[`NavbarMenuLink`](README.md#navbarmenulink), ``"slug"``\> & { `link`: [`string`[], `string` \| `undefined`]  }
 
 ___
 
