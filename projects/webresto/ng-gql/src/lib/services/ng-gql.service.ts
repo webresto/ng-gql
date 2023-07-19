@@ -3,7 +3,7 @@ import { OperationVariables } from '@apollo/client';
 import { createSubject, deepClone, isValue } from '@axrl/common';
 import type { ExtraSubscriptionOptions } from 'apollo-angular';
 import type { Observable } from 'rxjs';
-import { BehaviorSubject, exhaustMap, filter, map, of } from 'rxjs';
+import { BehaviorSubject, exhaustMap, filter, map, of, tap } from 'rxjs';
 import type {
   CheckPhoneCodeInput,
   CheckPhoneResponse,
@@ -286,11 +286,11 @@ export class NgGqlService {
                     { concept, topLevelGroupId, menu: result },
                   ];
                   this.storage.updateNavBarMenus(newItems);
-                  this._pendingLoadNavBar.next(false);
                   return result;
                 })
               );
-      })
+      }),
+      tap( () => this._pendingLoadNavBar.next(false))
     );
   }
 
