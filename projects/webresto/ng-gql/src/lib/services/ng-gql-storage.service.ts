@@ -38,7 +38,7 @@ export class NgGqlStorageService {
   }
 
   private _navigation = createSubject<NavigationBase[] | null>(null);
-  readonly navigation = getFilteredData(this._navigation);
+  readonly navigation = this._navigation;
 
   updateNavigation<T extends NavigationBase>(navigation: T[]) {
     this._navigation.next(navigation);
@@ -96,7 +96,7 @@ export class NgGqlStorageService {
   }
 
   private _navBarMenus = createSubject<NavBarMenu[]>([]);
-  readonly navBarMenus = getFilteredData(this._navBarMenus);
+  readonly navBarMenus = this._navBarMenus.asObservable();
 
   updateNavBarMenus(items: NavBarMenu[]) {
     this._navBarMenus.next(items);

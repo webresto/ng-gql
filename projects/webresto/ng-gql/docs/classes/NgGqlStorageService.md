@@ -61,7 +61,7 @@ ___
 
 ### navigation
 
-• `Readonly` **navigation**: `Observable`<[`NavigationBase`](../interfaces/NavigationBase.md)[]\>
+• `Readonly` **navigation**: `BehaviorSubject`<``null`` \| [`NavigationBase`](../interfaces/NavigationBase.md)[]\>
 
 ___
 
