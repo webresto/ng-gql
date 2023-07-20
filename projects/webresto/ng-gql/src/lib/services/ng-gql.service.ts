@@ -30,12 +30,6 @@ import {
 import { NgGqlStorageService } from './ng-gql-storage.service';
 import { QueryGenerationParam, RequestService } from './request.service';
 
-/** @internal */
-interface SlugAndConcept {
-  slug: string;
-  concept: string | 'origin';
-}
-
 @Injectable()
 /** Основной сервис для работы с библиотекой. Содержит все необходимые методы для управления сайтом. */
 export class NgGqlService {
@@ -59,15 +53,6 @@ export class NgGqlService {
     return deepClone(this.config);
   }
 
-  private _initGroupSlug$ = createSubject<SlugAndConcept | null>(null);
-
-  updateInitGroupSlug(initGroupSlug: string, concept: string | 'origin') {
-    this._initGroupSlug$.next({
-      slug: initGroupSlug,
-      concept,
-    });
-  }
-
   /**
    * @method getNavigation$()
    * Используется для получения массива обьектов навигации для различных компонентов приложения.
@@ -77,14 +62,12 @@ export class NgGqlService {
   getNavigation$<T extends NavigationBase>(
     options: NavigationLoader<T>
   ): Observable<T[]>;
-
   /**
    * @method getNavigation$()
    * Используется для получения массива обьектов навигации для различных компонентов приложения.
    * Если приложение использует стандартную механику навигации, параметр `options` - не требуется.
    */
   getNavigation$(): Observable<Navigation[]>;
-
   /**
    * @method getNavigation$()
    * Используется для получения массива обьектов навигации для различных компонентов приложения.
@@ -97,21 +80,40 @@ export class NgGqlService {
   getNavigation$<T extends NavigationBase = Navigation>(
     options?: NavigationLoader<T>
   ): Observable<T[]> {
-    return this.requestService
-      .queryAndSubscribe(
-        options?.nameQuery ?? 'navigation',
-        options?.nameSubscribe ?? 'navigation',
-        options?.queryObject ??
-          <NavigationLoader<T>['queryObject']>this.defaultNavigationFragments,
-        options?.uniqueKeyForCompareItem ??
-          <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId'
-      )
-      .pipe(
-        map((navigationData) => {
-          this.storage.updateNavigation(navigationData);
-          return navigationData;
-        })
-      );
+    return this._pendingLoadNavigation.asObservable().pipe(
+      filter((pending) => !pending),
+      exhaustMap(() => this._loadNavigation(options))
+    );
+  }
+
+  private _loadNavigation<T extends NavigationBase = Navigation>(
+    options?: NavigationLoader<T>
+  ): Observable<T[]> {
+    this._pendingLoadNavigation.next(true);
+    return this.storage.navigation.pipe(
+      exhaustMap((data) => {
+        return isValue(data)
+          ? of(<T[]>data)
+          : this.requestService
+              .queryAndSubscribe(
+                options?.nameQuery ?? 'navigation',
+                options?.nameSubscribe ?? 'navigation',
+                options?.queryObject ??
+                  <NavigationLoader<T>['queryObject']>(
+                    this.defaultNavigationFragments
+                  ),
+                options?.uniqueKeyForCompareItem ??
+                  <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId'
+              )
+              .pipe(
+                map((navigationData) => {
+                  this.storage.updateNavigation(navigationData);
+                  return navigationData;
+                })
+              );
+      }),
+      tap(() => this._pendingLoadNavigation.next(false))
+    );
   }
 
   getMaintenance$(): Observable<Maintenance> {
@@ -290,7 +292,7 @@ export class NgGqlService {
                 })
               );
       }),
-      tap( () => this._pendingLoadNavBar.next(false))
+      tap(() => this._pendingLoadNavBar.next(false))
     );
   }
 

@@ -9,7 +9,6 @@
 ### Methods
 
 - [getNgGqlConfig](NgGqlService.md#getnggqlconfig)
-- [updateInitGroupSlug](NgGqlService.md#updateinitgroupslug)
 - [getNavigation$](NgGqlService.md#getnavigation$)
 - [getMaintenance$](NgGqlService.md#getmaintenance$)
 - [getGroup](NgGqlService.md#getgroup)
@@ -52,23 +51,6 @@
 #### Returns
 
 [`NgGqlConfig`](../interfaces/NgGqlConfig.md)
-
-___
-
-### updateInitGroupSlug
-
-▸ **updateInitGroupSlug**(`initGroupSlug`, `concept`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `initGroupSlug` | `string` |
-| `concept` | `string` |
-
-#### Returns
-
-`void`
 
 ___
 
