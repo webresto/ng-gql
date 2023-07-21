@@ -6,7 +6,10 @@
     "cache": {
       "enabled": false
     },
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "projects": {
     "@webresto/ng-gql": {
@@ -37,6 +40,15 @@
             }
           },
           "defaultConfiguration": "production"
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/webresto/ng-gql/**/*.ts",
+              "projects/webresto/ng-gql/**/*.html"
+            ]
+          }
         }
       }
     }
