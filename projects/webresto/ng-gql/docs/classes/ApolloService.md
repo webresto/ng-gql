@@ -99,7 +99,7 @@ ___
 
 ### subscribe
 
-▸ **subscribe**<`T`, `V`\>(`options`, `extra?`): `Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
+▸ **subscribe**<`T`, `V`\>(`options`, `extra?`): `Observable`<`FetchResult`<`T`\>\>
 
 #### Type parameters
 
@@ -117,4 +117,4 @@ ___
 
 #### Returns
 
-`Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
+`Observable`<`FetchResult`<`T`\>\>

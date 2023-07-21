@@ -28,9 +28,7 @@ export interface QueryGenerationParam<V> {
   fieldsTypeMap?: Map<keyof V, string>;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class RequestService {
   constructor(private apollo: ApolloService) {}
 

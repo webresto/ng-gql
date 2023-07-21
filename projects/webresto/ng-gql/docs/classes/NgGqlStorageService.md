@@ -115,7 +115,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md), `T`\> |
+| `T` | extends [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\> |
 
 #### Parameters
 

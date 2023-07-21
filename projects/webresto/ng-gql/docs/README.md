@@ -6,7 +6,6 @@
 
 - [EventMessage](classes/EventMessage.md)
 - [GenerateUUIDHelper](classes/GenerateUUIDHelper.md)
-- [NqGqlLocalStorageWrapper](classes/NqGqlLocalStorageWrapper.md)
 - [ApolloService](classes/ApolloService.md)
 - [NgGqlStorageService](classes/NgGqlStorageService.md)
 - [NgGqlUserBusService](classes/NgGqlUserBusService.md)
@@ -14,6 +13,7 @@
 - [NgGqlService](classes/NgGqlService.md)
 - [NgOrderService](classes/NgOrderService.md)
 - [RequestService](classes/RequestService.md)
+- [NqGqlLocalStorageWrapper](classes/NqGqlLocalStorageWrapper.md)
 
 ### Interfaces
 
@@ -75,6 +75,8 @@
 - [OneTimePassword](interfaces/OneTimePassword.md)
 - [UserOrderHystory](interfaces/UserOrderHystory.md)
 - [QueryGenerationParam](interfaces/QueryGenerationParam.md)
+- [StorageOrderTokenSetOrderId](interfaces/StorageOrderTokenSetOrderId.md)
+- [StorageOrderTokenRemoveOrderId](interfaces/StorageOrderTokenRemoveOrderId.md)
 
 ### Type Aliases
 
@@ -93,6 +95,7 @@
 - [ValuesOrBoolean](README.md#valuesorboolean)
 - [UserBusEventType](README.md#userbuseventtype)
 - [UserBusEvent](README.md#userbusevent)
+- [StorageOrderTokenEvent](README.md#storageordertokenevent)
 
 ### Variables
 
@@ -107,6 +110,7 @@
 - [MAINTENANCE\_FRAGMENTS](README.md#maintenance_fragments)
 - [MODIFIER\_FRAGMENTS](README.md#modifier_fragments)
 - [NAVIGATION\_FRAGMENTS](README.md#navigation_fragments)
+- [NG\_GQL\_CONFIG](README.md#ng_gql_config)
 - [ORDER\_DISH\_FRAGMENTS](README.md#order_dish_fragments)
 - [ORDERID\_FACTORY\_FN](README.md#orderid_factory_fn)
 - [ORDER\_FRAGMENTS](README.md#order_fragments)
@@ -123,6 +127,7 @@
 
 - [generateQueryString](README.md#generatequerystring)
 - [generateUUID](README.md#generateuuid)
+- [httpLinkFactory](README.md#httplinkfactory)
 
 ### Events
 
@@ -295,6 +300,12 @@ ___
 
 Ƭ **UserBusEvent**: { `errorCb`: (`err`: `unknown`) => `void` ; `loading?`: `BehaviorSubject`<`boolean`\>  } & `UserBusEventMixin`<``"captchaGetJob"``, [`CaptchaJobPayload`](interfaces/CaptchaJobPayload.md), [`CaptchaJob`](interfaces/CaptchaJob.md)<`any`\>\> \| `UserBusEventMixin`<``"registrationApp"``, [`RegistrationPayload`](README.md#registrationpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"OTPRequest"``, [`OTPRequestPayload`](interfaces/OTPRequestPayload.md), [`OTPResponse`](interfaces/OTPResponse.md)\> \| `UserBusEventMixin`<``"login"``, [`LoginPayload`](README.md#loginpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"UpdateUserData"``, [`UpdateUserDataPayload`](README.md#updateuserdatapayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"RestorePassword"``, [`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"AddDishFavor"``, `string`, `boolean`\> \| `UserBusEventMixin`<``"logout"``, ``null``, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"userDelete"``, `string`, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"locationCreate"``, [`InputLocation`](interfaces/InputLocation.md), `boolean`\> \| `UserBusEventMixin`<``"locationDelete"``, `string`, `boolean`\> \| `UserBusEventMixin`<``"locationSetIsDefault"``, `string`, `boolean`\>
 
+___
+
+### StorageOrderTokenEvent
+
+Ƭ **StorageOrderTokenEvent**: [`StorageOrderTokenSetOrderId`](interfaces/StorageOrderTokenSetOrderId.md) \| [`StorageOrderTokenRemoveOrderId`](interfaces/StorageOrderTokenRemoveOrderId.md)
+
 ## Variables
 
 ### CAPTCHA\_GET\_JOB\_FRAGMENTS
@@ -382,6 +393,14 @@ ___
 • `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
+
+___
+
+### NG\_GQL\_CONFIG
+
+• `Const` **NG\_GQL\_CONFIG**: `InjectionToken`<[`NgGqlConfig`](interfaces/NgGqlConfig.md)\>
+
+InjectionToken с объектом NG_GQL_CONFIG
 
 ___
 
@@ -523,6 +542,29 @@ ___
 #### Returns
 
 `string`
+
+___
+
+### httpLinkFactory
+
+▸ **httpLinkFactory**(`httpLink`, `document`, `config`): `Object`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `httpLink` | `HttpLink` |
+| `document` | `Document` |
+| `config` | [`NgGqlConfig`](interfaces/NgGqlConfig.md) |
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `link` | `ApolloLink` |
+| `cache` | `InMemoryCache` |
 
 ## Events
 

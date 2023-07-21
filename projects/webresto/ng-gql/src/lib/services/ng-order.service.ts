@@ -39,7 +39,7 @@ import {
   ACTION_FRAGMENTS,
   DISH_FRAGMENTS,
   MESSAGE_FRAGMENTS,
-  NqGqlLocalStorageWrapper,
+  NG_GQL_CONFIG,
   ORDER_FRAGMENTS,
   PAYMENT_METHOD_FRAGMENTS,
 } from '../models';
@@ -47,6 +47,7 @@ import { NgGqlStorageService } from './ng-gql-storage.service';
 import { NgGqlUserBusService } from './ng-gql-user-bus.service';
 import { NgGqlService } from './ng-gql.service';
 import { RequestService } from './request.service';
+import { NqGqlLocalStorageWrapper } from './storage-wrapper';
 
 @Injectable()
 export class NgOrderService {
@@ -56,7 +57,7 @@ export class NgOrderService {
     private storageWrapper: NqGqlLocalStorageWrapper,
     private userBusService: NgGqlUserBusService,
     private ngGqlService: NgGqlService,
-    @Inject('NG_GQL_CONFIG') private config: NgGqlConfig,
+    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig,
     @Inject(PAYMENT_METHOD_FRAGMENTS)
     private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
     @Inject(ACTION_FRAGMENTS)

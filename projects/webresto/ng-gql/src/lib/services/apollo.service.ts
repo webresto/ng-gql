@@ -13,13 +13,13 @@ import {
 } from 'apollo-angular';
 import type { EmptyObject } from 'apollo-angular/types';
 import { catchError, map, throwError } from 'rxjs';
-import type { NgGqlConfig } from '../models';
+import { NgGqlConfig,NG_GQL_CONFIG } from '../models';
 
 @Injectable()
 export class ApolloService {
   constructor(
     private apollo: Apollo,
-    @Inject('NG_GQL_CONFIG') private config: NgGqlConfig
+    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig
   ) {}
 
   watchQuery<TData, TVariables extends OperationVariables = EmptyObject>(

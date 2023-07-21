@@ -1,20 +1,11 @@
-import { EventEmitter, Inject, Injectable } from '@angular/core';
-import {
-  BehaviorSubject,
-  of,
-  filter,
-  map,
-  switchMap,
-  distinctUntilChanged,
-} from 'rxjs';
-import { NgGqlModule } from '../../ng-gql.module';
-import { isValue } from '@axrl/common';
-import type { NgGqlConfig } from '../ng-gql-config/ng-gql-config';
-import { ORDERID_FACTORY_FN } from '../order';
+import {EventEmitter, Inject, Injectable} from '@angular/core';
+import {BehaviorSubject, of, filter, map, switchMap, distinctUntilChanged} from 'rxjs';
+import {isValue} from '@axrl/common';
+import type {NgGqlConfig} from '../models/ng-gql-config/ng-gql-config';
+import {ORDERID_FACTORY_FN} from '../models/order';
+import { NG_GQL_CONFIG } from '../models/ng-gql-config';
 
-export type StorageOrderTokenEvent =
-  | StorageOrderTokenSetOrderId
-  | StorageOrderTokenRemoveOrderId;
+export type StorageOrderTokenEvent = StorageOrderTokenSetOrderId | StorageOrderTokenRemoveOrderId;
 
 export interface StorageOrderTokenSetOrderId {
   event: 'setOrderId';
@@ -36,14 +27,13 @@ export interface StorageOrderTokenRemoveOrderId {
  * Это важно, поскольку стандартные методы работы со Storage иницируют StorageEvent только для ДРУГИХ ВКЛАДОК браузера и не происходят в самой
  * вкладке, где произошли изменения.
  */
-@Injectable({
-  providedIn: NgGqlModule,
-})
+@Injectable()
 export class NqGqlLocalStorageWrapper {
   constructor(
-    @Inject('NG_GQL_CONFIG') private config: NgGqlConfig,
-    @Inject(ORDERID_FACTORY_FN) private orderIdFactoryFn: () => string
-  ) {}
+    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig,
+    @Inject(ORDERID_FACTORY_FN) private orderIdFactoryFn: () => string,
+  ) {
+  }
 
   /**
    * @method setOrderId()
@@ -85,7 +75,7 @@ export class NqGqlLocalStorageWrapper {
     const storageOrderId = this.getOrderId(key);
     if (!storageOrderId || orderId !== storageOrderId) {
       const oldValue = window.localStorage.getItem(key);
-      const newValue = JSON.stringify({ orderId: orderId, dt: Date.now() });
+      const newValue = JSON.stringify({orderId: orderId, dt: Date.now()});
       window.localStorage.setItem(key, newValue);
       if (emitEvent) {
         this.notifyStorageUpdate(key, oldValue, newValue);
@@ -100,11 +90,7 @@ export class NqGqlLocalStorageWrapper {
     this.notifyStorageUpdate(key, oldValue, newValue);
   }
 
-  private notifyStorageUpdate(
-    key: string,
-    oldValue: string | null,
-    newValue: string | null
-  ) {
+  private notifyStorageUpdate(key: string, oldValue: string | null, newValue: string | null) {
     window.dispatchEvent(
       new StorageEvent('storage', {
         key,
@@ -112,7 +98,7 @@ export class NqGqlLocalStorageWrapper {
         newValue,
         storageArea: window.localStorage,
         url: window.location.href,
-      })
+      }),
     );
   }
 
@@ -136,7 +122,7 @@ export class NqGqlLocalStorageWrapper {
   getOrderId(storageOrderIdToken: string, storageOrderId?: string): string {
     const generateId = (token: string): string => {
       const orderId = this.orderIdFactoryFn();
-      const cartData = JSON.stringify({ orderId: orderId, dt: Date.now() });
+      const cartData = JSON.stringify({orderId: orderId, dt: Date.now()});
       window.localStorage.setItem(token, cartData);
       return orderId;
     };
@@ -151,8 +137,7 @@ export class NqGqlLocalStorageWrapper {
           dt: number;
         } = JSON.parse(cartString);
         const idObsolescence =
-          43200000 *
-          (isValue(this.config.obsolescence) ? this.config.obsolescence : 14);
+          43200000 * (isValue(this.config.obsolescence) ? this.config.obsolescence : 14);
         if (Date.now() - cartData.dt > idObsolescence) {
           return generateId(storageOrderIdToken);
         } else {
@@ -171,18 +156,15 @@ export class NqGqlLocalStorageWrapper {
    * Необходим для реализации на сайте "мультикорзины" - нескольких параллельных корзин, между которыми пользователь может переключаться при переходе по страницам сайта.
    */
   private _storageOrderIdToken$ = new BehaviorSubject<string | null>(
-    this.config.orderIdStorageToken !== undefined
+    this.config?.orderIdStorageToken !== undefined
       ? this.config.orderIdStorageToken
       : `${window.location.host}-orderId
-     `
+     `,
   );
 
   storageOrderIdToken$ = this._storageOrderIdToken$.pipe(
-    filter(
-      (storageOrderIdToken): storageOrderIdToken is string =>
-        !!storageOrderIdToken
-    ),
-    distinctUntilChanged()
+    filter((storageOrderIdToken): storageOrderIdToken is string => !!storageOrderIdToken),
+    distinctUntilChanged(),
   );
 
   /**
@@ -198,20 +180,14 @@ export class NqGqlLocalStorageWrapper {
 
   private _storageActionBus$ = new EventEmitter<StorageOrderTokenEvent>();
   private storageActionBus$ = this._storageActionBus$.pipe(
-    switchMap((busEvent) => {
-      if (
-        busEvent.event == 'setOrderId' &&
-        isValue(busEvent.data.alternativeToken)
-      ) {
-        this.setToStorage(
-          busEvent.data.alternativeToken,
-          busEvent.data.orderId
-        );
+    switchMap(busEvent => {
+      if (busEvent.event == 'setOrderId' && isValue(busEvent.data.alternativeToken)) {
+        this.setToStorage(busEvent.data.alternativeToken, busEvent.data.orderId);
         this.updateStorageOrderIdToken(busEvent.data.alternativeToken);
         return of(() => {});
       } else {
         return this.storageOrderIdToken$.pipe(
-          map((storageOrderIdToken) => {
+          map(storageOrderIdToken => {
             switch (busEvent.event) {
               case 'removeOrderId':
                 if (busEvent.newOrderId) {
@@ -224,10 +200,10 @@ export class NqGqlLocalStorageWrapper {
                 this.setToStorage(storageOrderIdToken, busEvent.data.orderId);
                 break;
             }
-          })
+          }),
         );
       }
-    })
+    }),
   );
 
   private _storageActionBusSubscription$ = this.storageActionBus$.subscribe({

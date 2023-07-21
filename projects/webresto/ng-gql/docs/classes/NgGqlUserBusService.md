@@ -53,7 +53,7 @@
 | Name | Type |
 | :------ | :------ |
 | `T` | extends [`UserBusEventType`](../README.md#userbuseventtype) |
-| `P` | extends ``null`` \| `string` \| [`CaptchaJobPayload`](../interfaces/CaptchaJobPayload.md) \| [`InputLocation`](../interfaces/InputLocation.md) \| [`RestorePasswordPayload`](../interfaces/RestorePasswordPayload.md) \| [`LoginPayload`](../README.md#loginpayload) \| [`RegistrationPayload`](../README.md#registrationpayload) \| [`OTPRequestPayload`](../interfaces/OTPRequestPayload.md) \| [`UpdateUserDataPayload`](../README.md#updateuserdatapayload) |
+| `P` | extends ``null`` \| `string` \| [`CaptchaJobPayload`](../interfaces/CaptchaJobPayload.md) \| [`InputLocation`](../interfaces/InputLocation.md) \| [`RestorePasswordPayload`](../interfaces/RestorePasswordPayload.md) \| [`LoginPayload`](../README.md#loginpayload) \| [`RegistrationPayload`](../README.md#registrationpayload) \| [`UpdateUserDataPayload`](../README.md#updateuserdatapayload) \| [`OTPRequestPayload`](../interfaces/OTPRequestPayload.md) |
 | `R` | `R` |
 
 #### Parameters

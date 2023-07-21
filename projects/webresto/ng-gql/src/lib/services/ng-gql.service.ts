@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@angular/core';
-import { OperationVariables } from '@apollo/client';
-import { createSubject, deepClone, isValue } from '@axrl/common';
-import type { ExtraSubscriptionOptions } from 'apollo-angular';
-import type { Observable } from 'rxjs';
-import { BehaviorSubject, exhaustMap, filter, map, of, tap } from 'rxjs';
+import {Inject, Injectable} from '@angular/core';
+import {OperationVariables} from '@apollo/client';
+import {createSubject, deepClone, isValue} from '@axrl/common';
+import type {ExtraSubscriptionOptions} from 'apollo-angular';
+import type {Observable} from 'rxjs';
+import {BehaviorSubject, exhaustMap, filter, map, of, tap} from 'rxjs';
 import type {
   CheckPhoneCodeInput,
   CheckPhoneResponse,
@@ -26,9 +26,10 @@ import {
   GROUP_FRAGMENTS,
   MAINTENANCE_FRAGMENTS,
   NAVIGATION_FRAGMENTS,
+  NG_GQL_CONFIG,
 } from '../models';
-import { NgGqlStorageService } from './ng-gql-storage.service';
-import { QueryGenerationParam, RequestService } from './request.service';
+import {NgGqlStorageService} from './ng-gql-storage.service';
+import {QueryGenerationParam, RequestService} from './request.service';
 
 @Injectable()
 /** Основной сервис для работы с библиотекой. Содержит все необходимые методы для управления сайтом. */
@@ -36,14 +37,14 @@ export class NgGqlService {
   constructor(
     private requestService: RequestService,
     private storage: NgGqlStorageService,
-    @Inject('NG_GQL_CONFIG') private config: NgGqlConfig,
+    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig,
     @Inject(NAVIGATION_FRAGMENTS)
     private defaultNavigationFragments: ValuesOrBoolean<Navigation>,
     @Inject(MAINTENANCE_FRAGMENTS)
     private defaultMaintenanceFragments: ValuesOrBoolean<Maintenance>,
     @Inject(GROUP_FRAGMENTS)
     private defaultGroupFragments: ValuesOrBoolean<Group>,
-    @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>
+    @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>,
   ) {}
 
   private _pendingLoadNavBar = createSubject<boolean>(false);
@@ -59,9 +60,7 @@ export class NgGqlService {
    * @param options - объект NavigationLoader. Обязателен, при использовании нестандартной схемы навигации в приложении.
    * @see @interface NavigationLoader<T>
    */
-  getNavigation$<T extends NavigationBase>(
-    options: NavigationLoader<T>
-  ): Observable<T[]>;
+  getNavigation$<T extends NavigationBase>(options: NavigationLoader<T>): Observable<T[]>;
   /**
    * @method getNavigation$()
    * Используется для получения массива обьектов навигации для различных компонентов приложения.
@@ -78,20 +77,20 @@ export class NgGqlService {
    * @see @interface NavigationLoader<T>
    */
   getNavigation$<T extends NavigationBase = Navigation>(
-    options?: NavigationLoader<T>
+    options?: NavigationLoader<T>,
   ): Observable<T[]> {
     return this._pendingLoadNavigation.asObservable().pipe(
-      filter((pending) => !pending),
-      exhaustMap(() => this._loadNavigation(options))
+      filter(pending => !pending),
+      exhaustMap(() => this._loadNavigation(options)),
     );
   }
 
   private _loadNavigation<T extends NavigationBase = Navigation>(
-    options?: NavigationLoader<T>
+    options?: NavigationLoader<T>,
   ): Observable<T[]> {
     this._pendingLoadNavigation.next(true);
     return this.storage.navigation.pipe(
-      exhaustMap((data) => {
+      exhaustMap(data => {
         return isValue(data)
           ? of(<T[]>data)
           : this.requestService
@@ -99,34 +98,27 @@ export class NgGqlService {
                 options?.nameQuery ?? 'navigation',
                 options?.nameSubscribe ?? 'navigation',
                 options?.queryObject ??
-                  <NavigationLoader<T>['queryObject']>(
-                    this.defaultNavigationFragments
-                  ),
+                  <NavigationLoader<T>['queryObject']>this.defaultNavigationFragments,
                 options?.uniqueKeyForCompareItem ??
-                  <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId'
+                  <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId',
               )
               .pipe(
-                map((navigationData) => {
+                map(navigationData => {
                   this.storage.updateNavigation(navigationData);
                   return navigationData;
-                })
+                }),
               );
       }),
-      tap(() => this._pendingLoadNavigation.next(false))
+      tap(() => this._pendingLoadNavigation.next(false)),
     );
   }
 
   getMaintenance$(): Observable<Maintenance> {
     return this.requestService
-      .queryAndSubscribe(
-        'maintenance',
-        'maintenance',
-        this.defaultMaintenanceFragments,
-        'id'
-      )
+      .queryAndSubscribe('maintenance', 'maintenance', this.defaultMaintenanceFragments, 'id')
       .pipe(
-        filter((result) => result.length > 0),
-        map((res) => res[0])
+        filter(result => result.length > 0),
+        map(res => res[0]),
       );
   }
 
@@ -139,46 +131,36 @@ export class NgGqlService {
    */
   getGroup(slug: string, concept: string = 'origin') {
     const getIdsFromPartialDish = (dishes?: Partial<Group>[]) =>
-      dishes
-        ?.map((dish) => dish.id)
-        .filter((id): id is string => isValue(id)) ?? [];
+      dishes?.map(dish => dish.id).filter((id): id is string => isValue(id)) ?? [];
 
     return this.storage.groups.pipe(
-      exhaustMap((groups) => {
-        const group = groups.find((g) => g.slug === slug);
+      exhaustMap(groups => {
+        const group = groups.find(g => g.slug === slug);
         if (isValue(group)) {
           return of(group);
         } else {
           return this.requestService
-            .customQuery$<Group, 'group', VCriteria>(
-              'group',
-              this.defaultGroupFragments,
-              {
-                criteria: {
-                  slug,
-                  concept,
-                },
-              }
-            )
+            .customQuery$<Group, 'group', VCriteria>('group', this.defaultGroupFragments, {
+              criteria: {
+                slug,
+                concept,
+              },
+            })
             .pipe(
-              map((data) => {
-                const group = deepClone(
-                  Array.isArray(data.group) ? data.group[0] : data.group
-                );
+              map(data => {
+                const group = deepClone(Array.isArray(data.group) ? data.group[0] : data.group);
 
                 group.dishesIds = getIdsFromPartialDish(group.dishes);
-                group.childGroups.forEach((childGroup) => {
-                  childGroup.dishesIds = getIdsFromPartialDish(
-                    childGroup.dishes
-                  );
+                group.childGroups.forEach(childGroup => {
+                  childGroup.dishesIds = getIdsFromPartialDish(childGroup.dishes);
                 });
                 groups.push(group);
                 this.storage.updateMenuGroups(groups);
                 return group;
-              })
+              }),
             );
         }
-      })
+      }),
     );
   }
 
@@ -195,7 +177,7 @@ export class NgGqlService {
         ? sourceDish.modifiers.map((groupModifier, groupIndex) => ({
             ...groupModifier,
             childModifiers: groupModifier.childModifiers
-              ?.filter((childModifier) => isValue(childModifier.dish))
+              ?.filter(childModifier => isValue(childModifier.dish))
               .map((childModifier, childIndex) => ({
                 ...childModifier,
                 amount:
@@ -214,60 +196,47 @@ export class NgGqlService {
 
   getDishes$(ids: string[]): Observable<Dish[]> {
     return this.storage.dishes.pipe(
-      exhaustMap((dishes) => {
-        const dishesInStock = dishes.filter((item) => ids.includes(item.id));
+      exhaustMap(dishes => {
+        const dishesInStock = dishes.filter(item => ids.includes(item.id));
 
         if (dishesInStock.length == ids.length) {
           return of(dishesInStock);
         } else {
-          const dishesNotInStock = ids.filter(
-            (dishId) => !dishes.find((dish) => dish.id === dishId)
-          );
+          const dishesNotInStock = ids.filter(dishId => !dishes.find(dish => dish.id === dishId));
           return this.requestService
-            .customQuery$<Dish, 'dish', VCriteria>(
-              'dish',
-              this.defaultDishFragments,
-              {
-                criteria: {
-                  id: dishesNotInStock,
-                },
-              }
-            )
+            .customQuery$<Dish, 'dish', VCriteria>('dish', this.defaultDishFragments, {
+              criteria: {
+                id: dishesNotInStock,
+              },
+            })
             .pipe(
-              map((loadedDishes) => {
+              map(loadedDishes => {
                 const result = (
-                  Array.isArray(loadedDishes.dish)
-                    ? loadedDishes.dish
-                    : [loadedDishes.dish]
-                ).map((dish) => this.addAmountToDish(dish));
+                  Array.isArray(loadedDishes.dish) ? loadedDishes.dish : [loadedDishes.dish]
+                ).map(dish => this.addAmountToDish(dish));
                 dishes.push(...result);
                 this.storage.updateDishes(dishes);
                 return [...dishesInStock, ...result];
-              })
+              }),
             );
         }
-      })
+      }),
     );
   }
 
-  getNavBarMenu(
-    concept?: string,
-    topLevelGroupId?: string
-  ): Observable<NavbarMenuLink[]> {
+  getNavBarMenu(concept?: string, topLevelGroupId?: string): Observable<NavbarMenuLink[]> {
     return this._pendingLoadNavBar.asObservable().pipe(
-      filter((pending) => !pending),
-      exhaustMap(() => this._loadNavBarMenu(concept, topLevelGroupId))
+      filter(pending => !pending),
+      exhaustMap(() => this._loadNavBarMenu(concept, topLevelGroupId)),
     );
   }
 
   private _loadNavBarMenu(concept?: string, topLevelGroupId?: string) {
     this._pendingLoadNavBar.next(true);
     return this.storage.navBarMenus.pipe(
-      exhaustMap((items) => {
+      exhaustMap(items => {
         const item = items.find(
-          (element) =>
-            element.concept === concept &&
-            element.topLevelGroupId === topLevelGroupId
+          element => element.concept === concept && element.topLevelGroupId === topLevelGroupId,
         );
         return isValue(item)
           ? of(item.menu)
@@ -279,20 +248,15 @@ export class NgGqlService {
                 icon: true,
               })
               .pipe(
-                map((data) => {
-                  const result = Array.isArray(data.menu)
-                    ? data.menu
-                    : [data.menu];
-                  const newItems = [
-                    ...items,
-                    { concept, topLevelGroupId, menu: result },
-                  ];
+                map(data => {
+                  const result = Array.isArray(data.menu) ? data.menu : [data.menu];
+                  const newItems = [...items, {concept, topLevelGroupId, menu: result}];
                   this.storage.updateNavBarMenus(newItems);
                   return result;
-                })
+                }),
               );
       }),
-      tap(() => this._pendingLoadNavBar.next(false))
+      tap(() => this._pendingLoadNavBar.next(false)),
     );
   }
 
@@ -304,7 +268,7 @@ export class NgGqlService {
    */
   isKnownPhone$(
     phone: Phone,
-    customvOb?: ValuesOrBoolean<PhoneKnowledge>
+    customvOb?: ValuesOrBoolean<PhoneKnowledge>,
   ): Observable<PhoneKnowledge[]> {
     const phonevOb: ValuesOrBoolean<PhoneKnowledge> = {
       id: true,
@@ -314,30 +278,22 @@ export class NgGqlService {
       codeTime: true,
       confirmCode: true,
     };
-    const vOb = customvOb ? { ...phonevOb, ...customvOb } : phonevOb;
+    const vOb = customvOb ? {...phonevOb, ...customvOb} : phonevOb;
     return this.requestService
-      .customQuery$<PhoneKnowledge, 'isKnownPhone', { phone: Phone }>(
+      .customQuery$<PhoneKnowledge, 'isKnownPhone', {phone: Phone}>(
         'isKnownPhone',
         vOb,
-        { phone },
-        { fieldsTypeMap: new Map([['phone', 'Phone!']]) }
+        {phone},
+        {fieldsTypeMap: new Map([['phone', 'Phone!']])},
       )
       .pipe(
-        map((data) =>
-          Array.isArray(data.isKnownPhone)
-            ? data.isKnownPhone
-            : [data.isKnownPhone]
-        )
+        map(data => (Array.isArray(data.isKnownPhone) ? data.isKnownPhone : [data.isKnownPhone])),
       );
   }
 
   phoneKnowledgeGetCode$(phone: Phone): Observable<CheckPhoneResponse[]> {
     return this.requestService
-      .customQuery$<
-        CheckPhoneResponse,
-        'phoneKnowledgeGetCode',
-        { phone: Phone }
-      >(
+      .customQuery$<CheckPhoneResponse, 'phoneKnowledgeGetCode', {phone: Phone}>(
         'phoneKnowledgeGetCode',
         {
           type: true,
@@ -346,27 +302,21 @@ export class NgGqlService {
           confirmed: true,
           firstbuy: true,
         },
-        { phone },
-        { fieldsTypeMap: new Map([['phone', 'Phone!']]) }
+        {phone},
+        {fieldsTypeMap: new Map([['phone', 'Phone!']])},
       )
       .pipe(
-        map((data) =>
+        map(data =>
           Array.isArray(data.phoneKnowledgeGetCode)
             ? data.phoneKnowledgeGetCode
-            : [data.phoneKnowledgeGetCode]
-        )
+            : [data.phoneKnowledgeGetCode],
+        ),
       );
   }
 
-  phoneKnowledgeSetCode$(
-    data: CheckPhoneCodeInput
-  ): Observable<CheckPhoneResponse> {
+  phoneKnowledgeSetCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
     return this.requestService
-      .customMutation$<
-        CheckPhoneResponse,
-        'phoneKnowledgeSetCode',
-        CheckPhoneCodeInput
-      >(
+      .customMutation$<CheckPhoneResponse, 'phoneKnowledgeSetCode', CheckPhoneCodeInput>(
         'phoneKnowledgeSetCode',
         {
           type: true,
@@ -381,37 +331,31 @@ export class NgGqlService {
             ['phone', 'Phone!'],
             ['code', 'String!'],
           ]),
-        }
+        },
       )
-      .pipe(map((result) => result.phoneKnowledgeSetCode));
+      .pipe(map(result => result.phoneKnowledgeSetCode));
   }
 
   destroy() {
     Object.values(this)
       .filter(
-        (property): property is BehaviorSubject<unknown> =>
-          property instanceof BehaviorSubject
+        (property): property is BehaviorSubject<unknown> => property instanceof BehaviorSubject,
       )
-      .forEach((property) => property.complete());
+      .forEach(property => property.complete());
   }
 
   /** @deprecated. Use RequestService methods instead */
   customQuery$<
     T extends {},
     N extends `${string}`,
-    V extends OperationVariables = GQLRequestVariables
+    V extends OperationVariables = GQLRequestVariables,
   >(
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables?: V,
-    paramOptions?: QueryGenerationParam<V>
+    paramOptions?: QueryGenerationParam<V>,
   ): Observable<Record<N, T | T[]>> {
-    return this.requestService.customQuery$(
-      name,
-      queryObject,
-      variables,
-      paramOptions
-    );
+    return this.requestService.customQuery$(name, queryObject, variables, paramOptions);
   }
 
   /** @deprecated. Use RequestService methods instead */
@@ -419,35 +363,20 @@ export class NgGqlService {
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables: V,
-    paramOptions?: QueryGenerationParam<V>
+    paramOptions?: QueryGenerationParam<V>,
   ): Observable<Record<N, T>> {
-    return this.requestService.customMutation$(
-      name,
-      queryObject,
-      variables,
-      paramOptions
-    );
+    return this.requestService.customMutation$(name, queryObject, variables, paramOptions);
   }
 
   /** @deprecated. Use RequestService methods instead */
-  customSubscribe$<
-    T extends {},
-    N extends `${string}`,
-    V = GQLRequestVariables
-  >(
+  customSubscribe$<T extends {}, N extends `${string}`, V = GQLRequestVariables>(
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables?: V,
     paramOptions?: QueryGenerationParam<V>,
-    extra?: ExtraSubscriptionOptions
+    extra?: ExtraSubscriptionOptions,
   ): Observable<Record<N, T>[N]> {
-    return this.requestService.customSubscribe$(
-      name,
-      queryObject,
-      variables,
-      paramOptions,
-      extra
-    );
+    return this.requestService.customSubscribe$(name, queryObject, variables, paramOptions, extra);
   }
 
   /** @deprecated. Use RequestService methods instead */
@@ -455,11 +384,8 @@ export class NgGqlService {
     T extends {},
     NQuery extends `${string}`,
     NSubscribe extends `${string}`,
-    VQ extends OperationVariables = Exclude<
-      GQLRequestVariables,
-      'query' | 'subscribe'
-    >,
-    VS = Exclude<GQLRequestVariables, 'query' | 'subscribe'>
+    VQ extends OperationVariables = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
+    VS = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
   >(
     nameQuery: NQuery,
     nameSubscribe: NSubscribe,
@@ -472,7 +398,7 @@ export class NgGqlService {
     paramOptions?: {
       query?: QueryGenerationParam<VQ>;
       subscribe?: QueryGenerationParam<VS>;
-    }
+    },
   ): Observable<T[]> {
     return this.requestService.queryAndSubscribe(
       nameQuery,
@@ -480,7 +406,7 @@ export class NgGqlService {
       queryObject,
       uniqueKeyForCompareItem,
       variables,
-      paramOptions
+      paramOptions,
     );
   }
 }

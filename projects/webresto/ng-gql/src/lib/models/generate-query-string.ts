@@ -1,4 +1,4 @@
-import { isValue, objectEntries, objectKeys } from '@axrl/common';
+import {isValue, objectEntries, objectKeys} from '@axrl/common';
 
 /**
  * @alias VCriteria
@@ -22,44 +22,41 @@ export type GQLRequestVariables =
   | Record<string, number | string | Object | boolean | null | undefined>
   | VCriteria;
 
-function makeFieldList<
-  T extends {} | string | boolean | number | bigint | Symbol | null,
-  V
->(source: T, name: string, indent: number = 1, variables?: V): string {
+function makeFieldList<T extends {} | string | boolean | number | bigint | Symbol | null, V>(
+  source: T,
+  name: string,
+  indent: number = 1,
+  variables?: V,
+): string {
   const indentString = new Array<string>(indent * 2).fill(' ').join('');
   const isObjectWithProperties =
-    typeof source === 'object' &&
-    isValue(source) &&
-    objectKeys(source).length > 0;
+    typeof source === 'object' && isValue(source) && objectKeys(source).length > 0;
 
   return `${name}${
     indent === 1 && variables
       ? `(${objectKeys(variables)
-          .filter((key) => isValue(variables[key]))
-          .map((key) => `${String(key)}:$${String(key)}`)
+          .filter(key => isValue(variables[key]))
+          .map(key => `${String(key)}:$${String(key)}`)
           .join(',')})`
       : ''
   } ${isObjectWithProperties ? '  {\n' : ''} ${indentString}${
     isObjectWithProperties
       ? objectEntries(source)
-          .filter(
-            (entry) =>
-              typeof entry[1] !== 'function' && entry[0] !== '__typename'
-          )
-          .map((entry) =>
-            typeof entry[1] === 'object' &&
-            entry[1] !== undefined &&
-            entry[1] !== null
+          .filter(entry => typeof entry[1] !== 'function' && entry[0] !== '__typename')
+          .map(([entry0, entry1]) =>
+            typeof entry1 === 'object' && entry1 !== undefined && entry1 !== null
               ? makeFieldList(
-                  Array.isArray(entry[1]) && entry[1][0]
-                    ? entry[1][0]
-                    : entry[1],
-                  String(entry[0]),
-                  indent + 1
+                  Array.isArray(entry1) && (<Array<unknown>>entry1)[0]
+                    ? (<Array<string | number | bigint | boolean | {} | unknown[] | Symbol | null>>(
+                        entry1
+                      ))[0]
+                    : entry1,
+                  String(entry0),
+                  indent + 1,
                 )
-              : typeof entry[1] === 'string' && entry[1].includes('Fragment')
-              ? `${String(entry[0])} : {...${entry[1]}}`
-              : String(entry[0])
+              : typeof entry1 === 'string' && (<string>entry1).includes('Fragment')
+              ? `${String(entry0)} : {...${entry1}}`
+              : String(entry0),
           )
           .join(`,\n  ${indentString}`)
       : ''
@@ -86,7 +83,7 @@ function makeFieldList<
 export function generateQueryString<
   T extends {} | string | boolean | number | bigint | Symbol | null,
   N extends `${string}`,
-  GQLRequestVariables
+  GQLRequestVariables,
 >(options: {
   name: N;
   queryObject: T;
@@ -94,13 +91,13 @@ export function generateQueryString<
   requiredFields?: (keyof GQLRequestVariables)[];
   fieldsTypeMap?: Map<keyof GQLRequestVariables, string>;
 }) {
-  const { name, queryObject, variables } = options;
+  const {name, queryObject, variables} = options;
 
   const getGqlType = <K extends keyof GQLRequestVariables>(
     key: K,
     value: GQLRequestVariables[K],
     optionalField: boolean = false,
-    fieldsTypeMap?: Map<keyof GQLRequestVariables, string>
+    fieldsTypeMap?: Map<keyof GQLRequestVariables, string>,
   ): string => {
     switch (true) {
       case isValue(fieldsTypeMap) && fieldsTypeMap.has(key):
@@ -114,23 +111,21 @@ export function generateQueryString<
       case typeof value === 'object':
         return optionalField ? 'Json!' : 'Json';
       default:
-        throw new Error(
-          'Параметр должен принадлежать типам number, string, object или boolean'
-        );
+        throw new Error('Параметр должен принадлежать типам number, string, object или boolean');
     }
   };
   return ` load${name[0].toUpperCase() + name.slice(1)} ${
     isValue(variables)
       ? `(${objectKeys(variables)
-          .filter((key) => isValue(variables[key]))
-          .map((k) => {
+          .filter(key => isValue(variables[key]))
+          .map(k => {
             const key = <keyof GQLRequestVariables>k;
 
             return `$${String(key)}:${getGqlType(
               key,
               variables[key],
               options.requiredFields && options.requiredFields.includes(key),
-              options.fieldsTypeMap
+              options.fieldsTypeMap,
             )}`;
           })
           .join(',')})`
