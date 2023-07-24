@@ -11,10 +11,12 @@ import type {
   GQLRequestVariables,
   Group,
   Maintenance,
+  NavBarLinkItem,
   NavbarMenuLink,
   Navigation,
   NavigationBase,
   NavigationLoader,
+  NavigationsMenuItem,
   NgGqlConfig,
   Phone,
   PhoneKnowledge,
@@ -110,6 +112,47 @@ export class NgGqlService {
               );
       }),
       tap(() => this._pendingLoadNavigation.next(false)),
+    );
+  }
+
+  /** Список ссылок для необходимого раздела навигации */
+  getNavigationPoints(slug: 'header' | 'footer' | 'social' | string) {
+    return this.getNavigation$().pipe(
+      map(data =>
+        (data.find(item => item.mnemonicId == slug)?.navigation_menu || [])
+          .filter(
+            item =>
+              isValue(item.link) && item.active && (!isValue(item.visible) || item.visible == true),
+          )
+          .map(
+            item =>
+              <NavigationsMenuItem>{
+                label: item.label,
+                link:
+                  item.link[0] == '/' || item.link.includes('http') ? item.link : `/${item.link}`,
+                active: item.active ?? true,
+                visible: item.visible ?? true,
+                icon: item.icon ? `app-${item.icon.replace('app-', '')}` : undefined,
+                groupSlug: item.groupSlug,
+              },
+          ),
+      ),
+    );
+  }
+
+  /** Возвращает ссылку на страницу, которая будет стартовой для меню */
+  getStartMenuSlug() {
+    return this.getNavBarMenu().pipe(
+      map(menu => {
+        const navbarmenu: NavBarLinkItem[] = menu.map(group => ({
+          id: group.id,
+          name: group.name,
+          icon: group.icon,
+          link: [[`/menu/${group.slug}`], undefined],
+        }));
+
+        return navbarmenu[0].link;
+      }),
     );
   }
 

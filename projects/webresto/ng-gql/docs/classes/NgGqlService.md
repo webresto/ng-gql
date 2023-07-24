@@ -10,6 +10,8 @@
 
 - [getNgGqlConfig](NgGqlService.md#getnggqlconfig)
 - [getNavigation$](NgGqlService.md#getnavigation$)
+- [getNavigationPoints](NgGqlService.md#getnavigationpoints)
+- [getStartMenuSlug](NgGqlService.md#getstartmenuslug)
 - [getMaintenance$](NgGqlService.md#getmaintenance$)
 - [getGroup](NgGqlService.md#getgroup)
 - [addAmountToDish](NgGqlService.md#addamounttodish)
@@ -94,6 +96,36 @@ getNavigation$()
 #### Returns
 
 `Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
+
+___
+
+### getNavigationPoints
+
+▸ **getNavigationPoints**(`slug`): `Observable`<[`NavigationsMenuItem`](../interfaces/NavigationsMenuItem.md)[]\>
+
+Список ссылок для необходимого раздела навигации
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `slug` | `string` |
+
+#### Returns
+
+`Observable`<[`NavigationsMenuItem`](../interfaces/NavigationsMenuItem.md)[]\>
+
+___
+
+### getStartMenuSlug
+
+▸ **getStartMenuSlug**(): `Observable`<[`string`[], `undefined` \| `string`]\>
+
+Возвращает ссылку на страницу, которая будет стартовой для меню
+
+#### Returns
+
+`Observable`<[`string`[], `undefined` \| `string`]\>
 
 ___
 
