@@ -18,7 +18,7 @@ ___
 
 ### type
 
-• **type**: `string`
+• **type**: ``"info"`` \| ``"error"`` \| ``"warn"``
 
 ___
 

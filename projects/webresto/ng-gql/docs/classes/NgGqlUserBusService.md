@@ -29,7 +29,7 @@
 | Name | Type |
 | :------ | :------ |
 | `requestService` | [`RequestService`](RequestService.md) |
-| `ngGqlStorage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
+| `ngGqlStorage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
 | `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
 | `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |
 | `defaultCaptchaGetJobFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |

@@ -12,7 +12,7 @@ export class EventMessage {
 
 export interface Message {
   title: string;
-  type: string;
+  type: 'info' | 'error' | 'warn';
   message: string;
 }
 

@@ -38,7 +38,7 @@
 | Name | Type |
 | :------ | :------ |
 | `requestService` | [`RequestService`](RequestService.md) |
-| `ngGqlStorage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
+| `ngGqlStorage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
 | `_userBus` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
 | `defaultUserOrderHystoryFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)\> |
 | `defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |

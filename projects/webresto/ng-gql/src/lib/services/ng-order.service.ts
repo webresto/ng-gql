@@ -1,7 +1,7 @@
-import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { isValue } from '@axrl/common';
-import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
-import type { BehaviorSubject, Observable } from 'rxjs';
+import {EventEmitter, Inject, Injectable} from '@angular/core';
+import {createSubject, isValue} from '@axrl/common';
+import type {FormGroupType} from '@axrl/ngx-extended-form-builder';
+import type {BehaviorSubject, Observable} from 'rxjs';
 import {
   catchError,
   combineLatest,
@@ -33,6 +33,7 @@ import type {
   RemoveOrSetAmountToDish,
   SendOrderInput,
   SetDishCommentInput,
+  User,
   ValuesOrBoolean,
 } from '../models';
 import {
@@ -43,150 +44,40 @@ import {
   ORDER_FRAGMENTS,
   PAYMENT_METHOD_FRAGMENTS,
 } from '../models';
-import { NgGqlStorageService } from './ng-gql-storage.service';
-import { NgGqlUserBusService } from './ng-gql-user-bus.service';
-import { NgGqlService } from './ng-gql.service';
-import { RequestService } from './request.service';
-import { NqGqlLocalStorageWrapper } from './storage-wrapper';
+import {NgGqlStoreService} from './ng-gql-storage.service';
+import {NgGqlUserBusService} from './ng-gql-user-bus.service';
+import {NgGqlUserService} from './ng-gql-user.service';
+import {NgGqlService} from './ng-gql.service';
+import {RequestService} from './request.service';
+import {NqGqlLocalStorageWrapper} from './storage-wrapper';
 
 @Injectable()
 export class NgOrderService {
-  constructor(
-    private requestService: RequestService,
-    private storage: NgGqlStorageService,
-    private storageWrapper: NqGqlLocalStorageWrapper,
-    private userBusService: NgGqlUserBusService,
-    private ngGqlService: NgGqlService,
-    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig,
-    @Inject(PAYMENT_METHOD_FRAGMENTS)
-    private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
-    @Inject(ACTION_FRAGMENTS)
-    private defaultActionFragments: ValuesOrBoolean<Action>,
-    @Inject(MESSAGE_FRAGMENTS)
-    private defaultMessageFragments: ValuesOrBoolean<Message>,
-    @Inject(ORDER_FRAGMENTS)
-    private defaultOrderFragments: ValuesOrBoolean<Order>,
-    @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>
-  ) {}
-
-  /**
-   * @method updateStorageOrderIdToken()
-   * @see this.StorageWrapper.updateStorageOrderIdToken()
-   */
-  updateStorageOrderIdToken(newToken: string) {
-    this.storageWrapper.updateStorageOrderIdToken(newToken);
-  }
-
-  /**
-   * @method getOrderId()
-   * @see this.StorageWrapper.getOrderId()
-   */
-  getOrderId(storageOrderIdToken: string, storageOrderId?: string) {
-    return this.storageWrapper.getOrderId(storageOrderIdToken, storageOrderId);
-  }
-
-  /**
-   * @method setOrderId()
-   * @see this.StorageWrapper.setOrderId()
-   */
-  setOrderId(orderId: string, storageOrderIdToken?: string) {
-    this.storageWrapper.setOrderId(orderId, storageOrderIdToken);
-  }
-
-  /**
-   * @method removeOrderId()
-   * @see this.StorageWrapper.removeOrderId()
-   */
-  removeOrderId(newOrderId?: string) {
-    this.storageWrapper.removeOrderId(newOrderId);
-  }
-
-  paymentLink$(
-    phone: string,
-    fromPhone: string,
-    orderId: string
-  ): Observable<any> {
-    console.log('paymentLink', orderId, phone, fromPhone);
-    return this.requestService
-      .customMutation$(
-        'paymentLink',
-        {
-          paymentLink: 1,
-        },
-        orderId
-          ? {
-              orderId,
-              phone,
-              fromPhone,
-            }
-          : {
-              phone,
-              fromPhone,
-            }
-      )
-      .pipe(
-        catchError((error) => {
-          console.log('error', error);
-          if (this.config.debugMode) {
-            alert(error);
-          }
-          this.emitMessageEvent({
-            type: 'info',
-            title: 'Не удалось отправить ссылку для оплаты.',
-            message: error.message,
-          });
-          return of(() => {});
-        })
-      );
-  }
-
-  getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
-    return this.requestService
-      .customQuery$<PaymentMethod, 'paymentMethod', { orderId: string }>(
-        'paymentMethod',
-        this.defaultPaymentMethodFragments,
-        { orderId: orderId ?? '' },
-        {
-          fieldsTypeMap: new Map([['orderId', 'String!']]),
-        }
-      )
-      .pipe(
-        map((data) =>
-          (Array.isArray(data.paymentMethod)
-            ? data.paymentMethod
-            : [data.paymentMethod]
-          ).filter((method) => method.enable)
-        )
-      );
-  }
+  private _orderBus = new EventEmitter<CartBusEvent>();
 
   private orderAndPaymentMethods$: Observable<{
     order: Order;
     methods: PaymentMethod[];
   }> = this.storageWrapper.storageOrderIdToken$.pipe(
-    switchMap((storageOrderIdToken) =>
+    switchMap(storageOrderIdToken =>
       fromEvent<StorageEvent>(window, 'storage', {
         passive: true,
       }).pipe(
-        startWith(
-          this.storageWrapper.startStorageEventFactory(storageOrderIdToken)
+        startWith(this.storageWrapper.startStorageEventFactory(storageOrderIdToken)),
+        filter(event => event.key === storageOrderIdToken),
+        map(event =>
+          this.storageWrapper.getOrderId(storageOrderIdToken, event.newValue ?? undefined),
         ),
-        filter((event) => event.key === storageOrderIdToken),
-        map((event) =>
-          this.storageWrapper.getOrderId(
-            storageOrderIdToken,
-            event.newValue ?? undefined
-          )
-        )
-      )
+      ),
     ),
     distinctUntilChanged(),
-    switchMap((storageOrderId) => {
+    switchMap(storageOrderId => {
       return combineLatest([
         this.getPaymentMethods$(storageOrderId),
         this.loadOrder$(storageOrderId).pipe(distinctUntilChanged()),
+        this.ngGqlUser.getUser$(),
       ]).pipe(
-        map(([methods, order]) => {
+        map(([methods, order, user]) => {
           if (!isValue(order.paymentMethod) && methods.length > 0) {
             order.paymentMethod = {
               id: methods[0].id,
@@ -196,114 +87,36 @@ export class NgOrderService {
           if (storageOrderId !== order.id) {
             this.setOrderId(order.id);
           }
+          if (isValue(user)) {
+            if (!order.customer) {
+              order.customer = {};
+            }
+
+            if (!isValue(order.customer.name)) {
+              order.customer.name = this.getOrderCustomerName(user);
+            }
+
+            if (!isValue(order.customer.phone)) {
+              order.customer.phone = {};
+            }
+
+            if (!isValue(order.customer.phone.code)) {
+              order.customer.phone.code = user.phone?.code ?? this.config.phoneCode;
+            }
+
+            if (!isValue(order.customer.phone.number)) {
+              order.customer.phone.number = user.phone?.number;
+            }
+          }
           this.storage.updateOrder(order);
           this.storage.updatePaymentMethods(methods);
 
-          return { methods, order };
-        })
+          return {methods, order};
+        }),
       );
     }),
-    shareReplay(1)
+    shareReplay(1),
   );
-
-  /**
-   * @method getOrderPaymentMethods$()
-   * @returns Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
-   */
-  getOrderPaymentMethods$(): Observable<PaymentMethod[]> {
-    return this.orderAndPaymentMethods$.pipe(
-      map((orderAndPaymentMethods) => orderAndPaymentMethods.methods)
-    );
-  }
-
-  /**
-   * @method () getOrder
-   * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
-   */
-  getOrder(): Observable<Order> {
-    return this.orderAndPaymentMethods$.pipe(
-      map((orderAndPaymentMethods) => orderAndPaymentMethods.order)
-    );
-  }
-
-  private _eventMessage: EventEmitter<Message> = new EventEmitter();
-  private _eventAction: EventEmitter<Action> = new EventEmitter();
-
-  /**
-   * Поток Observable, в который будут поступать события по текущему заказу в процессе оформления, подразумевающие совершение каких-либо действий на стороне фронта и выполняемых пользователем
-   * (переход на страницу оплаты или, к примеру, открытие диалогового окна с предложением блюда по акции, акции и т.п. )
-   * Для получения потока используется метод @method this.getActionEmitter()
-   * Для отправки в поток кастомных сообщений испльзуется @method this.emitActionEvent()
-   */
-  private _actions$ = this.requestService
-    .customSubscribe$<Action, 'action'>('action', this.defaultActionFragments)
-    .pipe(mergeWith(this._eventAction.asObservable()), shareReplay(1));
-
-  /**
-   * Поток Observable, в который будут поступать информационные сообщения по текущему заказу (блюдо добавлено/удалено/заказ оформлен).
-   * Для получения потока используется метод @method this.getMessageEmitter()
-   * Для отправки в поток кастомных сообщений испльзуется @method this.emitMessageEvent()
-   */
-  private _messages$ = this.requestService
-    .customSubscribe$<Message, 'message'>(
-      'message',
-      this.defaultMessageFragments
-    )
-    .pipe(mergeWith(this._eventMessage.asObservable()), shareReplay(1));
-
-  /**
-   * @method loadOrder$()
-   *
-   * Метод загружает заказ и делает подписку для получения по нему обновлений.
-   * Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
-   * (например, данные для страницы "Спасибо за заказ").
-   *
-   * @param id - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
-   *  */
-  loadOrder$(
-    id: string | undefined,
-    isShort: boolean = false
-  ): Observable<Order> {
-    return this.requestService
-      .queryAndSubscribe<
-        Order,
-        'order',
-        'order',
-        { orderId: string } | { shortId: string }
-      >(
-        'order',
-        'order',
-        this.defaultOrderFragments,
-        'id',
-        id
-          ? {
-              query: isShort ? { shortId: id } : { orderId: id },
-            }
-          : undefined,
-        undefined
-      )
-      .pipe(
-        map((values) => (values[0] ? values[0] : null)),
-        filter((order): order is Order => isValue(order)),
-        switchMap((order) => {
-          const dishesIds = order.dishes
-            .map((orderDish) => orderDish.dish?.id)
-            .filter((dishId): dishId is string => isValue(dishId));
-          return this.ngGqlService.getDishes$(dishesIds).pipe(
-            map((dishes) => {
-              order.dishes.forEach((orderDish) => {
-                orderDish.dish = dishes.find(
-                  (dish) => dish.id === orderDish.dish?.id
-                );
-              });
-              return order;
-            })
-          );
-        })
-      );
-  }
-
-  private _orderBus$ = new EventEmitter<CartBusEvent>();
 
   /**
    * Внутренний поток-шина для событий, ассоциированных с действиями, которыми необходимо выполнить с заказом (добавить/удалить блюдо, проверить заказ, отправить на проверку и тп.).
@@ -317,17 +130,11 @@ export class NgOrderService {
    * @see this.setDishAmount
    * @see this.setDishComment
    */
-  readonly orderBus$ = this.orderAndPaymentMethods$.pipe(
-    map((data) => data.order),
-    switchMap((order) =>
-      this._orderBus$
-        .asObservable()
-        .pipe(map((busEvent) => ({ busEvent, order })))
-    ),
-    concatMap(({ busEvent, order }) => {
-      const reducer = (
-        busEventData: CartBusEvent
-      ): Observable<Order | CheckResponse> => {
+  private readonly _orderBus$: Observable<void | (() => void)> = this.orderAndPaymentMethods$.pipe(
+    map(data => data.order),
+    switchMap(order => this._orderBus.asObservable().pipe(map(busEvent => ({busEvent, order})))),
+    concatMap(({busEvent, order}) => {
+      const reducer = (busEventData: CartBusEvent): Observable<Order | CheckResponse> => {
         switch (busEventData.event) {
           case 'add':
             return this.addDishToOrder$({
@@ -364,12 +171,20 @@ export class NgOrderService {
         }
       };
       return reducer(busEvent).pipe(
-        map((result) => {
+        map(result => {
           if (isValue(busEvent.loading)) {
             busEvent.loading.next(false);
           }
           if (isValue(busEvent.successCb)) {
             busEvent.successCb(<Order & CheckResponse>result);
+          }
+
+          if (isValue(result.message) && typeof result.message === 'object') {
+            this.requestService.emitMessageEvent(result.message);
+          }
+
+          if ('action' in result && isValue(result.action)) {
+            this.requestService.emitActionEvent(result.action);
           }
         }),
         catchError((err: unknown) => {
@@ -384,19 +199,191 @@ export class NgOrderService {
           }
           console.log(err);
           return of(() => {});
-        })
+        }),
       );
     }),
-    mergeWith(this.userBusService.userBus$)
+    mergeWith(this.userBusService.userBus$),
   );
 
   private _orderBusSubscription$ =
     this.config.busSubscribeMode === 'subscribe'
-      ? this.orderBus$.subscribe({
+      ? this._orderBus$.subscribe({
           next: () => {},
           error: () => {},
         })
       : undefined;
+
+  get orderBus$(): Observable<void | (() => void)> {
+    return this._orderBus$;
+  }
+
+  constructor(
+    private requestService: RequestService,
+    private storage: NgGqlStoreService,
+    private storageWrapper: NqGqlLocalStorageWrapper,
+    private userBusService: NgGqlUserBusService,
+    private ngGqlService: NgGqlService,
+    private ngGqlUser: NgGqlUserService,
+    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig,
+    @Inject(PAYMENT_METHOD_FRAGMENTS)
+    private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
+    @Inject(ORDER_FRAGMENTS)
+    private defaultOrderFragments: ValuesOrBoolean<Order>,
+    @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>,
+    @Inject(ACTION_FRAGMENTS)
+    private defaultActionFragments: ValuesOrBoolean<Action>,
+    @Inject(MESSAGE_FRAGMENTS)
+    private defaultMessageFragments: ValuesOrBoolean<Message>,
+  ) {}
+
+  /**
+   * @method updateStorageOrderIdToken()
+   * @see this.StorageWrapper.updateStorageOrderIdToken()
+   */
+  updateStorageOrderIdToken(newToken: string): void {
+    this.storageWrapper.updateStorageOrderIdToken(newToken);
+  }
+
+  /**
+   * @method getOrderId()
+   * @see this.StorageWrapper.getOrderId()
+   */
+  getOrderId(storageOrderIdToken: string, storageOrderId?: string): string {
+    return this.storageWrapper.getOrderId(storageOrderIdToken, storageOrderId);
+  }
+
+  /**
+   * @method setOrderId()
+   * @see this.StorageWrapper.setOrderId()
+   */
+  setOrderId(orderId: string, storageOrderIdToken?: string): void {
+    this.storageWrapper.setOrderId(orderId, storageOrderIdToken);
+  }
+
+  /**
+   * @method removeOrderId()
+   * @see this.StorageWrapper.removeOrderId()
+   */
+  removeOrderId(newOrderId?: string): void {
+    this.storageWrapper.removeOrderId(newOrderId);
+  }
+
+  paymentLink$(phone: string, fromPhone: string, orderId: string): Observable<any> {
+    console.log('paymentLink', orderId, phone, fromPhone);
+    return this.requestService
+      .customMutation$(
+        'paymentLink',
+        {
+          paymentLink: 1,
+        },
+        orderId
+          ? {
+              orderId,
+              phone,
+              fromPhone,
+            }
+          : {
+              phone,
+              fromPhone,
+            },
+      )
+      .pipe(
+        catchError(error => {
+          console.log('error', error);
+          if (this.config.debugMode) {
+            alert(error);
+          }
+          this.requestService.emitMessageEvent({
+            type: 'info',
+            title: 'Не удалось отправить ссылку для оплаты.',
+            message: error.message,
+          });
+          return of(() => {});
+        }),
+      );
+  }
+
+  getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
+    return this.requestService
+      .customQuery$<PaymentMethod, 'paymentMethod', {orderId: string}>(
+        'paymentMethod',
+        this.defaultPaymentMethodFragments,
+        {orderId: orderId ?? ''},
+        {
+          fieldsTypeMap: new Map([['orderId', 'String!']]),
+        },
+      )
+      .pipe(
+        map(data =>
+          (Array.isArray(data.paymentMethod) ? data.paymentMethod : [data.paymentMethod]).filter(
+            method => method.enable,
+          ),
+        ),
+      );
+  }
+
+  /**
+   * @method getOrderPaymentMethods$()
+   * @returns Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
+   */
+  getOrderPaymentMethods$(): Observable<PaymentMethod[]> {
+    return this.orderAndPaymentMethods$.pipe(
+      map(orderAndPaymentMethods => orderAndPaymentMethods.methods),
+    );
+  }
+
+  /**
+   * @method () getOrder
+   * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
+   */
+  getOrder(): Observable<Order> {
+    return this.orderAndPaymentMethods$.pipe(
+      map(orderAndPaymentMethods => orderAndPaymentMethods.order),
+    );
+  }
+
+  /**
+   * @method loadOrder$()
+   *
+   * Метод загружает заказ и делает подписку для получения по нему обновлений.
+   * Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
+   * (например, данные для страницы "Спасибо за заказ").
+   *
+   * @param id - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
+   *  */
+  loadOrder$(id: string | undefined, isShort: boolean = false): Observable<Order> {
+    return this.requestService
+      .queryAndSubscribe<Order, 'order', 'order', {orderId: string} | {shortId: string}>(
+        'order',
+        'order',
+        this.defaultOrderFragments,
+        'id',
+        id
+          ? {
+              query: isShort ? {shortId: id} : {orderId: id},
+            }
+          : undefined,
+        undefined,
+      )
+      .pipe(
+        map(values => (values[0] ? values[0] : null)),
+        filter((order): order is Order => isValue(order)),
+        switchMap(order => {
+          const dishesIds = order.dishes
+            .map(orderDish => orderDish.dish?.id)
+            .filter((dishId): dishId is string => isValue(dishId));
+          return this.ngGqlService.getDishes$(dishesIds).pipe(
+            map(dishes => {
+              order.dishes.forEach(orderDish => {
+                orderDish.isLoading = createSubject<boolean>(false);
+                orderDish.dish = dishes.find(dish => dish.id === orderDish.dish?.id);
+              });
+              return order;
+            }),
+          );
+        }),
+      );
+  }
 
   /**
    * @method addToOrder()
@@ -412,29 +399,25 @@ export class NgOrderService {
     loading: BehaviorSubject<boolean>;
     dishId: string;
     amount?: number;
-    dishModifiers?: Partial<OrderModifier>[] | Partial<Modifier>[];
+    dishModifiers?: Array<Partial<OrderModifier>> | Array<Partial<Modifier>>;
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
     comment?: string;
     replacedOrderDishId?: number;
-  }) {
+  }): void {
     options.loading.next(true);
-    this._orderBus$.emit({
+    this._orderBus.emit({
       event: 'add',
       loading: options.loading,
       successCb: options.successCb,
       errorCb: options.errorCb,
       data: {
         dishId: options.dishId,
-        modifiers: (options.dishModifiers ?? []).map((dishModifier) => ({
-          id:
-            'id' in dishModifier
-              ? dishModifier.id
-              : (<Partial<Modifier>>dishModifier).modifierId,
+        modifiers: (options.dishModifiers ?? []).map(dishModifier => ({
+          id: 'id' in dishModifier ? dishModifier.id : (<Partial<Modifier>>dishModifier).modifierId,
           amount: dishModifier.amount,
           dish: dishModifier.dish,
-          groupId:
-            dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId,
+          groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId,
         })),
         amount: options.amount ?? 1,
         comment: options.comment,
@@ -461,7 +444,7 @@ export class NgOrderService {
     orderDishId: number;
   }): void {
     options.loading.next(true);
-    this._orderBus$.emit({
+    this._orderBus.emit({
       event: 'remove',
       loading: options.loading,
       successCb: options.successCb,
@@ -490,8 +473,8 @@ export class NgOrderService {
     loading: BehaviorSubject<boolean>;
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
-  }) {
-    this._orderBus$.emit({
+  }): void {
+    this._orderBus.emit({
       event: 'update',
       data: options.data,
       loading: options.loading,
@@ -512,7 +495,7 @@ export class NgOrderService {
     orderForm: FormGroupType<OrderForm>['value'];
     successCb?: (order: CheckResponse) => void;
     errorCb?: (err: unknown) => void;
-  }) {
+  }): void {
     if (
       isValue(options.orderForm.selfService) &&
       isValue(options.orderForm.paymentMethod) &&
@@ -541,7 +524,7 @@ export class NgOrderService {
         date: options.orderForm.date,
       };
 
-      this._orderBus$.emit({
+      this._orderBus.emit({
         event: 'check',
         successCb: options.successCb,
         errorCb: options.errorCb,
@@ -549,7 +532,8 @@ export class NgOrderService {
       });
     } else {
       throw new Error(
-        'В options.orderForm отсутствуют один или несколько обязательных параметров : selfService, paymentMethod, address, customer, customer.phone, customer.phone.code, customer.phone.number!'
+        `В options.orderForm отсутствуют один или несколько обязательных параметров :
+        selfService, paymentMethod, address, customer, customer.phone, customer.phone.code, customer.phone.number !`,
       );
     }
   }
@@ -568,8 +552,8 @@ export class NgOrderService {
     loading?: BehaviorSubject<boolean>;
     successCb?: (order: CheckResponse) => void;
     errorCb?: (err: unknown) => void;
-  }) {
-    this._orderBus$.emit({
+  }): void {
+    this._orderBus.emit({
       event: 'order',
       loading: options.loading,
       successCb: options.successCb,
@@ -594,8 +578,8 @@ export class NgOrderService {
     loading?: BehaviorSubject<boolean>;
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
-  }) {
-    this._orderBus$.emit({
+  }): void {
+    this._orderBus.emit({
       event: 'clone',
       loading: options.loading,
       successCb: options.successCb,
@@ -624,7 +608,7 @@ export class NgOrderService {
     errorCb?: (err: unknown) => void;
   }): void {
     options.loading.next(true);
-    this._orderBus$.emit({
+    this._orderBus.emit({
       event: 'setDishAmount',
       loading: options.loading,
       successCb: options.successCb,
@@ -651,9 +635,9 @@ export class NgOrderService {
     comment: string;
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
-  }) {
+  }): void {
     options.loading.next(true);
-    this._orderBus$.emit({
+    this._orderBus.emit({
       event: 'setCommentToDish',
       loading: options.loading,
       successCb: options.successCb,
@@ -665,81 +649,114 @@ export class NgOrderService {
     });
   }
 
-  private addDishToOrder$(data: AddToOrderInput): Observable<Order> {
-    return this.requestService
-      .customMutation$<Order, 'orderAddDish', AddToOrderInput>(
-        'orderAddDish',
-        this.defaultOrderFragments,
-        data
-      )
-      .pipe(map((data) => data.orderAddDish));
+  destroy(): void {
+    if (isValue(this._orderBusSubscription$)) {
+      this._orderBusSubscription$.unsubscribe();
+    }
+    this.storageWrapper.destroy();
+    Object.values(this)
+      .filter((property): property is EventEmitter<unknown> => property instanceof EventEmitter)
+      .forEach(property => property.complete());
   }
 
-  private removeDishFromOrder$(
-    data: RemoveOrSetAmountToDish
-  ): Observable<Order> {
-    return this.requestService
-      .customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>(
-        'orderRemoveDish',
-        this.defaultOrderFragments,
-        data,
-        { requiredFields: ['orderDishId', 'id'] }
-      )
-      .pipe(map((data) => data.orderRemoveDish));
+  getDishRecomended(dishId: string): Observable<Dish[]> {
+    return this.getOrder().pipe(
+      switchMap(order =>
+        this.requestService
+          .customQuery$<Dish, 'recomendedForDish'>('recomendedForDish', this.defaultDishFragments, {
+            dishId,
+          })
+          .pipe(
+            map(data => {
+              const orderDishes = order.dishes.map(orderDish => orderDish.dish?.id);
+              const array = Array.isArray(data.recomendedForDish)
+                ? data.recomendedForDish
+                : [data.recomendedForDish];
+              return array.filter(dish => !orderDishes.includes(dish.id));
+            }),
+          ),
+      ),
+    );
   }
 
-  private updateOrder$(
-    order: FormGroupType<OrderForm>['value']
-  ): Observable<Order> {
-    return this.requestService
-      .customMutation$<
-        Order,
-        'orderUpdate',
-        {
-          order: FormGroupType<OrderForm>['value'];
+  getOrderRecommended(): Observable<Dish[]> {
+    return this.getOrder().pipe(
+      switchMap(order =>
+        this.requestService
+          .customQuery$<Dish, 'recomendedForOrder'>(
+            'recomendedForOrder',
+            this.defaultDishFragments,
+            {orderId: order.id},
+          )
+          .pipe(
+            map(data => {
+              const orderDishes = order.dishes.map(orderDish => orderDish.dish?.id);
+              const array = Array.isArray(data.recomendedForOrder)
+                ? data.recomendedForOrder
+                : [data.recomendedForOrder];
+              return array.filter(dish => !orderDishes.includes(dish.id));
+            }),
+          ),
+      ),
+    );
+  }
+
+  private getOrderCustomerName(user: User | null): string | null {
+    if (isValue(user)) {
+      if (isValue(user.firstName) && isValue(user.lastName)) {
+        return `${user?.firstName ?? ''} ${user?.lastName ?? ''}`;
+      } else {
+        if (isValue(user.firstName)) {
+          return user.firstName;
+        } else {
+          return user.lastName;
         }
-      >('orderUpdate', this.defaultOrderFragments, { order })
-      .pipe(map((data) => data.orderUpdate));
+      }
+    } else {
+      return null;
+    }
   }
 
-  private sendOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
+  private checkOrder$(data: CheckOrderInput): Observable<CheckResponse> {
     return this.requestService
-      .customMutation$<CheckResponse, 'sendOrder', { orderId: string }>(
-        'sendOrder',
-        <ValuesOrBoolean<CheckResponse>>{
+      .customMutation$<CheckResponse, 'checkOrder', {orderCheckout: CheckOrderInput}>(
+        'checkOrder',
+        {
           order: this.defaultOrderFragments,
           message: this.defaultMessageFragments,
           action: this.defaultActionFragments,
         },
+        {orderCheckout: data},
         {
-          orderId: sendOrderData.orderId,
+          fieldsTypeMap: new Map([['orderCheckout', 'InputOrderCheckout']]),
         },
-        {
-          requiredFields: ['orderId'],
-        }
       )
-      .pipe(
-        map((data) => {
-          if (isValue(data)) {
-            if (isValue(sendOrderData.orderIdFactory)) {
-              const newOrderId = sendOrderData.orderIdFactory();
-              if (newOrderId) {
-                this.setOrderId(newOrderId);
-              } else {
-                this.removeOrderId(newOrderId);
-              }
-            } else {
-              this.removeOrderId();
-            }
-          }
-          return data.sendOrder;
-        })
-      );
+      .pipe(map(data => data.checkOrder));
+  }
+
+  private setDishAmount$(data: RemoveOrSetAmountToDish): Observable<Order> {
+    return this.requestService
+      .customMutation$<Order, 'orderSetDishAmount', RemoveOrSetAmountToDish>(
+        'orderSetDishAmount',
+        this.defaultOrderFragments,
+        data,
+      )
+      .pipe(map(data => data.orderSetDishAmount));
+  }
+
+  private setDishComment$(data: SetDishCommentInput): Observable<Order> {
+    return this.requestService
+      .customMutation$<Order, 'orderSetDishComment', SetDishCommentInput>(
+        'orderSetDishComment',
+        this.defaultOrderFragments,
+        data,
+      )
+      .pipe(map(data => data.orderSetDishComment));
   }
 
   private cloneOrder$(sendOrderData: SendOrderInput): Observable<Order> {
     return this.requestService
-      .customMutation$<Order, 'orderClone', { orderId: string }>(
+      .customMutation$<Order, 'orderClone', {orderId: string}>(
         'orderClone',
         this.defaultOrderFragments,
 
@@ -748,10 +765,10 @@ export class NgOrderService {
         },
         {
           requiredFields: ['orderId'],
-        }
+        },
       )
       .pipe(
-        map((data) => {
+        map(data => {
           if (isValue(data)) {
             if (isValue(sendOrderData.orderIdFactory)) {
               const newOrderId = sendOrderData.orderIdFactory();
@@ -765,125 +782,75 @@ export class NgOrderService {
             }
           }
           return data.orderClone;
-        })
+        }),
       );
   }
 
-  private checkOrder$(data: CheckOrderInput): Observable<CheckResponse> {
-
+  private updateOrder$(order: FormGroupType<OrderForm>['value']): Observable<Order> {
     return this.requestService
       .customMutation$<
-        CheckResponse,
-        'checkOrder',
-        { orderCheckout: CheckOrderInput }
-      >(
-        'checkOrder',
+        Order,
+        'orderUpdate',
         {
+          order: FormGroupType<OrderForm>['value'];
+        }
+      >('orderUpdate', this.defaultOrderFragments, {order})
+      .pipe(map(data => data.orderUpdate));
+  }
+
+  private sendOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
+    return this.requestService
+      .customMutation$<CheckResponse, 'sendOrder', {orderId: string}>(
+        'sendOrder',
+        <ValuesOrBoolean<CheckResponse>>{
           order: this.defaultOrderFragments,
           message: this.defaultMessageFragments,
           action: this.defaultActionFragments,
         },
-        { orderCheckout: data },
         {
-          fieldsTypeMap: new Map([['orderCheckout', 'InputOrderCheckout']]),
-        }
+          orderId: sendOrderData.orderId,
+        },
+        {
+          requiredFields: ['orderId'],
+        },
       )
-      .pipe(map((data) => data.checkOrder));
+      .pipe(
+        map(data => {
+          if (isValue(data)) {
+            if (isValue(sendOrderData.orderIdFactory)) {
+              const newOrderId = sendOrderData.orderIdFactory();
+              if (newOrderId) {
+                this.setOrderId(newOrderId);
+              } else {
+                this.removeOrderId(newOrderId);
+              }
+            } else {
+              this.removeOrderId();
+            }
+          }
+          return data.sendOrder;
+        }),
+      );
   }
 
-  private setDishAmount$(data: RemoveOrSetAmountToDish): Observable<Order> {
+  private addDishToOrder$(data: AddToOrderInput): Observable<Order> {
     return this.requestService
-      .customMutation$<Order, 'orderSetDishAmount', RemoveOrSetAmountToDish>(
-        'orderSetDishAmount',
+      .customMutation$<Order, 'orderAddDish', AddToOrderInput>(
+        'orderAddDish',
         this.defaultOrderFragments,
-        data
+        data,
       )
-      .pipe(map((data) => data.orderSetDishAmount));
+      .pipe(map(data => data.orderAddDish));
   }
 
-  private setDishComment$(data: SetDishCommentInput): Observable<Order> {
+  private removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
     return this.requestService
-      .customMutation$<Order, 'orderSetDishComment', SetDishCommentInput>(
-        'orderSetDishComment',
+      .customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>(
+        'orderRemoveDish',
         this.defaultOrderFragments,
-        data
+        data,
+        {requiredFields: ['orderDishId', 'id']},
       )
-      .pipe(map((data) => data.orderSetDishComment));
-  }
-
-  destroy() {
-    if (isValue(this._orderBusSubscription$)) {
-      this._orderBusSubscription$.unsubscribe();
-    }
-    this.storageWrapper.destroy();
-    Object.values(this)
-      .filter(
-        (property): property is EventEmitter<unknown> =>
-          property instanceof EventEmitter
-      )
-      .forEach((property) => property.complete());
-  }
-
-  emitMessageEvent(message: Message) {
-    this._eventMessage.emit(message);
-  }
-  emitActionEvent(action: Action) {
-    this._eventAction.emit(action);
-  }
-
-  getMessageEmitter() {
-    return this._messages$;
-  }
-
-  getActionEmitter() {
-    return this._actions$;
-  }
-
-  getDishRecomended(dishId: string) {
-    return this.getOrder().pipe(
-      switchMap((order) =>
-        this.requestService
-          .customQuery$<Dish, 'recomendedForDish'>(
-            'recomendedForDish',
-            this.defaultDishFragments,
-            { dishId }
-          )
-          .pipe(
-            map((data) => {
-              const orderDishes = order.dishes.map(
-                (orderDish) => orderDish.dish?.id
-              );
-              const array = Array.isArray(data.recomendedForDish)
-                ? data.recomendedForDish
-                : [data.recomendedForDish];
-              return array.filter((dish) => !orderDishes.includes(dish.id));
-            })
-          )
-      )
-    );
-  }
-
-  getOrderRecommended() {
-    return this.getOrder().pipe(
-      switchMap((order) =>
-        this.requestService
-          .customQuery$<Dish, 'recomendedForOrder'>(
-            'recomendedForOrder',
-            this.defaultDishFragments,
-            { orderId: order.id }
-          )
-          .pipe(
-            map((data) => {
-              const orderDishes = order.dishes.map(
-                (orderDish) => orderDish.dish?.id
-              );
-              const array = Array.isArray(data.recomendedForOrder)
-                ? data.recomendedForOrder
-                : [data.recomendedForOrder];
-              return array.filter((dish) => !orderDishes.includes(dish.id));
-            })
-          )
-      )
-    );
+      .pipe(map(data => data.orderRemoveDish));
   }
 }

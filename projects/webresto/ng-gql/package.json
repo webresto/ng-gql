@@ -1,6 +1,6 @@
 {
   "name": "@webresto/ng-gql",
-  "version": "1.2.9",
+  "version": "1.2.10",
   "repository": {
     "type": "git",
     "url": "https://git.hm/webresto/ng-graphql.git"
@@ -19,7 +19,7 @@
     "graphql": ">=16.7.1",
     "subscriptions-transport-ws": "^0.11.0",
     "@axrl/ngx-extended-form-builder": ">=1.2.10",
-    "@axrl/common": ">=1.0.31",
+    "@axrl/common": ">=1.0.32",
     "crypto-puzzle": "^4.0.2"
   }
 }

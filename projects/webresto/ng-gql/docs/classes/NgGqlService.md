@@ -37,7 +37,7 @@
 | Name | Type |
 | :------ | :------ |
 | `requestService` | [`RequestService`](RequestService.md) |
-| `storage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
+| `storage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 | `defaultNavigationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Navigation`](../interfaces/Navigation.md)\> |
 | `defaultMaintenanceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Maintenance`](../interfaces/Maintenance.md)\> |
@@ -60,15 +60,6 @@ ___
 
 ▸ **getNavigation$**<`T`\>(`options`): `Observable`<`T`[]\>
 
-**`Method`**
-
-getNavigation$()
-Используется для получения массива обьектов навигации для различных компонентов приложения.
-
-**`See`**
-
-NavigationLoader<T>
-
 #### Type parameters
 
 | Name | Type |
@@ -85,17 +76,26 @@ NavigationLoader<T>
 
 `Observable`<`T`[]\>
 
+**`Method`**
+
+getNavigation$()
+Используется для получения массива обьектов навигации для различных компонентов приложения.
+
+**`See`**
+
+NavigationLoader<T>
+
 ▸ **getNavigation$**(): `Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
+
+#### Returns
+
+`Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
 
 **`Method`**
 
 getNavigation$()
 Используется для получения массива обьектов навигации для различных компонентов приложения.
 Если приложение использует стандартную механику навигации, параметр `options` - не требуется.
-
-#### Returns
-
-`Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
 
 ___
 
@@ -162,11 +162,6 @@ ___
 
 ▸ **addAmountToDish**(`sourceDish`): [`Dish`](../interfaces/Dish.md)
 
-**`Method`**
-
-addAmountToDish()
-Метод-хелпер, используемый для добавления модификаторам блюда параметра amount и установки ему значения, в случае, если они у него имеются.
-
 #### Parameters
 
 | Name | Type | Description |
@@ -178,6 +173,11 @@ addAmountToDish()
 [`Dish`](../interfaces/Dish.md)
 
 новый, дополненный объект с данными блюда.
+
+**`Method`**
+
+addAmountToDish()
+Метод-хелпер, используемый для добавления модификаторам блюда параметра amount и установки ему значения, в случае, если они у него имеются.
 
 ___
 
@@ -218,11 +218,6 @@ ___
 
 ▸ **isKnownPhone$**(`phone`, `customvOb?`): `Observable`<[`PhoneKnowledge`](../interfaces/PhoneKnowledge.md)[]\>
 
-**`Method`**
-
-isKnownPhone$
-Проверяет переданный номер телефона на "знакомость".
-
 #### Parameters
 
 | Name | Type | Description |
@@ -233,6 +228,11 @@ isKnownPhone$
 #### Returns
 
 `Observable`<[`PhoneKnowledge`](../interfaces/PhoneKnowledge.md)[]\>
+
+**`Method`**
+
+isKnownPhone$
+Проверяет переданный номер телефона на "знакомость".
 
 ___
 

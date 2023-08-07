@@ -1,37 +1,28 @@
-import { NgGqlUserService, NgGqlStorageService } from './../services';
-import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-} from '@angular/common/http';
-import { exhaustMap } from 'rxjs';
-import { isValue } from '@axrl/common';
-import type { Observable } from 'rxjs';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {isValue} from '@axrl/common';
+import type {Observable} from 'rxjs';
+import {exhaustMap} from 'rxjs';
+import {NgGqlStoreService, NgGqlUserService} from './../services';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private ngGqlUser: NgGqlUserService,
-    private storage: NgGqlStorageService
+    private storage: NgGqlStoreService,
   ) {}
 
-  intercept(
-    request: HttpRequest<unknown>,
-    next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const body = request?.body;
     const operationName =
       isValue(body) && 'operationName' in body && isValue(body.operationName)
         ? body.operationName
         : '';
 
-    return operationName === 'loadLogin' ||
-      operationName === 'loadRestorePassword'
+    return operationName === 'loadLogin' || operationName === 'loadRestorePassword'
       ? next.handle(request)
       : this.ngGqlUser.getToken$().pipe(
-          exhaustMap((userToken) => {
+          exhaustMap(userToken => {
             if (isValue(userToken)) {
               const payloadEncoded = userToken.split('.')[1];
               try {
@@ -45,7 +36,7 @@ export class AuthInterceptor implements HttpInterceptor {
                       setHeaders: {
                         authorization: userToken,
                       },
-                    })
+                    }),
                   );
                 }
               } catch (error) {
@@ -55,7 +46,7 @@ export class AuthInterceptor implements HttpInterceptor {
             } else {
               return next.handle(request);
             }
-          })
+          }),
         );
   }
 }

@@ -8,6 +8,10 @@
 
 ### Methods
 
+- [emitMessageEvent](RequestService.md#emitmessageevent)
+- [emitActionEvent](RequestService.md#emitactionevent)
+- [getMessageEmitter](RequestService.md#getmessageemitter)
+- [getActionEmitter](RequestService.md#getactionemitter)
 - [customQuery$](RequestService.md#customquery$)
 - [customMutation$](RequestService.md#custommutation$)
 - [customSubscribe$](RequestService.md#customsubscribe$)
@@ -17,29 +21,73 @@
 
 ### constructor
 
-• **new RequestService**(`apollo`)
+• **new RequestService**(`apollo`, `defaultActionFragments`, `defaultMessageFragments`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `apollo` | [`ApolloService`](ApolloService.md) |
+| `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
+| `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |
 
 ## Methods
+
+### emitMessageEvent
+
+▸ **emitMessageEvent**(`message`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `message` | `Partial`<[`Message`](../interfaces/Message.md)\> |
+
+#### Returns
+
+`void`
+
+___
+
+### emitActionEvent
+
+▸ **emitActionEvent**(`action`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `action` | `Partial`<[`Action`](../interfaces/Action.md)<`any`\>\> |
+
+#### Returns
+
+`void`
+
+___
+
+### getMessageEmitter
+
+▸ **getMessageEmitter**(): `Observable`<[`Message`](../interfaces/Message.md) \| `Partial`<[`Message`](../interfaces/Message.md)\>\>
+
+#### Returns
+
+`Observable`<[`Message`](../interfaces/Message.md) \| `Partial`<[`Message`](../interfaces/Message.md)\>\>
+
+___
+
+### getActionEmitter
+
+▸ **getActionEmitter**(): `Observable`<[`Action`](../interfaces/Action.md)<`any`\> \| `Partial`<[`Action`](../interfaces/Action.md)<`any`\>\>\>
+
+#### Returns
+
+`Observable`<[`Action`](../interfaces/Action.md)<`any`\> \| `Partial`<[`Action`](../interfaces/Action.md)<`any`\>\>\>
+
+___
 
 ### customQuery$
 
 ▸ **customQuery$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `paramOptions?`): `Observable`<`Record`<`N`, `T` \| `T`[]\>\>
-
-**`Method`**
-
-customQuery$() для выполнения запросов типа "query" к серверу API GraphQL
-
-**`See`**
-
-**`Alias`**
-
-ValuesOrBoolean<T>
 
 #### Type parameters
 
@@ -65,21 +113,21 @@ ValuesOrBoolean<T>
 - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
  в виде одиночного объекта либо массива.
 
-___
-
-### customMutation$
-
-▸ **customMutation$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables`, `paramOptions?`): `Observable`<`Record`<`N`, `T`\>\>
-
 **`Method`**
 
-customMutation$() для выполнения запросов типа "mutation" к серверу API GraphQL
+customQuery$() для выполнения запросов типа "query" к серверу API GraphQL
 
 **`See`**
 
 **`Alias`**
 
 ValuesOrBoolean<T>
+
+___
+
+### customMutation$
+
+▸ **customMutation$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables`, `paramOptions?`): `Observable`<`Record`<`N`, `T`\>\>
 
 #### Type parameters
 
@@ -104,24 +152,21 @@ ValuesOrBoolean<T>
 
 - Observable поток с результатом выполнения операции в формате объекта с одним ключом N (название операции), значение которого - непосредственно результат операции.
 
+**`Method`**
+
+customMutation$() для выполнения запросов типа "mutation" к серверу API GraphQL
+
+**`See`**
+
+**`Alias`**
+
+ValuesOrBoolean<T>
+
 ___
 
 ### customSubscribe$
 
 ▸ **customSubscribe$**<`T`, `N`, `V`\>(`name`, `queryObject`, `variables?`, `paramOptions?`, `extra?`): `Observable`<`Record`<`N`, `T`\>[`N`]\>
-
-**`Method`**
-
-customSubscribe$() для выполнения запросов типа "subscription" к серверу API GraphQL
-
-**`See`**
-
- - 
- - this.queryAndSubscribe
-
-**`Alias`**
-
-ValuesOrBoolean<T>
 
 #### Type parameters
 
@@ -150,22 +195,24 @@ ValuesOrBoolean<T>
 Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
 В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
 
+**`Method`**
+
+customSubscribe$() для выполнения запросов типа "subscription" к серверу API GraphQL
+
+**`See`**
+
+ - 
+ - this.queryAndSubscribe
+
+**`Alias`**
+
+ValuesOrBoolean<T>
+
 ___
 
 ### queryAndSubscribe
 
 ▸ **queryAndSubscribe**<`T`, `NQuery`, `NSubscribe`, `VQ`, `VS`\>(`nameQuery`, `nameSubscribe`, `queryObject`, `uniqueKeyForCompareItem`, `variables?`, `paramOptions?`): `Observable`<`T`[]\>
-
-**`Method`**
-
-queryAndSubscribe()
-Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
-
-**`See`**
-
-**`Alias`**
-
-ValuesOrBoolean<T>
 
 #### Type parameters
 
@@ -199,3 +246,14 @@ ValuesOrBoolean<T>
 - Observable поток с данными, которые будут поступать в рамках сделанной подписки.
 Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
 Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
+
+**`Method`**
+
+queryAndSubscribe()
+Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
+
+**`See`**
+
+**`Alias`**
+
+ValuesOrBoolean<T>

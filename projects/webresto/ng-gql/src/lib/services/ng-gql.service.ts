@@ -30,15 +30,18 @@ import {
   NAVIGATION_FRAGMENTS,
   NG_GQL_CONFIG,
 } from '../models';
-import {NgGqlStorageService} from './ng-gql-storage.service';
+import {NgGqlStoreService} from './ng-gql-storage.service';
 import {QueryGenerationParam, RequestService} from './request.service';
 
 @Injectable()
 /** Основной сервис для работы с библиотекой. Содержит все необходимые методы для управления сайтом. */
 export class NgGqlService {
+  private _pendingLoadNavBar = createSubject<boolean>(false);
+  private _pendingLoadNavigation = createSubject<boolean>(false);
+
   constructor(
     private requestService: RequestService,
-    private storage: NgGqlStorageService,
+    private storage: NgGqlStoreService,
     @Inject(NG_GQL_CONFIG) private config: NgGqlConfig,
     @Inject(NAVIGATION_FRAGMENTS)
     private defaultNavigationFragments: ValuesOrBoolean<Navigation>,
@@ -48,9 +51,6 @@ export class NgGqlService {
     private defaultGroupFragments: ValuesOrBoolean<Group>,
     @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>,
   ) {}
-
-  private _pendingLoadNavBar = createSubject<boolean>(false);
-  private _pendingLoadNavigation = createSubject<boolean>(false);
 
   getNgGqlConfig(): NgGqlConfig {
     return deepClone(this.config);
@@ -87,36 +87,10 @@ export class NgGqlService {
     );
   }
 
-  private _loadNavigation<T extends NavigationBase = Navigation>(
-    options?: NavigationLoader<T>,
-  ): Observable<T[]> {
-    this._pendingLoadNavigation.next(true);
-    return this.storage.navigation.pipe(
-      exhaustMap(data => {
-        return isValue(data)
-          ? of(<T[]>data)
-          : this.requestService
-              .queryAndSubscribe(
-                options?.nameQuery ?? 'navigation',
-                options?.nameSubscribe ?? 'navigation',
-                options?.queryObject ??
-                  <NavigationLoader<T>['queryObject']>this.defaultNavigationFragments,
-                options?.uniqueKeyForCompareItem ??
-                  <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId',
-              )
-              .pipe(
-                map(navigationData => {
-                  this.storage.updateNavigation(navigationData);
-                  return navigationData;
-                }),
-              );
-      }),
-      tap(() => this._pendingLoadNavigation.next(false)),
-    );
-  }
-
   /** Список ссылок для необходимого раздела навигации */
-  getNavigationPoints(slug: 'header' | 'footer' | 'social' | string) {
+  getNavigationPoints(
+    slug: 'header' | 'footer' | 'social' | string,
+  ): Observable<NavigationsMenuItem[]> {
     return this.getNavigation$().pipe(
       map(data =>
         (data.find(item => item.mnemonicId == slug)?.navigation_menu || [])
@@ -141,7 +115,7 @@ export class NgGqlService {
   }
 
   /** Возвращает ссылку на страницу, которая будет стартовой для меню */
-  getStartMenuSlug() {
+  getStartMenuSlug(): Observable<[string[], string | undefined]> {
     return this.getNavBarMenu().pipe(
       map(menu => {
         const navbarmenu: NavBarLinkItem[] = menu.map(group => ({
@@ -172,8 +146,8 @@ export class NgGqlService {
    * Чтобы обновлять значение в `initGroupSlug$` используется метод `updateInitGroupSlug`
    * @returns
    */
-  getGroup(slug: string, concept: string = 'origin') {
-    const getIdsFromPartialDish = (dishes?: Partial<Group>[]) =>
+  getGroup(slug: string, concept: string = 'origin'): Observable<Group> {
+    const getIdsFromPartialDish = (dishes?: Array<Partial<Group>>): string[] =>
       dishes?.map(dish => dish.id).filter((id): id is string => isValue(id)) ?? [];
 
     return this.storage.groups.pipe(
@@ -216,6 +190,7 @@ export class NgGqlService {
   addAmountToDish(sourceDish: Dish): Dish {
     return {
       ...sourceDish,
+      additionalInfo: this.getAdditionalInfo(sourceDish),
       modifiers: sourceDish.modifiers
         ? sourceDish.modifiers.map((groupModifier, groupIndex) => ({
             ...groupModifier,
@@ -271,35 +246,6 @@ export class NgGqlService {
     return this._pendingLoadNavBar.asObservable().pipe(
       filter(pending => !pending),
       exhaustMap(() => this._loadNavBarMenu(concept, topLevelGroupId)),
-    );
-  }
-
-  private _loadNavBarMenu(concept?: string, topLevelGroupId?: string) {
-    this._pendingLoadNavBar.next(true);
-    return this.storage.navBarMenus.pipe(
-      exhaustMap(items => {
-        const item = items.find(
-          element => element.concept === concept && element.topLevelGroupId === topLevelGroupId,
-        );
-        return isValue(item)
-          ? of(item.menu)
-          : this.requestService
-              .customQuery$<NavbarMenuLink, 'menu'>('menu', {
-                name: true,
-                slug: true,
-                id: true,
-                icon: true,
-              })
-              .pipe(
-                map(data => {
-                  const result = Array.isArray(data.menu) ? data.menu : [data.menu];
-                  const newItems = [...items, {concept, topLevelGroupId, menu: result}];
-                  this.storage.updateNavBarMenus(newItems);
-                  return result;
-                }),
-              );
-      }),
-      tap(() => this._pendingLoadNavBar.next(false)),
     );
   }
 
@@ -379,7 +325,7 @@ export class NgGqlService {
       .pipe(map(result => result.phoneKnowledgeSetCode));
   }
 
-  destroy() {
+  destroy(): void {
     Object.values(this)
       .filter(
         (property): property is BehaviorSubject<unknown> => property instanceof BehaviorSubject,
@@ -450,6 +396,82 @@ export class NgGqlService {
       uniqueKeyForCompareItem,
       variables,
       paramOptions,
+    );
+  }
+
+  private getAdditionalInfo(dish: Partial<Dish>): Dish['additionalInfo'] {
+    if (
+      dish.additionalInfo &&
+      typeof dish.additionalInfo == 'string' &&
+      dish.additionalInfo.includes('{"')
+    ) {
+      try {
+        return JSON.parse(dish.additionalInfo);
+      } catch (error) {
+        return dish.additionalInfo;
+      }
+    } else {
+      return dish.additionalInfo;
+    }
+  }
+
+  private _loadNavigation<T extends NavigationBase = Navigation>(
+    options?: NavigationLoader<T>,
+  ): Observable<T[]> {
+    this._pendingLoadNavigation.next(true);
+    return this.storage.navigation.pipe(
+      exhaustMap(data => {
+        return isValue(data)
+          ? of(<T[]>data)
+          : this.requestService
+              .queryAndSubscribe(
+                options?.nameQuery ?? 'navigation',
+                options?.nameSubscribe ?? 'navigation',
+                options?.queryObject ??
+                  <NavigationLoader<T>['queryObject']>this.defaultNavigationFragments,
+                options?.uniqueKeyForCompareItem ??
+                  <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId',
+              )
+              .pipe(
+                map(navigationData => {
+                  this.storage.updateNavigation(navigationData);
+                  return navigationData;
+                }),
+              );
+      }),
+      tap(() => this._pendingLoadNavigation.next(false)),
+    );
+  }
+
+  private _loadNavBarMenu(
+    concept?: string,
+    topLevelGroupId?: string,
+  ): Observable<NavbarMenuLink[]> {
+    this._pendingLoadNavBar.next(true);
+    return this.storage.navBarMenus.pipe(
+      exhaustMap(items => {
+        const item = items.find(
+          element => element.concept === concept && element.topLevelGroupId === topLevelGroupId,
+        );
+        return isValue(item)
+          ? of(item.menu)
+          : this.requestService
+              .customQuery$<NavbarMenuLink, 'menu'>('menu', {
+                name: true,
+                slug: true,
+                id: true,
+                icon: true,
+              })
+              .pipe(
+                map(data => {
+                  const result = Array.isArray(data.menu) ? data.menu : [data.menu];
+                  const newItems = [...items, {concept, topLevelGroupId, menu: result}];
+                  this.storage.updateNavBarMenus(newItems);
+                  return result;
+                }),
+              );
+      }),
+      tap(() => this._pendingLoadNavBar.next(false)),
     );
   }
 }

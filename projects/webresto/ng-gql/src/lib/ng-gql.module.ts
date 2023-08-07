@@ -8,7 +8,7 @@ import {NG_GQL_CONFIG, httpLinkFactory} from './models';
 import {
   ApolloService,
   NgGqlService,
-  NgGqlStorageService,
+  NgGqlStoreService,
   NgGqlUserBusService,
   NgGqlUserService,
   NgOrderService,
@@ -24,7 +24,7 @@ import {
     NgOrderService,
     NgGqlService,
     NgGqlUserService,
-    NgGqlStorageService,
+    NgGqlStoreService,
     NgGqlUserBusService,
     NqGqlLocalStorageWrapper,
     RequestService,

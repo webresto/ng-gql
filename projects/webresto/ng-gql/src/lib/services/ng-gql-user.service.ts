@@ -1,5 +1,5 @@
-import { Inject, Injectable } from '@angular/core';
-import { isValue } from '@axrl/common';
+import {Inject, Injectable} from '@angular/core';
+import {isValue} from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
 import {
   BehaviorSubject,
@@ -31,32 +31,32 @@ import {
   UserResponse,
   ValuesOrBoolean,
 } from '../models';
-import { NgGqlStorageService } from './ng-gql-storage.service';
-import { NgGqlUserBusService } from './ng-gql-user-bus.service';
-import { RequestService } from './request.service';
+import {NgGqlStoreService} from './ng-gql-storage.service';
+import {NgGqlUserBusService} from './ng-gql-user-bus.service';
+import {RequestService} from './request.service';
 
 @Injectable()
 export class NgGqlUserService {
   constructor(
     private requestService: RequestService,
-    private ngGqlStorage: NgGqlStorageService,
+    private ngGqlStorage: NgGqlStoreService,
     private _userBus: NgGqlUserBusService,
     @Inject(USER_ORDER_HYSTORY_FRAGMENTS)
     private defaultUserOrderHystoryFragments: ValuesOrBoolean<UserOrderHystory>,
     @Inject(USER_FRAGMENTS)
     private defaultUserFragments: ValuesOrBoolean<User>,
     @Inject(USER_LOCATION_FRAGMENTS)
-    private defaultuserLocationFragments: ValuesOrBoolean<UserLocation>
+    private defaultuserLocationFragments: ValuesOrBoolean<UserLocation>,
   ) {}
 
   private _loadUser$(): Observable<User | null> {
     return this.requestService
       .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
       .pipe(
-        map((result) => {
+        map(result => {
           console.log(result);
           return result[0] ?? null;
-        })
+        }),
       );
   }
 
@@ -64,14 +64,11 @@ export class NgGqlUserService {
     this.ngGqlStorage.updateUser(newUser);
   }
 
-  loadUserOrderHistory$(options: {
-    skip: number;
-    limit: number;
-  }): Observable<UserOrderHystory[]> {
+  loadUserOrderHistory$(options: {skip: number; limit: number}): Observable<UserOrderHystory[]> {
     return this.ngGqlStorage.token.pipe(
-      switchMap((token) =>
+      switchMap(token =>
         this.ngGqlStorage.orderHystory.pipe(
-          exhaustMap((hystory) => {
+          exhaustMap(hystory => {
             if (isValue(token)) {
               if (hystory.length >= options.skip + options.limit) {
                 return of(hystory.slice(0, options.skip + options.limit));
@@ -89,21 +86,21 @@ export class NgGqlUserService {
                     limit: options.limit,
                   })
                   .pipe(
-                    switchMap((data) => {
+                    switchMap(data => {
                       const result = Array.isArray(data.userOrderHistory)
                         ? data.userOrderHistory
                         : [data.userOrderHistory];
                       this.ngGqlStorage.updateOrderHystory(result);
                       return this.ngGqlStorage.orderHystory;
-                    })
+                    }),
                   );
               }
             } else {
               return of([]);
             }
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   }
 
@@ -112,24 +109,18 @@ export class NgGqlUserService {
     limit: number;
   }): Observable<UserLocationResponse> {
     return this.requestService
-      .customQuery$<number, 'userLocationCount', { criteria: {} }>(
-        'userLocationCount',
-        1,
-        { criteria: {} }
-      )
+      .customQuery$<number, 'userLocationCount', {criteria: {}}>('userLocationCount', 1, {
+        criteria: {},
+      })
       .pipe(
-        switchMap((data) => {
+        switchMap(data => {
           const userLocationCount = Array.isArray(data.userLocationCount)
             ? data.userLocationCount[0]
             : data.userLocationCount;
           return this.requestService
-            .customQuery$(
-              'userLocation',
-              this.defaultuserLocationFragments,
-              options
-            )
+            .customQuery$('userLocation', this.defaultuserLocationFragments, options)
             .pipe(
-              map((data) => {
+              map(data => {
                 const userLocation = Array.isArray(data.userLocation)
                   ? data.userLocation
                   : [data.userLocation];
@@ -139,9 +130,9 @@ export class NgGqlUserService {
                 };
                 this.ngGqlStorage.updateUserLocations(result);
                 return result;
-              })
+              }),
             );
-        })
+        }),
       );
   }
 
@@ -150,12 +141,12 @@ export class NgGqlUserService {
       skip: number;
       limit: number;
     },
-    update: boolean = false
+    update: boolean = false,
   ): Observable<UserLocationResponse> {
     return this.ngGqlStorage.token.pipe(
-      switchMap((token) =>
+      switchMap(token =>
         this.ngGqlStorage.userLocations.pipe(
-          exhaustMap((data) => {
+          exhaustMap(data => {
             if (isValue(token)) {
               if (
                 !update &&
@@ -164,10 +155,7 @@ export class NgGqlUserService {
               ) {
                 return of({
                   userLocationCount: data.userLocationCount,
-                  userLocation: data.userLocation.slice(
-                    0,
-                    options.skip + options.limit
-                  ),
+                  userLocation: data.userLocation.slice(0, options.skip + options.limit),
                 });
               } else {
                 return this._getUserLocations(options);
@@ -178,31 +166,31 @@ export class NgGqlUserService {
                 userLocation: [],
               });
             }
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   }
 
   private readonly _user$ = this.ngGqlStorage.user.pipe(
-    exhaustMap((user) =>
+    exhaustMap(user =>
       isValue(user)
         ? this.ngGqlStorage.user
         : this.getToken$().pipe(
-            switchMap((token) =>
+            switchMap(token =>
               isValue(token)
                 ? this._loadUser$().pipe(
-                    switchMap((user) => {
+                    switchMap(user => {
                       this.updateStorageUser(user);
                       return this.ngGqlStorage.user;
-                    })
+                    }),
                   )
-                : this.ngGqlStorage.user
-            )
-          )
+                : this.ngGqlStorage.user,
+            ),
+          ),
     ),
-    catchError((err) => this.ngGqlStorage.user),
-    shareReplay(1)
+    catchError(err => this.ngGqlStorage.user),
+    shareReplay(1),
   );
 
   getUser$(): Observable<User | null> {
@@ -214,10 +202,7 @@ export class NgGqlUserService {
   }
 
   /** Добавляет блюдо в избранное */
-  addDishFavor(
-    dishId: string,
-    loading?: BehaviorSubject<boolean>
-  ): Promise<boolean> {
+  addDishFavor(dishId: string, loading?: BehaviorSubject<boolean>): Promise<boolean> {
     return this._userBus.emitToBus({
       type: 'AddDishFavor',
       payload: dishId,
@@ -228,7 +213,7 @@ export class NgGqlUserService {
   /** Обновление данных о пользователе */
   updateUserData(
     data: UpdateUserDataPayload,
-    loading?: BehaviorSubject<boolean>
+    loading?: BehaviorSubject<boolean>,
   ): Promise<UserResponse> {
     return this._userBus.emitToBus({
       type: 'UpdateUserData',
@@ -239,11 +224,11 @@ export class NgGqlUserService {
 
   captchaGetJob<T extends CaptchaTask>(
     label: string,
-    loading?: BehaviorSubject<boolean>
+    loading?: BehaviorSubject<boolean>,
   ): Promise<CaptchaJob<T>> {
     return this._userBus.emitToBus({
       type: 'captchaGetJob',
-      payload: { label },
+      payload: {label},
       loading,
     });
   }
@@ -254,7 +239,7 @@ export class NgGqlUserService {
 
   registrationApp(
     data: RegistrationPayload,
-    loading?: BehaviorSubject<boolean>
+    loading?: BehaviorSubject<boolean>,
   ): Promise<UserResponse> {
     return this._userBus.emitToBus({
       type: 'registrationApp',
@@ -263,10 +248,7 @@ export class NgGqlUserService {
     });
   }
 
-  otpRequest(
-    data: OTPRequestPayload,
-    loading?: BehaviorSubject<boolean>
-  ): Promise<OTPResponse> {
+  otpRequest(data: OTPRequestPayload, loading?: BehaviorSubject<boolean>): Promise<OTPResponse> {
     return this._userBus.emitToBus({
       type: 'OTPRequest',
       payload: data,
@@ -274,10 +256,7 @@ export class NgGqlUserService {
     });
   }
 
-  login(
-    data: LoginPayload,
-    loading?: BehaviorSubject<boolean>
-  ): Promise<UserResponse> {
+  login(data: LoginPayload, loading?: BehaviorSubject<boolean>): Promise<UserResponse> {
     return this._userBus.emitToBus({
       type: 'login',
       payload: data,
@@ -287,7 +266,7 @@ export class NgGqlUserService {
 
   restorePassword(
     data: RestorePasswordPayload,
-    loading?: BehaviorSubject<boolean>
+    loading?: BehaviorSubject<boolean>,
   ): Promise<UserResponse> {
     return this._userBus.emitToBus({
       type: 'RestorePassword',
@@ -309,10 +288,7 @@ export class NgGqlUserService {
     return res;
   }
 
-  async userDelete(
-    otp: string,
-    loading?: BehaviorSubject<boolean>
-  ): Promise<Response> {
+  async userDelete(otp: string, loading?: BehaviorSubject<boolean>): Promise<Response> {
     const res = await this._userBus.emitToBus<'userDelete', string, Response>({
       type: 'userDelete',
       payload: otp,
@@ -326,10 +302,7 @@ export class NgGqlUserService {
   }
 
   /** Добавить адрес у пользователя */
-  locationCreate(
-    location: InputLocation,
-    loading?: BehaviorSubject<boolean>
-  ): Promise<boolean> {
+  locationCreate(location: InputLocation, loading?: BehaviorSubject<boolean>): Promise<boolean> {
     return this._userBus.emitToBus<'locationCreate', InputLocation, boolean>({
       type: 'locationCreate',
       payload: location,
@@ -338,10 +311,7 @@ export class NgGqlUserService {
   }
 
   /** Удалить сохраненный у пользователя адрес */
-  locationDelete(
-    locationId: string,
-    loading?: BehaviorSubject<boolean>
-  ): Promise<boolean> {
+  locationDelete(locationId: string, loading?: BehaviorSubject<boolean>): Promise<boolean> {
     return this._userBus.emitToBus<'locationDelete', string, boolean>({
       type: 'locationDelete',
       payload: locationId,
@@ -350,10 +320,7 @@ export class NgGqlUserService {
   }
 
   /** Установить адрес в качестве адреса по-умолчанию */
-  locationSetIsDefault(
-    locationId: string,
-    loading?: BehaviorSubject<boolean>
-  ): Promise<boolean> {
+  locationSetIsDefault(locationId: string, loading?: BehaviorSubject<boolean>): Promise<boolean> {
     return this._userBus.emitToBus<'locationSetIsDefault', string, boolean>({
       type: 'locationSetIsDefault',
       payload: locationId,

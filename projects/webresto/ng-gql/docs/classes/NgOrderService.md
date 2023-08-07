@@ -6,7 +6,7 @@
 
 - [constructor](NgOrderService.md#constructor)
 
-### Properties
+### Accessors
 
 - [orderBus$](NgOrderService.md#orderbus$)
 
@@ -30,10 +30,6 @@
 - [setDishAmount](NgOrderService.md#setdishamount)
 - [setDishComment](NgOrderService.md#setdishcomment)
 - [destroy](NgOrderService.md#destroy)
-- [emitMessageEvent](NgOrderService.md#emitmessageevent)
-- [emitActionEvent](NgOrderService.md#emitactionevent)
-- [getMessageEmitter](NgOrderService.md#getmessageemitter)
-- [getActionEmitter](NgOrderService.md#getactionemitter)
 - [getDishRecomended](NgOrderService.md#getdishrecomended)
 - [getOrderRecommended](NgOrderService.md#getorderrecommended)
 
@@ -41,58 +37,40 @@
 
 ### constructor
 
-• **new NgOrderService**(`requestService`, `storage`, `storageWrapper`, `userBusService`, `ngGqlService`, `config`, `defaultPaymentMethodFragments`, `defaultActionFragments`, `defaultMessageFragments`, `defaultOrderFragments`, `defaultDishFragments`)
+• **new NgOrderService**(`requestService`, `storage`, `storageWrapper`, `userBusService`, `ngGqlService`, `ngGqlUser`, `config`, `defaultPaymentMethodFragments`, `defaultOrderFragments`, `defaultDishFragments`, `defaultActionFragments`, `defaultMessageFragments`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `requestService` | [`RequestService`](RequestService.md) |
-| `storage` | [`NgGqlStorageService`](NgGqlStorageService.md) |
+| `storage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
 | `storageWrapper` | [`NqGqlLocalStorageWrapper`](NqGqlLocalStorageWrapper.md) |
 | `userBusService` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
 | `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
+| `ngGqlUser` | [`NgGqlUserService`](NgGqlUserService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 | `defaultPaymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
-| `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
-| `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |
 | `defaultOrderFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\> |
 | `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Dish`](../interfaces/Dish.md)\> |
+| `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
+| `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |
 
-## Properties
+## Accessors
 
 ### orderBus$
 
-• `Readonly` **orderBus$**: `Observable`<`void` \| () => `void` \| () => `void` \| () => `void`\>
+• `get` **orderBus$**(): `Observable`<`void` \| () => `void`\>
 
-Внутренний поток-шина для событий, ассоциированных с действиями, которыми необходимо выполнить с заказом (добавить/удалить блюдо, проверить заказ, отправить на проверку и тп.).
-Используется только в случае, если в
+#### Returns
 
-**`See`**
-
- - this.config параметр busSubscribeMode установлен в значении 'custom' для самостоятельного управления подпиской на стороне приложения.
-Использование этого потока и событий внутри него извне не подразумевается и не предусматривается,
-Для выполнения действий с заказом, необходимо использовать соответствующие методы:
- - this.addToOrder
- - this.removeFromOrder
- - this.checkOrder
- - this.sendOrder
- - this.setDishAmount
- - this.setDishComment
+`Observable`<`void` \| () => `void`\>
 
 ## Methods
 
 ### updateStorageOrderIdToken
 
 ▸ **updateStorageOrderIdToken**(`newToken`): `void`
-
-**`Method`**
-
-updateStorageOrderIdToken()
-
-**`See`**
-
-this.StorageWrapper.updateStorageOrderIdToken()
 
 #### Parameters
 
@@ -104,19 +82,19 @@ this.StorageWrapper.updateStorageOrderIdToken()
 
 `void`
 
+**`Method`**
+
+updateStorageOrderIdToken()
+
+**`See`**
+
+this.StorageWrapper.updateStorageOrderIdToken()
+
 ___
 
 ### getOrderId
 
 ▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`): `string`
-
-**`Method`**
-
-getOrderId()
-
-**`See`**
-
-this.StorageWrapper.getOrderId()
 
 #### Parameters
 
@@ -129,19 +107,19 @@ this.StorageWrapper.getOrderId()
 
 `string`
 
+**`Method`**
+
+getOrderId()
+
+**`See`**
+
+this.StorageWrapper.getOrderId()
+
 ___
 
 ### setOrderId
 
 ▸ **setOrderId**(`orderId`, `storageOrderIdToken?`): `void`
-
-**`Method`**
-
-setOrderId()
-
-**`See`**
-
-this.StorageWrapper.setOrderId()
 
 #### Parameters
 
@@ -154,19 +132,19 @@ this.StorageWrapper.setOrderId()
 
 `void`
 
+**`Method`**
+
+setOrderId()
+
+**`See`**
+
+this.StorageWrapper.setOrderId()
+
 ___
 
 ### removeOrderId
 
 ▸ **removeOrderId**(`newOrderId?`): `void`
-
-**`Method`**
-
-removeOrderId()
-
-**`See`**
-
-this.StorageWrapper.removeOrderId()
 
 #### Parameters
 
@@ -177,6 +155,14 @@ this.StorageWrapper.removeOrderId()
 #### Returns
 
 `void`
+
+**`Method`**
+
+removeOrderId()
+
+**`See`**
+
+this.StorageWrapper.removeOrderId()
 
 ___
 
@@ -218,15 +204,15 @@ ___
 
 ▸ **getOrderPaymentMethods$**(): `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
-**`Method`**
-
-getOrderPaymentMethods$()
-
 #### Returns
 
 `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
 Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
+
+**`Method`**
+
+getOrderPaymentMethods$()
 
 ___
 
@@ -234,29 +220,21 @@ ___
 
 ▸ **getOrder**(): `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
 
-**`Method`**
-
-() getOrder
-
 #### Returns
 
 `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
 
 Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
 
+**`Method`**
+
+() getOrder
+
 ___
 
 ### loadOrder$
 
 ▸ **loadOrder$**(`id`, `isShort?`): `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
-
-**`Method`**
-
-loadOrder$()
-
-Метод загружает заказ и делает подписку для получения по нему обновлений.
-Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
-(например, данные для страницы "Спасибо за заказ").
 
 #### Parameters
 
@@ -269,16 +247,19 @@ loadOrder$()
 
 `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
 
+**`Method`**
+
+loadOrder$()
+
+Метод загружает заказ и делает подписку для получения по нему обновлений.
+Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
+(например, данные для страницы "Спасибо за заказ").
+
 ___
 
 ### addToOrder
 
 ▸ **addToOrder**(`options`): `void`
-
-**`Method`**
-
-addToOrder()
-Используется для отправки в шину события добавления блюда.
 
 #### Parameters
 
@@ -298,16 +279,16 @@ addToOrder()
 
 `void`
 
+**`Method`**
+
+addToOrder()
+Используется для отправки в шину события добавления блюда.
+
 ___
 
 ### removeFromOrder
 
 ▸ **removeFromOrder**(`options`): `void`
-
-**`Method`**
-
-removeFromOrder()
-Используется для отправки в шину события удаления блюда из корзины
 
 #### Parameters
 
@@ -324,11 +305,30 @@ removeFromOrder()
 
 `void`
 
+**`Method`**
+
+removeFromOrder()
+Используется для отправки в шину события удаления блюда из корзины
+
 ___
 
 ### updateOrder
 
 ▸ **updateOrder**(`options`): `void`
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `options` | `Object` | - |
+| `options.data` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; modifiers: Partial<{ id: string; groupId: string; amount: number; dish: Partial<{ id: string; additionalInfo: string \| number \| Partial<{ [x: string]: any; }\>; name: string; description: string; ... 21 more ...; customData: Partial<...\>; }\>; }\>[]; ... 11 more ...; total: number; }\>[] ; `message`: `string` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `date`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `comment`: `string` ; `discountTotal`: `number` ; `totalWeight`: `number` ; `total`: `number` ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: [`OrderState`](../README.md#orderstate) ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; sortOrder: number; customData: Partial<{ [x: string]: any; }\>; title: string; type: string; enable: boolean; isCash: boolean; adapter: string; }\> ; `promocode`: `string`  }\> | объект заказа, при этом не все данные из него будут приняты и, в результате, обновлены. Большая часть будет данных будет проигнорирована и может изменяться только в рамках других методов согласно заложенной бизнес-логике. В настоящее время из всего заказа учитываются изменения ТОЛЬКО в свойстве `Order.trifleFrom`. |
+| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
+| `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
+
+#### Returns
+
+`void`
 
 **`Method`**
 
@@ -345,31 +345,11 @@ this.sendOrder()
 
 this.checkOrder(), если такая проверка уже проводилась ранее.
 
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `options` | `Object` | - |
-| `options.data` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; modifiers: Partial<{ id: string; groupId: string; amount: number; dish: Partial<{ id: string; additionalInfo: string \| number \| Partial<{ [x: string]: any; }\>; name: string; description: string; ... 21 more ...; customData: Partial<...\>; }\>; }\>[]; ... 11 more ...; total: number; }\>[] ; `message`: `string` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `date`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `comment`: `string` ; `discountTotal`: `number` ; `totalWeight`: `number` ; `total`: `number` ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: [`OrderState`](../README.md#orderstate) ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; sortOrder: number; customData: Partial<{ [x: string]: any; }\>; title: string; type: string; enable: boolean; isCash: boolean; adapter: string; }\> ; `promocode`: `string`  }\> | объект заказа, при этом не все данные из него будут приняты и, в результате, обновлены. Большая часть будет данных будет проигнорирована и может изменяться только в рамках других методов согласно заложенной бизнес-логике. В настоящее время из всего заказа учитываются изменения ТОЛЬКО в свойстве `Order.trifleFrom`. |
-| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
-| `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
-| `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
-
-#### Returns
-
-`void`
-
 ___
 
 ### checkOrder
 
 ▸ **checkOrder**(`options`): `void`
-
-**`Method`**
-
-checkOrder()
-Используется для отправки в шину события обязательной проверки заказа перед оформлением.
-Метод необходимо вызывать после того, как пользователь полностью заполнил в заказе все необходимые данные и далее после каждого вносимого в форму изменения, при условии, что в форме все необходимые данные заполнены.
 
 #### Parameters
 
@@ -384,17 +364,17 @@ checkOrder()
 
 `void`
 
+**`Method`**
+
+checkOrder()
+Используется для отправки в шину события обязательной проверки заказа перед оформлением.
+Метод необходимо вызывать после того, как пользователь полностью заполнил в заказе все необходимые данные и далее после каждого вносимого в форму изменения, при условии, что в форме все необходимые данные заполнены.
+
 ___
 
 ### sendOrder
 
 ▸ **sendOrder**(`options`): `void`
-
-**`Method`**
-
-sendOrder()
-Используется для отправки в шину события оформления заказа.
-Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
 
 #### Parameters
 
@@ -411,16 +391,17 @@ sendOrder()
 
 `void`
 
+**`Method`**
+
+sendOrder()
+Используется для отправки в шину события оформления заказа.
+Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
+
 ___
 
 ### cloneOrder
 
 ▸ **cloneOrder**(`options`): `void`
-
-**`Method`**
-
-cloneOrder()
-Используется для отправки в шину события повтора уже сделанного ранее заказа.
 
 #### Parameters
 
@@ -437,16 +418,16 @@ cloneOrder()
 
 `void`
 
+**`Method`**
+
+cloneOrder()
+Используется для отправки в шину события повтора уже сделанного ранее заказа.
+
 ___
 
 ### setDishAmount
 
 ▸ **setDishAmount**(`options`): `void`
-
-**`Method`**
-
-setDishAmount()
-Устанавливает для блюда dish в заказе количество amount.
 
 #### Parameters
 
@@ -463,16 +444,16 @@ setDishAmount()
 
 `void`
 
+**`Method`**
+
+setDishAmount()
+Устанавливает для блюда dish в заказе количество amount.
+
 ___
 
 ### setDishComment
 
 ▸ **setDishComment**(`options`): `void`
-
-**`Method`**
-
-setDishComment()
-Добавляет к заказываемому блюду комментарий.
 
 #### Parameters
 
@@ -489,6 +470,11 @@ setDishComment()
 
 `void`
 
+**`Method`**
+
+setDishComment()
+Добавляет к заказываемому блюду комментарий.
+
 ___
 
 ### destroy
@@ -498,58 +484,6 @@ ___
 #### Returns
 
 `void`
-
-___
-
-### emitMessageEvent
-
-▸ **emitMessageEvent**(`message`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `message` | [`Message`](../interfaces/Message.md) |
-
-#### Returns
-
-`void`
-
-___
-
-### emitActionEvent
-
-▸ **emitActionEvent**(`action`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `action` | [`Action`](../interfaces/Action.md)<`any`\> |
-
-#### Returns
-
-`void`
-
-___
-
-### getMessageEmitter
-
-▸ **getMessageEmitter**(): `Observable`<[`Message`](../interfaces/Message.md)\>
-
-#### Returns
-
-`Observable`<[`Message`](../interfaces/Message.md)\>
-
-___
-
-### getActionEmitter
-
-▸ **getActionEmitter**(): `Observable`<[`Action`](../interfaces/Action.md)<`any`\>\>
-
-#### Returns
-
-`Observable`<[`Action`](../interfaces/Action.md)<`any`\>\>
 
 ___
 

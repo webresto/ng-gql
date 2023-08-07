@@ -7,7 +7,7 @@
 - [EventMessage](classes/EventMessage.md)
 - [GenerateUUIDHelper](classes/GenerateUUIDHelper.md)
 - [ApolloService](classes/ApolloService.md)
-- [NgGqlStorageService](classes/NgGqlStorageService.md)
+- [NgGqlStoreService](classes/NgGqlStoreService.md)
 - [NgGqlUserBusService](classes/NgGqlUserBusService.md)
 - [NgGqlUserService](classes/NgGqlUserService.md)
 - [NgGqlService](classes/NgGqlService.md)
@@ -496,11 +496,6 @@ InjectionToken с объектом ValuesOrBoolean<UserOrderHystory>.
 
 ▸ **generateQueryString**<`T`, `N`, `GQLRequestVariables`\>(`options`): `string`
 
-**`Function`**
-
-generateQueryString()
-Функция - генератор строки запроса к серверу GraphQL.
-
 #### Type parameters
 
 | Name | Type |
@@ -526,6 +521,11 @@ generateQueryString()
 
 часть строки запроса к серверу GraphQL для переданной операции N с параметрами? перечисленными в V.
  НЕ ВКЛЮЧАЕТ начало, содержащее ключевое слово query, mutation или subscription
+
+**`Function`**
+
+generateQueryString()
+Функция - генератор строки запроса к серверу GraphQL.
 
 ___
 

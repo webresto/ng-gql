@@ -1,43 +1,43 @@
-# Class: NgGqlStorageService
+# Class: NgGqlStoreService
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](NgGqlStorageService.md#constructor)
+- [constructor](NgGqlStoreService.md#constructor)
 
 ### Properties
 
-- [order](NgGqlStorageService.md#order)
-- [dishes](NgGqlStorageService.md#dishes)
-- [groups](NgGqlStorageService.md#groups)
-- [navigation](NgGqlStorageService.md#navigation)
-- [paymentMethods](NgGqlStorageService.md#paymentmethods)
-- [user](NgGqlStorageService.md#user)
-- [token](NgGqlStorageService.md#token)
-- [isAuthenticated$](NgGqlStorageService.md#isauthenticated$)
-- [orderHystory](NgGqlStorageService.md#orderhystory)
-- [userLocations](NgGqlStorageService.md#userlocations)
-- [navBarMenus](NgGqlStorageService.md#navbarmenus)
+- [order](NgGqlStoreService.md#order)
+- [dishes](NgGqlStoreService.md#dishes)
+- [groups](NgGqlStoreService.md#groups)
+- [navigation](NgGqlStoreService.md#navigation)
+- [paymentMethods](NgGqlStoreService.md#paymentmethods)
+- [user](NgGqlStoreService.md#user)
+- [token](NgGqlStoreService.md#token)
+- [isAuthenticated$](NgGqlStoreService.md#isauthenticated$)
+- [orderHystory](NgGqlStoreService.md#orderhystory)
+- [userLocations](NgGqlStoreService.md#userlocations)
+- [navBarMenus](NgGqlStoreService.md#navbarmenus)
 
 ### Methods
 
-- [updateOrder](NgGqlStorageService.md#updateorder)
-- [updateDishes](NgGqlStorageService.md#updatedishes)
-- [updateMenuGroups](NgGqlStorageService.md#updatemenugroups)
-- [updateNavigation](NgGqlStorageService.md#updatenavigation)
-- [updatePaymentMethods](NgGqlStorageService.md#updatepaymentmethods)
-- [updateUser](NgGqlStorageService.md#updateuser)
-- [updateToken](NgGqlStorageService.md#updatetoken)
-- [updateOrderHystory](NgGqlStorageService.md#updateorderhystory)
-- [updateUserLocations](NgGqlStorageService.md#updateuserlocations)
-- [updateNavBarMenus](NgGqlStorageService.md#updatenavbarmenus)
+- [updateOrder](NgGqlStoreService.md#updateorder)
+- [updateDishes](NgGqlStoreService.md#updatedishes)
+- [updateMenuGroups](NgGqlStoreService.md#updatemenugroups)
+- [updateNavigation](NgGqlStoreService.md#updatenavigation)
+- [updatePaymentMethods](NgGqlStoreService.md#updatepaymentmethods)
+- [updateUser](NgGqlStoreService.md#updateuser)
+- [updateToken](NgGqlStoreService.md#updatetoken)
+- [updateOrderHystory](NgGqlStoreService.md#updateorderhystory)
+- [updateUserLocations](NgGqlStoreService.md#updateuserlocations)
+- [updateNavBarMenus](NgGqlStoreService.md#updatenavbarmenus)
 
 ## Constructors
 
 ### constructor
 
-• **new NgGqlStorageService**()
+• **new NgGqlStoreService**()
 
 ## Properties
 

@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { OperationVariables } from '@apollo/client';
-import { deepClone, isValue } from '@axrl/common';
-import type { ExtraSubscriptionOptions } from 'apollo-angular';
-import { gql } from 'apollo-angular';
-import type { Observable } from 'rxjs';
-import { filter, map, startWith, switchMap } from 'rxjs';
-import type { GQLRequestVariables, ValuesOrBoolean } from '../models';
-import { generateQueryString } from '../models';
-import { ApolloService } from './apollo.service';
+import {EventEmitter, Inject, Injectable} from '@angular/core';
+import {OperationVariables} from '@apollo/client';
+import {deepClone, isValue} from '@axrl/common';
+import type {ExtraSubscriptionOptions} from 'apollo-angular';
+import {gql} from 'apollo-angular';
+import type {Observable} from 'rxjs';
+import {filter, map, mergeWith, shareReplay, startWith, switchMap} from 'rxjs';
+import type {Action, GQLRequestVariables, Message, ValuesOrBoolean} from '../models';
+import {ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, generateQueryString} from '../models';
+import {ApolloService} from './apollo.service';
 
 /**
  * Объект настройки генерации части строки запроса с описанием типов параметров операции.
@@ -30,7 +30,52 @@ export interface QueryGenerationParam<V> {
 
 @Injectable()
 export class RequestService {
-  constructor(private apollo: ApolloService) {}
+  private _eventMessage: EventEmitter<Partial<Message>> = new EventEmitter();
+  private _eventAction: EventEmitter<Partial<Action>> = new EventEmitter();
+
+  /**
+   * Поток Observable, в который будут поступать события по текущему заказу в процессе оформления, подразумевающие совершение каких-либо действий на стороне фронта и выполняемых пользователем
+   * (переход на страницу оплаты или, к примеру, открытие диалогового окна с предложением блюда по акции, акции и т.п. )
+   * Для получения потока используется метод @method this.getActionEmitter()
+   * Для отправки в поток кастомных сообщений испльзуется @method this.emitActionEvent()
+   */
+  private _actions$ = this.customSubscribe$<Action, 'action'>(
+    'action',
+    this.defaultActionFragments,
+  ).pipe(mergeWith(this._eventAction.asObservable()), shareReplay(1));
+
+  /**
+   * Поток Observable, в который будут поступать информационные сообщения по текущему заказу (блюдо добавлено/удалено/заказ оформлен).
+   * Для получения потока используется метод @method this.getMessageEmitter()
+   * Для отправки в поток кастомных сообщений испльзуется @method this.emitMessageEvent()
+   */
+  private _messages$ = this.customSubscribe$<Message, 'message'>(
+    'message',
+    this.defaultMessageFragments,
+  ).pipe(mergeWith(this._eventMessage.asObservable()), shareReplay(1));
+
+  constructor(
+    private apollo: ApolloService,
+    @Inject(ACTION_FRAGMENTS)
+    private defaultActionFragments: ValuesOrBoolean<Action>,
+    @Inject(MESSAGE_FRAGMENTS)
+    private defaultMessageFragments: ValuesOrBoolean<Message>,
+  ) {}
+
+  emitMessageEvent(message: Partial<Message>) {
+    this._eventMessage.emit(message);
+  }
+  emitActionEvent(action: Partial<Action>) {
+    this._eventAction.emit(action);
+  }
+
+  getMessageEmitter() {
+    return this._messages$;
+  }
+
+  getActionEmitter() {
+    return this._actions$;
+  }
 
   /**
    * @method customQuery$() для выполнения запросов типа "query" к серверу API GraphQL
@@ -60,12 +105,12 @@ export class RequestService {
   customQuery$<
     T extends {},
     N extends `${string}`,
-    V extends OperationVariables = GQLRequestVariables
+    V extends OperationVariables = GQLRequestVariables,
   >(
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables?: V,
-    paramOptions?: QueryGenerationParam<V>
+    paramOptions?: QueryGenerationParam<V>,
   ): Observable<Record<N, T | T[]>> {
     return this.apollo
       .watchQuery<Record<N, T | T[]>, V>({
@@ -79,8 +124,8 @@ export class RequestService {
         variables,
       })
       .pipe(
-        map((res) => (res.error || res.errors ? null : res.data)),
-        filter((data): data is Record<N, T | T[]> => !!data)
+        map(res => (res.error || res.errors ? null : res.data)),
+        filter((data): data is Record<N, T | T[]> => !!data),
       );
   }
 
@@ -111,7 +156,7 @@ export class RequestService {
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables: V,
-    paramOptions?: QueryGenerationParam<V>
+    paramOptions?: QueryGenerationParam<V>,
   ): Observable<Record<N, T>> {
     return this.apollo
       .mutate<Record<N, T>, V>({
@@ -125,8 +170,8 @@ export class RequestService {
         variables,
       })
       .pipe(
-        map((result) => (isValue(result) ? result.data : null)),
-        filter((res): res is Record<N, T> => !!res)
+        map(result => (isValue(result) ? result.data : null)),
+        filter((res): res is Record<N, T> => !!res),
       );
   }
 
@@ -157,16 +202,12 @@ export class RequestService {
    * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
    * @see this.queryAndSubscribe
    **/
-  customSubscribe$<
-    T extends {},
-    N extends `${string}`,
-    V = GQLRequestVariables
-  >(
+  customSubscribe$<T extends {}, N extends `${string}`, V = GQLRequestVariables>(
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables?: V,
     paramOptions?: QueryGenerationParam<V>,
-    extra?: ExtraSubscriptionOptions
+    extra?: ExtraSubscriptionOptions,
   ): Observable<Record<N, T>[N]> {
     const q = generateQueryString({
       name,
@@ -176,14 +217,11 @@ export class RequestService {
       fieldsTypeMap: paramOptions?.fieldsTypeMap,
     });
     return this.apollo
-      .subscribe<Record<N, T>, V>(
-        { query: gql`subscription ${q}`, variables },
-        extra
-      )
+      .subscribe<Record<N, T>, V>({query: gql`subscription ${q}`, variables}, extra)
       .pipe(
-        map((result) => result.data),
+        map(result => result.data),
         filter((res): res is Record<N, T> => !!res),
-        map((res) => res[name])
+        map(res => res[name]),
       );
   }
 
@@ -216,11 +254,8 @@ export class RequestService {
     T extends {},
     NQuery extends `${string}`,
     NSubscribe extends `${string}`,
-    VQ extends OperationVariables = Exclude<
-      GQLRequestVariables,
-      'query' | 'subscribe'
-    >,
-    VS = Exclude<GQLRequestVariables, 'query' | 'subscribe'>
+    VQ extends OperationVariables = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
+    VS = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
   >(
     nameQuery: NQuery,
     nameSubscribe: NSubscribe,
@@ -233,16 +268,12 @@ export class RequestService {
     paramOptions?: {
       query?: QueryGenerationParam<VQ>;
       subscribe?: QueryGenerationParam<VS>;
-    }
+    },
   ): Observable<T[]> {
-    const updateFn: (store: T | T[], subscribeValue: T) => T[] = (
-      store,
-      newValue
-    ) => {
+    const updateFn: (store: T | T[], subscribeValue: T) => T[] = (store, newValue) => {
       const array = Array.isArray(store) ? store : [store];
       const findItem = array.find(
-        (item) =>
-          newValue[uniqueKeyForCompareItem] === item[uniqueKeyForCompareItem]
+        item => newValue[uniqueKeyForCompareItem] === item[uniqueKeyForCompareItem],
       );
       if (findItem) {
         Object.assign(findItem, newValue);
@@ -263,33 +294,31 @@ export class RequestService {
       variables: variables?.query,
     };
 
-    return this.apollo
-      .watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions)
-      .pipe(
-        map((res) => {
-          return res.error ?? res.data;
-        }),
-        filter((data): data is Record<NQuery, T | T[]> => !!data),
-        switchMap((result) =>
-          this.customSubscribe$<T, NSubscribe, VS>(
-            nameSubscribe,
-            queryObject,
-            variables?.subscribe,
-            paramOptions?.subscribe
-          ).pipe(
-            startWith(null),
-            map((updatedValue) => {
-              const store: T | T[] = deepClone(result[nameQuery]);
-              const final = isValue(updatedValue)
-                ? updateFn(store, deepClone(updatedValue))
-                : Array.isArray(store)
-                ? store
-                : <T[]>[store];
+    return this.apollo.watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions).pipe(
+      map(res => {
+        return res.error ?? res.data;
+      }),
+      filter((data): data is Record<NQuery, T | T[]> => !!data),
+      switchMap(result =>
+        this.customSubscribe$<T, NSubscribe, VS>(
+          nameSubscribe,
+          queryObject,
+          variables?.subscribe,
+          paramOptions?.subscribe,
+        ).pipe(
+          startWith(null),
+          map(updatedValue => {
+            const store: T | T[] = deepClone(result[nameQuery]);
+            const final = isValue(updatedValue)
+              ? updateFn(store, deepClone(updatedValue))
+              : Array.isArray(store)
+              ? store
+              : <T[]>[store];
 
-              return final;
-            })
-          )
-        )
-      );
+            return final;
+          }),
+        ),
+      ),
+    );
   }
 }

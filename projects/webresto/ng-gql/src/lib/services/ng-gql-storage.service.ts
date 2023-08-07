@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { createSubject, getFilteredData, isValue } from '@axrl/common';
+import {Injectable} from '@angular/core';
+import {createSubject, getFilteredData, isValue} from '@axrl/common';
 import {
   Dish,
   Group,
@@ -13,7 +13,7 @@ import {
 } from '../models';
 
 @Injectable()
-export class NgGqlStorageService {
+export class NgGqlStoreService {
   constructor() {}
 
   private _order = createSubject<Order<Dish> | null>(null);
