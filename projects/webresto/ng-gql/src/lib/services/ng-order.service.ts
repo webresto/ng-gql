@@ -1,12 +1,12 @@
 import {EventEmitter, Inject, Injectable} from '@angular/core';
-import {createSubject, isEqualItems, isValue} from '@axrl/common';
+import {createSubject, isValue} from '@axrl/common';
 import type {FormGroupType} from '@axrl/ngx-extended-form-builder';
 import type {BehaviorSubject, Observable} from 'rxjs';
 import {
   catchError,
   combineLatest,
   concatMap,
-  distinctUntilChanged,
+  distinctUntilKeyChanged,
   filter,
   fromEvent,
   map,
@@ -65,6 +65,7 @@ export class NgOrderService {
       }).pipe(
         startWith(this.storageWrapper.startStorageEventFactory(storageOrderIdToken)),
         filter(event => event.key === storageOrderIdToken),
+        distinctUntilKeyChanged('key'),
         switchMap(event => {
           const storageOrderId = this.storageWrapper.getOrderId(
             storageOrderIdToken,
@@ -74,7 +75,6 @@ export class NgOrderService {
         }),
       ),
     ),
-    distinctUntilChanged((prev, next) => !isEqualItems(prev, next)),
     switchMap(order => {
       const storageOrderId = order.id;
       return combineLatest([
@@ -119,7 +119,6 @@ export class NgOrderService {
         }),
       );
     }),
-    distinctUntilChanged((prev, next) => !isEqualItems(prev, next)),
     shareReplay(1),
   );
 

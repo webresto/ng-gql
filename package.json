@@ -20,7 +20,7 @@
     "@angular/compiler": "^15.2.9",
     "@angular/core": "^15.2.9",
     "@angular/forms": "^15.2.9",
-    "@apollo/client": "^3.7.17",
+    "@apollo/client": "^3.8.0",
     "@axrl/common": "^1.0.32",
     "@axrl/ngx-extended-form-builder": "^1.2.10",
     "apollo-angular": "^4.2.1",
