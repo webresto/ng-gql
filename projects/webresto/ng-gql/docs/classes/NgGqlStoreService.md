@@ -8,10 +8,6 @@
 
 ### Properties
 
-- [order](NgGqlStoreService.md#order)
-- [dishes](NgGqlStoreService.md#dishes)
-- [groups](NgGqlStoreService.md#groups)
-- [navigation](NgGqlStoreService.md#navigation)
 - [paymentMethods](NgGqlStoreService.md#paymentmethods)
 - [user](NgGqlStoreService.md#user)
 - [token](NgGqlStoreService.md#token)
@@ -19,6 +15,10 @@
 - [orderHystory](NgGqlStoreService.md#orderhystory)
 - [userLocations](NgGqlStoreService.md#userlocations)
 - [navBarMenus](NgGqlStoreService.md#navbarmenus)
+- [groups](NgGqlStoreService.md#groups)
+- [navigation](NgGqlStoreService.md#navigation)
+- [order](NgGqlStoreService.md#order)
+- [dishes](NgGqlStoreService.md#dishes)
 
 ### Methods
 
@@ -40,30 +40,6 @@
 • **new NgGqlStoreService**()
 
 ## Properties
-
-### order
-
-• `Readonly` **order**: `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
-
-___
-
-### dishes
-
-• `Readonly` **dishes**: `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
-
-___
-
-### groups
-
-• `Readonly` **groups**: `Observable`<[`Group`](../interfaces/Group.md)[]\>
-
-___
-
-### navigation
-
-• `Readonly` **navigation**: `BehaviorSubject`<``null`` \| [`NavigationBase`](../interfaces/NavigationBase.md)[]\>
-
-___
 
 ### paymentMethods
 
@@ -104,6 +80,30 @@ ___
 ### navBarMenus
 
 • `Readonly` **navBarMenus**: `Observable`<[`NavBarMenu`](../interfaces/NavBarMenu.md)[]\>
+
+___
+
+### groups
+
+• `Readonly` **groups**: `Observable`<[`Group`](../interfaces/Group.md)[]\>
+
+___
+
+### navigation
+
+• `Readonly` **navigation**: `BehaviorSubject`<``null`` \| [`NavigationBase`](../interfaces/NavigationBase.md)[]\>
+
+___
+
+### order
+
+• `Readonly` **order**: `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
+
+___
+
+### dishes
+
+• `Readonly` **dishes**: `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
 
 ## Methods
 

@@ -37,6 +37,27 @@ import {RequestService} from './request.service';
 
 @Injectable()
 export class NgGqlUserService {
+  private readonly _user$ = this.ngGqlStorage.user.pipe(
+    exhaustMap(user =>
+      isValue(user)
+        ? this.ngGqlStorage.user
+        : this.getToken$().pipe(
+            switchMap(token =>
+              isValue(token)
+                ? this._loadUser$().pipe(
+                    switchMap(user => {
+                      this.updateStorageUser(user);
+                      return this.ngGqlStorage.user;
+                    }),
+                  )
+                : this.ngGqlStorage.user,
+            ),
+          ),
+    ),
+    catchError(err => this.ngGqlStorage.user),
+    shareReplay(1),
+  );
+
   constructor(
     private requestService: RequestService,
     private ngGqlStorage: NgGqlStoreService,
@@ -48,17 +69,6 @@ export class NgGqlUserService {
     @Inject(USER_LOCATION_FRAGMENTS)
     private defaultuserLocationFragments: ValuesOrBoolean<UserLocation>,
   ) {}
-
-  private _loadUser$(): Observable<User | null> {
-    return this.requestService
-      .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
-      .pipe(
-        map(result => {
-          console.log(result);
-          return result[0] ?? null;
-        }),
-      );
-  }
 
   updateStorageUser(newUser: User | null): void {
     this.ngGqlStorage.updateUser(newUser);
@@ -104,38 +114,6 @@ export class NgGqlUserService {
     );
   }
 
-  private _getUserLocations(options: {
-    skip: number;
-    limit: number;
-  }): Observable<UserLocationResponse> {
-    return this.requestService
-      .customQuery$<number, 'userLocationCount', {criteria: {}}>('userLocationCount', 1, {
-        criteria: {},
-      })
-      .pipe(
-        switchMap(data => {
-          const userLocationCount = Array.isArray(data.userLocationCount)
-            ? data.userLocationCount[0]
-            : data.userLocationCount;
-          return this.requestService
-            .customQuery$('userLocation', this.defaultuserLocationFragments, options)
-            .pipe(
-              map(data => {
-                const userLocation = Array.isArray(data.userLocation)
-                  ? data.userLocation
-                  : [data.userLocation];
-                const result = {
-                  userLocationCount,
-                  userLocation,
-                };
-                this.ngGqlStorage.updateUserLocations(result);
-                return result;
-              }),
-            );
-        }),
-      );
-  }
-
   getUserLocations$(
     options: {
       skip: number;
@@ -171,27 +149,6 @@ export class NgGqlUserService {
       ),
     );
   }
-
-  private readonly _user$ = this.ngGqlStorage.user.pipe(
-    exhaustMap(user =>
-      isValue(user)
-        ? this.ngGqlStorage.user
-        : this.getToken$().pipe(
-            switchMap(token =>
-              isValue(token)
-                ? this._loadUser$().pipe(
-                    switchMap(user => {
-                      this.updateStorageUser(user);
-                      return this.ngGqlStorage.user;
-                    }),
-                  )
-                : this.ngGqlStorage.user,
-            ),
-          ),
-    ),
-    catchError(err => this.ngGqlStorage.user),
-    shareReplay(1),
-  );
 
   getUser$(): Observable<User | null> {
     return this._user$;
@@ -326,5 +283,48 @@ export class NgGqlUserService {
       payload: locationId,
       loading,
     });
+  }
+
+  private _loadUser$(): Observable<User | null> {
+    return this.requestService
+      .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
+      .pipe(
+        map(result => {
+          console.log(result);
+          return result[0] ?? null;
+        }),
+      );
+  }
+
+  private _getUserLocations(options: {
+    skip: number;
+    limit: number;
+  }): Observable<UserLocationResponse> {
+    return this.requestService
+      .customQuery$<number, 'userLocationCount', {criteria: {}}>('userLocationCount', 1, {
+        criteria: {},
+      })
+      .pipe(
+        switchMap(data => {
+          const userLocationCount = Array.isArray(data.userLocationCount)
+            ? data.userLocationCount[0]
+            : data.userLocationCount;
+          return this.requestService
+            .customQuery$('userLocation', this.defaultuserLocationFragments, options)
+            .pipe(
+              map(data => {
+                const userLocation = Array.isArray(data.userLocation)
+                  ? data.userLocation
+                  : [data.userLocation];
+                const result = {
+                  userLocationCount,
+                  userLocation,
+                };
+                this.ngGqlStorage.updateUserLocations(result);
+                return result;
+              }),
+            );
+        }),
+      );
   }
 }

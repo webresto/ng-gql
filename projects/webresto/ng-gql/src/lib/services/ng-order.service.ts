@@ -1,5 +1,5 @@
 import {EventEmitter, Inject, Injectable} from '@angular/core';
-import {createSubject, isValue} from '@axrl/common';
+import {createSubject, isEqualItems, isValue} from '@axrl/common';
 import type {FormGroupType} from '@axrl/ngx-extended-form-builder';
 import type {BehaviorSubject, Observable} from 'rxjs';
 import {
@@ -65,19 +65,23 @@ export class NgOrderService {
       }).pipe(
         startWith(this.storageWrapper.startStorageEventFactory(storageOrderIdToken)),
         filter(event => event.key === storageOrderIdToken),
-        map(event =>
-          this.storageWrapper.getOrderId(storageOrderIdToken, event.newValue ?? undefined),
-        ),
+        switchMap(event => {
+          const storageOrderId = this.storageWrapper.getOrderId(
+            storageOrderIdToken,
+            event.newValue ?? undefined,
+          );
+          return this.loadCurrentOrNewOrder(storageOrderId, storageOrderIdToken);
+        }),
       ),
     ),
-    distinctUntilChanged(),
-    switchMap(storageOrderId => {
+    distinctUntilChanged((prev, next) => !isEqualItems(prev, next)),
+    switchMap(order => {
+      const storageOrderId = order.id;
       return combineLatest([
         this.getPaymentMethods$(storageOrderId),
-        this.loadOrder$(storageOrderId).pipe(distinctUntilChanged()),
         this.ngGqlUser.getUser$(),
       ]).pipe(
-        map(([methods, order, user]) => {
+        map(([methods, user]) => {
           if (!isValue(order.paymentMethod) && methods.length > 0) {
             order.paymentMethod = {
               id: methods[0].id,
@@ -115,6 +119,7 @@ export class NgOrderService {
         }),
       );
     }),
+    distinctUntilChanged((prev, next) => !isEqualItems(prev, next)),
     shareReplay(1),
   );
 
@@ -351,7 +356,7 @@ export class NgOrderService {
    *
    * @param id - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
    *  */
-  loadOrder$(id: string | undefined, isShort: boolean = false): Observable<Order> {
+  loadOrder$(id: string, isShort: boolean = false): Observable<Order> {
     return this.requestService
       .queryAndSubscribe<Order, 'order', 'order', {orderId: string} | {shortId: string}>(
         'order',
@@ -816,7 +821,7 @@ export class NgOrderService {
       )
       .pipe(
         map(data => {
-          if (isValue(data)) {
+          if (isValue(data) && data.sendOrder.order.state === 'ORDER') {
             if (isValue(sendOrderData.orderIdFactory)) {
               const newOrderId = sendOrderData.orderIdFactory();
               if (newOrderId) {
@@ -852,5 +857,18 @@ export class NgOrderService {
         {requiredFields: ['orderDishId', 'id']},
       )
       .pipe(map(data => data.orderRemoveDish));
+  }
+
+  private loadCurrentOrNewOrder(id: string, token: string): Observable<Order> {
+    return this.loadOrder$(id).pipe(
+      switchMap(order => {
+        if (order.state === 'ORDER') {
+          const newId = this.storageWrapper.getOrderId(token, undefined, true);
+          return this.loadOrder$(newId);
+        } else {
+          return of(order);
+        }
+      }),
+    );
   }
 }

@@ -79,6 +79,36 @@ export type UserBusEvent = {
 
 @Injectable()
 export class NgGqlUserBusService {
+  private _userBus = new EventEmitter<UserBusEvent>();
+
+  readonly userBus$ = this._userBus.asObservable().pipe(
+    switchMap(event => {
+      return this.userServiceReducer(event).pipe(
+        concatMap(result => {
+          setTimeout(() => {
+            const successCb = <
+              (result: CaptchaJob<any> | Response | UserResponse | OTPResponse | boolean) => void
+            >event.successCb;
+            successCb(result);
+
+            if (isValue(event.loading)) {
+              event.loading.next(false);
+            }
+          }, 1);
+          return of(() => {});
+        }),
+        catchError((err: unknown) => {
+          if (isValue(event.loading)) {
+            event.loading.next(false);
+          }
+          event.errorCb(err);
+          console.log(err);
+          return of(() => {});
+        }),
+      );
+    }),
+  );
+
   constructor(
     private requestService: RequestService,
     private ngGqlStorage: NgGqlStoreService,
@@ -93,8 +123,6 @@ export class NgGqlUserBusService {
     @Inject(OTP_RESPONSE_FRAGMENTS)
     private defaultOTPResponceFragments: ValuesOrBoolean<OTPResponse>,
   ) {}
-
-  private _userBus = new EventEmitter<UserBusEvent>();
 
   emitToBus<T extends UserBusEventType, P extends UserBusEvent['payload'], R>(data: {
     type: T;
@@ -145,34 +173,6 @@ export class NgGqlUserBusService {
         return this.locationSetIsDefault$(busEvent.payload);
     }
   }
-
-  readonly userBus$ = this._userBus.asObservable().pipe(
-    switchMap(event => {
-      return this.userServiceReducer(event).pipe(
-        concatMap(result => {
-          setTimeout(() => {
-            const successCb = <
-              (result: CaptchaJob<any> | Response | UserResponse | OTPResponse | boolean) => void
-            >event.successCb;
-            successCb(result);
-
-            if (isValue(event.loading)) {
-              event.loading.next(false);
-            }
-          }, 1);
-          return of(() => {});
-        }),
-        catchError((err: unknown) => {
-          if (isValue(event.loading)) {
-            event.loading.next(false);
-          }
-          event.errorCb(err);
-          console.log(err);
-          return of(() => {});
-        }),
-      );
-    }),
-  );
 
   private captchaGetJob$<T extends CaptchaTask>(
     data: CaptchaJobPayload,

@@ -142,14 +142,15 @@ ___
 
 ### getOrderId
 
-▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`): `string`
+▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`, `generateNew?`): `string`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `storageOrderIdToken` | `string` |
-| `storageOrderId?` | `string` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `storageOrderIdToken` | `string` | `undefined` |
+| `storageOrderId?` | `string` | `undefined` |
+| `generateNew` | `boolean` | `false` |
 
 #### Returns
 

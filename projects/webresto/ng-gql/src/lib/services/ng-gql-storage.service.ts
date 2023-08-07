@@ -1,3 +1,4 @@
+/* eslint-disable rxjs/no-subject-value */
 import {Injectable} from '@angular/core';
 import {createSubject, getFilteredData, isValue} from '@axrl/common';
 import {
@@ -14,55 +15,56 @@ import {
 
 @Injectable()
 export class NgGqlStoreService {
+  private _groups = createSubject<Group[]>([]);
+  private _order = createSubject<Order<Dish> | null>(null);
+  private _dishes = createSubject<Dish[]>([]);
+  private _navBarMenus = createSubject<NavBarMenu[]>([]);
+  private _userLocations = createSubject<UserLocationResponse>(null);
+  private _orderHystory = createSubject<UserOrderHystory[]>([]);
+  private _navigation = createSubject<NavigationBase[] | null>(null);
+  private _token = createSubject<string | null>(localStorage.getItem('token'));
+  private _user = createSubject<User | null>(null);
+  private _paymentMethods = createSubject<PaymentMethod[] | null>(null);
+
+  readonly paymentMethods = getFilteredData(this._paymentMethods);
+  readonly user = this._user;
+  readonly token = this._token.asObservable();
+  readonly isAuthenticated$ = getFilteredData(this.token);
+  readonly orderHystory = this._orderHystory.asObservable();
+  readonly userLocations = this._userLocations.asObservable();
+  readonly navBarMenus = this._navBarMenus.asObservable();
+  readonly groups = this._groups.asObservable();
+  readonly navigation = this._navigation;
+  readonly order = getFilteredData(this._order);
+  readonly dishes = this._dishes.asObservable();
+
   constructor() {}
 
-  private _order = createSubject<Order<Dish> | null>(null);
-  readonly order = getFilteredData(this._order);
-
-  updateOrder<T extends Order<Dish>>(order: T) {
+  updateOrder<T extends Order<Dish>>(order: T): void {
     this._order.next(order);
   }
 
-  private _dishes = createSubject<Dish[]>([]);
-  readonly dishes = this._dishes.asObservable();
-
-  updateDishes<T extends Dish>(dishes: T[]) {
+  updateDishes<T extends Dish>(dishes: T[]): void {
     this._dishes.next(dishes);
   }
 
-  private _groups = createSubject<Group[]>([]);
-  readonly groups = this._groups.asObservable();
-
-  updateMenuGroups<T extends Group>(menuGroups: T[]) {
+  updateMenuGroups<T extends Group>(menuGroups: T[]): void {
     this._groups.next(menuGroups);
   }
 
-  private _navigation = createSubject<NavigationBase[] | null>(null);
-  readonly navigation = this._navigation;
-
-  updateNavigation<T extends NavigationBase>(navigation: T[]) {
+  updateNavigation<T extends NavigationBase>(navigation: T[]): void {
     this._navigation.next(navigation);
   }
 
-  private _paymentMethods = createSubject<PaymentMethod[] | null>(null);
-  readonly paymentMethods = getFilteredData(this._paymentMethods);
-
-  updatePaymentMethods<T extends PaymentMethod>(methods: T[]) {
+  updatePaymentMethods<T extends PaymentMethod>(methods: T[]): void {
     this._paymentMethods.next(methods);
   }
 
-  private _user = createSubject<User | null>(null);
-  readonly user = this._user;
-
-  updateUser<T extends User>(user: T | null) {
+  updateUser<T extends User>(user: T | null): void {
     this._user.next(user);
   }
 
-  private _token = createSubject<string | null>(localStorage.getItem('token'));
-  readonly token = this._token.asObservable();
-  readonly isAuthenticated$ = getFilteredData(this.token);
-
-  updateToken(newToken: string | null) {
+  updateToken(newToken: string | null): void {
     if (isValue(newToken)) {
       localStorage.setItem('token', newToken);
     } else {
@@ -71,19 +73,13 @@ export class NgGqlStoreService {
     this._token.next(newToken);
   }
 
-  private _orderHystory = createSubject<UserOrderHystory[]>([]);
-  readonly orderHystory = this._orderHystory.asObservable();
-
-  updateOrderHystory(newPart: UserOrderHystory[]) {
+  updateOrderHystory(newPart: UserOrderHystory[]): void {
     const hystory = [...this._orderHystory.value];
     hystory.push(...newPart);
     this._orderHystory.next(hystory);
   }
 
-  private _userLocations = createSubject<UserLocationResponse>(null);
-  readonly userLocations = this._userLocations.asObservable();
-
-  updateUserLocations(newValue: UserLocationResponse) {
+  updateUserLocations(newValue: UserLocationResponse): void {
     const current = this._userLocations.value;
     if (current) {
       const userLocations = [...current.userLocation];
@@ -95,10 +91,7 @@ export class NgGqlStoreService {
     }
   }
 
-  private _navBarMenus = createSubject<NavBarMenu[]>([]);
-  readonly navBarMenus = this._navBarMenus.asObservable();
-
-  updateNavBarMenus(items: NavBarMenu[]) {
+  updateNavBarMenus(items: NavBarMenu[]): void {
     this._navBarMenus.next(items);
   }
 }

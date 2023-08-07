@@ -67,21 +67,21 @@ ___
 
 ### getMessageEmitter
 
-▸ **getMessageEmitter**(): `Observable`<[`Message`](../interfaces/Message.md) \| `Partial`<[`Message`](../interfaces/Message.md)\>\>
+▸ **getMessageEmitter**(): `Observable`<`Partial`<[`Message`](../interfaces/Message.md)\>\>
 
 #### Returns
 
-`Observable`<[`Message`](../interfaces/Message.md) \| `Partial`<[`Message`](../interfaces/Message.md)\>\>
+`Observable`<`Partial`<[`Message`](../interfaces/Message.md)\>\>
 
 ___
 
 ### getActionEmitter
 
-▸ **getActionEmitter**(): `Observable`<[`Action`](../interfaces/Action.md)<`any`\> \| `Partial`<[`Action`](../interfaces/Action.md)<`any`\>\>\>
+▸ **getActionEmitter**(): `Observable`<`Partial`<[`Action`](../interfaces/Action.md)<`any`\>\>\>
 
 #### Returns
 
-`Observable`<[`Action`](../interfaces/Action.md)<`any`\> \| `Partial`<[`Action`](../interfaces/Action.md)<`any`\>\>\>
+`Observable`<`Partial`<[`Action`](../interfaces/Action.md)<`any`\>\>\>
 
 ___
 

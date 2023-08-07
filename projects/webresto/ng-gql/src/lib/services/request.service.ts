@@ -18,7 +18,7 @@ export interface QueryGenerationParam<V> {
    * (например у параметра указан тип String!, а не String).
    * ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`.
    */
-  requiredFields?: (keyof V)[];
+  requiredFields?: Array<keyof V>;
 
   /**
    * Необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
@@ -62,18 +62,18 @@ export class RequestService {
     private defaultMessageFragments: ValuesOrBoolean<Message>,
   ) {}
 
-  emitMessageEvent(message: Partial<Message>) {
+  emitMessageEvent(message: Partial<Message>): void {
     this._eventMessage.emit(message);
   }
-  emitActionEvent(action: Partial<Action>) {
+  emitActionEvent(action: Partial<Action>): void {
     this._eventAction.emit(action);
   }
 
-  getMessageEmitter() {
+  getMessageEmitter(): Observable<Partial<Message>> {
     return this._messages$;
   }
 
-  getActionEmitter() {
+  getActionEmitter(): Observable<Partial<Action<any>>> {
     return this._actions$;
   }
 
