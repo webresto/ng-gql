@@ -1,4 +1,4 @@
-import type { Dish } from '../dish/dish.gql';
+import type {Dish} from '../dish/dish.gql';
 
 export interface OrderModifier<T extends Dish = Dish> {
   id: string;
@@ -8,7 +8,6 @@ export interface OrderModifier<T extends Dish = Dish> {
 }
 
 export interface Modifier<T extends Dish = Dish> {
-  modifierId: string;
   groupId?: string;
   maxAmount: number;
   minAmount: number;

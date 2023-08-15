@@ -273,7 +273,6 @@ export class NgOrderService {
   }
 
   paymentLink$(phone: string, fromPhone: string, orderId: string): Observable<any> {
-    console.log('paymentLink', orderId, phone, fromPhone);
     return this.requestService
       .customMutation$(
         'paymentLink',
@@ -293,7 +292,6 @@ export class NgOrderService {
       )
       .pipe(
         catchError(error => {
-          console.log('error', error);
           if (this.config.debugMode) {
             alert(error);
           }
@@ -418,7 +416,7 @@ export class NgOrderService {
       data: {
         dishId: options.dishId,
         modifiers: (options.dishModifiers ?? []).map(dishModifier => ({
-          id: 'id' in dishModifier ? dishModifier.id : (<Partial<Modifier>>dishModifier).modifierId,
+          id: dishModifier.dish?.id,
           amount: dishModifier.amount,
           dish: dishModifier.dish,
           groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId,

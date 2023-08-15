@@ -10,7 +10,6 @@
 
 ### Properties
 
-- [modifierId](Modifier.md#modifierid)
 - [groupId](Modifier.md#groupid)
 - [maxAmount](Modifier.md#maxamount)
 - [minAmount](Modifier.md#minamount)
@@ -19,12 +18,6 @@
 - [dish](Modifier.md#dish)
 
 ## Properties
-
-### modifierId
-
-• **modifierId**: `string`
-
-___
 
 ### groupId
 

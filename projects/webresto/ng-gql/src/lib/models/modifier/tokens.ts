@@ -1,7 +1,7 @@
-import { inject, InjectionToken } from '@angular/core';
-import { IMAGE_FRAGMENTS } from "../image";
-import { Modifier } from './modifier.gql';
-import { ValuesOrBoolean } from '../values-or-boolean';
+import {inject, InjectionToken} from '@angular/core';
+import {IMAGE_FRAGMENTS} from '../image';
+import {ValuesOrBoolean} from '../values-or-boolean';
+import {Modifier} from './modifier.gql';
 
 /**
  * InjectionToken с объектом ValuesOrBoolean<Modifier>, используемым в запросе Modifier с сервера.
@@ -10,10 +10,9 @@ import { ValuesOrBoolean } from '../values-or-boolean';
 export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
   'MODIFIER_FRAGMENTS',
   {
-    factory: () => {
+    factory: (): ValuesOrBoolean<Modifier> => {
       const imageFragments = inject(IMAGE_FRAGMENTS);
       return {
-        modifierId: true,
         maxAmount: true,
         minAmount: true,
         defaultAmount: true,
@@ -34,5 +33,5 @@ export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
         },
       };
     },
-  }
+  },
 );

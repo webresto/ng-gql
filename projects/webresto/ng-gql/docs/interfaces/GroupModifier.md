@@ -20,7 +20,6 @@
 - [childModifiers](GroupModifier.md#childmodifiers)
 - [group](GroupModifier.md#group)
 - [totalAmount](GroupModifier.md#totalamount)
-- [modifierId](GroupModifier.md#modifierid)
 - [groupId](GroupModifier.md#groupid)
 - [maxAmount](GroupModifier.md#maxamount)
 - [minAmount](GroupModifier.md#minamount)
@@ -51,16 +50,6 @@ ___
 ### totalAmount
 
 • **totalAmount**: `number`
-
-___
-
-### modifierId
-
-• **modifierId**: `string`
-
-#### Inherited from
-
-Exclude.modifierId
 
 ___
 
