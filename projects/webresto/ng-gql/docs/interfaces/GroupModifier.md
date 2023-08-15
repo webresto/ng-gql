@@ -8,7 +8,7 @@
 
 ## Hierarchy
 
-- `Exclude`<[`Modifier`](Modifier.md)<`T`\>, ``"amount"`` \| ``"defaultAmount"`` \| ``"hideIfDefaultAmount"`` \| ``"groupId"`` \| ``"dish"``\>
+- `Omit`<[`Modifier`](Modifier.md)<`T`\>, ``"amount"`` \| ``"defaultAmount"`` \| ``"hideIfDefaultAmount"`` \| ``"groupId"`` \| ``"dish"``\>
 
   ↳ **`GroupModifier`**
 
@@ -20,12 +20,8 @@
 - [childModifiers](GroupModifier.md#childmodifiers)
 - [group](GroupModifier.md#group)
 - [totalAmount](GroupModifier.md#totalamount)
-- [groupId](GroupModifier.md#groupid)
 - [maxAmount](GroupModifier.md#maxamount)
 - [minAmount](GroupModifier.md#minamount)
-- [amount](GroupModifier.md#amount)
-- [defaultAmount](GroupModifier.md#defaultamount)
-- [dish](GroupModifier.md#dish)
 
 ## Properties
 
@@ -53,23 +49,13 @@ ___
 
 ___
 
-### groupId
-
-• `Optional` **groupId**: `string`
-
-#### Inherited from
-
-Exclude.groupId
-
-___
-
 ### maxAmount
 
 • **maxAmount**: `number`
 
 #### Inherited from
 
-Exclude.maxAmount
+Omit.maxAmount
 
 ___
 
@@ -79,34 +65,4 @@ ___
 
 #### Inherited from
 
-Exclude.minAmount
-
-___
-
-### amount
-
-• `Optional` **amount**: `number`
-
-#### Inherited from
-
-Exclude.amount
-
-___
-
-### defaultAmount
-
-• **defaultAmount**: `number`
-
-#### Inherited from
-
-Exclude.defaultAmount
-
-___
-
-### dish
-
-• **dish**: `Pick`<`T`, ``"id"`` \| ``"additionalInfo"`` \| ``"name"`` \| ``"description"`` \| ``"oldPrice"`` \| ``"price"`` \| ``"weight"`` \| ``"balance"`` \| ``"tags"`` \| ``"groupId"`` \| ``"parentGroup"`` \| ``"images"``\>
-
-#### Inherited from
-
-Exclude.dish
+Omit.minAmount
