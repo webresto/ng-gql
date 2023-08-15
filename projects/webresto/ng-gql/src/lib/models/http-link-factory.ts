@@ -1,4 +1,4 @@
-import type {InMemoryCacheConfig} from '@apollo/client/core';
+import type {ApolloLink, InMemoryCacheConfig} from '@apollo/client/core';
 import {InMemoryCache, split} from '@apollo/client/core';
 import {WebSocketLink} from '@apollo/client/link/ws';
 import {getMainDefinition} from '@apollo/client/utilities';
@@ -6,11 +6,18 @@ import {isValue} from '@axrl/common';
 import {HttpLink} from 'apollo-angular/http';
 import {LocalStorageWrapper, persistCacheSync} from 'apollo3-cache-persist';
 import type {OperationDefinitionNode} from 'graphql';
-import {SubscriptionClient} from 'subscriptions-transport-ws';
+import {ConnectionParamsOptions, SubscriptionClient} from 'subscriptions-transport-ws';
 import {generateUUID} from './get-uuid';
 import {NgGqlConfig} from './ng-gql-config';
 
-export function httpLinkFactory(httpLink: HttpLink, document: Document, config: NgGqlConfig) {
+export function httpLinkFactory(
+  httpLink: HttpLink,
+  document: Document,
+  config: NgGqlConfig,
+): {
+  link: ApolloLink;
+  cache: InMemoryCache;
+} {
   const win = document.defaultView;
   const savedDeviceId = localStorage.getItem('deviceId');
   const deviceId = savedDeviceId ?? generateUUID(win);
@@ -19,7 +26,7 @@ export function httpLinkFactory(httpLink: HttpLink, document: Document, config: 
   const ws = new WebSocketLink(
     new SubscriptionClient(config.url.replace('http', 'ws'), {
       reconnect: true,
-      connectionParams: () => {
+      connectionParams: (): ConnectionParamsOptions => {
         const token = localStorage.getItem('token');
         return isValue(token)
           ? {
@@ -52,7 +59,7 @@ export function httpLinkFactory(httpLink: HttpLink, document: Document, config: 
     resultCaching: true,
     typePolicies: {
       GroupModifier: {
-        keyFields: ['modifierId', 'maxAmount', 'minAmount', 'required'],
+        keyFields: ['maxAmount', 'minAmount', 'required', 'group', ['id']],
         fields: {
           childModifiers: {
             merge(existing, incoming) {
@@ -62,7 +69,7 @@ export function httpLinkFactory(httpLink: HttpLink, document: Document, config: 
         },
       },
       Modifier: {
-        keyFields: ['modifierId', 'maxAmount', 'minAmount', 'defaultAmount'],
+        keyFields: ['maxAmount', 'minAmount', 'defaultAmount', 'dish', ['id']],
       },
       Order: {
         fields: {
