@@ -1,12 +1,28 @@
-import type { FormGroupType } from '@axrl/ngx-extended-form-builder';
-import type { BehaviorSubject } from 'rxjs';
-import type { Order, CheckOrderInput, AddToOrderInput, RemoveOrSetAmountToDish, SetDishCommentInput, CheckResponse, OrderForm } from './order/order.gql';
+import type {FormGroupType} from '@axrl/ngx-extended-form-builder';
+import type {BehaviorSubject} from 'rxjs';
+import type {
+  AddToOrderInput,
+  CheckOrderInput,
+  CheckResponse,
+  Order,
+  OrderForm,
+  RemoveOrSetAmountToDish,
+  SetDishCommentInput,
+} from './order/order.gql';
 
 /**
  * @alias @event CartBusEvent
  * Тип, описывающий события, которые отслеживаются в потоке NgGqlService.orderBus$.
  */
-export type CartBusEvent = CartBusEventAdd | CartBusEventUpdate | CartBusEventRemove | CartBusEventSetAmountToDish | CartBusEventSetCommentToDish | CartBusEventCheck | CartBusEventSend | CartBusEventClone;
+export type CartBusEvent =
+  | CartBusEventAdd
+  | CartBusEventUpdate
+  | CartBusEventRemove
+  | CartBusEventSetAmountToDish
+  | CartBusEventSetCommentToDish
+  | CartBusEventCheck
+  | CartBusEventSend
+  | CartBusEventClone;
 
 /**
  * @event CartBusEventBase Базовый интерфейс событий в шине событий
@@ -20,7 +36,7 @@ export interface CartBusEventBase<T> {
 
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
   loading?: BehaviorSubject<boolean>;
-};
+}
 
 /**
  *  @event CartBusEventAdd
@@ -29,7 +45,7 @@ export interface CartBusEventAdd extends CartBusEventBase<Order> {
   event: 'add';
   /** Данные для операции */
   data: Omit<AddToOrderInput, 'orderId'>;
-};
+}
 
 /**
  *  @event CartBusEventUpdate
@@ -37,8 +53,8 @@ export interface CartBusEventAdd extends CartBusEventBase<Order> {
 export interface CartBusEventUpdate extends CartBusEventBase<Order> {
   event: 'update';
   /** Данные для операции */
-  data: FormGroupType<OrderForm>[ 'value' ];
-};
+  data: FormGroupType<OrderForm>['value'];
+}
 
 /**
  * @event CartBusEventRemove
@@ -47,7 +63,7 @@ export interface CartBusEventRemove extends CartBusEventBase<Order> {
   event: 'remove';
   /** Данные для операции */
   data: Omit<RemoveOrSetAmountToDish, 'id'>;
-};
+}
 
 /**
  * @event CartBusEventSetToDish
@@ -58,18 +74,18 @@ export interface CartBusEventSetAmountToDish extends CartBusEventBase<Order> {
   /** Данные для операции */
   data: Omit<RemoveOrSetAmountToDish, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-};
+}
 
 /**
  * @event CartBusEventSetToDish
  * Установить количество порций или комментарий для блюда
  * Данные необходимого блюда и требуемое количество указываются в @field data */
-export interface CartBusEventSetCommentToDish extends CartBusEventBase < Order > {
+export interface CartBusEventSetCommentToDish extends CartBusEventBase<Order> {
   event: 'setCommentToDish';
   /** Данные для операции */
   data: Omit<SetDishCommentInput, 'id'>;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-};
+}
 
 /**
  * @event CartBusEventCheck
@@ -77,7 +93,7 @@ export interface CartBusEventSetCommentToDish extends CartBusEventBase < Order >
 export interface CartBusEventCheck extends CartBusEventBase<CheckResponse> {
   event: 'check';
   data: Omit<CheckOrderInput, 'orderId'>;
-};
+}
 
 /**
  * @interface SendOrderInput
@@ -87,7 +103,7 @@ export interface CartBusEventCheck extends CartBusEventBase<CheckResponse> {
  * По умолчанию (если orderIdFactory не передавался) в качестве id нового заказа будет отправлено undefined и id будет сгенерирован на стороне сервера API.
  */
 export interface SendOrderInput {
-  orderId: string,
+  orderId: string;
   orderIdFactory?: () => string | undefined;
 }
 
@@ -97,7 +113,7 @@ export interface SendOrderInput {
 export interface CartBusEventSend extends CartBusEventBase<CheckResponse> {
   event: 'order';
   data: SendOrderInput;
-} ;
+}
 
 /**
  * @event CartBusEventSend
@@ -105,4 +121,4 @@ export interface CartBusEventSend extends CartBusEventBase<CheckResponse> {
 export interface CartBusEventClone extends CartBusEventBase<Order> {
   event: 'clone';
   data: SendOrderInput;
-} ;
+}

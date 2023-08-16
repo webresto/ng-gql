@@ -46,15 +46,11 @@ function makeFieldList<T extends {} | string | boolean | number | bigint | Symbo
           .map(([entry0, entry1]) =>
             typeof entry1 === 'object' && entry1 !== undefined && entry1 !== null
               ? makeFieldList(
-                  Array.isArray(entry1) && (<Array<unknown>>entry1)[0]
-                    ? (<Array<string | number | bigint | boolean | {} | unknown[] | Symbol | null>>(
-                        entry1
-                      ))[0]
-                    : entry1,
+                  Array.isArray(entry1) && entry1[0] ? entry1[0] : entry1,
                   String(entry0),
                   indent + 1,
                 )
-              : typeof entry1 === 'string' && (<string>entry1).includes('Fragment')
+              : typeof entry1 === 'string' && entry1.includes('Fragment')
               ? `${String(entry0)} : {...${entry1}}`
               : String(entry0),
           )
@@ -88,9 +84,9 @@ export function generateQueryString<
   name: N;
   queryObject: T;
   variables?: GQLRequestVariables;
-  requiredFields?: (keyof GQLRequestVariables)[];
+  requiredFields?: Array<keyof GQLRequestVariables>;
   fieldsTypeMap?: Map<keyof GQLRequestVariables, string>;
-}) {
+}): string {
   const {name, queryObject, variables} = options;
 
   const getGqlType = <K extends keyof GQLRequestVariables>(
@@ -114,6 +110,7 @@ export function generateQueryString<
         throw new Error('Параметр должен принадлежать типам number, string, object или boolean');
     }
   };
+
   return ` load${name[0].toUpperCase() + name.slice(1)} ${
     isValue(variables)
       ? `(${objectKeys(variables)

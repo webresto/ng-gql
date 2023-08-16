@@ -1,98 +1,101 @@
-import { Inject, Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import type {
-  MutationOptions,
+  ApolloQueryResult,
+  FetchResult,
   OperationVariables,
   QueryOptions,
   SubscriptionOptions,
 } from '@apollo/client/core';
-import { isValue } from '@axrl/common';
-import {
-  Apollo,
+import {isValue} from '@axrl/common';
+import {Apollo} from 'apollo-angular';
+import type {
+  EmptyObject,
   ExtraSubscriptionOptions,
+  MutationOptions,
+  MutationResult,
   WatchQueryOptions,
-} from 'apollo-angular';
-import type { EmptyObject } from 'apollo-angular/types';
-import { catchError, map, throwError } from 'rxjs';
-import { NgGqlConfig,NG_GQL_CONFIG } from '../models';
+} from 'apollo-angular/types';
+import {Observable, catchError, map, throwError} from 'rxjs';
+import {NG_GQL_CONFIG, NgGqlConfig} from '../models';
 
 @Injectable()
 export class ApolloService {
   constructor(
-    private apollo: Apollo,
-    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig
+    private _apollo: Apollo,
+    @Inject(NG_GQL_CONFIG) private _config: NgGqlConfig,
   ) {}
 
   watchQuery<TData, TVariables extends OperationVariables = EmptyObject>(
-    options: WatchQueryOptions<TVariables, TData>
-  ) {
-    return this.apollo.watchQuery<TData, TVariables>(options).valueChanges.pipe(
-      map((data) => {
+    options: WatchQueryOptions<TVariables, TData>,
+  ): Observable<ApolloQueryResult<TData>> {
+    return this._apollo.watchQuery<TData, TVariables>(options).valueChanges.pipe(
+      map(data => {
         if (isValue(data.error) || isValue(data.errors)) {
           throw new Error(JSON.stringify(data.error || data.errors));
         } else {
           return data;
         }
       }),
-      catchError((error) => {
+      catchError(error => {
         console.log(error);
-        if (this.config.debugMode) {
+        if (this._config.debugMode) {
           alert(error);
         }
         return throwError(() => error);
-      })
+      }),
     );
   }
 
-  query<T, V = EmptyObject>(options: QueryOptions<V, T>) {
-    return this.apollo.query<T, V>(options).pipe(
-      map((data) => {
+  query<T, V = EmptyObject>(options: QueryOptions<V, T>): Observable<ApolloQueryResult<T>> {
+    return this._apollo.query<T, V>(options).pipe(
+      map(data => {
         if (isValue(data.error) || isValue(data.errors)) {
           throw new Error(JSON.stringify(data.error || data.errors));
         } else {
           return data;
         }
       }),
-      catchError((error) => {
+      catchError(error => {
         console.log(error);
-        if (this.config.debugMode) {
+        if (this._config.debugMode) {
           alert(error);
         }
         return throwError(() => error);
-      })
+      }),
     );
   }
 
-  mutate<T, V = EmptyObject>(options: MutationOptions<T, V>) {
-    return this.apollo.mutate<T, V>(options).pipe(
-      catchError((error) => {
+  mutate<T, V = EmptyObject>(options: MutationOptions<T, V>): Observable<MutationResult<T>> {
+    return this._apollo.mutate<T, V>(options).pipe(
+      catchError(error => {
         console.log(error);
-        if (this.config.debugMode) {
+        if (this._config.debugMode) {
           alert(error);
         }
         return throwError(() => error);
-      })
+      }),
     );
   }
 
   subscribe<T, V = EmptyObject>(
     options: SubscriptionOptions<V, T>,
-    extra?: ExtraSubscriptionOptions
-  ) {
-    return this.apollo.subscribe<T, V>(options, extra).pipe(
-      map((data) => {
+    extra?: ExtraSubscriptionOptions,
+  ): Observable<FetchResult<T>> {
+    return this._apollo.subscribe<T, V>(options, extra).pipe(
+      map(data => {
         if (isValue(data.errors)) {
           throw new Error(JSON.stringify(data.errors));
         } else {
           return data;
         }
       }),
-      catchError((error) => {
+      catchError(error => {
         console.log(error);
-        if (this.config.debugMode) {
+        if (this._config.debugMode) {
           alert(error);
         }
         return throwError(() => error);
-      })
+      }),
     );
   }
 }

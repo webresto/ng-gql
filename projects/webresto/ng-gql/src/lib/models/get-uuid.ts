@@ -1,8 +1,8 @@
-import { DOCUMENT } from '@angular/common';
-import { inject, Injectable } from '@angular/core';
-import { isValue } from '@axrl/common';
+import {DOCUMENT} from '@angular/common';
+import {inject, Injectable} from '@angular/core';
+import {isValue} from '@axrl/common';
 
-export function generateUUID(win: (Window & typeof globalThis) | null) {
+export function generateUUID(win: (Window & typeof globalThis) | null): string {
   if (isValue(win) && isValue(win.crypto) && isValue(win.crypto.randomUUID)) {
     return win.crypto.randomUUID();
   } else {

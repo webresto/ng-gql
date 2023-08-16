@@ -55,10 +55,7 @@ import {NqGqlLocalStorageWrapper} from './storage-wrapper';
 export class NgOrderService {
   private _orderBus = new EventEmitter<CartBusEvent>();
 
-  private orderAndPaymentMethods$: Observable<{
-    order: Order;
-    methods: PaymentMethod[];
-  }> = this.storageWrapper.storageOrderIdToken$.pipe(
+  private order$: Observable<Order> = this.storageWrapper.storageOrderIdToken$.pipe(
     switchMap(storageOrderIdToken =>
       fromEvent<StorageEvent>(window, 'storage', {
         passive: true,
@@ -77,6 +74,7 @@ export class NgOrderService {
     ),
     switchMap(order => {
       const storageOrderId = order.id;
+
       return combineLatest([
         this.getPaymentMethods$(storageOrderId),
         this.ngGqlUser.getUser$(),
@@ -115,7 +113,7 @@ export class NgOrderService {
           this.storage.updateOrder(order);
           this.storage.updatePaymentMethods(methods);
 
-          return {methods, order};
+          return order;
         }),
       );
     }),
@@ -134,8 +132,7 @@ export class NgOrderService {
    * @see this.setDishAmount
    * @see this.setDishComment
    */
-  private readonly _orderBus$: Observable<void | (() => void)> = this.orderAndPaymentMethods$.pipe(
-    map(data => data.order),
+  private readonly _orderBus$: Observable<void | (() => void)> = this.storage.order.pipe(
     switchMap(order => this._orderBus.asObservable().pipe(map(busEvent => ({busEvent, order})))),
     concatMap(({busEvent, order}) => {
       const reducer = (busEventData: CartBusEvent): Observable<Order | CheckResponse> => {
@@ -305,33 +302,12 @@ export class NgOrderService {
       );
   }
 
-  getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
-    return this.requestService
-      .customQuery$<PaymentMethod, 'paymentMethod', {orderId: string}>(
-        'paymentMethod',
-        this.defaultPaymentMethodFragments,
-        {orderId: orderId ?? ''},
-        {
-          fieldsTypeMap: new Map([['orderId', 'String!']]),
-        },
-      )
-      .pipe(
-        map(data =>
-          (Array.isArray(data.paymentMethod) ? data.paymentMethod : [data.paymentMethod]).filter(
-            method => method.enable,
-          ),
-        ),
-      );
-  }
-
   /**
    * @method getOrderPaymentMethods$()
    * @returns Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
    */
   getOrderPaymentMethods$(): Observable<PaymentMethod[]> {
-    return this.orderAndPaymentMethods$.pipe(
-      map(orderAndPaymentMethods => orderAndPaymentMethods.methods),
-    );
+    return this.storage.paymentMethods;
   }
 
   /**
@@ -339,9 +315,7 @@ export class NgOrderService {
    * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
    */
   getOrder(): Observable<Order> {
-    return this.orderAndPaymentMethods$.pipe(
-      map(orderAndPaymentMethods => orderAndPaymentMethods.order),
-    );
+    return this.order$;
   }
 
   /**
@@ -398,7 +372,7 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   addToOrder(options: {
-    loading: BehaviorSubject<boolean>;
+    loading?: BehaviorSubject<boolean>;
     dishId: string;
     amount?: number;
     dishModifiers?: Array<Partial<OrderModifier>> | Array<Partial<Modifier>>;
@@ -407,7 +381,7 @@ export class NgOrderService {
     comment?: string;
     replacedOrderDishId?: number;
   }): void {
-    options.loading.next(true);
+    options.loading?.next(true);
     this._orderBus.emit({
       event: 'add',
       loading: options.loading,
@@ -439,13 +413,13 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   removeFromOrder(options: {
-    loading: BehaviorSubject<boolean>;
+    loading?: BehaviorSubject<boolean>;
     amount: number;
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
     orderDishId: number;
   }): void {
-    options.loading.next(true);
+    options.loading?.next(true);
     this._orderBus.emit({
       event: 'remove',
       loading: options.loading,
@@ -472,7 +446,7 @@ export class NgOrderService {
    */
   updateOrder(options: {
     data: FormGroupType<OrderForm>['value'];
-    loading: BehaviorSubject<boolean>;
+    loading?: BehaviorSubject<boolean>;
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
   }): void {
@@ -545,6 +519,7 @@ export class NgOrderService {
    * Используется для отправки в шину события оформления заказа.
    * Метод необходимо вызывать только после успешной предварительной проверки заказа в методе checkOrder.
    * @param options.orderId - Форма чекаута с данными оформляемего заказа
+   * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
    * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
@@ -555,6 +530,7 @@ export class NgOrderService {
     successCb?: (order: CheckResponse) => void;
     errorCb?: (err: unknown) => void;
   }): void {
+    options.loading?.next(true);
     this._orderBus.emit({
       event: 'order',
       loading: options.loading,
@@ -571,6 +547,7 @@ export class NgOrderService {
    * @method cloneOrder()
    * Используется для отправки в шину события повтора уже сделанного ранее заказа.
    * @param options.orderId - Форма чекаута с данными оформляемего заказа
+   * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
    * @param options.successCb -Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
@@ -581,6 +558,7 @@ export class NgOrderService {
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
   }): void {
+    options.loading?.next(true);
     this._orderBus.emit({
       event: 'clone',
       loading: options.loading,
@@ -603,13 +581,13 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   setDishAmount(options: {
-    loading: BehaviorSubject<boolean>;
+    loading?: BehaviorSubject<boolean>;
     orderDishId: number;
     amount?: number;
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
   }): void {
-    options.loading.next(true);
+    options.loading?.next(true);
     this._orderBus.emit({
       event: 'setDishAmount',
       loading: options.loading,
@@ -632,13 +610,13 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   setDishComment(options: {
-    loading: BehaviorSubject<boolean>;
+    loading?: BehaviorSubject<boolean>;
     orderDishId: number;
     comment: string;
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
   }): void {
-    options.loading.next(true);
+    options.loading?.next(true);
     this._orderBus.emit({
       event: 'setCommentToDish',
       loading: options.loading,
@@ -701,6 +679,25 @@ export class NgOrderService {
           ),
       ),
     );
+  }
+
+  private getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
+    return this.requestService
+      .customQuery$<PaymentMethod, 'paymentMethod', {orderId: string}>(
+        'paymentMethod',
+        this.defaultPaymentMethodFragments,
+        {orderId: orderId ?? ''},
+        {
+          fieldsTypeMap: new Map([['orderId', 'String!']]),
+        },
+      )
+      .pipe(
+        map(data =>
+          (Array.isArray(data.paymentMethod) ? data.paymentMethod : [data.paymentMethod]).filter(
+            method => method.enable,
+          ),
+        ),
+      );
   }
 
   private getOrderCustomerName(user: User | null): string | null {

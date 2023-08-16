@@ -1,5 +1,5 @@
-import type { AbstractControl } from '@angular/forms';
-import type { Observable } from 'rxjs';
+import type {AbstractControl} from '@angular/forms';
+import type {Observable} from 'rxjs';
 
 /**
  * @alias ValuesOrBoolean<T>
@@ -21,14 +21,7 @@ export type ValuesOrBoolean<T> = {
     | true
     | (T[K] extends Observable<unknown> | AbstractControl<unknown>
         ? never
-        : T[K] extends
-            | string
-            | number
-            | bigint
-            | symbol
-            | boolean
-            | undefined
-            | null
+        : T[K] extends string | number | bigint | symbol | boolean | undefined | null
         ? true
         : T[K] extends Array<infer U> | undefined | null
         ? ValuesOrBoolean<U>

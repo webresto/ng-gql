@@ -17,7 +17,6 @@
 - [setOrderId](NgOrderService.md#setorderid)
 - [removeOrderId](NgOrderService.md#removeorderid)
 - [paymentLink$](NgOrderService.md#paymentlink$)
-- [getPaymentMethods$](NgOrderService.md#getpaymentmethods$)
 - [getOrderPaymentMethods$](NgOrderService.md#getorderpaymentmethods$)
 - [getOrder](NgOrderService.md#getorder)
 - [loadOrder$](NgOrderService.md#loadorder$)
@@ -184,22 +183,6 @@ ___
 
 ___
 
-### getPaymentMethods$
-
-▸ **getPaymentMethods$**(`orderId`): `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `undefined` \| `string` |
-
-#### Returns
-
-`Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
-
-___
-
 ### getOrderPaymentMethods$
 
 ▸ **getOrderPaymentMethods$**(): `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
@@ -266,7 +249,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `options.dishId` | `string` | id добавляемого блюдо |
 | `options.amount?` | `number` | количество |
 | `options.dishModifiers?` | `Partial`<[`Modifier`](../interfaces/Modifier.md)<[`Dish`](../interfaces/Dish.md)\>\>[] \| `Partial`<[`OrderModifier`](../interfaces/OrderModifier.md)<[`Dish`](../interfaces/Dish.md)\>\>[] | выбранные пользователем модификаторы блюда (необязательный) |
@@ -295,7 +278,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `options.amount` | `number` | количество |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
@@ -322,7 +305,7 @@ ___
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
 | `options.data` | `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; modifiers: Partial<{ id: string; groupId: string; amount: number; dish: Partial<{ id: string; additionalInfo: string \| number \| Partial<{ [x: string]: any; }\>; name: string; description: string; ... 21 more ...; customData: Partial<...\>; }\>; }\>[]; ... 11 more ...; total: number; }\>[] ; `message`: `string` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `date`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `comment`: `string` ; `discountTotal`: `number` ; `totalWeight`: `number` ; `total`: `number` ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: [`OrderState`](../README.md#orderstate) ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; sortOrder: number; customData: Partial<{ [x: string]: any; }\>; title: string; type: string; enable: boolean; isCash: boolean; adapter: string; }\> ; `promocode`: `string`  }\> | объект заказа, при этом не все данные из него будут приняты и, в результате, обновлены. Большая часть будет данных будет проигнорирована и может изменяться только в рамках других методов согласно заложенной бизнес-логике. В настоящее время из всего заказа учитываются изменения ТОЛЬКО в свойстве `Order.trifleFrom`. |
-| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
 
@@ -383,7 +366,7 @@ ___
 | `options` | `Object` | - |
 | `options.orderId` | `string` | Форма чекаута с данными оформляемего заказа |
 | `options.orderIdFactory?` | () => `undefined` \| `string` | - |
-| `options.loading?` | `BehaviorSubject`<`boolean`\> | - |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
 
@@ -410,7 +393,7 @@ ___
 | `options` | `Object` | - |
 | `options.orderId` | `string` | Форма чекаута с данными оформляемего заказа |
 | `options.orderIdFactory?` | () => `undefined` \| `string` | - |
-| `options.loading?` | `BehaviorSubject`<`boolean`\> | - |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
 
@@ -434,7 +417,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `options.orderDishId` | `number` | id блюда в корзине, для которого изменяется количество заказываемых порций |
 | `options.amount?` | `number` | необходимое количество порций |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
@@ -460,7 +443,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.loading` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
+| `options.loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `options.orderDishId` | `number` | id блюда в корзине, которому добавляется комментарий |
 | `options.comment` | `string` | добавляемый комментарий |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |

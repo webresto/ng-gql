@@ -17,14 +17,14 @@
 
 ### constructor
 
-• **new ApolloService**(`apollo`, `config`)
+• **new ApolloService**(`_apollo`, `_config`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `apollo` | `Apollo` |
-| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
+| `_apollo` | `Apollo` |
+| `_config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 
 ## Methods
 
@@ -89,7 +89,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `MutationOptions`<`T`, `V`, `DefaultContext`, `ApolloCache`<`any`\>\> |
+| `options` | `MutationOptions`<`T`, `V`\> |
 
 #### Returns
 
