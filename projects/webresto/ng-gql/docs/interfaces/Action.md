@@ -10,10 +10,17 @@
 
 ### Properties
 
+- [id](Action.md#id)
 - [type](Action.md#type)
 - [data](Action.md#data)
 
 ## Properties
+
+### id
+
+• **id**: `string`
+
+___
 
 ### type
 

@@ -4,11 +4,18 @@
 
 ### Properties
 
+- [id](Message.md#id)
 - [title](Message.md#title)
 - [type](Message.md#type)
 - [message](Message.md#message)
 
 ## Properties
+
+### id
+
+• **id**: `string`
+
+___
 
 ### title
 

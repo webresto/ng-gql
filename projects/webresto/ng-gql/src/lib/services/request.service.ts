@@ -4,7 +4,15 @@ import {deepClone, isValue} from '@axrl/common';
 import type {ExtraSubscriptionOptions} from 'apollo-angular';
 import {gql} from 'apollo-angular';
 import type {Observable} from 'rxjs';
-import {filter, map, mergeWith, shareReplay, startWith, switchMap} from 'rxjs';
+import {
+  distinctUntilKeyChanged,
+  filter,
+  map,
+  mergeWith,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import type {Action, GQLRequestVariables, Message, ValuesOrBoolean} from '../models';
 import {ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, generateQueryString} from '../models';
 import {ApolloService} from './apollo.service';
@@ -42,7 +50,11 @@ export class RequestService {
   private _actions$ = this.customSubscribe$<Action, 'action'>(
     'action',
     this.defaultActionFragments,
-  ).pipe(mergeWith(this._eventAction.asObservable()), shareReplay(1));
+  ).pipe(
+    mergeWith(this._eventAction.asObservable()),
+    distinctUntilKeyChanged('id'),
+    shareReplay(1),
+  );
 
   /**
    * Поток Observable, в который будут поступать информационные сообщения по текущему заказу (блюдо добавлено/удалено/заказ оформлен).
@@ -52,7 +64,11 @@ export class RequestService {
   private _messages$ = this.customSubscribe$<Message, 'message'>(
     'message',
     this.defaultMessageFragments,
-  ).pipe(mergeWith(this._eventMessage.asObservable()), shareReplay(1));
+  ).pipe(
+    mergeWith(this._eventMessage.asObservable()),
+    distinctUntilKeyChanged('id'),
+    shareReplay(1),
+  );
 
   constructor(
     private apollo: ApolloService,

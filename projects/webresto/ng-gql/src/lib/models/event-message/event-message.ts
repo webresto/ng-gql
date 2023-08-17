@@ -11,12 +11,14 @@ export class EventMessage {
 }
 
 export interface Message {
+  id: string;
   title: string;
   type: 'info' | 'error' | 'warn';
   message: string;
 }
 
 export interface Action<T = any> {
+  id: string;
   type: string;
   data: T;
 }
