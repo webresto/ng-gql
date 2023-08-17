@@ -722,7 +722,6 @@ export class NgOrderService {
         'checkOrder',
         {
           order: this.defaultOrderFragments,
-          message: this.defaultMessageFragments,
           action: this.defaultActionFragments,
         },
         {orderCheckout: data},

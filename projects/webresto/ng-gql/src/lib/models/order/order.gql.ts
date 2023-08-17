@@ -1,10 +1,10 @@
-import type { PaymentMethod } from '../payment-method/payment-method.gql';
-import type { Modifier, OrderModifier } from '../modifier/modifier.gql';
-import type { Message, Action } from '../event-message/event-message';
-import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
-import type { Customer } from '../customer/customer';
-import { OrderDish } from '../order-dish/order-dish.gql';
-import type { Dish } from '../dish/dish.gql';
+import type {BaseModelWithCustomData} from '../base/base-model-with-custom-data';
+import type {Customer} from '../customer/customer';
+import type {Dish} from '../dish/dish.gql';
+import type {Action, Message} from '../event-message/event-message';
+import type {Modifier, OrderModifier} from '../modifier/modifier.gql';
+import {OrderDish} from '../order-dish/order-dish.gql';
+import type {PaymentMethod} from '../payment-method/payment-method.gql';
 
 /**
  * @alias OrderState
@@ -23,7 +23,7 @@ export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER';
 export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   id: string;
   shortId: string;
-  dishes: Partial<OrderDish<T>>[];
+  dishes: Array<Partial<OrderDish<T>>>;
   dishesCount: number;
   comment: string;
   deliveryDescription: string;
@@ -65,7 +65,7 @@ export interface AddToOrderInput {
   orderId: string;
   dishId: string;
   amount?: number;
-  modifiers?: Partial<OrderModifier>[] | Partial<Modifier>[];
+  modifiers?: Array<Partial<OrderModifier>> | Array<Partial<Modifier>>;
   comment?: string;
   replace?: boolean;
   orderDishId?: number;
