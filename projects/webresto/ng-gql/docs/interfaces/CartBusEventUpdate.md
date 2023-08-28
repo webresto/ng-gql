@@ -15,7 +15,7 @@ CartBusEventUpdate
 
 - [successCb](CartBusEventUpdate.md#successcb)
 - [errorCb](CartBusEventUpdate.md#errorcb)
-- [loading](CartBusEventUpdate.md#loading)
+- [isLoading](CartBusEventUpdate.md#isloading)
 - [event](CartBusEventUpdate.md#event)
 - [data](CartBusEventUpdate.md#data)
 
@@ -73,15 +73,15 @@ ___
 
 ___
 
-### loading
+### isLoading
 
-• `Optional` **loading**: `BehaviorSubject`<`boolean`\>
+• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>
 
 BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
 
 #### Inherited from
 
-[CartBusEventBase](CartBusEventBase.md).[loading](CartBusEventBase.md#loading)
+[CartBusEventBase](CartBusEventBase.md).[isLoading](CartBusEventBase.md#isloading)
 
 ___
 
@@ -93,6 +93,6 @@ ___
 
 ### data
 
-• **data**: `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; modifiers: Partial<{ id: string; groupId: string; amount: number; dish: Partial<{ id: string; additionalInfo: string \| number \| Partial<{ [x: string]: any; }\>; name: string; description: string; ... 21 more ...; customData: Partial<...\>; }\>; }\>[]; ... 11 more ...; total: number; }\>[] ; `message`: `string` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `date`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `comment`: `string` ; `discountTotal`: `number` ; `totalWeight`: `number` ; `total`: `number` ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: [`OrderState`](../README.md#orderstate) ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; sortOrder: number; customData: Partial<{ [x: string]: any; }\>; title: string; type: string; enable: boolean; isCash: boolean; adapter: string; }\> ; `promocode`: `string`  }\>
+• **data**: `Partial`<{ `id`: `string` ; `customData`: `Partial`<{ [x: string]: any; }\> ; `dishes`: `Partial`<{ id: number; modifiers: Partial<{ id: string; groupId: string; amount: number; dish: Partial<{ id: string; additionalInfo: string \| number \| Partial<{ [x: string]: any; }\>; name: string; description: string; ... 21 more ...; customData: Partial<...\>; }\>; }\>[]; ... 10 more ...; total: number; }\>[] ; `message`: `string` ; `selfService`: `boolean` ; `pickupAddressId`: `string` ; `locationId`: `string` ; `date`: `string` ; `address`: `Partial`<{ comment: string; streetId: string; home: string; city: string; street: string; housing: string; index: string; entrance: string; floor: string; apartment: string; doorphone: string; }\> ; `customer`: `Partial`<{ name: string; phone: Partial<{ number: string; code: string; additionalNumber: string; }\>; mail: string; }\> ; `comment`: `string` ; `discountTotal`: `number` ; `totalWeight`: `number` ; `total`: `number` ; `shortId`: `string` ; `dishesCount`: `number` ; `deliveryDescription`: `string` ; `deliveryCost`: `number` ; `trifleFrom`: `number` ; `orderTotal`: `number` ; `state`: [`OrderState`](../README.md#orderstate) ; `rmsId`: `string` ; `rmsOrderNumber`: `string` ; `rmsDeliveryDate`: `string` ; `rmsDelivered`: `boolean` ; `paid`: `boolean` ; `paymentMethod`: `Partial`<{ id: string; description: string; sortOrder: number; customData: Partial<{ [x: string]: any; }\>; title: string; type: string; enable: boolean; isCash: boolean; adapter: string; }\> ; `promocode`: `string`  }\>
 
 Данные для операции

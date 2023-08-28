@@ -34,7 +34,7 @@ CartBusEventBase Базовый интерфейс событий в шине с
 
 - [successCb](CartBusEventBase.md#successcb)
 - [errorCb](CartBusEventBase.md#errorcb)
-- [loading](CartBusEventBase.md#loading)
+- [isLoading](CartBusEventBase.md#isloading)
 
 ## Properties
 
@@ -82,8 +82,8 @@ ___
 
 ___
 
-### loading
+### isLoading
 
-• `Optional` **loading**: `BehaviorSubject`<`boolean`\>
+• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>
 
 BehaviorSubject блюда, отслеживающий состояние выполняемого действия.

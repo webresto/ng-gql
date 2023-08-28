@@ -15,7 +15,7 @@ CartBusEventAdd
 
 - [successCb](CartBusEventAdd.md#successcb)
 - [errorCb](CartBusEventAdd.md#errorcb)
-- [loading](CartBusEventAdd.md#loading)
+- [isLoading](CartBusEventAdd.md#isloading)
 - [event](CartBusEventAdd.md#event)
 - [data](CartBusEventAdd.md#data)
 
@@ -73,15 +73,15 @@ ___
 
 ___
 
-### loading
+### isLoading
 
-• `Optional` **loading**: `BehaviorSubject`<`boolean`\>
+• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>
 
 BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
 
 #### Inherited from
 
-[CartBusEventBase](CartBusEventBase.md).[loading](CartBusEventBase.md#loading)
+[CartBusEventBase](CartBusEventBase.md).[isLoading](CartBusEventBase.md#isloading)
 
 ___
 
@@ -93,6 +93,6 @@ ___
 
 ### data
 
-• **data**: `Omit`<[`AddToOrderInput`](AddToOrderInput.md), ``"orderId"``\>
+• **data**: [`AddToOrderInput`](AddToOrderInput.md)
 
 Данные для операции

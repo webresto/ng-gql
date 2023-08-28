@@ -23,7 +23,6 @@
 - [totalWeight](OrderDish.md#totalweight)
 - [total](OrderDish.md#total)
 - [modifiers](OrderDish.md#modifiers)
-- [isLoading](OrderDish.md#isloading)
 
 ## Properties
 
@@ -102,9 +101,3 @@ ___
 ### modifiers
 
 • **modifiers**: `Partial`<[`OrderModifier`](OrderModifier.md)<`T`\>\>[]
-
-___
-
-### isLoading
-
-• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>

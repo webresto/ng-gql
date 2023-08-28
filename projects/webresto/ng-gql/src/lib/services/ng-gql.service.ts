@@ -1,14 +1,11 @@
 import {Inject, Injectable} from '@angular/core';
-import {OperationVariables} from '@apollo/client';
 import {createSubject, deepClone, isValue} from '@axrl/common';
-import type {ExtraSubscriptionOptions} from 'apollo-angular';
 import type {Observable} from 'rxjs';
 import {BehaviorSubject, exhaustMap, filter, map, of, tap} from 'rxjs';
 import type {
   CheckPhoneCodeInput,
   CheckPhoneResponse,
   Dish,
-  GQLRequestVariables,
   Group,
   Maintenance,
   NavBarLinkItem,
@@ -31,7 +28,7 @@ import {
   NG_GQL_CONFIG,
 } from '../models';
 import {NgGqlStoreService} from './ng-gql-storage.service';
-import {QueryGenerationParam, RequestService} from './request.service';
+import {RequestService} from './request.service';
 
 @Injectable()
 /** Основной сервис для работы с библиотекой. Содержит все необходимые методы для управления сайтом. */
@@ -191,6 +188,7 @@ export class NgGqlService {
     return {
       ...sourceDish,
       additionalInfo: this.getAdditionalInfo(sourceDish),
+      isLoading: sourceDish.isLoading ?? createSubject<boolean>(false),
       modifiers: sourceDish.modifiers
         ? sourceDish.modifiers.map((groupModifier, groupIndex) => ({
             ...groupModifier,
@@ -331,72 +329,6 @@ export class NgGqlService {
         (property): property is BehaviorSubject<unknown> => property instanceof BehaviorSubject,
       )
       .forEach(property => property.complete());
-  }
-
-  /** @deprecated. Use RequestService methods instead */
-  customQuery$<
-    T extends {},
-    N extends `${string}`,
-    V extends OperationVariables = GQLRequestVariables,
-  >(
-    name: N,
-    queryObject: ValuesOrBoolean<T>,
-    variables?: V,
-    paramOptions?: QueryGenerationParam<V>,
-  ): Observable<Record<N, T | T[]>> {
-    return this.requestService.customQuery$(name, queryObject, variables, paramOptions);
-  }
-
-  /** @deprecated. Use RequestService methods instead */
-  customMutation$<T extends {}, N extends `${string}`, V = GQLRequestVariables>(
-    name: N,
-    queryObject: ValuesOrBoolean<T>,
-    variables: V,
-    paramOptions?: QueryGenerationParam<V>,
-  ): Observable<Record<N, T>> {
-    return this.requestService.customMutation$(name, queryObject, variables, paramOptions);
-  }
-
-  /** @deprecated. Use RequestService methods instead */
-  customSubscribe$<T extends {}, N extends `${string}`, V = GQLRequestVariables>(
-    name: N,
-    queryObject: ValuesOrBoolean<T>,
-    variables?: V,
-    paramOptions?: QueryGenerationParam<V>,
-    extra?: ExtraSubscriptionOptions,
-  ): Observable<Record<N, T>[N]> {
-    return this.requestService.customSubscribe$(name, queryObject, variables, paramOptions, extra);
-  }
-
-  /** @deprecated. Use RequestService methods instead */
-  queryAndSubscribe<
-    T extends {},
-    NQuery extends `${string}`,
-    NSubscribe extends `${string}`,
-    VQ extends OperationVariables = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
-    VS = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
-  >(
-    nameQuery: NQuery,
-    nameSubscribe: NSubscribe,
-    queryObject: ValuesOrBoolean<T>,
-    uniqueKeyForCompareItem: keyof T,
-    variables?: {
-      query?: VQ;
-      subscribe?: VS;
-    },
-    paramOptions?: {
-      query?: QueryGenerationParam<VQ>;
-      subscribe?: QueryGenerationParam<VS>;
-    },
-  ): Observable<T[]> {
-    return this.requestService.queryAndSubscribe(
-      nameQuery,
-      nameSubscribe,
-      queryObject,
-      uniqueKeyForCompareItem,
-      variables,
-      paramOptions,
-    );
   }
 
   private getAdditionalInfo(dish: Partial<Dish>): Dish['additionalInfo'] {

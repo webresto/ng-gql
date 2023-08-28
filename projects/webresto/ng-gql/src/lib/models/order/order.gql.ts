@@ -74,6 +74,7 @@ export interface AddToOrderInput {
 export interface RemoveOrSetAmountToDish {
   orderDishId?: number;
   amount?: number;
+  /** Order id */
   id: string;
 }
 

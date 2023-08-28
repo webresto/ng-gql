@@ -35,7 +35,7 @@ export interface CartBusEventBase<T> {
   errorCb?: (err: unknown) => void;
 
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
-  loading?: BehaviorSubject<boolean>;
+  isLoading?: BehaviorSubject<boolean>;
 }
 
 /**
@@ -44,7 +44,7 @@ export interface CartBusEventBase<T> {
 export interface CartBusEventAdd extends CartBusEventBase<Order> {
   event: 'add';
   /** Данные для операции */
-  data: Omit<AddToOrderInput, 'orderId'>;
+  data: AddToOrderInput;
 }
 
 /**
@@ -62,7 +62,7 @@ export interface CartBusEventUpdate extends CartBusEventBase<Order> {
 export interface CartBusEventRemove extends CartBusEventBase<Order> {
   event: 'remove';
   /** Данные для операции */
-  data: Omit<RemoveOrSetAmountToDish, 'id'>;
+  data: RemoveOrSetAmountToDish;
 }
 
 /**
@@ -72,7 +72,7 @@ export interface CartBusEventRemove extends CartBusEventBase<Order> {
 export interface CartBusEventSetAmountToDish extends CartBusEventBase<Order> {
   event: 'setDishAmount';
   /** Данные для операции */
-  data: Omit<RemoveOrSetAmountToDish, 'id'>;
+  data: RemoveOrSetAmountToDish;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
 }
 
@@ -83,7 +83,7 @@ export interface CartBusEventSetAmountToDish extends CartBusEventBase<Order> {
 export interface CartBusEventSetCommentToDish extends CartBusEventBase<Order> {
   event: 'setCommentToDish';
   /** Данные для операции */
-  data: Omit<SetDishCommentInput, 'id'>;
+  data: SetDishCommentInput;
   /** BehaviorSubject блюда, отслеживающий состояние выполняемого действия. */
 }
 
@@ -92,7 +92,7 @@ export interface CartBusEventSetCommentToDish extends CartBusEventBase<Order> {
  * Отправка заказа на проверку перед оформлением. */
 export interface CartBusEventCheck extends CartBusEventBase<CheckResponse> {
   event: 'check';
-  data: Omit<CheckOrderInput, 'orderId'>;
+  data: CheckOrderInput;
 }
 
 /**

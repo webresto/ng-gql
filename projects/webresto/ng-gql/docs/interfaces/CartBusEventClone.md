@@ -15,7 +15,7 @@ CartBusEventSend
 
 - [successCb](CartBusEventClone.md#successcb)
 - [errorCb](CartBusEventClone.md#errorcb)
-- [loading](CartBusEventClone.md#loading)
+- [isLoading](CartBusEventClone.md#isloading)
 - [event](CartBusEventClone.md#event)
 - [data](CartBusEventClone.md#data)
 
@@ -73,15 +73,15 @@ ___
 
 ___
 
-### loading
+### isLoading
 
-• `Optional` **loading**: `BehaviorSubject`<`boolean`\>
+• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>
 
 BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
 
 #### Inherited from
 
-[CartBusEventBase](CartBusEventBase.md).[loading](CartBusEventBase.md#loading)
+[CartBusEventBase](CartBusEventBase.md).[isLoading](CartBusEventBase.md#isloading)
 
 ___
 

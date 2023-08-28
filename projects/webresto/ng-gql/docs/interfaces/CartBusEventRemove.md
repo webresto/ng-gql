@@ -15,7 +15,7 @@ CartBusEventRemove
 
 - [successCb](CartBusEventRemove.md#successcb)
 - [errorCb](CartBusEventRemove.md#errorcb)
-- [loading](CartBusEventRemove.md#loading)
+- [isLoading](CartBusEventRemove.md#isloading)
 - [event](CartBusEventRemove.md#event)
 - [data](CartBusEventRemove.md#data)
 
@@ -73,15 +73,15 @@ ___
 
 ___
 
-### loading
+### isLoading
 
-• `Optional` **loading**: `BehaviorSubject`<`boolean`\>
+• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>
 
 BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
 
 #### Inherited from
 
-[CartBusEventBase](CartBusEventBase.md).[loading](CartBusEventBase.md#loading)
+[CartBusEventBase](CartBusEventBase.md).[isLoading](CartBusEventBase.md#isloading)
 
 ___
 
@@ -93,6 +93,6 @@ ___
 
 ### data
 
-• **data**: `Omit`<[`RemoveOrSetAmountToDish`](RemoveOrSetAmountToDish.md), ``"id"``\>
+• **data**: [`RemoveOrSetAmountToDish`](RemoveOrSetAmountToDish.md)
 
 Данные для операции

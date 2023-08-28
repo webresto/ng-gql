@@ -1,7 +1,7 @@
-import type { Dish } from '../dish/dish.gql';
-import type { Address, Order } from '../order';
-import type { Phone } from './../customer/customer';
-import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
+import type {BaseModelWithCustomData} from '../base/base-model-with-custom-data';
+import type {Dish} from '../dish/dish.gql';
+import type {Address, Order} from '../order';
+import type {Phone} from './../customer/customer';
 
 /**
  *  Модели, описывающие авторизованного пользователя и его данные

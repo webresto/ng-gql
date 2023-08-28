@@ -1,5 +1,5 @@
 import {EventEmitter, Inject, Injectable} from '@angular/core';
-import {createSubject, isValue} from '@axrl/common';
+import {isValue} from '@axrl/common';
 import type {FormGroupType} from '@axrl/ngx-extended-form-builder';
 import type {BehaviorSubject, Observable} from 'rxjs';
 import {
@@ -80,7 +80,9 @@ export class NgOrderService {
         this.ngGqlUser.getUser$(),
       ]).pipe(
         map(([methods, user]) => {
-          if (!isValue(order.paymentMethod) && methods.length > 0) {
+          const notPaymentId = !isValue(order.paymentMethod) || !isValue(order.paymentMethod?.id);
+
+          if (notPaymentId && methods.length > 0) {
             order.paymentMethod = {
               id: methods[0].id,
               title: methods[0].title,
@@ -132,27 +134,16 @@ export class NgOrderService {
    * @see this.setDishAmount
    * @see this.setDishComment
    */
-  private readonly _orderBus$: Observable<void | (() => void)> = this.storage.order.pipe(
-    switchMap(order => this._orderBus.asObservable().pipe(map(busEvent => ({busEvent, order})))),
-    concatMap(({busEvent, order}) => {
+  private readonly _orderBus$: Observable<void | (() => void)> = this._orderBus.asObservable().pipe(
+    concatMap(busEvent => {
       const reducer = (busEventData: CartBusEvent): Observable<Order | CheckResponse> => {
         switch (busEventData.event) {
           case 'add':
-            return this.addDishToOrder$({
-              ...busEventData.data,
-              orderId: order.id,
-            });
+            return this.addDishToOrder$(busEventData.data);
           case 'remove':
-            return this.removeDishFromOrder$({
-              id: order.id,
-              orderDishId: busEventData.data.orderDishId,
-              amount: busEventData.data.amount,
-            });
+            return this.removeDishFromOrder$(busEventData.data);
           case 'check':
-            return this.checkOrder$({
-              ...busEventData.data,
-              orderId: order.id,
-            });
+            return this.checkOrder$(busEventData.data);
           case 'order':
             return this.sendOrder$(busEventData.data);
           case 'clone':
@@ -160,21 +151,15 @@ export class NgOrderService {
           case 'update':
             return this.updateOrder$(busEventData.data);
           case 'setDishAmount':
-            return this.setDishAmount$({
-              ...busEventData.data,
-              id: order.id,
-            });
+            return this.setDishAmount$(busEventData.data);
           case 'setCommentToDish':
-            return this.setDishComment$({
-              ...busEventData.data,
-              id: order.id,
-            });
+            return this.setDishComment$(busEventData.data);
         }
       };
       return reducer(busEvent).pipe(
         map(result => {
-          if (isValue(busEvent.loading)) {
-            busEvent.loading.next(false);
+          if (isValue(busEvent.isLoading)) {
+            busEvent.isLoading.next(false);
           }
           if (isValue(busEvent.successCb)) {
             busEvent.successCb(<Order & CheckResponse>result);
@@ -189,8 +174,8 @@ export class NgOrderService {
           }
         }),
         catchError((err: unknown) => {
-          if (isValue(busEvent.loading)) {
-            busEvent.loading.next(false);
+          if (isValue(busEvent.isLoading)) {
+            busEvent.isLoading.next(false);
           }
           if (busEvent.errorCb) {
             busEvent.errorCb(err);
@@ -198,7 +183,6 @@ export class NgOrderService {
           if (this.config.debugMode) {
             alert(JSON.stringify(err));
           }
-          console.log(err);
           return of(() => {});
         }),
       );
@@ -351,7 +335,6 @@ export class NgOrderService {
           return this.ngGqlService.getDishes$(dishesIds).pipe(
             map(dishes => {
               order.dishes.forEach(orderDish => {
-                orderDish.isLoading = createSubject<boolean>(false);
                 orderDish.dish = dishes.find(dish => dish.id === orderDish.dish?.id);
               });
               return order;
@@ -365,6 +348,7 @@ export class NgOrderService {
    * @method addToOrder()
    * Используется для отправки в шину события добавления блюда.
    * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
+   * @param options.orderId -  id заказа.
    * @param options.dishId - id добавляемого блюдо
    * @param options.amount - количество
    * @param options.dishModifiers - выбранные пользователем модификаторы блюда (необязательный)
@@ -372,6 +356,7 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   addToOrder(options: {
+    orderId: string;
     loading?: BehaviorSubject<boolean>;
     dishId: string;
     amount?: number;
@@ -384,10 +369,11 @@ export class NgOrderService {
     options.loading?.next(true);
     this._orderBus.emit({
       event: 'add',
-      loading: options.loading,
+      isLoading: options.loading,
       successCb: options.successCb,
       errorCb: options.errorCb,
       data: {
+        orderId: options.orderId,
         dishId: options.dishId,
         modifiers: (options.dishModifiers ?? []).map(dishModifier => ({
           id: dishModifier.dish?.id,
@@ -406,6 +392,7 @@ export class NgOrderService {
   /**
    * @method removeFromOrder()
    * Используется для отправки в шину события удаления блюда из корзины
+   * @param options.orderId -  id заказа.
    * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
    * @param options.amount - количество
    * @param options.orderDishId - id удаляемого блюда в корзине
@@ -413,6 +400,7 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   removeFromOrder(options: {
+    orderId: string;
     loading?: BehaviorSubject<boolean>;
     amount: number;
     successCb?: (order: Order) => void;
@@ -422,10 +410,11 @@ export class NgOrderService {
     options.loading?.next(true);
     this._orderBus.emit({
       event: 'remove',
-      loading: options.loading,
+      isLoading: options.loading,
       successCb: options.successCb,
       errorCb: options.errorCb,
       data: {
+        id: options.orderId,
         orderDishId: options.orderDishId,
         amount: options.amount ?? 1,
       },
@@ -453,7 +442,7 @@ export class NgOrderService {
     this._orderBus.emit({
       event: 'update',
       data: options.data,
-      loading: options.loading,
+      isLoading: options.loading,
       errorCb: options.errorCb,
       successCb: options.successCb,
     });
@@ -472,25 +461,28 @@ export class NgOrderService {
     successCb?: (order: CheckResponse) => void;
     errorCb?: (err: unknown) => void;
   }): void {
+    const {selfService, paymentMethod, customer, id, address} = options.orderForm;
     if (
-      isValue(options.orderForm.selfService) &&
-      isValue(options.orderForm.paymentMethod) &&
-      isValue(options.orderForm.customer) &&
-      isValue(options.orderForm.customer.phone) &&
-      isValue(options.orderForm.customer.phone.code) &&
-      isValue(options.orderForm.customer.phone.number) &&
-      isValue(options.orderForm.address)
+      isValue(selfService) &&
+      isValue(paymentMethod) &&
+      isValue(customer) &&
+      isValue(customer.phone) &&
+      isValue(customer.phone.code) &&
+      isValue(customer.phone.number) &&
+      isValue(id) &&
+      isValue(address)
     ) {
-      const data: Omit<CheckOrderInput, 'orderId'> = {
-        paymentMethodId: options.orderForm.paymentMethod.id,
-        selfService: options.orderForm.selfService,
-        address: options.orderForm.address,
+      const data: CheckOrderInput = {
+        paymentMethodId: paymentMethod.id,
+        orderId: id,
+        selfService: selfService,
+        address: address,
         customer: {
-          mail: options.orderForm.customer.mail,
-          name: options.orderForm.customer.name,
+          mail: customer.mail,
+          name: customer.name,
           phone: {
-            code: options.orderForm.customer.phone.code,
-            number: options.orderForm.customer.phone.number,
+            code: customer.phone.code,
+            number: customer.phone.number,
           },
         },
         comment: options.orderForm.comment,
@@ -533,7 +525,7 @@ export class NgOrderService {
     options.loading?.next(true);
     this._orderBus.emit({
       event: 'order',
-      loading: options.loading,
+      isLoading: options.loading,
       successCb: options.successCb,
       errorCb: options.errorCb,
       data: {
@@ -561,7 +553,7 @@ export class NgOrderService {
     options.loading?.next(true);
     this._orderBus.emit({
       event: 'clone',
-      loading: options.loading,
+      isLoading: options.loading,
       successCb: options.successCb,
       errorCb: options.errorCb,
       data: {
@@ -574,6 +566,7 @@ export class NgOrderService {
   /**
    * @method setDishAmount()
    * Устанавливает для блюда dish в заказе количество amount.
+   * @param options.orderId -  id заказа.
    * @param options.loading -  BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
    * @param options.orderDishId - id блюда в корзине, для которого изменяется количество заказываемых порций
    * @param options.amount - необходимое количество порций
@@ -581,6 +574,7 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   setDishAmount(options: {
+    orderId: string;
     loading?: BehaviorSubject<boolean>;
     orderDishId: number;
     amount?: number;
@@ -590,10 +584,11 @@ export class NgOrderService {
     options.loading?.next(true);
     this._orderBus.emit({
       event: 'setDishAmount',
-      loading: options.loading,
+      isLoading: options.loading,
       successCb: options.successCb,
       errorCb: options.errorCb,
       data: {
+        id: options.orderId,
         orderDishId: options.orderDishId,
         amount: options.amount ?? 1,
       },
@@ -619,7 +614,7 @@ export class NgOrderService {
     options.loading?.next(true);
     this._orderBus.emit({
       event: 'setCommentToDish',
-      loading: options.loading,
+      isLoading: options.loading,
       successCb: options.successCb,
       errorCb: options.errorCb,
       data: {
