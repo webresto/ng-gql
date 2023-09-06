@@ -1,17 +1,17 @@
 import { inject, InjectionToken } from '@angular/core';
-import {
-  UserDevice,
-  UserLocation,
-  UserBonusProgram,
-  BonusProgram,
-  User,
-  UserOrderHystory,
-} from './user';
-import { ValuesOrBoolean } from '../values-or-boolean';
-import { OTPResponse } from './methods';
-import { ACTION_FRAGMENTS, MESSAGE_FRAGMENTS } from '../event-message';
 import { PHONE_FRAGMENT } from '../customer';
 import { DISH_FRAGMENTS } from '../dish';
+import { ACTION_FRAGMENTS, MESSAGE_FRAGMENTS } from '../event-message';
+import { ValuesOrBoolean } from '../values-or-boolean';
+import { OTPResponse } from './methods';
+import {
+  BonusProgram,
+  User,
+  UserBonusProgram,
+  UserDevice,
+  UserLocation,
+  UserOrderHystory,
+} from './user';
 /**
  * InjectionToken с объектом ValuesOrBoolean<OTPResponse>.
  */
@@ -70,6 +70,7 @@ export const USER_LOCATION_FRAGMENTS = new InjectionToken<
     streetId: true,
     street: {
       name: true,
+      externalId: true,
       id: true,
     },
     userId: true,

@@ -1,10 +1,10 @@
-import type {BaseModelWithCustomData} from '../base/base-model-with-custom-data';
-import type {Customer} from '../customer/customer';
-import type {Dish} from '../dish/dish.gql';
-import type {Action, Message} from '../event-message/event-message';
-import type {Modifier, OrderModifier} from '../modifier/modifier.gql';
-import {OrderDish} from '../order-dish/order-dish.gql';
-import type {PaymentMethod} from '../payment-method/payment-method.gql';
+import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
+import type { Customer } from '../customer/customer';
+import type { Dish } from '../dish/dish.gql';
+import type { Action, Message } from '../event-message/event-message';
+import type { Modifier, OrderModifier } from '../modifier/modifier.gql';
+import { OrderDish } from '../order-dish/order-dish.gql';
+import type { PaymentMethod } from '../payment-method/payment-method.gql';
 
 /**
  * @alias OrderState
@@ -45,6 +45,16 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   paymentMethod: Partial<PaymentMethod> | null;
   selfService: boolean;
   date: string | null;
+  orderDate: string|null;
+  personsCount: number|null;
+  deliveryStatus:string|null;
+  promotionState: Array<PromotionState>
+}
+
+export interface PromotionState {
+  type: string|null
+  message: string|null
+  state : Record<string, any> |null
 }
 
 export interface Address {

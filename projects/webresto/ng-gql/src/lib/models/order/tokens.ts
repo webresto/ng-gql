@@ -50,6 +50,14 @@ export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>(
         rmsDelivered: true,
         selfService: true,
         date: true,
+        promotionState: {
+          type:true,
+          message: true,
+          state: true
+        }, 
+        orderDate: true,
+        deliveryStatus: true,
+        personsCount: true,
         paymentMethod: {
           id: true,
           title: true,
