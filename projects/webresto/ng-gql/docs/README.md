@@ -239,7 +239,7 @@ ___
 
 ### LoginPayload
 
-Ƭ **LoginPayload**: `Omit`<[`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), ``"password"`` \| ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `password?`: `string` ; `otp?`: `string`  }
+Ƭ **LoginPayload**: `Omit`<[`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), ``"password"`` \| ``"otp"``\> & { `phone`: `Partial`<[`Phone`](interfaces/Phone.md)\> ; `password?`: `string` ; `otp?`: `string`  }
 
 ___
 

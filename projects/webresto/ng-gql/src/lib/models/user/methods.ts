@@ -15,7 +15,7 @@ export interface RestorePasswordPayload {
 }
 
 export type LoginPayload = Omit<RestorePasswordPayload, 'password' | 'otp'> & {
-  phone?: Phone;
+  phone: Partial<Phone>;
   password?: string;
   otp?: string;
 };
