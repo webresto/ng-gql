@@ -12,6 +12,7 @@
     "subscriptions-transport-ws",
     "apollo3-cache-persist",
     "@axrl/common",
-    "crypto-puzzle"
+    "crypto-puzzle",
+    "@webresto/worktime"
   ]
 }

@@ -15,7 +15,7 @@
 
 - [customData](Street.md#customdata)
 - [id](Street.md#id)
-- [exId](Street.md#exid)
+- [externalId](Street.md#externalid)
 - [name](Street.md#name)
 
 ## Properties
@@ -36,9 +36,9 @@ ___
 
 ___
 
-### exId
+### externalId
 
-• **exId**: `string`
+• **externalId**: `string`
 
 ___
 

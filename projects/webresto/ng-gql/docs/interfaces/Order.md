@@ -44,6 +44,10 @@
 - [paymentMethod](Order.md#paymentmethod)
 - [selfService](Order.md#selfservice)
 - [date](Order.md#date)
+- [orderDate](Order.md#orderdate)
+- [personsCount](Order.md#personscount)
+- [deliveryStatus](Order.md#deliverystatus)
+- [promotionState](Order.md#promotionstate)
 
 ## Properties
 
@@ -198,3 +202,27 @@ ___
 ### date
 
 • **date**: ``null`` \| `string`
+
+___
+
+### orderDate
+
+• **orderDate**: ``null`` \| `string`
+
+___
+
+### personsCount
+
+• **personsCount**: ``null`` \| `number`
+
+___
+
+### deliveryStatus
+
+• **deliveryStatus**: ``null`` \| `string`
+
+___
+
+### promotionState
+
+• **promotionState**: [`PromotionState`](PromotionState.md)[]

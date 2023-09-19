@@ -45,6 +45,16 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   paymentMethod: Partial<PaymentMethod> | null;
   selfService: boolean;
   date: string | null;
+  orderDate: string | null;
+  personsCount: number | null;
+  deliveryStatus: string | null;
+  promotionState: PromotionState[];
+}
+
+export interface PromotionState {
+  type: string | null;
+  message: string | null;
+  state: Record<string, any> | null;
 }
 
 export interface Address {

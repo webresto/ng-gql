@@ -1,7 +1,7 @@
-import { Captcha } from '../captcha';
-import { Phone } from '../customer';
-import type { Message, Action } from '../event-message/event-message';
-import { User } from './user';
+import {Captcha} from '../captcha';
+import {Phone} from '../customer';
+import type {Action, Message} from '../event-message/event-message';
+import {User} from './user';
 
 export interface BaseResponse {
   message: Message;

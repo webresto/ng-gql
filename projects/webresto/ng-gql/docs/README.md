@@ -49,6 +49,7 @@
 - [SendOrderInput](interfaces/SendOrderInput.md)
 - [OrderDish](interfaces/OrderDish.md)
 - [Order](interfaces/Order.md)
+- [PromotionState](interfaces/PromotionState.md)
 - [Address](interfaces/Address.md)
 - [AddToOrderInput](interfaces/AddToOrderInput.md)
 - [RemoveOrSetAmountToDish](interfaces/RemoveOrSetAmountToDish.md)
@@ -128,6 +129,14 @@
 - [generateQueryString](README.md#generatequerystring)
 - [generateUUID](README.md#generateuuid)
 - [httpLinkFactory](README.md#httplinkfactory)
+- [setErrorsToControl](README.md#seterrorstocontrol)
+- [deliveryDateValidator](README.md#deliverydatevalidator)
+- [deliveryTimeValidator](README.md#deliverytimevalidator)
+- [addressStreetValidator](README.md#addressstreetvalidator)
+- [addressStreetIdValidator](README.md#addressstreetidvalidator)
+- [addressHomeValidator](README.md#addresshomevalidator)
+- [pickupAddressIdValidator](README.md#pickupaddressidvalidator)
+- [isReqiredFieldValidator](README.md#isreqiredfieldvalidator)
 
 ### Events
 
@@ -565,6 +574,137 @@ ___
 | :------ | :------ |
 | `link` | `ApolloLink` |
 | `cache` | `InMemoryCache` |
+
+___
+
+### setErrorsToControl
+
+▸ **setErrorsToControl**(`errors`, `control`): `ValidationErrors` \| ``null``
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `errors` | ``null`` \| `ValidationErrors` |
+| `control` | `undefined` \| `AbstractControl`<`any`, `any`\> |
+
+#### Returns
+
+`ValidationErrors` \| ``null``
+
+___
+
+### deliveryDateValidator
+
+▸ **deliveryDateValidator**(`restrictionsData`, `workTimeValidator`): `ValidatorFn`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `restrictionsData` | `undefined` \| ``null`` \| `RestrictionsOrder`<{}\> |
+| `workTimeValidator` | `WorkTimeValidator` |
+
+#### Returns
+
+`ValidatorFn`
+
+___
+
+### deliveryTimeValidator
+
+▸ **deliveryTimeValidator**(`restrictionsData`, `workTimeValidator`): `ValidatorFn`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `restrictionsData` | `undefined` \| ``null`` \| `RestrictionsOrder`<{}\> |
+| `workTimeValidator` | `WorkTimeValidator` |
+
+#### Returns
+
+`ValidatorFn`
+
+___
+
+### addressStreetValidator
+
+▸ **addressStreetValidator**(`form`): `ValidationErrors` \| ``null``
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `form` | `AbstractControl`<`any`, `any`\> |
+
+#### Returns
+
+`ValidationErrors` \| ``null``
+
+___
+
+### addressStreetIdValidator
+
+▸ **addressStreetIdValidator**(`form`): `ValidationErrors` \| ``null``
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `form` | `AbstractControl`<`any`, `any`\> |
+
+#### Returns
+
+`ValidationErrors` \| ``null``
+
+___
+
+### addressHomeValidator
+
+▸ **addressHomeValidator**(`form`): `ValidationErrors` \| ``null``
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `form` | `AbstractControl`<`any`, `any`\> |
+
+#### Returns
+
+`ValidationErrors` \| ``null``
+
+___
+
+### pickupAddressIdValidator
+
+▸ **pickupAddressIdValidator**(`form`): `ValidationErrors` \| ``null``
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `form` | `AbstractControl`<`any`, `any`\> |
+
+#### Returns
+
+`ValidationErrors` \| ``null``
+
+___
+
+### isReqiredFieldValidator
+
+▸ **isReqiredFieldValidator**(`controlName`): `ValidatorFn`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `controlName` | `string` |
+
+#### Returns
+
+`ValidatorFn`
 
 ## Events
 
