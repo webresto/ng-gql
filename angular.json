@@ -7,9 +7,7 @@
       "enabled": false
     },
     "analytics": false,
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "schematicCollections": ["@angular-eslint/schematics"]
   },
   "projects": {
     "@webresto/ng-gql": {
@@ -29,14 +27,6 @@
             },
             "development": {
               "tsConfig": "projects/webresto/ng-gql/tsconfig.lib.json"
-            },
-            "axrl": {
-              "project": "projects/webresto/ng-gql/ng-package-axrl.json",
-              "tsConfig": "projects/webresto/ng-gql/tsconfig.lib.json"
-            },
-            "axrl-nadym": {
-              "project": "projects/webresto/ng-gql/ng-package-axrl-nadym.json",
-              "tsConfig": "projects/webresto/ng-gql/tsconfig.lib.prod.json"
             }
           },
           "defaultConfiguration": "production"
