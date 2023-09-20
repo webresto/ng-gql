@@ -20,8 +20,6 @@
 
 - [setOrderId](NqGqlLocalStorageWrapper.md#setorderid)
 - [removeOrderId](NqGqlLocalStorageWrapper.md#removeorderid)
-- [setToStorage](NqGqlLocalStorageWrapper.md#settostorage)
-- [removeFromStorage](NqGqlLocalStorageWrapper.md#removefromstorage)
 - [startStorageEventFactory](NqGqlLocalStorageWrapper.md#startstorageeventfactory)
 - [getOrderId](NqGqlLocalStorageWrapper.md#getorderid)
 - [updateStorageOrderIdToken](NqGqlLocalStorageWrapper.md#updatestorageorderidtoken)
@@ -87,40 +85,6 @@ ___
 
 removeOrderId()
 Удаляет сохраненный в localStorage id заказа.
-
-___
-
-### setToStorage
-
-▸ **setToStorage**(`key`, `orderId`, `emitEvent?`): `void`
-
-#### Parameters
-
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `key` | `string` | `undefined` | ключ, с которым данные будут записаны в Storage |
-| `orderId` | `string` | `undefined` | сохраняемое значение |
-| `emitEvent` | `boolean` | `true` | требуется ли создавать StorageEvent для подписчиков об изменении значения |
-
-#### Returns
-
-`void`
-
-___
-
-### removeFromStorage
-
-▸ **removeFromStorage**(`key`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `key` | `string` |
-
-#### Returns
-
-`void`
 
 ___
 

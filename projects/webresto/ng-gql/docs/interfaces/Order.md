@@ -48,6 +48,7 @@
 - [personsCount](Order.md#personscount)
 - [deliveryStatus](Order.md#deliverystatus)
 - [promotionState](Order.md#promotionstate)
+- [pickupPoint](Order.md#pickuppoint)
 
 ## Properties
 
@@ -226,3 +227,9 @@ ___
 ### promotionState
 
 • **promotionState**: [`PromotionState`](PromotionState.md)[]
+
+___
+
+### pickupPoint
+
+• **pickupPoint**: [`PickupPoint`](PickupPoint.md)

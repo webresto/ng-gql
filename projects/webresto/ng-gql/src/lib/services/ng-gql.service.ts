@@ -271,7 +271,7 @@ export class NgGqlService {
         'isKnownPhone',
         vOb,
         {phone},
-        {fieldsTypeMap: new Map([['phone', 'Phone!']])},
+        {fieldsTypeMap: new Map([['phone', 'InputPhone!']])},
       )
       .pipe(
         map(data => (Array.isArray(data.isKnownPhone) ? data.isKnownPhone : [data.isKnownPhone])),
@@ -290,7 +290,7 @@ export class NgGqlService {
           firstbuy: true,
         },
         {phone},
-        {fieldsTypeMap: new Map([['phone', 'Phone!']])},
+        {fieldsTypeMap: new Map([['phone', 'InputPhone!']])},
       )
       .pipe(
         map(data =>
@@ -315,7 +315,7 @@ export class NgGqlService {
         data,
         {
           fieldsTypeMap: new Map([
-            ['phone', 'Phone!'],
+            ['phone', 'InputPhone!'],
             ['code', 'String!'],
           ]),
         },

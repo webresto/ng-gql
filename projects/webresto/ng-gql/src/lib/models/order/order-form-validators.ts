@@ -1,7 +1,7 @@
 import {formatDate} from '@angular/common';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isValue} from '@axrl/common';
-import {FormGroupType} from '@axrl/ngx-extended-form-builder';
+import {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import {RestrictionsOrder, WorkTime, WorkTimeValidator} from '@webresto/worktime';
 import {OrderForm} from './order.gql';
 
@@ -137,7 +137,7 @@ export function deliveryTimeValidator(
 
 export function addressStreetValidator(form: AbstractControl): ValidationErrors | null {
   const formValue = form.value;
-  const control = (<FormGroupType<OrderForm>>form).controls?.address?.controls?.street;
+  const control = (<ScanFormType<OrderForm>>form).controls?.address?.controls?.street;
   const controlValue = control?.value;
   const isDelieveryToAddress = !formValue.selfService && !isValue(formValue.locationId);
 
@@ -150,8 +150,8 @@ export function addressStreetValidator(form: AbstractControl): ValidationErrors 
 
 export function addressStreetIdValidator(form: AbstractControl): ValidationErrors | null {
   const formValue = form.value;
-  const controlStreetId = (<FormGroupType<OrderForm>>form).controls?.address?.controls?.streetId;
-  const controlStreet = (<FormGroupType<OrderForm>>form).controls?.address?.controls?.street;
+  const controlStreetId = (<ScanFormType<OrderForm>>form).controls?.address?.controls?.streetId;
+  const controlStreet = (<ScanFormType<OrderForm>>form).controls?.address?.controls?.street;
   const controlValue = controlStreetId?.value;
   const isDelieveryToAddress = !formValue.selfService && !isValue(formValue.locationId);
 
@@ -164,7 +164,7 @@ export function addressStreetIdValidator(form: AbstractControl): ValidationError
 
 export function addressHomeValidator(form: AbstractControl): ValidationErrors | null {
   const formValue = form.value;
-  const control = (<FormGroupType<OrderForm>>form).controls?.address?.controls?.home;
+  const control = (<ScanFormType<OrderForm>>form).controls?.address?.controls?.home;
   const controlValue = control?.value;
   const isDelieveryToAddress = !formValue.selfService && !isValue(formValue.locationId);
 
@@ -177,7 +177,7 @@ export function addressHomeValidator(form: AbstractControl): ValidationErrors | 
 
 export function pickupAddressIdValidator(form: AbstractControl): ValidationErrors | null {
   const formValue = form.value;
-  const control = (<FormGroupType<OrderForm>>form).controls?.pickupAddressId;
+  const control = (<ScanFormType<OrderForm>>form).controls.pickupPoint.controls.id;
   const controlValue = control?.value;
 
   const errors =

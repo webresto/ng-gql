@@ -2,6 +2,7 @@ import {DOCUMENT} from '@angular/common';
 import {InjectionToken, inject} from '@angular/core';
 import {generateUUID} from '../get-uuid';
 import {ORDER_DISH_FRAGMENTS} from '../order-dish';
+import {PICKUP_POINT_FRAGMENTS} from '../pickupPoint';
 import {ValuesOrBoolean} from '../values-or-boolean';
 import {Order} from './order.gql';
 
@@ -21,6 +22,7 @@ export const ORDERID_FACTORY_FN = new InjectionToken<() => string>('ORDERID_FACT
 export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>('ORDER_FRAGMENTS', {
   factory: (): ValuesOrBoolean<Order> => {
     const orderDishFragments = inject(ORDER_DISH_FRAGMENTS);
+    const pickupPoint = inject(PICKUP_POINT_FRAGMENTS);
     return {
       id: true,
       shortId: true,
@@ -45,6 +47,7 @@ export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>('ORDER
       rmsDelivered: true,
       selfService: true,
       date: true,
+      pickupPoint,
       promotionState: {
         type: true,
         message: true,

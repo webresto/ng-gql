@@ -14,7 +14,7 @@
 - [orderId](CheckOrderInput.md#orderid)
 - [paymentMethodId](CheckOrderInput.md#paymentmethodid)
 - [selfService](CheckOrderInput.md#selfservice)
-- [pickupAddressId](CheckOrderInput.md#pickupaddressid)
+- [pickupPointId](CheckOrderInput.md#pickuppointid)
 - [locationId](CheckOrderInput.md#locationid)
 - [date](CheckOrderInput.md#date)
 - [address](CheckOrderInput.md#address)
@@ -52,9 +52,9 @@ ___
 
 ___
 
-### pickupAddressId
+### pickupPointId
 
-• `Optional` **pickupAddressId**: `string`
+• `Optional` **pickupPointId**: `string`
 
 ___
 

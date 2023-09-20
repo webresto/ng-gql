@@ -13,9 +13,6 @@
 ### Methods
 
 - [updateStorageOrderIdToken](NgOrderService.md#updatestorageorderidtoken)
-- [getOrderId](NgOrderService.md#getorderid)
-- [setOrderId](NgOrderService.md#setorderid)
-- [removeOrderId](NgOrderService.md#removeorderid)
 - [paymentLink$](NgOrderService.md#paymentlink$)
 - [getOrderPaymentMethods$](NgOrderService.md#getorderpaymentmethods$)
 - [getOrder](NgOrderService.md#getorder)
@@ -91,80 +88,6 @@ this.StorageWrapper.updateStorageOrderIdToken()
 
 ___
 
-### getOrderId
-
-▸ **getOrderId**(`storageOrderIdToken`, `storageOrderId?`): `string`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `storageOrderIdToken` | `string` |
-| `storageOrderId?` | `string` |
-
-#### Returns
-
-`string`
-
-**`Method`**
-
-getOrderId()
-
-**`See`**
-
-this.StorageWrapper.getOrderId()
-
-___
-
-### setOrderId
-
-▸ **setOrderId**(`orderId`, `storageOrderIdToken?`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `orderId` | `string` |
-| `storageOrderIdToken?` | `string` |
-
-#### Returns
-
-`void`
-
-**`Method`**
-
-setOrderId()
-
-**`See`**
-
-this.StorageWrapper.setOrderId()
-
-___
-
-### removeOrderId
-
-▸ **removeOrderId**(`newOrderId?`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `newOrderId?` | `string` |
-
-#### Returns
-
-`void`
-
-**`Method`**
-
-removeOrderId()
-
-**`See`**
-
-this.StorageWrapper.removeOrderId()
-
-___
-
 ### paymentLink$
 
 ▸ **paymentLink$**(`phone`, `fromPhone`, `orderId`): `Observable`<`any`\>
@@ -223,7 +146,7 @@ ___
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `id` | `string` | `undefined` | id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему. |
+| `id` | `string` | `undefined` | id загружаемого заказа. |
 | `isShort` | `boolean` | `false` | - |
 
 #### Returns
@@ -306,7 +229,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.data` | `Partial`<{ `customData`: `Partial`<{ [x: string]: any; }\> ; `id`: `string` ; `shortId`: `string` ; `dishes`: `Partial`<{ id?: number \| null \| undefined; amount?: number \| null \| undefined; dish?: Partial<{ id?: string \| undefined; name?: string \| undefined; description?: string \| undefined; price?: number \| null \| undefined; ... 22 more ...; customData?: Partial<...\> \| undefined; }\> \| undefined; ... 9 more ...; modifiers?: Partial<....\>[] ; `dishesCount`: ``null`` \| `number` ; `comment`: `string` ; `deliveryDescription`: `string` ; `message`: `string` ; `deliveryCost`: ``null`` \| `number` ; `totalWeight`: ``null`` \| `number` ; `trifleFrom`: ``null`` \| `number` ; `total`: ``null`` \| `number` ; `orderTotal`: ``null`` \| `number` ; `discountTotal`: ``null`` \| `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId?`: `string` ; `rmsOrderNumber?`: `string` ; `rmsDeliveryDate?`: `string` ; `rmsDelivered?`: `boolean` ; `customer`: `Partial`<{ phone?: Partial<{ number?: string \| undefined; code?: string \| undefined; additionalNumber?: string \| undefined; }\> \| undefined; mail?: string \| undefined; name?: string \| undefined; }\> ; `address`: `Partial`<{ streetId?: string \| undefined; home?: string \| undefined; comment?: string \| undefined; city?: string \| undefined; street?: string \| undefined; housing?: string \| undefined; index?: string \| undefined; entrance?: string \| undefined; floor?: string \| undefined; apartment?: string \| undefined; doorphone?: string \| u...\> ; `paid?`: `boolean` ; `paymentMethod`: `Partial`<{ id?: string \| undefined; type?: string \| undefined; title?: string \| undefined; description?: string \| undefined; isCash?: boolean \| undefined; adapter?: string \| undefined; sortOrder?: number \| ... 1 more ... \| undefined; enable?: boolean \| undefined; customData?: Partial<...\> \| undefined; }\> ; `selfService`: `boolean` ; `date`: `string` ; `orderDate`: `string` ; `personsCount`: ``null`` \| `number` ; `deliveryStatus`: `string` ; `promotionState`: `Partial`<{ type: string; message: string; state: Partial<{ [x: string]: any; }\>; }\>[] ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `promocode?`: `string`  }\> | объект заказа, при этом не все данные из него будут приняты и, в результате, обновлены. Большая часть будет данных будет проигнорирована и может изменяться только в рамках других методов согласно заложенной бизнес-логике. В настоящее время из всего заказа учитываются изменения ТОЛЬКО в свойстве `Order.trifleFrom`. |
+| `options.data` | `Partial`<{ `customData`: `Partial`<{ [x: string]: any; }\> ; `id`: `string` ; `shortId`: `string` ; `dishes`: `Partial`<{ id?: number \| null \| undefined; amount?: number \| null \| undefined; dish?: Partial<{ id?: string \| undefined; name?: string \| undefined; description?: string \| undefined; price?: number \| null \| undefined; ... 22 more ...; customData?: Partial<...\> \| undefined; }\> \| undefined; ... 9 more ...; modifiers?: Partial<....\>[] ; `dishesCount`: ``null`` \| `number` ; `comment`: `string` ; `deliveryDescription`: `string` ; `message`: `string` ; `deliveryCost`: ``null`` \| `number` ; `totalWeight`: ``null`` \| `number` ; `trifleFrom`: ``null`` \| `number` ; `total`: ``null`` \| `number` ; `orderTotal`: ``null`` \| `number` ; `discountTotal`: ``null`` \| `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId?`: `string` ; `rmsOrderNumber?`: `string` ; `rmsDeliveryDate?`: `string` ; `rmsDelivered?`: `boolean` ; `customer`: `Partial`<{ phone?: Partial<{ number?: string \| undefined; code?: string \| undefined; additionalNumber?: string \| undefined; }\> \| undefined; mail?: string \| undefined; name?: string \| undefined; }\> ; `address`: `Partial`<{ streetId?: string \| undefined; home?: string \| undefined; comment?: string \| undefined; city?: string \| undefined; street?: string \| undefined; housing?: string \| undefined; index?: string \| undefined; entrance?: string \| undefined; floor?: string \| undefined; apartment?: string \| undefined; doorphone?: string \| u...\> ; `paid?`: `boolean` ; `paymentMethod`: `Partial`<{ id?: string \| undefined; type?: string \| undefined; title?: string \| undefined; description?: string \| undefined; isCash?: boolean \| undefined; adapter?: string \| undefined; sortOrder?: number \| ... 1 more ... \| undefined; enable?: boolean \| undefined; customData?: Partial<...\> \| undefined; }\> ; `selfService`: `boolean` ; `date`: `string` ; `orderDate`: `string` ; `personsCount`: ``null`` \| `number` ; `deliveryStatus`: `string` ; `promotionState`: `Partial`<{ type: string; message: string; state: Partial<{ [x: string]: any; }\>; }\>[] ; `pickupPoint`: `Partial`<{ id: string; order: number \| null; address: string; title: string; enable?: boolean \| undefined; worktime?: Partial<{ dayOfWeek: string \| string[]; selfService?: Partial<{ start: string; stop: string; break?: string \| undefined; }\> \| undefined; start: string; stop: string; break?: string \| undefined; }\>[] \| undefin...\> ; `locationId?`: `string` ; `promocode?`: `string`  }\> | объект заказа, при этом не все данные из него будут приняты и, в результате, обновлены. Большая часть будет данных будет проигнорирована и может изменяться только в рамках других методов согласно заложенной бизнес-логике. В настоящее время из всего заказа учитываются изменения ТОЛЬКО в свойстве `Order.trifleFrom`. |
 | `options.loading?` | `BehaviorSubject`<`boolean`\> | BehaviorSubject блюда, отслеживающий состояние выполняемого действия. |
 | `options.successCb?` | (`order`: [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
@@ -341,7 +264,7 @@ ___
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `options` | `Object` | - |
-| `options.orderForm` | `Partial`<{ `customData`: `Partial`<{ [x: string]: any; }\> ; `id`: `string` ; `shortId`: `string` ; `dishes`: `Partial`<{ id?: number \| null \| undefined; amount?: number \| null \| undefined; dish?: Partial<{ id?: string \| undefined; name?: string \| undefined; description?: string \| undefined; price?: number \| null \| undefined; ... 22 more ...; customData?: Partial<...\> \| undefined; }\> \| undefined; ... 9 more ...; modifiers?: Partial<....\>[] ; `dishesCount`: ``null`` \| `number` ; `comment`: `string` ; `deliveryDescription`: `string` ; `message`: `string` ; `deliveryCost`: ``null`` \| `number` ; `totalWeight`: ``null`` \| `number` ; `trifleFrom`: ``null`` \| `number` ; `total`: ``null`` \| `number` ; `orderTotal`: ``null`` \| `number` ; `discountTotal`: ``null`` \| `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId?`: `string` ; `rmsOrderNumber?`: `string` ; `rmsDeliveryDate?`: `string` ; `rmsDelivered?`: `boolean` ; `customer`: `Partial`<{ phone?: Partial<{ number?: string \| undefined; code?: string \| undefined; additionalNumber?: string \| undefined; }\> \| undefined; mail?: string \| undefined; name?: string \| undefined; }\> ; `address`: `Partial`<{ streetId?: string \| undefined; home?: string \| undefined; comment?: string \| undefined; city?: string \| undefined; street?: string \| undefined; housing?: string \| undefined; index?: string \| undefined; entrance?: string \| undefined; floor?: string \| undefined; apartment?: string \| undefined; doorphone?: string \| u...\> ; `paid?`: `boolean` ; `paymentMethod`: `Partial`<{ id?: string \| undefined; type?: string \| undefined; title?: string \| undefined; description?: string \| undefined; isCash?: boolean \| undefined; adapter?: string \| undefined; sortOrder?: number \| ... 1 more ... \| undefined; enable?: boolean \| undefined; customData?: Partial<...\> \| undefined; }\> ; `selfService`: `boolean` ; `date`: `string` ; `orderDate`: `string` ; `personsCount`: ``null`` \| `number` ; `deliveryStatus`: `string` ; `promotionState`: `Partial`<{ type: string; message: string; state: Partial<{ [x: string]: any; }\>; }\>[] ; `pickupAddressId?`: `string` ; `locationId?`: `string` ; `promocode?`: `string`  }\> | Форма чекаута с данными проверяемого заказа |
+| `options.orderForm` | `Partial`<{ `customData`: `Partial`<{ [x: string]: any; }\> ; `id`: `string` ; `shortId`: `string` ; `dishes`: `Partial`<{ id?: number \| null \| undefined; amount?: number \| null \| undefined; dish?: Partial<{ id?: string \| undefined; name?: string \| undefined; description?: string \| undefined; price?: number \| null \| undefined; ... 22 more ...; customData?: Partial<...\> \| undefined; }\> \| undefined; ... 9 more ...; modifiers?: Partial<....\>[] ; `dishesCount`: ``null`` \| `number` ; `comment`: `string` ; `deliveryDescription`: `string` ; `message`: `string` ; `deliveryCost`: ``null`` \| `number` ; `totalWeight`: ``null`` \| `number` ; `trifleFrom`: ``null`` \| `number` ; `total`: ``null`` \| `number` ; `orderTotal`: ``null`` \| `number` ; `discountTotal`: ``null`` \| `number` ; `state`: ``"CART"`` \| ``"CHECKOUT"`` \| ``"PAYMENT"`` \| ``"ORDER"`` ; `rmsId?`: `string` ; `rmsOrderNumber?`: `string` ; `rmsDeliveryDate?`: `string` ; `rmsDelivered?`: `boolean` ; `customer`: `Partial`<{ phone?: Partial<{ number?: string \| undefined; code?: string \| undefined; additionalNumber?: string \| undefined; }\> \| undefined; mail?: string \| undefined; name?: string \| undefined; }\> ; `address`: `Partial`<{ streetId?: string \| undefined; home?: string \| undefined; comment?: string \| undefined; city?: string \| undefined; street?: string \| undefined; housing?: string \| undefined; index?: string \| undefined; entrance?: string \| undefined; floor?: string \| undefined; apartment?: string \| undefined; doorphone?: string \| u...\> ; `paid?`: `boolean` ; `paymentMethod`: `Partial`<{ id?: string \| undefined; type?: string \| undefined; title?: string \| undefined; description?: string \| undefined; isCash?: boolean \| undefined; adapter?: string \| undefined; sortOrder?: number \| ... 1 more ... \| undefined; enable?: boolean \| undefined; customData?: Partial<...\> \| undefined; }\> ; `selfService`: `boolean` ; `date`: `string` ; `orderDate`: `string` ; `personsCount`: ``null`` \| `number` ; `deliveryStatus`: `string` ; `promotionState`: `Partial`<{ type: string; message: string; state: Partial<{ [x: string]: any; }\>; }\>[] ; `pickupPoint`: `Partial`<{ id: string; order: number \| null; address: string; title: string; enable?: boolean \| undefined; worktime?: Partial<{ dayOfWeek: string \| string[]; selfService?: Partial<{ start: string; stop: string; break?: string \| undefined; }\> \| undefined; start: string; stop: string; break?: string \| undefined; }\>[] \| undefin...\> ; `locationId?`: `string` ; `promocode?`: `string`  }\> | Форма чекаута с данными проверяемого заказа |
 | `options.successCb?` | (`order`: [`CheckResponse`](../interfaces/CheckResponse.md)) => `void` | Пользовательский callback, который дополнительно будет выполнен в случае успешной операции |
 | `options.errorCb?` | (`err`: `unknown`) => `void` | Пользовательский callback, будет который дополнительно выполнен в случае успешной операции |
 

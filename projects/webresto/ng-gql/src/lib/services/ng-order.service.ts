@@ -1,6 +1,6 @@
 import {EventEmitter, Inject, Injectable} from '@angular/core';
 import {isValue} from '@axrl/common';
-import type {FormGroupType} from '@axrl/ngx-extended-form-builder';
+import type {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import type {BehaviorSubject, Observable} from 'rxjs';
 import {
   catchError,
@@ -12,7 +12,6 @@ import {
   map,
   mergeWith,
   of,
-  shareReplay,
   startWith,
   switchMap,
 } from 'rxjs';
@@ -55,7 +54,7 @@ import {NqGqlLocalStorageWrapper} from './storage-wrapper';
 export class NgOrderService {
   private _orderBus = new EventEmitter<CartBusEvent>();
 
-  private order$: Observable<Order> = this.storageWrapper.storageOrderIdToken$.pipe(
+  private _order$: Observable<Order> = this.storageWrapper.storageOrderIdToken$.pipe(
     switchMap(storageOrderIdToken =>
       fromEvent<StorageEvent>(window, 'storage', {
         passive: true,
@@ -88,30 +87,38 @@ export class NgOrderService {
               title: methods[0].title,
             };
           }
-          if (storageOrderId !== order.id) {
-            this.setOrderId(order.id);
+
+          if (!isValue(order.pickupPoint)) {
+            order.pickupPoint = {
+              id: null,
+              address: null,
+              title: null,
+              order: null,
+            };
           }
+
           if (isValue(user)) {
-            if (!order.customer) {
+            if (!isValue(order.customer)) {
               order.customer = {};
             }
 
-            if (!isValue(order.customer.name)) {
+            if (!isValue(order.customer?.name)) {
               order.customer.name = this.getOrderCustomerName(user);
             }
 
-            if (!isValue(order.customer.phone)) {
+            if (!isValue(order.customer?.phone)) {
               order.customer.phone = {};
             }
 
-            if (!isValue(order.customer.phone.code)) {
+            if (!isValue(order.customer?.phone.code)) {
               order.customer.phone.code = user.phone?.code ?? this.config.phoneCode;
             }
 
-            if (!isValue(order.customer.phone.number)) {
+            if (!isValue(order.customer?.phone.number)) {
               order.customer.phone.number = user.phone?.number;
             }
           }
+
           this.storage.updateOrder(order);
           this.storage.updatePaymentMethods(methods);
 
@@ -119,7 +126,6 @@ export class NgOrderService {
         }),
       );
     }),
-    shareReplay(1),
   );
 
   /**
@@ -197,6 +203,7 @@ export class NgOrderService {
           error: () => {},
         })
       : undefined;
+  private _orderSubscription$ = this._order$.subscribe();
 
   get orderBus$(): Observable<void | (() => void)> {
     return this._orderBus$;
@@ -227,30 +234,6 @@ export class NgOrderService {
    */
   updateStorageOrderIdToken(newToken: string): void {
     this.storageWrapper.updateStorageOrderIdToken(newToken);
-  }
-
-  /**
-   * @method getOrderId()
-   * @see this.StorageWrapper.getOrderId()
-   */
-  getOrderId(storageOrderIdToken: string, storageOrderId?: string): string {
-    return this.storageWrapper.getOrderId(storageOrderIdToken, storageOrderId);
-  }
-
-  /**
-   * @method setOrderId()
-   * @see this.StorageWrapper.setOrderId()
-   */
-  setOrderId(orderId: string, storageOrderIdToken?: string): void {
-    this.storageWrapper.setOrderId(orderId, storageOrderIdToken);
-  }
-
-  /**
-   * @method removeOrderId()
-   * @see this.StorageWrapper.removeOrderId()
-   */
-  removeOrderId(newOrderId?: string): void {
-    this.storageWrapper.removeOrderId(newOrderId);
   }
 
   paymentLink$(phone: string, fromPhone: string, orderId: string): Observable<any> {
@@ -299,7 +282,7 @@ export class NgOrderService {
    * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
    */
   getOrder(): Observable<Order> {
-    return this.order$;
+    return this.storage.order;
   }
 
   /**
@@ -309,7 +292,7 @@ export class NgOrderService {
    * Используется для внутренних нужд библиотеки, а также может использоваться для загрузки заказа отдельно от шины событий заказов
    * (например, данные для страницы "Спасибо за заказ").
    *
-   * @param id - id загружаемого заказа. Если отсутствует - создается новый заказ и возвращаются данные по нему.
+   * @param id - id загружаемого заказа.
    *  */
   loadOrder$(id: string, isShort: boolean = false): Observable<Order> {
     return this.requestService
@@ -434,7 +417,7 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   updateOrder(options: {
-    data: FormGroupType<OrderForm>['value'];
+    data: ScanFormType<OrderForm>['value'];
     loading?: BehaviorSubject<boolean>;
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
@@ -457,7 +440,7 @@ export class NgOrderService {
    * @param options.errorCb - Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
    */
   checkOrder(options: {
-    orderForm: FormGroupType<OrderForm>['value'];
+    orderForm: ScanFormType<OrderForm>['value'];
     successCb?: (order: CheckResponse) => void;
     errorCb?: (err: unknown) => void;
   }): void {
@@ -475,8 +458,8 @@ export class NgOrderService {
       const data: CheckOrderInput = {
         paymentMethodId: paymentMethod.id,
         orderId: id,
-        selfService: selfService,
-        address: address,
+        selfService,
+        address,
         customer: {
           mail: customer.mail,
           name: customer.name,
@@ -486,7 +469,7 @@ export class NgOrderService {
           },
         },
         comment: options.orderForm.comment,
-        pickupAddressId: options.orderForm.pickupAddressId,
+        pickupPointId: options.orderForm.pickupPoint?.id,
         locationId: options.orderForm.locationId,
         customData: options.orderForm.customData,
         date: options.orderForm.date,
@@ -628,6 +611,7 @@ export class NgOrderService {
     if (isValue(this._orderBusSubscription$)) {
       this._orderBusSubscription$.unsubscribe();
     }
+    this._orderSubscription$.unsubscribe();
     this.storageWrapper.destroy();
     Object.values(this)
       .filter((property): property is EventEmitter<unknown> => property instanceof EventEmitter)
@@ -767,12 +751,12 @@ export class NgOrderService {
             if (isValue(sendOrderData.orderIdFactory)) {
               const newOrderId = sendOrderData.orderIdFactory();
               if (newOrderId) {
-                this.setOrderId(newOrderId);
+                this.storageWrapper.setOrderId(newOrderId);
               } else {
-                this.removeOrderId(newOrderId);
+                this.storageWrapper.removeOrderId(newOrderId);
               }
             } else {
-              this.removeOrderId();
+              this.storageWrapper.removeOrderId();
             }
           }
           return data.orderClone;
@@ -780,13 +764,13 @@ export class NgOrderService {
       );
   }
 
-  private updateOrder$(order: FormGroupType<OrderForm>['value']): Observable<Order> {
+  private updateOrder$(order: ScanFormType<OrderForm>['value']): Observable<Order> {
     return this.requestService
       .customMutation$<
         Order,
         'orderUpdate',
         {
-          order: FormGroupType<OrderForm>['value'];
+          order: ScanFormType<OrderForm>['value'];
         }
       >('orderUpdate', this.defaultOrderFragments, {order})
       .pipe(map(data => data.orderUpdate));
@@ -814,12 +798,12 @@ export class NgOrderService {
             if (isValue(sendOrderData.orderIdFactory)) {
               const newOrderId = sendOrderData.orderIdFactory();
               if (newOrderId) {
-                this.setOrderId(newOrderId);
+                this.storageWrapper.setOrderId(newOrderId);
               } else {
-                this.removeOrderId(newOrderId);
+                this.storageWrapper.removeOrderId(newOrderId);
               }
             } else {
-              this.removeOrderId();
+              this.storageWrapper.removeOrderId();
             }
           }
           return data.sendOrder;

@@ -5,6 +5,7 @@ import type {Action, Message} from '../event-message/event-message';
 import type {Modifier, OrderModifier} from '../modifier/modifier.gql';
 import {OrderDish} from '../order-dish/order-dish.gql';
 import type {PaymentMethod} from '../payment-method/payment-method.gql';
+import {PickupPoint} from '../pickupPoint';
 
 /**
  * @alias OrderState
@@ -49,6 +50,7 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   personsCount: number | null;
   deliveryStatus: string | null;
   promotionState: PromotionState[];
+  pickupPoint: PickupPoint;
 }
 
 export interface PromotionState {
@@ -98,7 +100,7 @@ export interface CheckOrderInput extends Partial<BaseModelWithCustomData> {
   orderId: string;
   paymentMethodId?: string;
   selfService: boolean;
-  pickupAddressId?: string;
+  pickupPointId?: string;
   locationId?: string;
   date?: string;
   address: Partial<Address> | null;
@@ -114,7 +116,6 @@ export interface CheckResponse {
 }
 
 export interface OrderAdditionalFields {
-  pickupAddressId?: string | undefined;
   locationId?: string | undefined;
   promocode?: string | undefined;
 }

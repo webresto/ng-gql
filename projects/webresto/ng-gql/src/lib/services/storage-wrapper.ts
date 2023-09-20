@@ -114,31 +114,6 @@ export class NqGqlLocalStorageWrapper {
     });
   }
 
-  /**
-   *
-   * @param key ключ, с которым данные будут записаны в Storage
-   * @param orderId сохраняемое значение
-   * @param emitEvent требуется ли создавать StorageEvent для подписчиков об изменении значения
-   */
-  setToStorage(key: string, orderId: string, emitEvent = true): void {
-    const storageOrderId = this.getOrderId(key);
-    if (!storageOrderId || orderId !== storageOrderId) {
-      const oldValue = window.localStorage.getItem(key);
-      const newValue = JSON.stringify({orderId: orderId, dt: Date.now()});
-      window.localStorage.setItem(key, newValue);
-      if (emitEvent) {
-        this.notifyStorageUpdate(key, oldValue, newValue);
-      }
-    }
-  }
-
-  removeFromStorage(key: string): void {
-    const oldValue = window.localStorage.getItem(key);
-    const newValue = null;
-    window.localStorage.removeItem(key);
-    this.notifyStorageUpdate(key, oldValue, newValue);
-  }
-
   startStorageEventFactory(key: string): StorageEvent {
     return new StorageEvent('storage', {
       key,
@@ -221,5 +196,30 @@ export class NqGqlLocalStorageWrapper {
         url: window.location.href,
       }),
     );
+  }
+
+  /**
+   *
+   * @param key ключ, с которым данные будут записаны в Storage
+   * @param orderId сохраняемое значение
+   * @param emitEvent требуется ли создавать StorageEvent для подписчиков об изменении значения
+   */
+  private setToStorage(key: string, orderId: string, emitEvent = true): void {
+    const storageOrderId = this.getOrderId(key);
+    if (!storageOrderId || orderId !== storageOrderId) {
+      const oldValue = window.localStorage.getItem(key);
+      const newValue = JSON.stringify({orderId: orderId, dt: Date.now()});
+      window.localStorage.setItem(key, newValue);
+      if (emitEvent) {
+        this.notifyStorageUpdate(key, oldValue, newValue);
+      }
+    }
+  }
+
+  private removeFromStorage(key: string): void {
+    const oldValue = window.localStorage.getItem(key);
+    const newValue = null;
+    window.localStorage.removeItem(key);
+    this.notifyStorageUpdate(key, oldValue, newValue);
   }
 }

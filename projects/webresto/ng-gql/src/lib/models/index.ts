@@ -17,5 +17,6 @@ export * from './order';
 export * from './order-bus-event';
 export * from './order-dish';
 export * from './payment-method';
+export * from './pickupPoint';
 export * from './user';
 export {ValuesOrBoolean} from './values-or-boolean';

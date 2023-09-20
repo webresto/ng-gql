@@ -1,4 +1,4 @@
-import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
+import type {BaseModelWithCustomData} from '../base/base-model-with-custom-data';
 
 export interface Customer {
   phone: Partial<Phone> | null;

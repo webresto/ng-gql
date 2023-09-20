@@ -58,6 +58,7 @@
 - [CheckResponse](interfaces/CheckResponse.md)
 - [OrderAdditionalFields](interfaces/OrderAdditionalFields.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
+- [PickupPoint](interfaces/PickupPoint.md)
 - [BaseResponse](interfaces/BaseResponse.md)
 - [RestorePasswordPayload](interfaces/RestorePasswordPayload.md)
 - [Response](interfaces/Response.md)
@@ -116,6 +117,7 @@
 - [ORDERID\_FACTORY\_FN](README.md#orderid_factory_fn)
 - [ORDER\_FRAGMENTS](README.md#order_fragments)
 - [PAYMENT\_METHOD\_FRAGMENTS](README.md#payment_method_fragments)
+- [PICKUP\_POINT\_FRAGMENTS](README.md#pickup_point_fragments)
 - [OTP\_RESPONSE\_FRAGMENTS](README.md#otp_response_fragments)
 - [USER\_DEVICES\_FRAGMENTS](README.md#user_devices_fragments)
 - [USER\_LOCATION\_FRAGMENTS](README.md#user_location_fragments)
@@ -442,6 +444,14 @@ ___
 • `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.
+
+___
+
+### PICKUP\_POINT\_FRAGMENTS
+
+• `Const` **PICKUP\_POINT\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PickupPoint`](interfaces/PickupPoint.md)\>\>
+
+InjectionToken с объектом ValuesOrBoolean<PickupPoint>, используемым в запросе PickupPoint с сервера.
 
 ___
 

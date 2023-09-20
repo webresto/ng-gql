@@ -1,4 +1,4 @@
-import type {FormGroupType} from '@axrl/ngx-extended-form-builder';
+import type {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import type {BehaviorSubject} from 'rxjs';
 import type {
   AddToOrderInput,
@@ -53,7 +53,7 @@ export interface CartBusEventAdd extends CartBusEventBase<Order> {
 export interface CartBusEventUpdate extends CartBusEventBase<Order> {
   event: 'update';
   /** Данные для операции */
-  data: FormGroupType<OrderForm>['value'];
+  data: ScanFormType<OrderForm>['value'];
 }
 
 /**
