@@ -58,7 +58,6 @@
 - [CheckResponse](interfaces/CheckResponse.md)
 - [OrderAdditionalFields](interfaces/OrderAdditionalFields.md)
 - [PaymentMethod](interfaces/PaymentMethod.md)
-- [PickupPoint](interfaces/PickupPoint.md)
 - [BaseResponse](interfaces/BaseResponse.md)
 - [RestorePasswordPayload](interfaces/RestorePasswordPayload.md)
 - [Response](interfaces/Response.md)
@@ -90,6 +89,7 @@
 - [NavBarLinkItem](README.md#navbarlinkitem)
 - [OrderState](README.md#orderstate)
 - [OrderForm](README.md#orderform)
+- [PickupPoint](README.md#pickuppoint)
 - [LoginPayload](README.md#loginpayload)
 - [RegistrationPayload](README.md#registrationpayload)
 - [UpdateUserDataPayload](README.md#updateuserdatapayload)
@@ -131,13 +131,12 @@
 - [generateQueryString](README.md#generatequerystring)
 - [generateUUID](README.md#generateuuid)
 - [httpLinkFactory](README.md#httplinkfactory)
-- [setErrorsToControl](README.md#seterrorstocontrol)
 - [deliveryDateValidator](README.md#deliverydatevalidator)
 - [deliveryTimeValidator](README.md#deliverytimevalidator)
 - [addressStreetValidator](README.md#addressstreetvalidator)
 - [addressStreetIdValidator](README.md#addressstreetidvalidator)
 - [addressHomeValidator](README.md#addresshomevalidator)
-- [pickupAddressIdValidator](README.md#pickupaddressidvalidator)
+- [pickupPointIdValidator](README.md#pickuppointidvalidator)
 - [isReqiredFieldValidator](README.md#isreqiredfieldvalidator)
 
 ### Events
@@ -236,6 +235,12 @@ ___
 ### OrderForm
 
 Ƭ **OrderForm**: [`Order`](interfaces/Order.md) & [`OrderAdditionalFields`](interfaces/OrderAdditionalFields.md)
+
+___
+
+### PickupPoint
+
+Ƭ **PickupPoint**: `Omit`<`PickupPointSource`, ``"worktime"`` \| ``"active"``\>
 
 ___
 
@@ -449,7 +454,7 @@ ___
 
 ### PICKUP\_POINT\_FRAGMENTS
 
-• `Const` **PICKUP\_POINT\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PickupPoint`](interfaces/PickupPoint.md)\>\>
+• `Const` **PICKUP\_POINT\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PickupPoint`](README.md#pickuppoint)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<PickupPoint>, используемым в запросе PickupPoint с сервера.
 
@@ -587,23 +592,6 @@ ___
 
 ___
 
-### setErrorsToControl
-
-▸ **setErrorsToControl**(`errors`, `control`): `ValidationErrors` \| ``null``
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `errors` | ``null`` \| `ValidationErrors` |
-| `control` | `undefined` \| `AbstractControl`<`any`, `any`\> |
-
-#### Returns
-
-`ValidationErrors` \| ``null``
-
-___
-
 ### deliveryDateValidator
 
 ▸ **deliveryDateValidator**(`restrictionsData`, `workTimeValidator`): `ValidatorFn`
@@ -686,9 +674,9 @@ ___
 
 ___
 
-### pickupAddressIdValidator
+### pickupPointIdValidator
 
-▸ **pickupAddressIdValidator**(`form`): `ValidationErrors` \| ``null``
+▸ **pickupPointIdValidator**(`form`): `ValidationErrors` \| ``null``
 
 #### Parameters
 

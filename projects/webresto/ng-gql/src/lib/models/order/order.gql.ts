@@ -50,7 +50,7 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   personsCount: number | null;
   deliveryStatus: string | null;
   promotionState: PromotionState[];
-  pickupPoint: PickupPoint;
+  pickupPoint: PickupPoint | null;
 }
 
 export interface PromotionState {

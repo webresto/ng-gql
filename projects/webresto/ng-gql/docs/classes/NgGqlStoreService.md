@@ -19,6 +19,7 @@
 - [navigation](NgGqlStoreService.md#navigation)
 - [order](NgGqlStoreService.md#order)
 - [dishes](NgGqlStoreService.md#dishes)
+- [pickupPoints$](NgGqlStoreService.md#pickuppoints$)
 
 ### Methods
 
@@ -32,6 +33,7 @@
 - [updateOrderHystory](NgGqlStoreService.md#updateorderhystory)
 - [updateUserLocations](NgGqlStoreService.md#updateuserlocations)
 - [updateNavBarMenus](NgGqlStoreService.md#updatenavbarmenus)
+- [updatePickupPoints](NgGqlStoreService.md#updatepickuppoints)
 
 ## Constructors
 
@@ -104,6 +106,12 @@ ___
 ### dishes
 
 • `Readonly` **dishes**: `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+
+___
+
+### pickupPoints$
+
+• `Readonly` **pickupPoints$**: `Observable`<``null`` \| [`PickupPoint`](../README.md#pickuppoint)[]\>
 
 ## Methods
 
@@ -296,6 +304,22 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `items` | [`NavBarMenu`](../interfaces/NavBarMenu.md)[] |
+
+#### Returns
+
+`void`
+
+___
+
+### updatePickupPoints
+
+▸ **updatePickupPoints**(`newPoints`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `newPoints` | [`PickupPoint`](../README.md#pickuppoint)[] |
 
 #### Returns
 

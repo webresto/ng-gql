@@ -15,8 +15,6 @@ export const PICKUP_POINT_FRAGMENTS = new InjectionToken<ValuesOrBoolean<PickupP
         title: true,
         order: true,
         enable: true,
-        worktime: true,
-        active: true,
         phone: true,
       };
     },

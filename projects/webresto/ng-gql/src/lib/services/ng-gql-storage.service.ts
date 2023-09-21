@@ -8,6 +8,7 @@ import {
   NavigationBase,
   Order,
   PaymentMethod,
+  PickupPoint,
   User,
   UserLocationResponse,
   UserOrderHystory,
@@ -25,6 +26,7 @@ export class NgGqlStoreService {
   private _token = createSubject<string | null>(localStorage.getItem('token'));
   private _user = createSubject<User | null>(null);
   private _paymentMethods = createSubject<PaymentMethod[] | null>(null);
+  private _pickupPoints = createSubject<PickupPoint[] | null>(null);
 
   readonly paymentMethods = getFilteredData(this._paymentMethods);
   readonly user = this._user;
@@ -37,6 +39,7 @@ export class NgGqlStoreService {
   readonly navigation = this._navigation;
   readonly order = getFilteredData(this._order);
   readonly dishes = this._dishes.asObservable();
+  readonly pickupPoints$ = this._pickupPoints.asObservable();
 
   constructor() {}
 
@@ -93,5 +96,9 @@ export class NgGqlStoreService {
 
   updateNavBarMenus(items: NavBarMenu[]): void {
     this._navBarMenus.next(items);
+  }
+
+  updatePickupPoints(newPoints: PickupPoint[]): void {
+    this._pickupPoints.next(newPoints);
   }
 }

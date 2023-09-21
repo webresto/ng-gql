@@ -232,4 +232,4 @@ ___
 
 ### pickupPoint
 
-• **pickupPoint**: [`PickupPoint`](PickupPoint.md)
+• **pickupPoint**: ``null`` \| [`PickupPoint`](../README.md#pickuppoint)

@@ -5,19 +5,24 @@ import {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import {RestrictionsOrder, WorkTime, WorkTimeValidator} from '@webresto/worktime';
 import {OrderForm} from './order.gql';
 
-export function setErrorsToControl(
+function setErrorsToControl(
   errors: ValidationErrors | null,
   control: AbstractControl | undefined,
 ): ValidationErrors | null {
+  if (!isValue(control)) {
+    return null;
+  }
+
   if (isValue(errors)) {
-    control?.setErrors(errors);
+    control.setErrors(errors);
   } else {
-    if (isValue(control?.errors)) {
-      control?.updateValueAndValidity({
+    if (isValue(control.errors)) {
+      control.updateValueAndValidity({
         onlySelf: true,
       });
     }
   }
+
   return null;
 }
 
@@ -175,13 +180,15 @@ export function addressHomeValidator(form: AbstractControl): ValidationErrors | 
   return setErrorsToControl(errors, control);
 }
 
-export function pickupAddressIdValidator(form: AbstractControl): ValidationErrors | null {
-  const formValue = form.value;
-  const control = (<ScanFormType<OrderForm>>form).controls.pickupPoint.controls.id;
+export function pickupPointIdValidator(form: AbstractControl): ValidationErrors | null {
+  const selfService: boolean = form.value?.selfService;
+  const control = <AbstractControl<string> | undefined>(
+    (<ScanFormType<OrderForm>>form).controls?.pickupPoint?.controls?.id
+  );
   const controlValue = control?.value;
 
   const errors =
-    formValue.selfService && (!isValue(controlValue) || controlValue === '')
+    selfService && (!isValue(controlValue) || controlValue === '')
       ? {
           ['Адрес самовывоза']: 'Не выбран адрес самовывоза.',
         }

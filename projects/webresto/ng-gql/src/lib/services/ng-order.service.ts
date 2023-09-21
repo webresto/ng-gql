@@ -1,5 +1,5 @@
 import {EventEmitter, Inject, Injectable} from '@angular/core';
-import {isValue} from '@axrl/common';
+import {deepClone, isValue} from '@axrl/common';
 import type {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import type {BehaviorSubject, Observable} from 'rxjs';
 import {
@@ -7,6 +7,7 @@ import {
   combineLatest,
   concatMap,
   distinctUntilKeyChanged,
+  exhaustMap,
   filter,
   fromEvent,
   map,
@@ -29,6 +30,7 @@ import type {
   OrderForm,
   OrderModifier,
   PaymentMethod,
+  PickupPoint,
   RemoveOrSetAmountToDish,
   SendOrderInput,
   SetDishCommentInput,
@@ -77,8 +79,9 @@ export class NgOrderService {
       return combineLatest([
         this.getPaymentMethods$(storageOrderId),
         this.ngGqlUser.getUser$(),
+        this.getPickupPoints(),
       ]).pipe(
-        map(([methods, user]) => {
+        map(([methods, user, points]) => {
           const notPaymentId = !isValue(order.paymentMethod) || !isValue(order.paymentMethod?.id);
 
           if (notPaymentId && methods.length > 0) {
@@ -94,7 +97,14 @@ export class NgOrderService {
               address: null,
               title: null,
               order: null,
+              enable: null,
+              phone: null,
             };
+          } else {
+            const point = points.find(pickupPoint => pickupPoint.id === order.pickupPoint?.id);
+            if (isValue(point)) {
+              order.pickupPoint = deepClone(point);
+            }
           }
 
           if (isValue(user)) {
@@ -119,8 +129,8 @@ export class NgOrderService {
             }
           }
 
-          this.storage.updateOrder(order);
-          this.storage.updatePaymentMethods(methods);
+          this.ngGqlStorage.updateOrder(order);
+          this.ngGqlStorage.updatePaymentMethods(methods);
 
           return order;
         }),
@@ -211,7 +221,7 @@ export class NgOrderService {
 
   constructor(
     private requestService: RequestService,
-    private storage: NgGqlStoreService,
+    private ngGqlStorage: NgGqlStoreService,
     private storageWrapper: NqGqlLocalStorageWrapper,
     private userBusService: NgGqlUserBusService,
     private ngGqlService: NgGqlService,
@@ -274,7 +284,7 @@ export class NgOrderService {
    * @returns Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
    */
   getOrderPaymentMethods$(): Observable<PaymentMethod[]> {
-    return this.storage.paymentMethods;
+    return this.ngGqlStorage.paymentMethods;
   }
 
   /**
@@ -282,7 +292,7 @@ export class NgOrderService {
    * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
    */
   getOrder(): Observable<Order> {
-    return this.storage.order;
+    return this.ngGqlStorage.order;
   }
 
   /**
@@ -658,6 +668,29 @@ export class NgOrderService {
           ),
       ),
     );
+  }
+
+  getPickupPoints(): Observable<PickupPoint[]> {
+    return this.ngGqlStorage.pickupPoints$.pipe(
+      exhaustMap(data => (isValue(data) ? of(data) : this._getPickupPoints())),
+    );
+  }
+
+  private _getPickupPoints(): Observable<PickupPoint[]> {
+    return this.requestService
+      .customQuery$<PickupPoint, 'pickuppoints'>('pickuppoints', {
+        id: true,
+        address: true,
+        title: true,
+        order: true,
+      })
+      .pipe(
+        map(data => {
+          const result = Array.isArray(data.pickuppoints) ? data.pickuppoints : [data.pickuppoints];
+          this.ngGqlStorage.updatePickupPoints(result);
+          return result;
+        }),
+      );
   }
 
   private getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
