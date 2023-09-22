@@ -1,0 +1,270 @@
+[
+  {
+    "label": "Доставка",
+    "warning": "<label>Будет показано меню доставки</label> <span>Перейти?</span>",
+    "active": true,
+    "concept": "dostavka",
+    "slug": "dostavka",
+    "behavior": "onepagebyquerymenu",
+    "navigation": [
+      {
+        "mnemonicId": "head",
+        "description": "Header website menu",
+        "id": 3,
+        "links": [
+          {"label": "Акции", "link": "/akcii", "active": true, "visible": true},
+          {"label": "Кафе", "link": "/kafe", "active": true, "visible": true},
+          {"label": "Трансляция", "link": "/translyaciya", "active": false, "visible": true},
+          {"label": "Условия доставки", "link": "/dostavka", "active": true, "visible": true},
+          {
+            "label": "Отключенная страница тест",
+            "link": "/test_404",
+            "active": false,
+            "visible": true
+          }
+        ]
+      },
+      {
+        "mnemonicId": "social",
+        "description": "Socials links menu",
+        "id": 2,
+        "links": [
+          {
+            "label": "Вконтакте",
+            "link": "https://vk.com/lifenadymcafe",
+            "icon": "vk",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "Вконтакте",
+            "link": "https://vk.com/lifenadym",
+            "icon": "vk",
+            "active": true,
+            "visible": true
+          }
+        ]
+      },
+      {
+        "mnemonicId": "footer",
+        "description": "Bottom website menu",
+        "id": 1,
+        "links": [
+          {
+            "label": "Условия доставки",
+            "link": "/static/usloviya-dostavki",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "Условия обработки персональных данных",
+            "link": "/static/usloviya-obrabotki-personalnyh-dannyh",
+            "active": true,
+            "visible": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Самовывоз",
+    "warning": "<label>Будет показано меню для самовывоза</label> <span>Перейти?</span>",
+    "active": true,
+    "concept": "samovyvoz",
+    "slug": "samovyvoz",
+    "behavior": "onepagebyquerymenu",
+    "navigation": [
+      {
+        "mnemonicId": "head",
+        "description": "Header website menu",
+        "id": 3,
+        "links": [
+          {"label": "Акции", "link": "/akcii", "active": true, "visible": true},
+          {"label": "Кафе", "link": "/kafe", "active": true, "visible": true},
+          {"label": "Трансляция", "link": "/translyaciya", "active": false, "visible": true},
+          {"label": "Условия доставки", "link": "/dostavka", "active": true, "visible": true},
+          {
+            "label": "Отключенная страница тест",
+            "link": "/test_404",
+            "active": false,
+            "visible": true
+          }
+        ]
+      },
+      {
+        "mnemonicId": "social",
+        "description": "Socials links menu",
+        "id": 2,
+        "links": [
+          {
+            "label": "Вконтакте",
+            "link": "https://vk.com/lifenadymcafe",
+            "icon": "vk",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "Вконтакте",
+            "link": "https://vk.com/lifenadym",
+            "icon": "vk",
+            "active": true,
+            "visible": true
+          }
+        ]
+      },
+      {
+        "mnemonicId": "footer",
+        "description": "Bottom website menu",
+        "id": 1,
+        "links": [
+          {
+            "label": "Условия доставки",
+            "link": "/static/usloviya-dostavki",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "Условия обработки персональных данных",
+            "link": "/static/usloviya-obrabotki-personalnyh-dannyh",
+            "active": true,
+            "visible": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Бронь стола",
+    "warning": "<label>Желаете забронировать стол?</span>",
+    "active": true,
+    "concept": "bron-stola",
+    "slug": "bron-stola",
+    "behavior": "onepagebyquerymenu",
+    "navigation": [
+      {
+        "mnemonicId": "head",
+        "description": "Header website menu",
+        "id": 3,
+        "links": [
+          {"label": "Акции", "link": "/akcii", "active": true, "visible": true},
+          {"label": "Кафе", "link": "/kafe", "active": true, "visible": true},
+          {"label": "Трансляция", "link": "/translyaciya", "active": false, "visible": true},
+          {"label": "Условия доставки", "link": "/dostavka", "active": true, "visible": true},
+          {
+            "label": "Отключенная страница тест",
+            "link": "/test_404",
+            "active": false,
+            "visible": true
+          }
+        ]
+      },
+      {
+        "mnemonicId": "social",
+        "description": "Socials links menu",
+        "id": 2,
+        "links": [
+          {
+            "label": "Вконтакте",
+            "link": "https://vk.com/lifenadymcafe",
+            "icon": "vk",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "Вконтакте",
+            "link": "https://vk.com/lifenadym",
+            "icon": "vk",
+            "active": true,
+            "visible": true
+          }
+        ]
+      },
+      {
+        "mnemonicId": "footer",
+        "description": "Bottom website menu",
+        "id": 1,
+        "links": [
+          {
+            "label": "Условия доставки",
+            "link": "/static/usloviya-dostavki",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "Условия обработки персональных данных",
+            "link": "/static/usloviya-obrabotki-personalnyh-dannyh",
+            "active": true,
+            "visible": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Электронное меню",
+    "warning": null,
+    "active": true,
+    "concept": "el-menu",
+    "slug": "el-menu",
+    "behavior": "onepagebyquerymenu",
+    "navigation": [
+      {
+        "mnemonicId": "head",
+        "description": "Header website menu",
+        "id": 3,
+        "links": [
+          {"label": "Акции", "link": "/akcii", "active": true, "visible": true},
+          {"label": "Кафе", "link": "/kafe", "active": true, "visible": true},
+          {"label": "Трансляция", "link": "/translyaciya", "active": false, "visible": true},
+          {"label": "Условия доставки", "link": "/dostavka", "active": true, "visible": true},
+          {
+            "label": "Отключенная страница тест",
+            "link": "/test_404",
+            "active": false,
+            "visible": true
+          }
+        ]
+      },
+      {
+        "mnemonicId": "social",
+        "description": "Socials links menu",
+        "id": 2,
+        "links": [
+          {
+            "label": "Вконтакте",
+            "link": "https://vk.com/lifenadymcafe",
+            "icon": "vk",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "Вконтакте",
+            "link": "https://vk.com/lifenadym",
+            "icon": "vk",
+            "active": true,
+            "visible": true
+          }
+        ]
+      },
+      {
+        "mnemonicId": "footer",
+        "description": "Bottom website menu",
+        "id": 1,
+        "links": [
+          {
+            "label": "Условия доставки",
+            "link": "/static/usloviya-dostavki",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "Условия обработки персональных данных",
+            "link": "/static/usloviya-obrabotki-personalnyh-dannyh",
+            "active": true,
+            "visible": true
+          }
+        ]
+      }
+    ]
+  }
+]

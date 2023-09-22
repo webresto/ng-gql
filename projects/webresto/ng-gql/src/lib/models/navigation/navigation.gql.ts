@@ -1,5 +1,5 @@
-import { Group } from '../group';
-import type { ValuesOrBoolean } from '../values-or-boolean';
+import {Group} from '../group';
+import type {ValuesOrBoolean} from '../values-or-boolean';
 
 /**
  * @interface NavigationBase
@@ -42,7 +42,6 @@ export interface NavigationsMenuItemBase {
 }
 
 export interface NavigationsMenuItem extends NavigationsMenuItemBase {
-  visible?: boolean;
   icon?: string;
   groupSlug: string;
 }
@@ -51,8 +50,8 @@ export interface NavigationsOptions {
   initGroupSlug: string;
   concept: string | 'origin' | null | undefined;
   behavior?:
-    | `newpagebynavigationmenu` //Построение из меню которое пришло в navigation_menu где каждый раздел создается на своей странице
-    | `onepagebynavigationmenu`; //Построение из меню которое пришло в navigation_menu где все разделы аккамулируются на одной странице, акамуляция происходит по массиву из `navigation_menu` с учетом очереди
+    | 'newpagebynavigationmenu' //Построение из меню которое пришло в navigation_menu где каждый раздел создается на своей странице
+    | 'onepagebynavigationmenu'; //Построение из меню которое пришло в navigation_menu где все разделы аккамулируются на одной странице, акамуляция происходит по массиву из `navigation_menu` с учетом очереди
 }
 
 export type NavbarMenuLink = Pick<Group, 'name' | 'slug' | 'id' | 'icon'>;

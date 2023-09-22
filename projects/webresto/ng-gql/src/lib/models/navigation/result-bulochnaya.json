@@ -1,0 +1,70 @@
+[
+  {
+    "label": "Доставка",
+    "warning": "<label>Будет показано меню доставки</label> <span>Перейти?</span>",
+    "active": true,
+    "concept": "origin",
+    "slug": "dostavka",
+    "behavior": "newpagebyquerymenu",
+    "navigation": [
+      {
+        "mnemonicId": "head",
+        "description": "Header website menu",
+        "id": 3,
+        "links": [
+          {"label": "Меню", "link": "/menu/pirogi-sytnye", "active": true, "visible": true},
+          {"label": "О нас", "link": "/static/about-us", "active": true, "visible": true},
+          {"label": "Акции", "link": "/stocks", "active": true, "visible": true},
+          {
+            "label": "Условия доставки",
+            "link": "/static/usloviya-dostavki",
+            "active": true,
+            "visible": true
+          },
+          {"label": "Контакты", "link": "/about", "active": true, "visible": true}
+        ]
+      },
+      {
+        "mnemonicId": "social",
+        "description": "Socials links menu",
+        "id": 2,
+        "links": [
+          {
+            "label": "vk",
+            "link": "https://m.vk.com/bakerysurgut",
+            "icon": "vk",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "telegram",
+            "link": "https://t.me/bakerysurgut",
+            "icon": "telegram",
+            "active": true,
+            "visible": true
+          }
+        ]
+      },
+      {
+        "mnemonicId": "footer",
+        "description": "Bottom website menu",
+        "id": 1,
+        "links": [
+          {
+            "label": "Условия доставки",
+            "link": "/static/usloviya-dostavki",
+            "active": true,
+            "visible": true
+          },
+          {
+            "label": "Условия обработки персональных данных",
+            "link": "/static/usloviya-obrabotki-personalnyh-dannyh",
+            "active": true,
+            "visible": true
+          },
+          {"label": "Служба поддержки", "link": "/static/support", "active": true, "visible": true}
+        ]
+      }
+    ]
+  }
+]
