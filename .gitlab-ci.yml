@@ -10,8 +10,7 @@ publish:
       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" 
       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
     - nvm install 20.8.0
-    - nvm use 20.8.0
     - npm i --force --legacy-peer-deps
     - npm run build 
-    - cp .npmrc dist
+    - cp ./.ci/.npmrc dist
     - cd dist && npm publish
