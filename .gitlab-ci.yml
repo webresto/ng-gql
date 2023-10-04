@@ -5,9 +5,13 @@ publish:
   stage: publish
   only: [master] 
   script:
-    - cp ./.ci/.npmrc ./.npmrc 
-    - ~/.nvm/nvm-exec install 16.18.0
-    - ~/.nvm/nvm-exec use 16.18.0
+    - >
+     export NVM_DIR="$HOME/.nvm" 
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" 
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
+    - nvm install 20.8.0
+    - nvm use 20.8.0
     - npm i --force --legacy-peer-deps
     - npm run build 
-    - cd ./dist && npm publish && cd .. && rm -rf ./.npmrc
+    - cp .npmrc dist
+    - cd dist && npm publish
