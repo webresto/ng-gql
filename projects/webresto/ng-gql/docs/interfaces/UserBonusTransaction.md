@@ -20,7 +20,6 @@
 - [isPositive](UserBonusTransaction.md#ispositive)
 - [amount](UserBonusTransaction.md#amount)
 - [balanceAfter](UserBonusTransaction.md#balanceafter)
-- [user](UserBonusTransaction.md#user)
 - [userId](UserBonusTransaction.md#userid)
 
 ## Properties
@@ -68,12 +67,6 @@ ___
 ### balanceAfter
 
 • **balanceAfter**: `number`
-
-___
-
-### user
-
-• **user**: [`User`](User.md)
 
 ___
 

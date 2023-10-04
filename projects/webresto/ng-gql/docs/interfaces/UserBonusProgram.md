@@ -17,7 +17,6 @@
 - [id](UserBonusProgram.md#id)
 - [isActive](UserBonusProgram.md#isactive)
 - [balance](UserBonusProgram.md#balance)
-- [user](UserBonusProgram.md#user)
 - [userId](UserBonusProgram.md#userid)
 - [bonusProgram](UserBonusProgram.md#bonusprogram)
 - [bonusProgramId](UserBonusProgram.md#bonusprogramid)
@@ -50,12 +49,6 @@ ___
 ### balance
 
 • **balance**: `number`
-
-___
-
-### user
-
-• **user**: [`User`](User.md)
 
 ___
 

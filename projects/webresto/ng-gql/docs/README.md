@@ -274,7 +274,7 @@ ___
 
 ### UserLocation
 
-Ƭ **UserLocation**: `Omit`<[`InputLocation`](interfaces/InputLocation.md), ``"street"``\> & { `id`: `string` ; `user`: [`User`](interfaces/User.md) ; `userId`: `string` ; `street`: [`Street`](interfaces/Street.md)  }
+Ƭ **UserLocation**: `Omit`<[`InputLocation`](interfaces/InputLocation.md), ``"street"``\> & { `id`: `string` ; `userId`: `string` ; `street`: [`Street`](interfaces/Street.md)  }
 
 ___
 

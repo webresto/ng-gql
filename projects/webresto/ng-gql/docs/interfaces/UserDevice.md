@@ -18,7 +18,6 @@
 - [name](UserDevice.md#name)
 - [userAgent](UserDevice.md#useragent)
 - [isLogined](UserDevice.md#islogined)
-- [user](UserDevice.md#user)
 - [userId](UserDevice.md#userid)
 - [lastIP](UserDevice.md#lastip)
 - [loginTime](UserDevice.md#logintime)
@@ -58,12 +57,6 @@ ___
 ### isLogined
 
 • **isLogined**: `boolean`
-
-___
-
-### user
-
-• **user**: [`User`](User.md)
 
 ___
 

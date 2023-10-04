@@ -1,7 +1,7 @@
-import type { BaseModelWithCustomData } from '../base/base-model-with-custom-data';
-import type { Dish } from '../dish/dish.gql';
-import type { Address, Order } from '../order';
-import type { Phone } from './../customer/customer';
+import type {BaseModelWithCustomData} from '../base/base-model-with-custom-data';
+import type {Dish} from '../dish/dish.gql';
+import type {Address, Order} from '../order';
+import type {Phone} from './../customer/customer';
 
 /**
  *  Модели, описывающие авторизованного пользователя и его данные
@@ -36,7 +36,6 @@ export interface UserBonusProgram extends BaseModelWithCustomData {
   id: string;
   isActive: boolean;
   balance: number;
-  user: User;
   userId: string;
   bonusProgram: BonusProgram;
   bonusProgramId: string;
@@ -50,7 +49,6 @@ export interface UserBonusTransaction extends BaseModelWithCustomData {
   isPositive: boolean;
   amount: number;
   balanceAfter: number;
-  user: User;
   userId: string;
 }
 
@@ -59,7 +57,6 @@ export interface UserDevice extends BaseModelWithCustomData {
   name: string;
   userAgent: string;
   isLogined: boolean;
-  user: User;
   userId: string;
   lastIP: string;
   loginTime: number;
@@ -85,7 +82,6 @@ export interface InputLocation extends Address {
 
 export type UserLocation = Omit<InputLocation, 'street'> & {
   id: string;
-  user: User;
   userId: string;
   street: Street;
 };

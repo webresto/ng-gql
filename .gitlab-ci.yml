@@ -6,8 +6,8 @@ publish:
   only: [master] 
   script:
     - cp ./.ci/.npmrc ./.npmrc 
-    - nvm install 16.18.0
-    - nvm use 16.18.0
+    - ~/.nvm/nvm-exec install 16.18.0
+    - ~/.nvm/nvm-exec use 16.18.0
     - npm i --force --legacy-peer-deps
     - npm run build 
     - cd ./dist && npm publish && cd .. && rm -rf ./.npmrc

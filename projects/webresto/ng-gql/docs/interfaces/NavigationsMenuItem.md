@@ -64,7 +64,7 @@ ___
 
 • `Optional` **visible**: `boolean`
 
-#### Overrides
+#### Inherited from
 
 [NavigationsMenuItemBase](NavigationsMenuItemBase.md).[visible](NavigationsMenuItemBase.md#visible)
 
