@@ -128,6 +128,8 @@
 
 ### Functions
 
+- [groupModifierFormValidator](README.md#groupmodifierformvalidator)
+- [modifierFormValidator](README.md#modifierformvalidator)
 - [generateQueryString](README.md#generatequerystring)
 - [generateUUID](README.md#generateuuid)
 - [httpLinkFactory](README.md#httplinkfactory)
@@ -515,6 +517,38 @@ ___
 InjectionToken с объектом ValuesOrBoolean<UserOrderHystory>.
 
 ## Functions
+
+### groupModifierFormValidator
+
+▸ **groupModifierFormValidator**(`control`): `ValidationErrors` \| ``null``
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `control` | `AbstractControl`<`any`, `any`\> |
+
+#### Returns
+
+`ValidationErrors` \| ``null``
+
+___
+
+### modifierFormValidator
+
+▸ **modifierFormValidator**(`control`): `ValidationErrors` \| ``null``
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `control` | `AbstractControl`<`any`, `any`\> |
+
+#### Returns
+
+`ValidationErrors` \| ``null``
+
+___
 
 ### generateQueryString
 
