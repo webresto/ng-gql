@@ -1,2 +1,2 @@
-export * from './group.gql';
-export * from './tokens'
+export * from './group';
+export * from './tokens';

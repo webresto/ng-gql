@@ -1,7 +1,7 @@
 import {inject, InjectionToken} from '@angular/core';
 import {IMAGE_FRAGMENTS} from '../image';
 import {ValuesOrBoolean} from '../values-or-boolean';
-import {Modifier} from './modifier.gql';
+import {Modifier} from './modifier';
 
 /**
  * InjectionToken с объектом ValuesOrBoolean<Modifier>, используемым в запросе Modifier с сервера.

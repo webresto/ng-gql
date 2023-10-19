@@ -3,7 +3,7 @@ import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isValue} from '@axrl/common';
 import {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import {RestrictionsOrder, WorkTime, WorkTimeValidator} from '@webresto/worktime';
-import {OrderForm} from './order.gql';
+import {OrderForm} from './order';
 
 function setErrorsToControl(
   errors: ValidationErrors | null,

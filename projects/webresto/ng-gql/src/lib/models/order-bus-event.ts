@@ -8,7 +8,7 @@ import type {
   OrderForm,
   RemoveOrSetAmountToDish,
   SetDishCommentInput,
-} from './order/order.gql';
+} from './order/order';
 
 /**
  * @alias @event CartBusEvent

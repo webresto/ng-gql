@@ -1,5 +1,5 @@
-import type {Dish} from '../dish/dish.gql';
-import type {Modifier} from '../modifier/modifier.gql';
+import type {Dish} from '../dish/dish';
+import type {Modifier} from '../modifier/modifier';
 
 export interface GroupModifier<T extends Dish = Dish>
   extends Omit<

@@ -1,2 +1,2 @@
-export * from './order-dish.gql';
+export * from './order-dish';
 export * from './tokens';

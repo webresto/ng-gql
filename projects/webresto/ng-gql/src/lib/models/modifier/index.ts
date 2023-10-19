@@ -1,2 +1,2 @@
-export * from './modifier.gql';
+export * from './modifier';
 export * from './tokens';

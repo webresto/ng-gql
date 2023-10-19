@@ -1,2 +1,2 @@
-export * from './image.gql';
+export * from './image';
 export * from './tokens';

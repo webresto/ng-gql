@@ -1,10 +1,10 @@
 import type {BaseModelWithCustomData} from '../base/base-model-with-custom-data';
 import type {Customer} from '../customer/customer';
-import type {Dish} from '../dish/dish.gql';
+import type {Dish} from '../dish/dish';
 import type {Action, Message} from '../event-message/event-message';
-import type {Modifier, OrderModifier} from '../modifier/modifier.gql';
-import {OrderDish} from '../order-dish/order-dish.gql';
-import type {PaymentMethod} from '../payment-method/payment-method.gql';
+import type {Modifier, OrderModifier} from '../modifier/modifier';
+import {OrderDish} from '../order-dish/order-dish';
+import type {PaymentMethod} from '../payment-method/payment-method';
 import {PickupPoint} from '../pickupPoint';
 
 /**

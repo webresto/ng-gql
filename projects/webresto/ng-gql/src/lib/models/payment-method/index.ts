@@ -1,2 +1,2 @@
-export * from './payment-method.gql';
+export * from './payment-method';
 export * from './tokens';

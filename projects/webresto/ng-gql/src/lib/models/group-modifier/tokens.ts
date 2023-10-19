@@ -1,7 +1,7 @@
 import {InjectionToken, inject} from '@angular/core';
 import {MODIFIER_FRAGMENTS} from '../modifier';
 import {ValuesOrBoolean} from '../values-or-boolean';
-import {GroupModifier} from './group-modifier.gql';
+import {GroupModifier} from './group-modifier';
 
 /**
  * InjectionToken с объектом ValuesOrBoolean<GroupModifier>, используемым в запросе GroupModifier с сервера.

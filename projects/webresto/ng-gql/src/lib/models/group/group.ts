@@ -1,5 +1,5 @@
-import type { Dish } from '../dish/dish.gql';
-import { Image } from '../image/image.gql';
+import type {Dish} from '../dish/dish';
+import {Image} from '../image/image';
 
 export interface Group {
   id: string;
@@ -10,10 +10,10 @@ export interface Group {
   visible: boolean;
   sortOrder: number;
   dishesIds: string[];
-  dishes?: Partial<Dish>[];
+  dishes?: Array<Partial<Dish>>;
   discount?: string | null;
   parentGroup?: Partial<Pick<Group, 'id' | 'dishesPlaceholder'>>;
-  childGroups: Partial<Group>[];
+  childGroups: Array<Partial<Group>>;
   dishesPlaceholder: Partial<Image> | null;
 }
 export type PartialGroupNullable = Pick<Group, 'slug'> & {

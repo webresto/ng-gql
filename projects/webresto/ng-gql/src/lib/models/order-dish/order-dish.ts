@@ -1,5 +1,5 @@
-import type {DiscountType, Dish} from '../dish/dish.gql';
-import type {OrderModifier} from '../modifier/modifier.gql';
+import type {DiscountType, Dish} from '../dish/dish';
+import type {OrderModifier} from '../modifier/modifier';
 
 export interface OrderDish<T extends Dish = Dish> {
   id: number;

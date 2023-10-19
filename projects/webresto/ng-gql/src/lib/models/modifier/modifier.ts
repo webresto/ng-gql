@@ -1,4 +1,4 @@
-import type {Dish} from '../dish/dish.gql';
+import type {Dish} from '../dish/dish';
 
 export interface OrderModifier<T extends Dish = Dish> {
   id: string;

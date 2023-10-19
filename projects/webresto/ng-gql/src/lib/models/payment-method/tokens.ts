@@ -1,6 +1,6 @@
 import {InjectionToken} from '@angular/core';
 import {ValuesOrBoolean} from '../values-or-boolean';
-import {PaymentMethod} from './payment-method.gql';
+import {PaymentMethod} from './payment-method';
 
 /**
  * InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.

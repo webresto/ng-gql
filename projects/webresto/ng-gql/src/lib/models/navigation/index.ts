@@ -1,2 +1,2 @@
-export * from './navigation.gql';
+export * from './navigation';
 export * from './tokens';

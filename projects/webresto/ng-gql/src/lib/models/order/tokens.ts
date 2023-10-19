@@ -4,7 +4,7 @@ import {generateUUID} from '../get-uuid';
 import {ORDER_DISH_FRAGMENTS} from '../order-dish';
 import {PICKUP_POINT_FRAGMENTS} from '../pickupPoint';
 import {ValuesOrBoolean} from '../values-or-boolean';
-import {Order} from './order.gql';
+import {Order} from './order';
 
 /**
  * Метод для генерации orderId
