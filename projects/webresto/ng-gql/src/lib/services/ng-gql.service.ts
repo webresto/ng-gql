@@ -211,62 +211,11 @@ export class NgGqlService {
   }
 
   getDishes$(ids: string[]): Observable<Dish[]> {
-    return this.storage.dishes.pipe(
-      exhaustMap(dishes => {
-        const dishesInStock = dishes.filter(item => ids.includes(item.id));
-
-        if (dishesInStock.length == ids.length) {
-          return of(dishesInStock);
-        } else {
-          const dishesNotInStock = ids.filter(dishId => !dishes.find(dish => dish.id === dishId));
-          return this.requestService
-            .customQuery$<Dish, 'dish', VCriteria>('dish', this.defaultDishFragments, {
-              criteria: {
-                id: dishesNotInStock,
-              },
-            })
-            .pipe(
-              map(loadedDishes => {
-                const result = (
-                  Array.isArray(loadedDishes.dish) ? loadedDishes.dish : [loadedDishes.dish]
-                ).map(dish => this.addAmountToDish(dish));
-                dishes.push(...result);
-                this.storage.updateDishes(dishes);
-                return [...dishesInStock, ...result];
-              }),
-            );
-        }
-      }),
-      distinctUntilObjectChanged(),
-    );
+    return this._getDishes(ids).pipe(distinctUntilObjectChanged());
   }
 
   getDishBySlug(slug: string): Observable<Dish> {
-    return this.storage.dishes.pipe(
-      exhaustMap(dishes => {
-        const dishInStock = dishes.find(item => item.slug === slug);
-
-        if (isValue(dishInStock)) {
-          return of([dishInStock]);
-        } else {
-          return this.requestService
-            .customQuery$<Dish, 'dish', VCriteria>('dish', this.defaultDishFragments, {
-              criteria: {
-                slug,
-              },
-            })
-            .pipe(
-              map(loadedDishes => {
-                const result = (
-                  Array.isArray(loadedDishes.dish) ? loadedDishes.dish : [loadedDishes.dish]
-                ).map(dish => this.addAmountToDish(dish));
-                dishes.push(...result);
-                this.storage.updateDishes(dishes);
-                return result;
-              }),
-            );
-        }
-      }),
+    return this._getDishes([slug], false).pipe(
       map(dishes => dishes[0]),
       filter((dish): dish is Dish => isValue(dish)),
       distinctUntilObjectChanged(),
@@ -362,6 +311,40 @@ export class NgGqlService {
         (property): property is BehaviorSubject<unknown> => property instanceof BehaviorSubject,
       )
       .forEach(property => property.complete());
+  }
+
+  private _getDishes(items: string[], isId: boolean = true): Observable<Dish[]> {
+    return this.storage.dishes.pipe(
+      exhaustMap(dishes => {
+        const dishesInStock = dishes.filter(item => items.includes(isId ? item.id : item.slug));
+
+        if (dishesInStock.length == items.length) {
+          return of(dishesInStock);
+        } else {
+          const dishesNotInStock = items.filter(
+            item => !dishes.find(dish => item === (isId ? dish.id : dish.slug)),
+          );
+          const criteriaKey = isId ? 'id' : 'slug';
+
+          return this.requestService
+            .customQuery$<Dish, 'dish', VCriteria>('dish', this.defaultDishFragments, {
+              criteria: {
+                [criteriaKey]: dishesNotInStock,
+              },
+            })
+            .pipe(
+              map(loadedDishes => {
+                const result = (
+                  Array.isArray(loadedDishes.dish) ? loadedDishes.dish : [loadedDishes.dish]
+                ).map(dish => this.addAmountToDish(dish));
+                dishes.push(...result);
+                this.storage.updateDishes(dishes);
+                return [...dishesInStock, ...result];
+              }),
+            );
+        }
+      }),
+    );
   }
 
   private getAdditionalInfo(dish: Partial<Dish>): Dish['additionalInfo'] {
