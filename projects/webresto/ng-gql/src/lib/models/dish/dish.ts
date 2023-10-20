@@ -9,6 +9,7 @@ export type DiscountType = 'FIXED' | 'PERCENT';
 export interface Dish extends BaseModelWithCustomData {
   id: string;
   name: string;
+  slug: string;
   description: string;
   price: number;
   oldPrice: number | null;

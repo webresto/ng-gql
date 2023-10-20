@@ -7,13 +7,14 @@ import {Dish} from './dish';
  * InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
  */
 export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>('DISH_FRAGMENTS', {
-  factory: () => {
+  factory: (): ValuesOrBoolean<Dish> => {
     const imageFragments = inject(IMAGE_FRAGMENTS);
     const groupModifierFragments = inject(GROUP_MODIFIER_FRAGMENTS);
     return {
       customData: true,
       id: true,
       name: true,
+      slug: true,
       description: true,
       price: true,
       weight: true,

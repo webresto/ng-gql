@@ -16,6 +16,7 @@
 - [customData](Dish.md#customdata)
 - [id](Dish.md#id)
 - [name](Dish.md#name)
+- [slug](Dish.md#slug)
 - [description](Dish.md#description)
 - [price](Dish.md#price)
 - [oldPrice](Dish.md#oldprice)
@@ -62,6 +63,12 @@ ___
 ### name
 
 • **name**: `string`
+
+___
+
+### slug
+
+• **slug**: `string`
 
 ___
 

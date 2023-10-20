@@ -16,6 +16,7 @@
 - [getGroup](NgGqlService.md#getgroup)
 - [addAmountToDish](NgGqlService.md#addamounttodish)
 - [getDishes$](NgGqlService.md#getdishes$)
+- [getDishBySlug](NgGqlService.md#getdishbyslug)
 - [getNavBarMenu](NgGqlService.md#getnavbarmenu)
 - [isKnownPhone$](NgGqlService.md#isknownphone$)
 - [phoneKnowledgeGetCode$](NgGqlService.md#phoneknowledgegetcode$)
@@ -190,6 +191,22 @@ ___
 #### Returns
 
 `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+
+___
+
+### getDishBySlug
+
+▸ **getDishBySlug**(`slug`): `Observable`<[`Dish`](../interfaces/Dish.md)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `slug` | `string` |
+
+#### Returns
+
+`Observable`<[`Dish`](../interfaces/Dish.md)\>
 
 ___
 

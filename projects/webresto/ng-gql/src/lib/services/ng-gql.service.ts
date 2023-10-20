@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {createSubject, deepClone, isValue} from '@axrl/common';
+import {createSubject, deepClone, distinctUntilObjectChanged, isValue} from '@axrl/common';
 import type {Observable} from 'rxjs';
 import {BehaviorSubject, exhaustMap, filter, map, of, tap} from 'rxjs';
 import type {
@@ -237,6 +237,39 @@ export class NgGqlService {
             );
         }
       }),
+      distinctUntilObjectChanged(),
+    );
+  }
+
+  getDishBySlug(slug: string): Observable<Dish> {
+    return this.storage.dishes.pipe(
+      exhaustMap(dishes => {
+        const dishInStock = dishes.find(item => item.slug === slug);
+
+        if (isValue(dishInStock)) {
+          return of([dishInStock]);
+        } else {
+          return this.requestService
+            .customQuery$<Dish, 'dish', VCriteria>('dish', this.defaultDishFragments, {
+              criteria: {
+                slug,
+              },
+            })
+            .pipe(
+              map(loadedDishes => {
+                const result = (
+                  Array.isArray(loadedDishes.dish) ? loadedDishes.dish : [loadedDishes.dish]
+                ).map(dish => this.addAmountToDish(dish));
+                dishes.push(...result);
+                this.storage.updateDishes(dishes);
+                return result;
+              }),
+            );
+        }
+      }),
+      map(dishes => dishes[0]),
+      filter((dish): dish is Dish => isValue(dish)),
+      distinctUntilObjectChanged(),
     );
   }
 
