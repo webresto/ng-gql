@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- `Partial`<[`BaseModelWithCustomData`](BaseModelWithCustomData.md)\>
+- `Partial`\<[`BaseModelWithCustomData`](BaseModelWithCustomData.md)\>
 
   ↳ **`CheckOrderInput`**
 
@@ -21,12 +21,13 @@
 - [customer](CheckOrderInput.md#customer)
 - [comment](CheckOrderInput.md#comment)
 - [notifyMethodId](CheckOrderInput.md#notifymethodid)
+- [spendBonus](CheckOrderInput.md#spendbonus)
 
 ## Properties
 
 ### customData
 
-• `Optional` **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+• `Optional` **customData**: ``null`` \| \{ `[key: string]`: `string` \| `any` \| ``null``;  }
 
 #### Inherited from
 
@@ -72,13 +73,13 @@ ___
 
 ### address
 
-• **address**: ``null`` \| `Partial`<[`Address`](Address.md)\>
+• **address**: ``null`` \| `Partial`\<[`Address`](Address.md)\>
 
 ___
 
 ### customer
 
-• **customer**: ``null`` \| `Partial`<[`Customer`](Customer.md)\>
+• **customer**: ``null`` \| `Partial`\<[`Customer`](Customer.md)\>
 
 ___
 
@@ -91,3 +92,9 @@ ___
 ### notifyMethodId
 
 • `Optional` **notifyMethodId**: `string`
+
+___
+
+### spendBonus
+
+• `Optional` **spendBonus**: ``null`` \| `Partial`\<\{ `bonusProgramId`: `string` ; `amount`: ``null`` \| `number` ; `adapter`: `string` ; `bonusProgramName`: `string`  }\>

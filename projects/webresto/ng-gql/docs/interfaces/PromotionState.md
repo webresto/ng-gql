@@ -24,4 +24,4 @@ ___
 
 ### state
 
-• **state**: ``null`` \| `Record`<`string`, `any`\>
+• **state**: ``null`` \| `Record`\<`string`, `any`\>

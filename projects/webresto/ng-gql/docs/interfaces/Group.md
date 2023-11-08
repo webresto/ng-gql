@@ -70,7 +70,7 @@ ___
 
 ### dishes
 
-• `Optional` **dishes**: `Partial`<[`Dish`](Dish.md)\>[]
+• `Optional` **dishes**: `Partial`\<[`Dish`](Dish.md)\>[]
 
 ___
 
@@ -82,16 +82,16 @@ ___
 
 ### parentGroup
 
-• `Optional` **parentGroup**: `Partial`<`Pick`<[`Group`](Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>\>
+• `Optional` **parentGroup**: `Partial`\<`Pick`\<[`Group`](Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>\>
 
 ___
 
 ### childGroups
 
-• **childGroups**: `Partial`<[`Group`](Group.md)\>[]
+• **childGroups**: `Partial`\<[`Group`](Group.md)\>[]
 
 ___
 
 ### dishesPlaceholder
 
-• **dishesPlaceholder**: ``null`` \| `Partial`<[`Image`](Image.md)\>
+• **dishesPlaceholder**: ``null`` \| `Partial`\<[`Image`](Image.md)\>

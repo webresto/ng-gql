@@ -17,4 +17,4 @@ ___
 
 ### action
 
-• **action**: [`Action`](Action.md)<`any`\>
+• **action**: [`Action`](Action.md)\<`any`\>

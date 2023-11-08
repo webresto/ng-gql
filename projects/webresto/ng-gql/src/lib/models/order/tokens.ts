@@ -48,6 +48,8 @@ export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>('ORDER
       selfService: true,
       date: true,
       pickupPoint,
+      spendBonus: true,
+      bonusesTotal: true,
       promotionState: {
         type: true,
         message: true,

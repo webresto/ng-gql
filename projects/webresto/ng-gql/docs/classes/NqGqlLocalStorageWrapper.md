@@ -29,7 +29,7 @@
 
 ### constructor
 
-• **new NqGqlLocalStorageWrapper**(`config`, `orderIdFactoryFn`)
+• **new NqGqlLocalStorageWrapper**(`config`, `orderIdFactoryFn`): [`NqGqlLocalStorageWrapper`](NqGqlLocalStorageWrapper.md)
 
 #### Parameters
 
@@ -38,11 +38,15 @@
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 | `orderIdFactoryFn` | () => `string` |
 
+#### Returns
+
+[`NqGqlLocalStorageWrapper`](NqGqlLocalStorageWrapper.md)
+
 ## Properties
 
 ### storageOrderIdToken$
 
-• **storageOrderIdToken$**: `Observable`<`string`\>
+• **storageOrderIdToken$**: `Observable`\<`string`\>
 
 ## Methods
 

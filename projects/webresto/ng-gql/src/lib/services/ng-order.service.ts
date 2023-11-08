@@ -478,6 +478,7 @@ export class NgOrderService {
             number: customer.phone.number,
           },
         },
+        spendBonus: options.orderForm.spendBonus,
         comment: options.orderForm.comment,
         pickupPointId: options.orderForm.pickupPoint?.id,
         locationId: options.orderForm.locationId,

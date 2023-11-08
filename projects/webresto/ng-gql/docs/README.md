@@ -49,6 +49,7 @@
 - [SendOrderInput](interfaces/SendOrderInput.md)
 - [OrderDish](interfaces/OrderDish.md)
 - [Order](interfaces/Order.md)
+- [InputSpendBonus](interfaces/InputSpendBonus.md)
 - [PromotionState](interfaces/PromotionState.md)
 - [Address](interfaces/Address.md)
 - [AddToOrderInput](interfaces/AddToOrderInput.md)
@@ -177,13 +178,13 @@ VCriteria
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `criteria` | `Record`<`string`, `any`\> | Объект Waterline query language |
+| `criteria` | `Record`\<`string`, `any`\> | Объект Waterline query language |
 
 ___
 
 ### GQLRequestVariables
 
-Ƭ **GQLRequestVariables**: `Record`<`string`, `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`\> \| [`VCriteria`](README.md#vcriteria)
+Ƭ **GQLRequestVariables**: `Record`\<`string`, `number` \| `string` \| `Object` \| `boolean` \| ``null`` \| `undefined`\> \| [`VCriteria`](README.md#vcriteria)
 
 **`Alias`**
 
@@ -196,19 +197,19 @@ ___
 
 ### PartialGroupNullable
 
-Ƭ **PartialGroupNullable**: `Pick`<[`Group`](interfaces/Group.md), ``"slug"``\> & { `id`: `string` \| ``null``  }
+Ƭ **PartialGroupNullable**: `Pick`\<[`Group`](interfaces/Group.md), ``"slug"``\> & \{ `id`: `string` \| ``null``  }
 
 ___
 
 ### NavbarMenuLink
 
-Ƭ **NavbarMenuLink**: `Pick`<[`Group`](interfaces/Group.md), ``"name"`` \| ``"slug"`` \| ``"id"`` \| ``"icon"``\>
+Ƭ **NavbarMenuLink**: `Pick`\<[`Group`](interfaces/Group.md), ``"name"`` \| ``"slug"`` \| ``"id"`` \| ``"icon"``\>
 
 ___
 
 ### NavBarLinkItem
 
-Ƭ **NavBarLinkItem**: `Omit`<[`NavbarMenuLink`](README.md#navbarmenulink), ``"slug"``\> & { `link`: [`string`[], `string` \| `undefined`]  }
+Ƭ **NavBarLinkItem**: `Omit`\<[`NavbarMenuLink`](README.md#navbarmenulink), ``"slug"``\> & \{ `link`: [`string`[], `string` \| `undefined`]  }
 
 ___
 
@@ -242,19 +243,19 @@ ___
 
 ### PickupPoint
 
-Ƭ **PickupPoint**: `Omit`<`PickupPointSource`, ``"worktime"`` \| ``"active"``\>
+Ƭ **PickupPoint**: `Omit`\<`PickupPointSource`, ``"worktime"`` \| ``"active"``\>
 
 ___
 
 ### LoginPayload
 
-Ƭ **LoginPayload**: `Omit`<[`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), ``"password"`` \| ``"otp"``\> & { `phone`: `Partial`<[`Phone`](interfaces/Phone.md)\> ; `password?`: `string` ; `otp?`: `string`  }
+Ƭ **LoginPayload**: `Omit`\<[`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), ``"password"`` \| ``"otp"``\> & \{ `phone`: `Partial`\<[`Phone`](interfaces/Phone.md)\> ; `password?`: `string` ; `otp?`: `string`  }
 
 ___
 
 ### RegistrationPayload
 
-Ƭ **RegistrationPayload**: `Omit`<[`LoginPayload`](README.md#loginpayload), ``"otp"``\> & { `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName?`: `string` ; `lastName?`: `string` ; `customFields?`: { `[key: string]`: `string` \| `any` \| ``null``;  }  }
+Ƭ **RegistrationPayload**: `Omit`\<[`LoginPayload`](README.md#loginpayload), ``"otp"``\> & \{ `phone?`: [`Phone`](interfaces/Phone.md) ; `otp`: `string` ; `firstName?`: `string` ; `lastName?`: `string` ; `customFields?`: \{ `[key: string]`: `string` \| `any` \| ``null``;  }  }
 
 ___
 
@@ -276,13 +277,13 @@ ___
 
 ### UserLocation
 
-Ƭ **UserLocation**: `Omit`<[`InputLocation`](interfaces/InputLocation.md), ``"street"``\> & { `id`: `string` ; `userId`: `string` ; `street`: [`Street`](interfaces/Street.md)  }
+Ƭ **UserLocation**: `Omit`\<[`InputLocation`](interfaces/InputLocation.md), ``"street"``\> & \{ `id`: `string` ; `userId`: `string` ; `street`: [`Street`](interfaces/Street.md)  }
 
 ___
 
 ### ValuesOrBoolean
 
-Ƭ **ValuesOrBoolean**<`T`\>: { [K in keyof T]?: true \| (T[K] extends Observable<unknown\> \| AbstractControl<unknown\> ? never : T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean<U\> : ValuesOrBoolean<T[K]\>) }
+Ƭ **ValuesOrBoolean**\<`T`\>: \{ [K in keyof T]?: true \| (T[K] extends Observable\<unknown\> \| AbstractControl\<unknown\> ? never : T[K] extends string \| number \| bigint \| symbol \| boolean \| undefined \| null ? true : T[K] extends (infer U)[] \| undefined \| null ? ValuesOrBoolean\<U\> : ValuesOrBoolean\<T[K]\>) }
 
 **`Alias`**
 
@@ -316,7 +317,7 @@ ___
 
 ### UserBusEvent
 
-Ƭ **UserBusEvent**: { `errorCb`: (`err`: `unknown`) => `void` ; `loading?`: `BehaviorSubject`<`boolean`\>  } & `UserBusEventMixin`<``"captchaGetJob"``, [`CaptchaJobPayload`](interfaces/CaptchaJobPayload.md), [`CaptchaJob`](interfaces/CaptchaJob.md)<`any`\>\> \| `UserBusEventMixin`<``"registrationApp"``, [`RegistrationPayload`](README.md#registrationpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"OTPRequest"``, [`OTPRequestPayload`](interfaces/OTPRequestPayload.md), [`OTPResponse`](interfaces/OTPResponse.md)\> \| `UserBusEventMixin`<``"login"``, [`LoginPayload`](README.md#loginpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"UpdateUserData"``, [`UpdateUserDataPayload`](README.md#updateuserdatapayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"RestorePassword"``, [`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`<``"AddDishFavor"``, `string`, `boolean`\> \| `UserBusEventMixin`<``"logout"``, ``null``, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"userDelete"``, `string`, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`<``"locationCreate"``, [`InputLocation`](interfaces/InputLocation.md), `boolean`\> \| `UserBusEventMixin`<``"locationDelete"``, `string`, `boolean`\> \| `UserBusEventMixin`<``"locationSetIsDefault"``, `string`, `boolean`\>
+Ƭ **UserBusEvent**: \{ `errorCb`: (`err`: `unknown`) => `void` ; `loading?`: `BehaviorSubject`\<`boolean`\>  } & `UserBusEventMixin`\<``"captchaGetJob"``, [`CaptchaJobPayload`](interfaces/CaptchaJobPayload.md), [`CaptchaJob`](interfaces/CaptchaJob.md)\<`any`\>\> \| `UserBusEventMixin`\<``"registrationApp"``, [`RegistrationPayload`](README.md#registrationpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`\<``"OTPRequest"``, [`OTPRequestPayload`](interfaces/OTPRequestPayload.md), [`OTPResponse`](interfaces/OTPResponse.md)\> \| `UserBusEventMixin`\<``"login"``, [`LoginPayload`](README.md#loginpayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`\<``"UpdateUserData"``, [`UpdateUserDataPayload`](README.md#updateuserdatapayload), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`\<``"RestorePassword"``, [`RestorePasswordPayload`](interfaces/RestorePasswordPayload.md), [`UserResponse`](interfaces/UserResponse.md)\> \| `UserBusEventMixin`\<``"AddDishFavor"``, `string`, `boolean`\> \| `UserBusEventMixin`\<``"logout"``, ``null``, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`\<``"userDelete"``, `string`, [`Response`](interfaces/Response.md)\> \| `UserBusEventMixin`\<``"locationCreate"``, [`InputLocation`](interfaces/InputLocation.md), `boolean`\> \| `UserBusEventMixin`\<``"locationDelete"``, `string`, `boolean`\> \| `UserBusEventMixin`\<``"locationSetIsDefault"``, `string`, `boolean`\>
 
 ___
 
@@ -328,7 +329,7 @@ ___
 
 ### CAPTCHA\_GET\_JOB\_FRAGMENTS
 
-• `Const` **CAPTCHA\_GET\_JOB\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`CaptchaJob`](interfaces/CaptchaJob.md)<`string`\>\>\>
+• `Const` **CAPTCHA\_GET\_JOB\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`CaptchaJob`](interfaces/CaptchaJob.md)\<`string`\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<CaptchaJob>.
 
@@ -336,7 +337,7 @@ ___
 
 ### PHONE\_FRAGMENT
 
-• `Const` **PHONE\_FRAGMENT**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Phone`](interfaces/Phone.md)\>\>
+• `Const` **PHONE\_FRAGMENT**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Phone`](interfaces/Phone.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Phone>.
 
@@ -344,7 +345,7 @@ ___
 
 ### DISH\_FRAGMENTS
 
-• `Const` **DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Dish`](interfaces/Dish.md)\>\>
+• `Const` **DISH\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Dish`](interfaces/Dish.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
 
@@ -352,7 +353,7 @@ ___
 
 ### MESSAGE\_FRAGMENTS
 
-• `Const` **MESSAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Message`](interfaces/Message.md)\>\>
+• `Const` **MESSAGE\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Message`](interfaces/Message.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Message>, используемым в запросе Message с сервера.
 
@@ -360,7 +361,7 @@ ___
 
 ### ACTION\_FRAGMENTS
 
-• `Const` **ACTION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Action`](interfaces/Action.md)<`any`\>\>\>
+• `Const` **ACTION\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Action`](interfaces/Action.md)\<`any`\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Action>, используемым в запросе Action с сервера.
 
@@ -368,7 +369,7 @@ ___
 
 ### GROUP\_MODIFIER\_FRAGMENTS
 
-• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`GroupModifier`](interfaces/GroupModifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+• `Const` **GROUP\_MODIFIER\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`GroupModifier`](interfaces/GroupModifier.md)\<[`Dish`](interfaces/Dish.md)\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<GroupModifier>, используемым в запросе GroupModifier с сервера.
 
@@ -376,7 +377,7 @@ ___
 
 ### GROUP\_FRAGMENTS
 
-• `Const` **GROUP\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Group`](interfaces/Group.md)\>\>
+• `Const` **GROUP\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Group`](interfaces/Group.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Group>, используемым в запросе Group с сервера.
 
@@ -384,7 +385,7 @@ ___
 
 ### IMAGE\_FRAGMENTS
 
-• `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Image`](interfaces/Image.md)\>\>
+• `Const` **IMAGE\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Image`](interfaces/Image.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Image>, используемым в запросе Image с сервера.
 
@@ -392,7 +393,7 @@ ___
 
 ### MAINTENANCE\_FRAGMENTS
 
-• `Const` **MAINTENANCE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Maintenance`](interfaces/Maintenance.md)\>\>
+• `Const` **MAINTENANCE\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Maintenance`](interfaces/Maintenance.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Maintenance>, используемым в запросе Maintenance с сервера.
 
@@ -400,7 +401,7 @@ ___
 
 ### MODIFIER\_FRAGMENTS
 
-• `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Modifier`](interfaces/Modifier.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+• `Const` **MODIFIER\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Modifier`](interfaces/Modifier.md)\<[`Dish`](interfaces/Dish.md)\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Modifier>, используемым в запросе Modifier с сервера.
 
@@ -408,7 +409,7 @@ ___
 
 ### NAVIGATION\_FRAGMENTS
 
-• `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Navigation`](interfaces/Navigation.md)\>\>
+• `Const` **NAVIGATION\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Navigation`](interfaces/Navigation.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Navigation>, используемым в запросе Navigation с сервера.
 
@@ -416,7 +417,7 @@ ___
 
 ### NG\_GQL\_CONFIG
 
-• `Const` **NG\_GQL\_CONFIG**: `InjectionToken`<[`NgGqlConfig`](interfaces/NgGqlConfig.md)\>
+• `Const` **NG\_GQL\_CONFIG**: `InjectionToken`\<[`NgGqlConfig`](interfaces/NgGqlConfig.md)\>
 
 InjectionToken с объектом NG_GQL_CONFIG
 
@@ -424,7 +425,7 @@ ___
 
 ### ORDER\_DISH\_FRAGMENTS
 
-• `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OrderDish`](interfaces/OrderDish.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+• `Const` **ORDER\_DISH\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`OrderDish`](interfaces/OrderDish.md)\<[`Dish`](interfaces/Dish.md)\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<OrderDish>, используемым в запросе OrderDish с сервера.
 
@@ -432,7 +433,7 @@ ___
 
 ### ORDERID\_FACTORY\_FN
 
-• `Const` **ORDERID\_FACTORY\_FN**: `InjectionToken`<() => `string`\>
+• `Const` **ORDERID\_FACTORY\_FN**: `InjectionToken`\<() => `string`\>
 
 Метод для генерации orderId
 
@@ -440,7 +441,7 @@ ___
 
 ### ORDER\_FRAGMENTS
 
-• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`Order`](interfaces/Order.md)<[`Dish`](interfaces/Dish.md)\>\>\>
+• `Const` **ORDER\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Order`](interfaces/Order.md)\<[`Dish`](interfaces/Dish.md)\>\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Order>, используемым в запросе Order с сервера.
 
@@ -448,7 +449,7 @@ ___
 
 ### PAYMENT\_METHOD\_FRAGMENTS
 
-• `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
+• `Const` **PAYMENT\_METHOD\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`PaymentMethod`](interfaces/PaymentMethod.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<PaymentMethod>, используемым в запросе PaymentMethod с сервера.
 
@@ -456,7 +457,7 @@ ___
 
 ### PICKUP\_POINT\_FRAGMENTS
 
-• `Const` **PICKUP\_POINT\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`PickupPoint`](README.md#pickuppoint)\>\>
+• `Const` **PICKUP\_POINT\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`PickupPoint`](README.md#pickuppoint)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<PickupPoint>, используемым в запросе PickupPoint с сервера.
 
@@ -464,7 +465,7 @@ ___
 
 ### OTP\_RESPONSE\_FRAGMENTS
 
-• `Const` **OTP\_RESPONSE\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`OTPResponse`](interfaces/OTPResponse.md)\>\>
+• `Const` **OTP\_RESPONSE\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`OTPResponse`](interfaces/OTPResponse.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<OTPResponse>.
 
@@ -472,7 +473,7 @@ ___
 
 ### USER\_DEVICES\_FRAGMENTS
 
-• `Const` **USER\_DEVICES\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserDevice`](interfaces/UserDevice.md)\>\>
+• `Const` **USER\_DEVICES\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`UserDevice`](interfaces/UserDevice.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<UserDevice>.
 
@@ -480,7 +481,7 @@ ___
 
 ### USER\_LOCATION\_FRAGMENTS
 
-• `Const` **USER\_LOCATION\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserLocation`](README.md#userlocation)\>\>
+• `Const` **USER\_LOCATION\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`UserLocation`](README.md#userlocation)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<UserLocation>.
 
@@ -488,7 +489,7 @@ ___
 
 ### BONUS\_PROGRAM\_FRAGMENTS
 
-• `Const` **BONUS\_PROGRAM\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`BonusProgram`](interfaces/BonusProgram.md)\>\>
+• `Const` **BONUS\_PROGRAM\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`BonusProgram`](interfaces/BonusProgram.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<BonusProgram>.
 
@@ -496,7 +497,7 @@ ___
 
 ### USER\_BONUS\_PROGRAM\_FRAGMENTS
 
-• `Const` **USER\_BONUS\_PROGRAM\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserBonusProgram`](interfaces/UserBonusProgram.md)\>\>
+• `Const` **USER\_BONUS\_PROGRAM\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`UserBonusProgram`](interfaces/UserBonusProgram.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<UserBonusProgram>.
 
@@ -504,7 +505,7 @@ ___
 
 ### USER\_FRAGMENTS
 
-• `Const` **USER\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`User`](interfaces/User.md)\>\>
+• `Const` **USER\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`User`](interfaces/User.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<User>.
 
@@ -512,7 +513,7 @@ ___
 
 ### USER\_ORDER\_HYSTORY\_FRAGMENTS
 
-• `Const` **USER\_ORDER\_HYSTORY\_FRAGMENTS**: `InjectionToken`<[`ValuesOrBoolean`](README.md#valuesorboolean)<[`UserOrderHystory`](interfaces/UserOrderHystory.md)\>\>
+• `Const` **USER\_ORDER\_HYSTORY\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`UserOrderHystory`](interfaces/UserOrderHystory.md)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<UserOrderHystory>.
 
@@ -526,7 +527,7 @@ InjectionToken с объектом ValuesOrBoolean<UserOrderHystory>.
 
 | Name | Type |
 | :------ | :------ |
-| `control` | `AbstractControl`<`any`, `any`\> |
+| `control` | `AbstractControl`\<`any`, `any`\> |
 
 #### Returns
 
@@ -542,7 +543,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `control` | `AbstractControl`<`any`, `any`\> |
+| `control` | `AbstractControl`\<`any`, `any`\> |
 
 #### Returns
 
@@ -552,7 +553,7 @@ ___
 
 ### generateQueryString
 
-▸ **generateQueryString**<`T`, `N`, `GQLRequestVariables`\>(`options`): `string`
+▸ **generateQueryString**\<`T`, `N`, `GQLRequestVariables`\>(`options`): `string`
 
 #### Type parameters
 
@@ -571,7 +572,7 @@ ___
 | `options.queryObject` | `T` | объект-источник информации о структуре запрашиваемых данных |
 | `options.variables?` | `GQLRequestVariables` | необязательный объект с переменными, передаваемыми в качестве параметров запроса. В качестве типа параметров допустимо использовать типы - number, string, object или boolean. |
 | `options.requiredFields?` | keyof `GQLRequestVariables`[] | необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`. (например у параметра указан тип String!, а не String). |
-| `options.fieldsTypeMap?` | `Map`<keyof `GQLRequestVariables`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL. ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
+| `options.fieldsTypeMap?` | `Map`\<keyof `GQLRequestVariables`, `string`\> | необязательный объект Map, в качестве ключей содержащий названия параметров запроса, а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL. ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный. |
 
 #### Returns
 
@@ -634,7 +635,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `restrictionsData` | `undefined` \| ``null`` \| `RestrictionsOrder`<{}\> |
+| `restrictionsData` | `undefined` \| ``null`` \| `RestrictionsOrder`\<{}\> |
 | `workTimeValidator` | `WorkTimeValidator` |
 
 #### Returns
@@ -651,7 +652,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `restrictionsData` | `undefined` \| ``null`` \| `RestrictionsOrder`<{}\> |
+| `restrictionsData` | `undefined` \| ``null`` \| `RestrictionsOrder`\<{}\> |
 | `workTimeValidator` | `WorkTimeValidator` |
 
 #### Returns
@@ -668,7 +669,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `form` | `AbstractControl`<`any`, `any`\> |
+| `form` | `AbstractControl`\<`any`, `any`\> |
 
 #### Returns
 
@@ -684,7 +685,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `form` | `AbstractControl`<`any`, `any`\> |
+| `form` | `AbstractControl`\<`any`, `any`\> |
 
 #### Returns
 
@@ -700,7 +701,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `form` | `AbstractControl`<`any`, `any`\> |
+| `form` | `AbstractControl`\<`any`, `any`\> |
 
 #### Returns
 
@@ -716,7 +717,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `form` | `AbstractControl`<`any`, `any`\> |
+| `form` | `AbstractControl`\<`any`, `any`\> |
 
 #### Returns
 
@@ -751,7 +752,7 @@ CartBusEvent
 
 ___
 
-• **CartBusEventBase**<`T`\>: `Object`
+• **CartBusEventBase**\<`T`\>: `Object`
 
 CartBusEventBase Базовый интерфейс событий в шине событий
 

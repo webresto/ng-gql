@@ -1,4 +1,4 @@
-# Interface: OrderModifier<T\>
+# Interface: OrderModifier\<T\>
 
 ## Type parameters
 
@@ -37,4 +37,4 @@ ___
 
 ### dish
 
-• **dish**: `Omit`<`Partial`<`T`\>, ``"modifiers"``\>
+• **dish**: `Omit`\<`Partial`\<`T`\>, ``"modifiers"``\>

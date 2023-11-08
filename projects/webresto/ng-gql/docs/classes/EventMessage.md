@@ -16,7 +16,7 @@
 
 ### constructor
 
-• **new EventMessage**(`type`, `title`, `body`)
+• **new EventMessage**(`type`, `title`, `body`): [`EventMessage`](EventMessage.md)
 
 #### Parameters
 
@@ -25,6 +25,10 @@
 | `type` | `string` |
 | `title` | `string` |
 | `body` | `string` |
+
+#### Returns
+
+[`EventMessage`](EventMessage.md)
 
 ## Properties
 

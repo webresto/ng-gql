@@ -1,3 +1,4 @@
+import {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import type {BaseModelWithCustomData} from '../base/base-model-with-custom-data';
 import type {Customer} from '../customer/customer';
 import type {Dish} from '../dish/dish';
@@ -51,6 +52,15 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   deliveryStatus: string | null;
   promotionState: PromotionState[];
   pickupPoint: PickupPoint | null;
+  spendBonus: InputSpendBonus | null;
+  bonusesTotal: number;
+}
+
+export interface InputSpendBonus {
+  bonusProgramId: string;
+  amount: number;
+  adapter: string;
+  bonusProgramName: string;
 }
 
 export interface PromotionState {
@@ -107,6 +117,7 @@ export interface CheckOrderInput extends Partial<BaseModelWithCustomData> {
   customer: Partial<Customer> | null;
   comment?: string;
   notifyMethodId?: string;
+  spendBonus?: ScanFormType<InputSpendBonus>['value'] | null;
 }
 
 export interface CheckResponse {

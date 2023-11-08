@@ -17,7 +17,7 @@
 
 ### constructor
 
-• **new ApolloService**(`_apollo`, `_config`)
+• **new ApolloService**(`_apollo`, `_config`): [`ApolloService`](ApolloService.md)
 
 #### Parameters
 
@@ -26,11 +26,15 @@
 | `_apollo` | `Apollo` |
 | `_config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
 
+#### Returns
+
+[`ApolloService`](ApolloService.md)
+
 ## Methods
 
 ### watchQuery
 
-▸ **watchQuery**<`TData`, `TVariables`\>(`options`): `Observable`<`ApolloQueryResult`<`TData`\>\>
+▸ **watchQuery**\<`TData`, `TVariables`\>(`options`): `Observable`\<`ApolloQueryResult`\<`TData`\>\>
 
 #### Type parameters
 
@@ -43,17 +47,17 @@
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `WatchQueryOptions`<`TVariables`, `TData`\> |
+| `options` | `WatchQueryOptions`\<`TVariables`, `TData`\> |
 
 #### Returns
 
-`Observable`<`ApolloQueryResult`<`TData`\>\>
+`Observable`\<`ApolloQueryResult`\<`TData`\>\>
 
 ___
 
 ### query
 
-▸ **query**<`T`, `V`\>(`options`): `Observable`<`ApolloQueryResult`<`T`\>\>
+▸ **query**\<`T`, `V`\>(`options`): `Observable`\<`ApolloQueryResult`\<`T`\>\>
 
 #### Type parameters
 
@@ -66,17 +70,17 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `QueryOptions`<`V`, `T`\> |
+| `options` | `QueryOptions`\<`V`, `T`\> |
 
 #### Returns
 
-`Observable`<`ApolloQueryResult`<`T`\>\>
+`Observable`\<`ApolloQueryResult`\<`T`\>\>
 
 ___
 
 ### mutate
 
-▸ **mutate**<`T`, `V`\>(`options`): `Observable`<`MutationResult`<`T`\>\>
+▸ **mutate**\<`T`, `V`\>(`options`): `Observable`\<`MutationResult`\<`T`\>\>
 
 #### Type parameters
 
@@ -89,17 +93,17 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `MutationOptions`<`T`, `V`\> |
+| `options` | `MutationOptions`\<`T`, `V`\> |
 
 #### Returns
 
-`Observable`<`MutationResult`<`T`\>\>
+`Observable`\<`MutationResult`\<`T`\>\>
 
 ___
 
 ### subscribe
 
-▸ **subscribe**<`T`, `V`\>(`options`, `extra?`): `Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
+▸ **subscribe**\<`T`, `V`\>(`options`, `extra?`): `Observable`\<`FetchResult`\<`T`, `Record`\<`string`, `any`\>, `Record`\<`string`, `any`\>\>\>
 
 #### Type parameters
 
@@ -112,9 +116,9 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `SubscriptionOptions`<`V`, `T`\> |
+| `options` | `SubscriptionOptions`\<`V`, `T`\> |
 | `extra?` | `ExtraSubscriptionOptions` |
 
 #### Returns
 
-`Observable`<`FetchResult`<`T`, `Record`<`string`, `any`\>, `Record`<`string`, `any`\>\>\>
+`Observable`\<`FetchResult`\<`T`, `Record`\<`string`, `any`\>, `Record`\<`string`, `any`\>\>\>

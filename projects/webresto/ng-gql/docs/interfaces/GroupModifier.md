@@ -1,4 +1,4 @@
-# Interface: GroupModifier<T\>
+# Interface: GroupModifier\<T\>
 
 ## Type parameters
 
@@ -8,7 +8,7 @@
 
 ## Hierarchy
 
-- `Omit`<[`Modifier`](Modifier.md)<`T`\>, ``"amount"`` \| ``"defaultAmount"`` \| ``"hideIfDefaultAmount"`` \| ``"groupId"`` \| ``"dish"``\>
+- `Omit`\<[`Modifier`](Modifier.md)\<`T`\>, ``"amount"`` \| ``"defaultAmount"`` \| ``"hideIfDefaultAmount"`` \| ``"groupId"`` \| ``"dish"``\>
 
   ↳ **`GroupModifier`**
 
@@ -33,13 +33,13 @@ ___
 
 ### childModifiers
 
-• **childModifiers**: `Partial`<[`Modifier`](Modifier.md)<`T`\>\>[]
+• **childModifiers**: `Partial`\<[`Modifier`](Modifier.md)\<`T`\>\>[]
 
 ___
 
 ### group
 
-• **group**: `Partial`<{ `id`: `string` ; `name`: `string`  }\>
+• **group**: `Partial`\<\{ `id`: `string` ; `name`: `string`  }\>
 
 ___
 

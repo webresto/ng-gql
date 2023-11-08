@@ -22,7 +22,7 @@
 
 ### constructor
 
-• **new NgGqlUserBusService**(`requestService`, `ngGqlStorage`, `defaultActionFragments`, `defaultMessageFragments`, `defaultCaptchaGetJobFragments`, `defaultUserFragments`, `defaultOTPResponceFragments`)
+• **new NgGqlUserBusService**(`requestService`, `ngGqlStorage`, `defaultActionFragments`, `defaultMessageFragments`, `defaultCaptchaGetJobFragments`, `defaultUserFragments`, `defaultOTPResponceFragments`): [`NgGqlUserBusService`](NgGqlUserBusService.md)
 
 #### Parameters
 
@@ -30,23 +30,27 @@
 | :------ | :------ |
 | `requestService` | [`RequestService`](RequestService.md) |
 | `ngGqlStorage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
-| `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Action`](../interfaces/Action.md)<`any`\>\> |
-| `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Message`](../interfaces/Message.md)\> |
-| `defaultCaptchaGetJobFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |
-| `defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`User`](../interfaces/User.md)\> |
-| `defaultOTPResponceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`OTPResponse`](../interfaces/OTPResponse.md)\> |
+| `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
+| `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Message`](../interfaces/Message.md)\> |
+| `defaultCaptchaGetJobFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`User`](../interfaces/User.md)\> |
+| `defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`User`](../interfaces/User.md)\> |
+| `defaultOTPResponceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`OTPResponse`](../interfaces/OTPResponse.md)\> |
+
+#### Returns
+
+[`NgGqlUserBusService`](NgGqlUserBusService.md)
 
 ## Properties
 
 ### userBus$
 
-• `Readonly` **userBus$**: `Observable`<() => `void` \| () => `void`\>
+• `Readonly` **userBus$**: `Observable`\<() => `void` \| () => `void`\>
 
 ## Methods
 
 ### emitToBus
 
-▸ **emitToBus**<`T`, `P`, `R`\>(`data`): `Promise`<`R`\>
+▸ **emitToBus**\<`T`, `P`, `R`\>(`data`): `Promise`\<`R`\>
 
 #### Type parameters
 
@@ -63,8 +67,8 @@
 | `data` | `Object` |
 | `data.type` | `T` |
 | `data.payload` | `P` |
-| `data.loading?` | `BehaviorSubject`<`boolean`\> |
+| `data.loading?` | `BehaviorSubject`\<`boolean`\> |
 
 #### Returns
 
-`Promise`<`R`\>
+`Promise`\<`R`\>

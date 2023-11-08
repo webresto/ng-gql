@@ -46,7 +46,7 @@
 
 ### customData
 
-• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+• **customData**: ``null`` \| \{ `[key: string]`: `string` \| `any` \| ``null``;  }
 
 #### Inherited from
 
@@ -110,19 +110,19 @@ ___
 
 ### tags
 
-• `Optional` **tags**: `Partial`<[`DishTag`](DishTag.md)\>[]
+• `Optional` **tags**: `Partial`\<[`DishTag`](DishTag.md)\>[]
 
 ___
 
 ### additionalInfo
 
-• `Optional` **additionalInfo**: ``null`` \| `string` \| `number` \| { `[key: string]`: `string` \| `any`;  }
+• `Optional` **additionalInfo**: ``null`` \| `string` \| `number` \| \{ `[key: string]`: `string` \| `any`;  }
 
 ___
 
 ### images
 
-• **images**: `Partial`<[`Image`](Image.md)\>[]
+• **images**: `Partial`\<[`Image`](Image.md)\>[]
 
 ___
 
@@ -134,13 +134,13 @@ ___
 
 ### parentGroup
 
-• **parentGroup**: `Partial`<`Pick`<[`Group`](Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>\>
+• **parentGroup**: `Partial`\<`Pick`\<[`Group`](Group.md), ``"id"`` \| ``"dishesPlaceholder"``\>\>
 
 ___
 
 ### modifiers
 
-• `Optional` **modifiers**: `Partial`<[`GroupModifier`](GroupModifier.md)<[`Dish`](Dish.md)\>\>[]
+• `Optional` **modifiers**: `Partial`\<[`GroupModifier`](GroupModifier.md)\<[`Dish`](Dish.md)\>\>[]
 
 ___
 
@@ -212,4 +212,4 @@ ___
 
 ### isLoading
 
-• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>
+• `Optional` **isLoading**: `BehaviorSubject`\<`boolean`\>

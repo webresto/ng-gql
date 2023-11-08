@@ -1,4 +1,4 @@
-# Interface: Modifier<T\>
+# Interface: Modifier\<T\>
 
 ## Type parameters
 
@@ -51,4 +51,4 @@ ___
 
 ### dish
 
-• **dish**: `Pick`<`T`, ``"id"`` \| ``"additionalInfo"`` \| ``"name"`` \| ``"description"`` \| ``"oldPrice"`` \| ``"price"`` \| ``"weight"`` \| ``"balance"`` \| ``"tags"`` \| ``"groupId"`` \| ``"parentGroup"`` \| ``"images"``\>
+• **dish**: `Pick`\<`T`, ``"id"`` \| ``"additionalInfo"`` \| ``"name"`` \| ``"description"`` \| ``"oldPrice"`` \| ``"price"`` \| ``"weight"`` \| ``"balance"`` \| ``"tags"`` \| ``"groupId"`` \| ``"parentGroup"`` \| ``"images"``\>

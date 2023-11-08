@@ -5,7 +5,7 @@ CartBusEventSend
 
 ## Hierarchy
 
-- [`CartBusEventBase`](CartBusEventBase.md)<[`CheckResponse`](CheckResponse.md)\>
+- [`CartBusEventBase`](CartBusEventBase.md)\<[`CheckResponse`](CheckResponse.md)\>
 
   ↳ **`CartBusEventSend`**
 
@@ -75,7 +75,7 @@ ___
 
 ### isLoading
 
-• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>
+• `Optional` **isLoading**: `BehaviorSubject`\<`boolean`\>
 
 BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
 

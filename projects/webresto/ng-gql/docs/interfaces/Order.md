@@ -1,4 +1,4 @@
-# Interface: Order<T\>
+# Interface: Order\<T\>
 
 Базовый интерфейс. описывающий содержимаое свойства customData в той или иной конкретной реализации сервера.
 Т.к. структура customData будет одинакова для всех содержащих ее моделей, другие модели наследуюттся от этого базового интерфейса.
@@ -49,12 +49,14 @@
 - [deliveryStatus](Order.md#deliverystatus)
 - [promotionState](Order.md#promotionstate)
 - [pickupPoint](Order.md#pickuppoint)
+- [spendBonus](Order.md#spendbonus)
+- [bonusesTotal](Order.md#bonusestotal)
 
 ## Properties
 
 ### customData
 
-• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+• **customData**: ``null`` \| \{ `[key: string]`: `string` \| `any` \| ``null``;  }
 
 #### Inherited from
 
@@ -76,7 +78,7 @@ ___
 
 ### dishes
 
-• **dishes**: `Partial`<[`OrderDish`](OrderDish.md)<`T`\>\>[]
+• **dishes**: `Partial`\<[`OrderDish`](OrderDish.md)\<`T`\>\>[]
 
 ___
 
@@ -172,13 +174,13 @@ ___
 
 ### customer
 
-• **customer**: ``null`` \| `Partial`<[`Customer`](Customer.md)\>
+• **customer**: ``null`` \| `Partial`\<[`Customer`](Customer.md)\>
 
 ___
 
 ### address
 
-• **address**: ``null`` \| `Partial`<[`Address`](Address.md)\>
+• **address**: ``null`` \| `Partial`\<[`Address`](Address.md)\>
 
 ___
 
@@ -190,7 +192,7 @@ ___
 
 ### paymentMethod
 
-• **paymentMethod**: ``null`` \| `Partial`<[`PaymentMethod`](PaymentMethod.md)\>
+• **paymentMethod**: ``null`` \| `Partial`\<[`PaymentMethod`](PaymentMethod.md)\>
 
 ___
 
@@ -233,3 +235,15 @@ ___
 ### pickupPoint
 
 • **pickupPoint**: ``null`` \| [`PickupPoint`](../README.md#pickuppoint)
+
+___
+
+### spendBonus
+
+• **spendBonus**: ``null`` \| [`InputSpendBonus`](InputSpendBonus.md)
+
+___
+
+### bonusesTotal
+
+• **bonusesTotal**: `number`

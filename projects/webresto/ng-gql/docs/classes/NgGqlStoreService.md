@@ -39,91 +39,95 @@
 
 ### constructor
 
-• **new NgGqlStoreService**()
+• **new NgGqlStoreService**(): [`NgGqlStoreService`](NgGqlStoreService.md)
+
+#### Returns
+
+[`NgGqlStoreService`](NgGqlStoreService.md)
 
 ## Properties
 
 ### paymentMethods
 
-• `Readonly` **paymentMethods**: `Observable`<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
+• `Readonly` **paymentMethods**: `Observable`\<[`PaymentMethod`](../interfaces/PaymentMethod.md)[]\>
 
 ___
 
 ### user
 
-• `Readonly` **user**: `BehaviorSubject`<``null`` \| [`User`](../interfaces/User.md)\>
+• `Readonly` **user**: `BehaviorSubject`\<``null`` \| [`User`](../interfaces/User.md)\>
 
 ___
 
 ### token
 
-• `Readonly` **token**: `Observable`<``null`` \| `string`\>
+• `Readonly` **token**: `Observable`\<``null`` \| `string`\>
 
 ___
 
 ### isAuthenticated$
 
-• `Readonly` **isAuthenticated$**: `Observable`<`string`\>
+• `Readonly` **isAuthenticated$**: `Observable`\<`string`\>
 
 ___
 
 ### orderHystory
 
-• `Readonly` **orderHystory**: `Observable`<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
+• `Readonly` **orderHystory**: `Observable`\<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)[]\>
 
 ___
 
 ### userLocations
 
-• `Readonly` **userLocations**: `Observable`<``null`` \| [`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
+• `Readonly` **userLocations**: `Observable`\<``null`` \| [`UserLocationResponse`](../interfaces/UserLocationResponse.md)\>
 
 ___
 
 ### navBarMenus
 
-• `Readonly` **navBarMenus**: `Observable`<[`NavBarMenu`](../interfaces/NavBarMenu.md)[]\>
+• `Readonly` **navBarMenus**: `Observable`\<[`NavBarMenu`](../interfaces/NavBarMenu.md)[]\>
 
 ___
 
 ### groups
 
-• `Readonly` **groups**: `Observable`<[`Group`](../interfaces/Group.md)[]\>
+• `Readonly` **groups**: `Observable`\<[`Group`](../interfaces/Group.md)[]\>
 
 ___
 
 ### navigation
 
-• `Readonly` **navigation**: `BehaviorSubject`<``null`` \| [`NavigationBase`](../interfaces/NavigationBase.md)[]\>
+• `Readonly` **navigation**: `BehaviorSubject`\<``null`` \| [`NavigationBase`](../interfaces/NavigationBase.md)[]\>
 
 ___
 
 ### order
 
-• `Readonly` **order**: `Observable`<[`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md)\>\>
+• `Readonly` **order**: `Observable`\<[`Order`](../interfaces/Order.md)\<[`Dish`](../interfaces/Dish.md)\>\>
 
 ___
 
 ### dishes
 
-• `Readonly` **dishes**: `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+• `Readonly` **dishes**: `Observable`\<[`Dish`](../interfaces/Dish.md)[]\>
 
 ___
 
 ### pickupPoints$
 
-• `Readonly` **pickupPoints$**: `Observable`<``null`` \| [`PickupPoint`](../README.md#pickuppoint)[]\>
+• `Readonly` **pickupPoints$**: `Observable`\<``null`` \| [`PickupPoint`](../README.md#pickuppoint)[]\>
 
 ## Methods
 
 ### updateOrder
 
-▸ **updateOrder**<`T`\>(`order`): `void`
+▸ **updateOrder**\<`T`\>(`order`): `void`
 
 #### Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`Order`](../interfaces/Order.md)<[`Dish`](../interfaces/Dish.md), `T`\> |
+| `T` | extends [`Order`](../interfaces/Order.md)\<[`Dish`](../interfaces/Dish.md), `T`\> |
 
 #### Parameters
 
@@ -139,7 +143,7 @@ ___
 
 ### updateDishes
 
-▸ **updateDishes**<`T`\>(`dishes`): `void`
+▸ **updateDishes**\<`T`\>(`dishes`): `void`
 
 #### Type parameters
 
@@ -161,7 +165,7 @@ ___
 
 ### updateMenuGroups
 
-▸ **updateMenuGroups**<`T`\>(`menuGroups`): `void`
+▸ **updateMenuGroups**\<`T`\>(`menuGroups`): `void`
 
 #### Type parameters
 
@@ -183,7 +187,7 @@ ___
 
 ### updateNavigation
 
-▸ **updateNavigation**<`T`\>(`navigation`): `void`
+▸ **updateNavigation**\<`T`\>(`navigation`): `void`
 
 #### Type parameters
 
@@ -205,7 +209,7 @@ ___
 
 ### updatePaymentMethods
 
-▸ **updatePaymentMethods**<`T`\>(`methods`): `void`
+▸ **updatePaymentMethods**\<`T`\>(`methods`): `void`
 
 #### Type parameters
 
@@ -227,7 +231,7 @@ ___
 
 ### updateUser
 
-▸ **updateUser**<`T`\>(`user`): `void`
+▸ **updateUser**\<`T`\>(`user`): `void`
 
 #### Type parameters
 

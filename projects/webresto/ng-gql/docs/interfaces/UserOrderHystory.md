@@ -28,7 +28,7 @@
 
 ### customData
 
-• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+• **customData**: ``null`` \| \{ `[key: string]`: `string` \| `any` \| ``null``;  }
 
 #### Inherited from
 
@@ -62,7 +62,7 @@ ___
 
 ### order
 
-• **order**: [`Order`](Order.md)<[`Dish`](Dish.md)\>
+• **order**: [`Order`](Order.md)\<[`Dish`](Dish.md)\>
 
 ___
 

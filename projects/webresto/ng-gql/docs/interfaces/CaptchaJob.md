@@ -1,4 +1,4 @@
-# Interface: CaptchaJob<T\>
+# Interface: CaptchaJob\<T\>
 
 ## Type parameters
 

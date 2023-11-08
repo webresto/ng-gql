@@ -23,7 +23,7 @@
 
 ### customData
 
-• **customData**: ``null`` \| { `[key: string]`: `string` \| `any` \| ``null``;  }
+• **customData**: ``null`` \| \{ `[key: string]`: `string` \| `any` \| ``null``;  }
 
 #### Inherited from
 

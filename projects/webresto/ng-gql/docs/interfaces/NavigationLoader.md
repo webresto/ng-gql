@@ -1,4 +1,4 @@
-# Interface: NavigationLoader<T\>
+# Interface: NavigationLoader\<T\>
 
 NavigationLoader<T>
 Интерфейс объекта для потока, в котором происходит загрузка массива обьъектов навигации для прилоржения.
@@ -34,7 +34,7 @@ ___
 
 ### queryObject
 
-• **queryObject**: [`ValuesOrBoolean`](../README.md#valuesorboolean)<`T`\>
+• **queryObject**: [`ValuesOrBoolean`](../README.md#valuesorboolean)\<`T`\>
 
 ___
 

@@ -1,4 +1,4 @@
-# Interface: CartBusEventBase<T\>
+# Interface: CartBusEventBase\<T\>
 
 CartBusEventBase Базовый интерфейс событий в шине событий
 
@@ -84,6 +84,6 @@ ___
 
 ### isLoading
 
-• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>
+• `Optional` **isLoading**: `BehaviorSubject`\<`boolean`\>
 
 BehaviorSubject блюда, отслеживающий состояние выполняемого действия.

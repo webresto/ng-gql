@@ -27,7 +27,7 @@
 
 ### constructor
 
-• **new NgGqlService**(`requestService`, `storage`, `config`, `defaultNavigationFragments`, `defaultMaintenanceFragments`, `defaultGroupFragments`, `defaultDishFragments`)
+• **new NgGqlService**(`requestService`, `storage`, `config`, `defaultNavigationFragments`, `defaultMaintenanceFragments`, `defaultGroupFragments`, `defaultDishFragments`): [`NgGqlService`](NgGqlService.md)
 
 #### Parameters
 
@@ -36,10 +36,14 @@
 | `requestService` | [`RequestService`](RequestService.md) |
 | `storage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
 | `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
-| `defaultNavigationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Navigation`](../interfaces/Navigation.md)\> |
-| `defaultMaintenanceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Maintenance`](../interfaces/Maintenance.md)\> |
-| `defaultGroupFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Group`](../interfaces/Group.md)\> |
-| `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`Dish`](../interfaces/Dish.md)\> |
+| `defaultNavigationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Navigation`](../interfaces/Navigation.md)\> |
+| `defaultMaintenanceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Maintenance`](../interfaces/Maintenance.md)\> |
+| `defaultGroupFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Group`](../interfaces/Group.md)\> |
+| `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Dish`](../interfaces/Dish.md)\> |
+
+#### Returns
+
+[`NgGqlService`](NgGqlService.md)
 
 ## Methods
 
@@ -55,7 +59,7 @@ ___
 
 ### getNavigation$
 
-▸ **getNavigation$**<`T`\>(`options`): `Observable`<`T`[]\>
+▸ **getNavigation$**\<`T`\>(`options`): `Observable`\<`T`[]\>
 
 #### Type parameters
 
@@ -67,11 +71,11 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `options` | [`NavigationLoader`](../interfaces/NavigationLoader.md)<`T`\> | объект NavigationLoader. Обязателен, при использовании нестандартной схемы навигации в приложении. |
+| `options` | [`NavigationLoader`](../interfaces/NavigationLoader.md)\<`T`\> | объект NavigationLoader. Обязателен, при использовании нестандартной схемы навигации в приложении. |
 
 #### Returns
 
-`Observable`<`T`[]\>
+`Observable`\<`T`[]\>
 
 **`Method`**
 
@@ -82,11 +86,11 @@ getNavigation$()
 
 NavigationLoader<T>
 
-▸ **getNavigation$**(): `Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
+▸ **getNavigation$**(): `Observable`\<[`Navigation`](../interfaces/Navigation.md)[]\>
 
 #### Returns
 
-`Observable`<[`Navigation`](../interfaces/Navigation.md)[]\>
+`Observable`\<[`Navigation`](../interfaces/Navigation.md)[]\>
 
 **`Method`**
 
@@ -98,7 +102,7 @@ ___
 
 ### getNavigationPoints
 
-▸ **getNavigationPoints**(`slug`): `Observable`<[`NavigationsMenuItem`](../interfaces/NavigationsMenuItem.md)[]\>
+▸ **getNavigationPoints**(`slug`): `Observable`\<[`NavigationsMenuItem`](../interfaces/NavigationsMenuItem.md)[]\>
 
 Список ссылок для необходимого раздела навигации
 
@@ -110,35 +114,35 @@ ___
 
 #### Returns
 
-`Observable`<[`NavigationsMenuItem`](../interfaces/NavigationsMenuItem.md)[]\>
+`Observable`\<[`NavigationsMenuItem`](../interfaces/NavigationsMenuItem.md)[]\>
 
 ___
 
 ### getStartMenuSlug
 
-▸ **getStartMenuSlug**(): `Observable`<[`string`[], `undefined` \| `string`]\>
+▸ **getStartMenuSlug**(): `Observable`\<[`string`[], `undefined` \| `string`]\>
 
 Возвращает ссылку на страницу, которая будет стартовой для меню
 
 #### Returns
 
-`Observable`<[`string`[], `undefined` \| `string`]\>
+`Observable`\<[`string`[], `undefined` \| `string`]\>
 
 ___
 
 ### getMaintenance$
 
-▸ **getMaintenance$**(): `Observable`<[`Maintenance`](../interfaces/Maintenance.md)\>
+▸ **getMaintenance$**(): `Observable`\<[`Maintenance`](../interfaces/Maintenance.md)\>
 
 #### Returns
 
-`Observable`<[`Maintenance`](../interfaces/Maintenance.md)\>
+`Observable`\<[`Maintenance`](../interfaces/Maintenance.md)\>
 
 ___
 
 ### getGroup
 
-▸ **getGroup**(`slug`, `concept?`): `Observable`<[`Group`](../interfaces/Group.md)\>
+▸ **getGroup**(`slug`, `concept?`): `Observable`\<[`Group`](../interfaces/Group.md)\>
 
 Внутренний метод, используемый для загрузки основного - "корневого" списка групп.
 
@@ -151,7 +155,7 @@ ___
 
 #### Returns
 
-`Observable`<[`Group`](../interfaces/Group.md)\>
+`Observable`\<[`Group`](../interfaces/Group.md)\>
 
 ___
 
@@ -180,7 +184,7 @@ ___
 
 ### getDishes$
 
-▸ **getDishes$**(`ids`): `Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+▸ **getDishes$**(`ids`): `Observable`\<[`Dish`](../interfaces/Dish.md)[]\>
 
 #### Parameters
 
@@ -190,13 +194,13 @@ ___
 
 #### Returns
 
-`Observable`<[`Dish`](../interfaces/Dish.md)[]\>
+`Observable`\<[`Dish`](../interfaces/Dish.md)[]\>
 
 ___
 
 ### getDishBySlug
 
-▸ **getDishBySlug**(`slug`): `Observable`<[`Dish`](../interfaces/Dish.md)\>
+▸ **getDishBySlug**(`slug`): `Observable`\<[`Dish`](../interfaces/Dish.md)\>
 
 #### Parameters
 
@@ -206,13 +210,13 @@ ___
 
 #### Returns
 
-`Observable`<[`Dish`](../interfaces/Dish.md)\>
+`Observable`\<[`Dish`](../interfaces/Dish.md)\>
 
 ___
 
 ### getNavBarMenu
 
-▸ **getNavBarMenu**(`concept?`, `topLevelGroupId?`): `Observable`<[`NavbarMenuLink`](../README.md#navbarmenulink)[]\>
+▸ **getNavBarMenu**(`concept?`, `topLevelGroupId?`): `Observable`\<[`NavbarMenuLink`](../README.md#navbarmenulink)[]\>
 
 #### Parameters
 
@@ -223,24 +227,24 @@ ___
 
 #### Returns
 
-`Observable`<[`NavbarMenuLink`](../README.md#navbarmenulink)[]\>
+`Observable`\<[`NavbarMenuLink`](../README.md#navbarmenulink)[]\>
 
 ___
 
 ### isKnownPhone$
 
-▸ **isKnownPhone$**(`phone`, `customvOb?`): `Observable`<[`PhoneKnowledge`](../interfaces/PhoneKnowledge.md)[]\>
+▸ **isKnownPhone$**(`phone`, `customvOb?`): `Observable`\<[`PhoneKnowledge`](../interfaces/PhoneKnowledge.md)[]\>
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `phone` | [`Phone`](../interfaces/Phone.md) | Объект с данными номера телефона. |
-| `customvOb?` | [`ValuesOrBoolean`](../README.md#valuesorboolean)<[`PhoneKnowledge`](../interfaces/PhoneKnowledge.md)\> | - |
+| `customvOb?` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`PhoneKnowledge`](../interfaces/PhoneKnowledge.md)\> | - |
 
 #### Returns
 
-`Observable`<[`PhoneKnowledge`](../interfaces/PhoneKnowledge.md)[]\>
+`Observable`\<[`PhoneKnowledge`](../interfaces/PhoneKnowledge.md)[]\>
 
 **`Method`**
 
@@ -251,7 +255,7 @@ ___
 
 ### phoneKnowledgeGetCode$
 
-▸ **phoneKnowledgeGetCode$**(`phone`): `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
+▸ **phoneKnowledgeGetCode$**(`phone`): `Observable`\<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
 
 #### Parameters
 
@@ -261,13 +265,13 @@ ___
 
 #### Returns
 
-`Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
+`Observable`\<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)[]\>
 
 ___
 
 ### phoneKnowledgeSetCode$
 
-▸ **phoneKnowledgeSetCode$**(`data`): `Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)\>
+▸ **phoneKnowledgeSetCode$**(`data`): `Observable`\<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)\>
 
 #### Parameters
 
@@ -277,7 +281,7 @@ ___
 
 #### Returns
 
-`Observable`<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)\>
+`Observable`\<[`CheckPhoneResponse`](../interfaces/CheckPhoneResponse.md)\>
 
 ___
 

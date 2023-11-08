@@ -14,7 +14,11 @@
 
 ### constructor
 
-• **new GenerateUUIDHelper**()
+• **new GenerateUUIDHelper**(): [`GenerateUUIDHelper`](GenerateUUIDHelper.md)
+
+#### Returns
+
+[`GenerateUUIDHelper`](GenerateUUIDHelper.md)
 
 ## Methods
 

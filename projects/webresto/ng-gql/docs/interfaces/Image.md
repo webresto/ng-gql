@@ -24,4 +24,4 @@ ___
 
 ### images
 
-• **images**: `Partial`<[`ImageItem`](ImageItem.md)\>
+• **images**: `Partial`\<[`ImageItem`](ImageItem.md)\>

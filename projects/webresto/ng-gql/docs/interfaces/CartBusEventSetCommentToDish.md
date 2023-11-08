@@ -10,7 +10,7 @@ data
 
 ## Hierarchy
 
-- [`CartBusEventBase`](CartBusEventBase.md)<[`Order`](Order.md)\>
+- [`CartBusEventBase`](CartBusEventBase.md)\<[`Order`](Order.md)\>
 
   ↳ **`CartBusEventSetCommentToDish`**
 
@@ -28,7 +28,7 @@ data
 
 ### successCb
 
-• `Optional` **successCb**: (`result`: [`Order`](Order.md)<[`Dish`](Dish.md)\>) => `void`
+• `Optional` **successCb**: (`result`: [`Order`](Order.md)\<[`Dish`](Dish.md)\>) => `void`
 
 #### Type declaration
 
@@ -40,7 +40,7 @@ data
 
 | Name | Type |
 | :------ | :------ |
-| `result` | [`Order`](Order.md)<[`Dish`](Dish.md)\> |
+| `result` | [`Order`](Order.md)\<[`Dish`](Dish.md)\> |
 
 ##### Returns
 
@@ -80,7 +80,7 @@ ___
 
 ### isLoading
 
-• `Optional` **isLoading**: `BehaviorSubject`<`boolean`\>
+• `Optional` **isLoading**: `BehaviorSubject`\<`boolean`\>
 
 BehaviorSubject блюда, отслеживающий состояние выполняемого действия.
 

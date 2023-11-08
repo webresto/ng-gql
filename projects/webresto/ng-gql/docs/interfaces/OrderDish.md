@@ -1,4 +1,4 @@
-# Interface: OrderDish<T\>
+# Interface: OrderDish\<T\>
 
 ## Type parameters
 
@@ -40,7 +40,7 @@ ___
 
 ### dish
 
-• **dish**: `Partial`<`T`\>
+• **dish**: `Partial`\<`T`\>
 
 ___
 
@@ -100,4 +100,4 @@ ___
 
 ### modifiers
 
-• **modifiers**: `Partial`<[`OrderModifier`](OrderModifier.md)<`T`\>\>[]
+• **modifiers**: `Partial`\<[`OrderModifier`](OrderModifier.md)\<`T`\>\>[]

@@ -1,4 +1,4 @@
-# Interface: Action<T\>
+# Interface: Action\<T\>
 
 ## Type parameters
 
