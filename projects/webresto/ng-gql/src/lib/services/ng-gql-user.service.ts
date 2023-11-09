@@ -37,53 +37,53 @@ import {RequestService} from './request.service';
 
 @Injectable()
 export class NgGqlUserService {
-  private readonly _user$ = this.ngGqlStorage.user.pipe(
+  private readonly _user$ = this._storage.user.pipe(
     exhaustMap(user =>
       isValue(user)
-        ? this.ngGqlStorage.user
+        ? this._storage.user
         : this.getToken$().pipe(
             switchMap(token =>
               isValue(token)
                 ? this._loadUser$().pipe(
                     switchMap(user => {
                       this.updateStorageUser(user);
-                      return this.ngGqlStorage.user;
+                      return this._storage.user;
                     }),
                   )
-                : this.ngGqlStorage.user,
+                : this._storage.user,
             ),
           ),
     ),
-    catchError(err => this.ngGqlStorage.user),
+    catchError(err => this._storage.user),
     shareReplay(1),
   );
 
   constructor(
-    private requestService: RequestService,
-    private ngGqlStorage: NgGqlStoreService,
+    private _requestService: RequestService,
+    private _storage: NgGqlStoreService,
     private _userBus: NgGqlUserBusService,
     @Inject(USER_ORDER_HYSTORY_FRAGMENTS)
-    private defaultUserOrderHystoryFragments: ValuesOrBoolean<UserOrderHystory>,
+    private _defaultUserOrderHystoryFragments: ValuesOrBoolean<UserOrderHystory>,
     @Inject(USER_FRAGMENTS)
-    private defaultUserFragments: ValuesOrBoolean<User>,
+    private _defaultUserFragments: ValuesOrBoolean<User>,
     @Inject(USER_LOCATION_FRAGMENTS)
-    private defaultuserLocationFragments: ValuesOrBoolean<UserLocation>,
+    private _defaultuserLocationFragments: ValuesOrBoolean<UserLocation>,
   ) {}
 
   updateStorageUser(newUser: User | null): void {
-    this.ngGqlStorage.updateUser(newUser);
+    this._storage.updateUser(newUser);
   }
 
   loadUserOrderHistory$(options: {skip: number; limit: number}): Observable<UserOrderHystory[]> {
-    return this.ngGqlStorage.token.pipe(
+    return this._storage.token.pipe(
       switchMap(token =>
-        this.ngGqlStorage.orderHystory.pipe(
+        this._storage.orderHystory.pipe(
           exhaustMap(hystory => {
             if (isValue(token)) {
               if (hystory.length >= options.skip + options.limit) {
                 return of(hystory.slice(0, options.skip + options.limit));
               } else {
-                return this.requestService
+                return this._requestService
                   .customQuery$<
                     UserOrderHystory,
                     'userOrderHistory',
@@ -91,7 +91,7 @@ export class NgGqlUserService {
                       skip: number;
                       limit: number;
                     }
-                  >('userOrderHistory', this.defaultUserOrderHystoryFragments, {
+                  >('userOrderHistory', this._defaultUserOrderHystoryFragments, {
                     skip: options.skip,
                     limit: options.limit,
                   })
@@ -100,8 +100,8 @@ export class NgGqlUserService {
                       const result = Array.isArray(data.userOrderHistory)
                         ? data.userOrderHistory
                         : [data.userOrderHistory];
-                      this.ngGqlStorage.updateOrderHystory(result);
-                      return this.ngGqlStorage.orderHystory;
+                      this._storage.updateOrderHystory(result);
+                      return this._storage.orderHystory;
                     }),
                   );
               }
@@ -121,9 +121,9 @@ export class NgGqlUserService {
     },
     update: boolean = false,
   ): Observable<UserLocationResponse> {
-    return this.ngGqlStorage.token.pipe(
+    return this._storage.token.pipe(
       switchMap(token =>
-        this.ngGqlStorage.userLocations.pipe(
+        this._storage.userLocations.pipe(
           exhaustMap(data => {
             if (isValue(token)) {
               if (
@@ -155,7 +155,7 @@ export class NgGqlUserService {
   }
 
   getToken$(): Observable<string | null> {
-    return this.ngGqlStorage.token;
+    return this._storage.token;
   }
 
   /** Добавляет блюдо в избранное */
@@ -239,8 +239,8 @@ export class NgGqlUserService {
       loading,
     });
 
-    this.ngGqlStorage.updateToken(null);
-    this.ngGqlStorage.updateUser(null);
+    this._storage.updateToken(null);
+    this._storage.updateUser(null);
 
     return res;
   }
@@ -252,8 +252,8 @@ export class NgGqlUserService {
       loading,
     });
 
-    this.ngGqlStorage.updateToken(null);
-    this.ngGqlStorage.updateUser(null);
+    this._storage.updateToken(null);
+    this._storage.updateUser(null);
 
     return res;
   }
@@ -286,8 +286,8 @@ export class NgGqlUserService {
   }
 
   private _loadUser$(): Observable<User | null> {
-    return this.requestService
-      .queryAndSubscribe('user', 'user', this.defaultUserFragments, 'id')
+    return this._requestService
+      .queryAndSubscribe('user', 'user', this._defaultUserFragments, 'id')
       .pipe(
         map(result => {
           console.log(result);
@@ -300,7 +300,7 @@ export class NgGqlUserService {
     skip: number;
     limit: number;
   }): Observable<UserLocationResponse> {
-    return this.requestService
+    return this._requestService
       .customQuery$<number, 'userLocationCount', {criteria: {}}>('userLocationCount', 1, {
         criteria: {},
       })
@@ -309,8 +309,8 @@ export class NgGqlUserService {
           const userLocationCount = Array.isArray(data.userLocationCount)
             ? data.userLocationCount[0]
             : data.userLocationCount;
-          return this.requestService
-            .customQuery$('userLocation', this.defaultuserLocationFragments, options)
+          return this._requestService
+            .customQuery$('userLocation', this._defaultuserLocationFragments, options)
             .pipe(
               map(data => {
                 const userLocation = Array.isArray(data.userLocation)
@@ -320,7 +320,7 @@ export class NgGqlUserService {
                   userLocationCount,
                   userLocation,
                 };
-                this.ngGqlStorage.updateUserLocations(result);
+                this._storage.updateUserLocations(result);
                 return result;
               }),
             );

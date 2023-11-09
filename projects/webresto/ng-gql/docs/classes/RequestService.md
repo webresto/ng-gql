@@ -21,15 +21,15 @@
 
 ### constructor
 
-• **new RequestService**(`apollo`, `defaultActionFragments`, `defaultMessageFragments`): [`RequestService`](RequestService.md)
+• **new RequestService**(`_apollo`, `_defaultActionFragments`, `_defaultMessageFragments`): [`RequestService`](RequestService.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `apollo` | [`ApolloService`](ApolloService.md) |
-| `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
-| `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Message`](../interfaces/Message.md)\> |
+| `_apollo` | [`ApolloService`](ApolloService.md) |
+| `_defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
+| `_defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Message`](../interfaces/Message.md)\> |
 
 #### Returns
 

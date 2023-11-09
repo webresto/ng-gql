@@ -6,6 +6,10 @@
 
 - [constructor](GenerateUUIDHelper.md#constructor)
 
+### Properties
+
+- [\_win](GenerateUUIDHelper.md#_win)
+
 ### Methods
 
 - [getGUID](GenerateUUIDHelper.md#getguid)
@@ -19,6 +23,12 @@
 #### Returns
 
 [`GenerateUUIDHelper`](GenerateUUIDHelper.md)
+
+## Properties
+
+### \_win
+
+• **\_win**: ``null`` \| `Window` & typeof `globalThis`
 
 ## Methods
 

@@ -33,18 +33,18 @@ export class NqGqlLocalStorageWrapper {
    * Поток для изменения "на лету" токена, с которым в localStorage сохраняется id заказа.
    * Необходим для реализации на сайте "мультикорзины" - нескольких параллельных корзин, между которыми пользователь может переключаться при переходе по страницам сайта.
    */
-  private _storageOrderIdToken$ = new BehaviorSubject<string | null>(
-    this.config?.orderIdStorageToken !== undefined
-      ? this.config.orderIdStorageToken
+  private readonly _storageOrderIdToken$ = new BehaviorSubject<string | null>(
+    this._config?.orderIdStorageToken !== undefined
+      ? this._config.orderIdStorageToken
       : `${window.location.host}-orderId
        `,
   );
 
-  private _storageActionBus$ = new EventEmitter<StorageOrderTokenEvent>();
-  private storageActionBus$ = this._storageActionBus$.pipe(
+  private __storageActionBus$ = new EventEmitter<StorageOrderTokenEvent>();
+  private readonly _storageActionBus$ = this.__storageActionBus$.pipe(
     switchMap(busEvent => {
       if (busEvent.event == 'setOrderId' && isValue(busEvent.data.alternativeToken)) {
-        this.setToStorage(busEvent.data.alternativeToken, busEvent.data.orderId);
+        this._setToStorage(busEvent.data.alternativeToken, busEvent.data.orderId);
         this.updateStorageOrderIdToken(busEvent.data.alternativeToken);
         return of(() => {});
       } else {
@@ -53,13 +53,13 @@ export class NqGqlLocalStorageWrapper {
             switch (busEvent.event) {
               case 'removeOrderId':
                 if (busEvent.newOrderId) {
-                  this.setToStorage(storageOrderIdToken, busEvent.newOrderId);
+                  this._setToStorage(storageOrderIdToken, busEvent.newOrderId);
                 } else {
-                  this.removeFromStorage(storageOrderIdToken);
+                  this._removeFromStorage(storageOrderIdToken);
                 }
                 break;
               case 'setOrderId':
-                this.setToStorage(storageOrderIdToken, busEvent.data.orderId);
+                this._setToStorage(storageOrderIdToken, busEvent.data.orderId);
                 break;
             }
           }),
@@ -68,20 +68,20 @@ export class NqGqlLocalStorageWrapper {
     }),
   );
 
-  private _storageActionBusSubscription$ = this.storageActionBus$.subscribe({
+  private readonly _storageActionBusSubscription$ = this._storageActionBus$.subscribe({
     next: () => {},
     error: () => {},
     complete: () => {},
   });
 
-  storageOrderIdToken$ = this._storageOrderIdToken$.pipe(
+  readonly storageOrderIdToken$ = this._storageOrderIdToken$.pipe(
     filter((storageOrderIdToken): storageOrderIdToken is string => !!storageOrderIdToken),
     distinctUntilChanged(),
   );
 
   constructor(
-    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig,
-    @Inject(ORDERID_FACTORY_FN) private orderIdFactoryFn: () => string,
+    @Inject(NG_GQL_CONFIG) private _config: NgGqlConfig,
+    @Inject(ORDERID_FACTORY_FN) private _orderIdFactoryFn: () => string,
   ) {}
 
   /**
@@ -94,7 +94,7 @@ export class NqGqlLocalStorageWrapper {
    * Также все последующие операции в localStorage данными заказа начнут использовать этот токен, т.к. обновится внутренняя подписка информации об используемом токене.
    */
   setOrderId(orderId: string, storageOrderIdToken?: string): void {
-    this._storageActionBus$.emit({
+    this.__storageActionBus$.emit({
       event: 'setOrderId',
       data: {
         orderId,
@@ -108,7 +108,7 @@ export class NqGqlLocalStorageWrapper {
    * Удаляет сохраненный в localStorage id заказа.
    */
   removeOrderId(newOrderId?: string): void {
-    this._storageActionBus$.emit({
+    this.__storageActionBus$.emit({
       event: 'removeOrderId',
       newOrderId,
     });
@@ -137,7 +137,7 @@ export class NqGqlLocalStorageWrapper {
     generateNew: boolean = false,
   ): string {
     const generateId = (token: string): string => {
-      const orderId = this.orderIdFactoryFn();
+      const orderId = this._orderIdFactoryFn();
       const cartData = JSON.stringify({orderId: orderId, dt: Date.now()});
       window.localStorage.setItem(token, cartData);
       return orderId;
@@ -157,7 +157,7 @@ export class NqGqlLocalStorageWrapper {
           dt: number;
         } = JSON.parse(cartString);
         const idObsolescence =
-          43200000 * (isValue(this.config.obsolescence) ? this.config.obsolescence : 14);
+          43200000 * (isValue(this._config.obsolescence) ? this._config.obsolescence : 14);
         if (Date.now() - cartData.dt > idObsolescence) {
           return generateId(storageOrderIdToken);
         } else {
@@ -186,7 +186,11 @@ export class NqGqlLocalStorageWrapper {
     this._storageActionBusSubscription$.unsubscribe();
   }
 
-  private notifyStorageUpdate(key: string, oldValue: string | null, newValue: string | null): void {
+  private _notifyStorageUpdate(
+    key: string,
+    oldValue: string | null,
+    newValue: string | null,
+  ): void {
     window.dispatchEvent(
       new StorageEvent('storage', {
         key,
@@ -204,22 +208,22 @@ export class NqGqlLocalStorageWrapper {
    * @param orderId сохраняемое значение
    * @param emitEvent требуется ли создавать StorageEvent для подписчиков об изменении значения
    */
-  private setToStorage(key: string, orderId: string, emitEvent = true): void {
+  private _setToStorage(key: string, orderId: string, emitEvent = true): void {
     const storageOrderId = this.getOrderId(key);
     if (!storageOrderId || orderId !== storageOrderId) {
       const oldValue = window.localStorage.getItem(key);
       const newValue = JSON.stringify({orderId: orderId, dt: Date.now()});
       window.localStorage.setItem(key, newValue);
       if (emitEvent) {
-        this.notifyStorageUpdate(key, oldValue, newValue);
+        this._notifyStorageUpdate(key, oldValue, newValue);
       }
     }
   }
 
-  private removeFromStorage(key: string): void {
+  private _removeFromStorage(key: string): void {
     const oldValue = window.localStorage.getItem(key);
     const newValue = null;
     window.localStorage.removeItem(key);
-    this.notifyStorageUpdate(key, oldValue, newValue);
+    this._notifyStorageUpdate(key, oldValue, newValue);
   }
 }

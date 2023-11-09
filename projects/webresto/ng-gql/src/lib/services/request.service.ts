@@ -47,9 +47,9 @@ export class RequestService {
    * Для получения потока используется метод @method this.getActionEmitter()
    * Для отправки в поток кастомных сообщений испльзуется @method this.emitActionEvent()
    */
-  private _actions$ = this.customSubscribe$<Action, 'action'>(
+  private readonly _actions$ = this.customSubscribe$<Action, 'action'>(
     'action',
-    this.defaultActionFragments,
+    this._defaultActionFragments,
   ).pipe(
     mergeWith(this._eventAction.asObservable()),
     distinctUntilKeyChanged('id'),
@@ -61,9 +61,9 @@ export class RequestService {
    * Для получения потока используется метод @method this.getMessageEmitter()
    * Для отправки в поток кастомных сообщений испльзуется @method this.emitMessageEvent()
    */
-  private _messages$ = this.customSubscribe$<Message, 'message'>(
+  private readonly _messages$ = this.customSubscribe$<Message, 'message'>(
     'message',
-    this.defaultMessageFragments,
+    this._defaultMessageFragments,
   ).pipe(
     mergeWith(this._eventMessage.asObservable()),
     distinctUntilKeyChanged('id'),
@@ -71,11 +71,11 @@ export class RequestService {
   );
 
   constructor(
-    private apollo: ApolloService,
+    private _apollo: ApolloService,
     @Inject(ACTION_FRAGMENTS)
-    private defaultActionFragments: ValuesOrBoolean<Action>,
+    private _defaultActionFragments: ValuesOrBoolean<Action>,
     @Inject(MESSAGE_FRAGMENTS)
-    private defaultMessageFragments: ValuesOrBoolean<Message>,
+    private _defaultMessageFragments: ValuesOrBoolean<Message>,
   ) {}
 
   emitMessageEvent(message: Partial<Message>): void {
@@ -128,7 +128,7 @@ export class RequestService {
     variables?: V,
     paramOptions?: QueryGenerationParam<V>,
   ): Observable<Record<N, T | T[]>> {
-    return this.apollo
+    return this._apollo
       .watchQuery<Record<N, T | T[]>, V>({
         query: gql`query ${generateQueryString({
           name,
@@ -174,7 +174,7 @@ export class RequestService {
     variables: V,
     paramOptions?: QueryGenerationParam<V>,
   ): Observable<Record<N, T>> {
-    return this.apollo
+    return this._apollo
       .mutate<Record<N, T>, V>({
         mutation: gql`mutation ${generateQueryString({
           name,
@@ -232,7 +232,7 @@ export class RequestService {
       requiredFields: paramOptions?.requiredFields,
       fieldsTypeMap: paramOptions?.fieldsTypeMap,
     });
-    return this.apollo
+    return this._apollo
       .subscribe<Record<N, T>, V>({query: gql`subscription ${q}`, variables}, extra)
       .pipe(
         map(result => result.data),
@@ -310,7 +310,7 @@ export class RequestService {
       variables: variables?.query,
     };
 
-    return this.apollo.watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions).pipe(
+    return this._apollo.watchQuery<Record<NQuery, T | T[]>, VQ>(apolloQueryOptions).pipe(
       map(res => {
         return res.error ?? res.data;
       }),

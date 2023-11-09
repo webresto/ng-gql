@@ -22,19 +22,19 @@
 
 ### constructor
 
-• **new NgGqlUserBusService**(`requestService`, `ngGqlStorage`, `defaultActionFragments`, `defaultMessageFragments`, `defaultCaptchaGetJobFragments`, `defaultUserFragments`, `defaultOTPResponceFragments`): [`NgGqlUserBusService`](NgGqlUserBusService.md)
+• **new NgGqlUserBusService**(`_requestService`, `_storage`, `_defaultActionFragments`, `_defaultMessageFragments`, `_defaultCaptchaGetJobFragments`, `_defaultUserFragments`, `_defaultOTPResponceFragments`): [`NgGqlUserBusService`](NgGqlUserBusService.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `requestService` | [`RequestService`](RequestService.md) |
-| `ngGqlStorage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
-| `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
-| `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Message`](../interfaces/Message.md)\> |
-| `defaultCaptchaGetJobFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`User`](../interfaces/User.md)\> |
-| `defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`User`](../interfaces/User.md)\> |
-| `defaultOTPResponceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`OTPResponse`](../interfaces/OTPResponse.md)\> |
+| `_requestService` | [`RequestService`](RequestService.md) |
+| `_storage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
+| `_defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
+| `_defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Message`](../interfaces/Message.md)\> |
+| `_defaultCaptchaGetJobFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`User`](../interfaces/User.md)\> |
+| `_defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`User`](../interfaces/User.md)\> |
+| `_defaultOTPResponceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`OTPResponse`](../interfaces/OTPResponse.md)\> |
 
 #### Returns
 

@@ -34,24 +34,24 @@
 
 ### constructor
 
-• **new NgOrderService**(`requestService`, `ngGqlStorage`, `storageWrapper`, `userBusService`, `ngGqlService`, `ngGqlUser`, `config`, `defaultPaymentMethodFragments`, `defaultOrderFragments`, `defaultDishFragments`, `defaultActionFragments`, `defaultMessageFragments`): [`NgOrderService`](NgOrderService.md)
+• **new NgOrderService**(`_requestService`, `_storage`, `_storageWrapper`, `_userBusService`, `_ngGqlService`, `_ngGqlUser`, `_config`, `_defaultPaymentMethodFragments`, `_defaultOrderFragments`, `_defaultDishFragments`, `_defaultActionFragments`, `_defaultMessageFragments`): [`NgOrderService`](NgOrderService.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `requestService` | [`RequestService`](RequestService.md) |
-| `ngGqlStorage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
-| `storageWrapper` | [`NqGqlLocalStorageWrapper`](NqGqlLocalStorageWrapper.md) |
-| `userBusService` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
-| `ngGqlService` | [`NgGqlService`](NgGqlService.md) |
-| `ngGqlUser` | [`NgGqlUserService`](NgGqlUserService.md) |
-| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
-| `defaultPaymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
-| `defaultOrderFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Order`](../interfaces/Order.md)\<[`Dish`](../interfaces/Dish.md)\>\> |
-| `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Dish`](../interfaces/Dish.md)\> |
-| `defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
-| `defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Message`](../interfaces/Message.md)\> |
+| `_requestService` | [`RequestService`](RequestService.md) |
+| `_storage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
+| `_storageWrapper` | [`NqGqlLocalStorageWrapper`](NqGqlLocalStorageWrapper.md) |
+| `_userBusService` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
+| `_ngGqlService` | [`NgGqlService`](NgGqlService.md) |
+| `_ngGqlUser` | [`NgGqlUserService`](NgGqlUserService.md) |
+| `_config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
+| `_defaultPaymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
+| `_defaultOrderFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Order`](../interfaces/Order.md)\<[`Dish`](../interfaces/Dish.md)\>\> |
+| `_defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Dish`](../interfaces/Dish.md)\> |
+| `_defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
+| `_defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Message`](../interfaces/Message.md)\> |
 
 #### Returns
 

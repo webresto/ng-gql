@@ -1,5 +1,6 @@
 import {WorkTime} from '@webresto/worktime';
 
+/** @private */
 interface PickupPointSource {
   id: string | null;
   order: number | null;

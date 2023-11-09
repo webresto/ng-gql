@@ -27,19 +27,19 @@
 
 ### constructor
 
-• **new NgGqlService**(`requestService`, `storage`, `config`, `defaultNavigationFragments`, `defaultMaintenanceFragments`, `defaultGroupFragments`, `defaultDishFragments`): [`NgGqlService`](NgGqlService.md)
+• **new NgGqlService**(`_requestService`, `_storage`, `_config`, `_defaultNavigationFragments`, `_defaultMaintenanceFragments`, `_defaultGroupFragments`, `_defaultDishFragments`): [`NgGqlService`](NgGqlService.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `requestService` | [`RequestService`](RequestService.md) |
-| `storage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
-| `config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
-| `defaultNavigationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Navigation`](../interfaces/Navigation.md)\> |
-| `defaultMaintenanceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Maintenance`](../interfaces/Maintenance.md)\> |
-| `defaultGroupFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Group`](../interfaces/Group.md)\> |
-| `defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Dish`](../interfaces/Dish.md)\> |
+| `_requestService` | [`RequestService`](RequestService.md) |
+| `_storage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
+| `_config` | [`NgGqlConfig`](../interfaces/NgGqlConfig.md) |
+| `_defaultNavigationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Navigation`](../interfaces/Navigation.md)\> |
+| `_defaultMaintenanceFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Maintenance`](../interfaces/Maintenance.md)\> |
+| `_defaultGroupFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Group`](../interfaces/Group.md)\> |
+| `_defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Dish`](../interfaces/Dish.md)\> |
 
 #### Returns
 

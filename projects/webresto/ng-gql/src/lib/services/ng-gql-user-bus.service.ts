@@ -41,6 +41,7 @@ export type UserBusEventType =
   | 'locationDelete'
   | 'locationSetIsDefault';
 
+/** @private */
 type UserBusEventMixin<
   T extends UserBusEventType = UserBusEventType,
   P extends unknown = unknown,
@@ -83,7 +84,7 @@ export class NgGqlUserBusService {
 
   readonly userBus$ = this._userBus.asObservable().pipe(
     switchMap(event => {
-      return this.userServiceReducer(event).pipe(
+      return this._userServiceReducer(event).pipe(
         concatMap(result => {
           setTimeout(() => {
             const successCb = <
@@ -110,18 +111,18 @@ export class NgGqlUserBusService {
   );
 
   constructor(
-    private requestService: RequestService,
-    private ngGqlStorage: NgGqlStoreService,
+    private _requestService: RequestService,
+    private _storage: NgGqlStoreService,
     @Inject(ACTION_FRAGMENTS)
-    private defaultActionFragments: ValuesOrBoolean<Action>,
+    private _defaultActionFragments: ValuesOrBoolean<Action>,
     @Inject(MESSAGE_FRAGMENTS)
-    private defaultMessageFragments: ValuesOrBoolean<Message>,
+    private _defaultMessageFragments: ValuesOrBoolean<Message>,
     @Inject(CAPTCHA_GET_JOB_FRAGMENTS)
-    private defaultCaptchaGetJobFragments: ValuesOrBoolean<User>,
+    private _defaultCaptchaGetJobFragments: ValuesOrBoolean<User>,
     @Inject(USER_FRAGMENTS)
-    private defaultUserFragments: ValuesOrBoolean<User>,
+    private _defaultUserFragments: ValuesOrBoolean<User>,
     @Inject(OTP_RESPONSE_FRAGMENTS)
-    private defaultOTPResponceFragments: ValuesOrBoolean<OTPResponse>,
+    private _defaultOTPResponceFragments: ValuesOrBoolean<OTPResponse>,
   ) {}
 
   emitToBus<T extends UserBusEventType, P extends UserBusEvent['payload'], R>(data: {
@@ -143,44 +144,44 @@ export class NgGqlUserBusService {
     });
   }
 
-  private userServiceReducer(
+  private _userServiceReducer(
     busEvent: UserBusEvent,
   ): Observable<Parameters<UserBusEvent['successCb']>[0]> {
     switch (busEvent.type) {
       case 'OTPRequest':
-        return this.otpRequest$(busEvent.payload);
+        return this._otpRequest$(busEvent.payload);
       case 'login':
-        return this.login$(busEvent.payload);
+        return this._login$(busEvent.payload);
       case 'captchaGetJob':
-        return this.captchaGetJob$(busEvent.payload);
+        return this._captchaGetJob$(busEvent.payload);
       case 'registrationApp':
-        return this.registrationApp$(busEvent.payload);
+        return this._registrationApp$(busEvent.payload);
       case 'RestorePassword':
-        return this.restorePassword$(busEvent.payload);
+        return this._restorePassword$(busEvent.payload);
       case 'AddDishFavor':
-        return this.addDishFavor$(busEvent.payload);
+        return this._addDishFavor$(busEvent.payload);
       case 'UpdateUserData':
-        return this.updateUserData$(busEvent.payload);
+        return this._updateUserData$(busEvent.payload);
       case 'logout':
-        return this.logout$();
+        return this._logout$();
       case 'userDelete':
-        return this.userDelete$(busEvent.payload);
+        return this._userDelete$(busEvent.payload);
       case 'locationCreate':
-        return this.locationCreate$(busEvent.payload);
+        return this._locationCreate$(busEvent.payload);
       case 'locationDelete':
-        return this.locationDelete$(busEvent.payload);
+        return this._locationDelete$(busEvent.payload);
       case 'locationSetIsDefault':
-        return this.locationSetIsDefault$(busEvent.payload);
+        return this._locationSetIsDefault$(busEvent.payload);
     }
   }
 
-  private captchaGetJob$<T extends CaptchaTask>(
+  private _captchaGetJob$<T extends CaptchaTask>(
     data: CaptchaJobPayload,
   ): Observable<CaptchaJob<T>> {
-    return this.requestService
+    return this._requestService
       .customQuery$<CaptchaJob<T>, 'captchaGetJob', CaptchaJobPayload>(
         'captchaGetJob',
-        this.defaultCaptchaGetJobFragments,
+        this._defaultCaptchaGetJobFragments,
         data,
       )
       .pipe(
@@ -204,14 +205,14 @@ export class NgGqlUserBusService {
   }
 
   /** Обновление данных пользователя (профиль) */
-  private updateUserData$(data: UpdateUserDataPayload): Observable<UserResponse> {
-    return this.requestService
+  private _updateUserData$(data: UpdateUserDataPayload): Observable<UserResponse> {
+    return this._requestService
       .customMutation$<UserResponse, 'userUpdate', {user: UpdateUserDataPayload}>(
         'userUpdate',
         {
-          user: this.defaultUserFragments,
-          message: this.defaultMessageFragments,
-          action: this.defaultActionFragments,
+          user: this._defaultUserFragments,
+          message: this._defaultMessageFragments,
+          action: this._defaultActionFragments,
         },
         {
           user: data,
@@ -226,11 +227,11 @@ export class NgGqlUserBusService {
           if (isValue(userResponse.action)) {
             const token = userResponse.action.data?.token;
             setTimeout(() => {
-              this.ngGqlStorage.updateToken(token ?? null);
+              this._storage.updateToken(token ?? null);
             }, 100);
           }
           if (isValue(userResponse.user)) {
-            this.ngGqlStorage.updateUser(record.userUpdate.user);
+            this._storage.updateUser(record.userUpdate.user);
           }
           return record.userUpdate;
         }),
@@ -238,22 +239,22 @@ export class NgGqlUserBusService {
   }
 
   /** Добавляет блюдо в избранное */
-  private addDishFavor$(dishId: string): Observable<boolean> {
-    return this.requestService
+  private _addDishFavor$(dishId: string): Observable<boolean> {
+    return this._requestService
       .customMutation$<boolean, 'favoriteDish'>('favoriteDish', true, {
         dishId,
       })
       .pipe(map(record => record.favoriteDish));
   }
 
-  private restorePassword$(data: RestorePasswordPayload): Observable<UserResponse> {
-    return this.requestService
+  private _restorePassword$(data: RestorePasswordPayload): Observable<UserResponse> {
+    return this._requestService
       .customMutation$<UserResponse, 'restorePassword', RestorePasswordPayload>(
         'restorePassword',
         {
-          user: this.defaultUserFragments,
-          message: this.defaultMessageFragments,
-          action: this.defaultActionFragments,
+          user: this._defaultUserFragments,
+          message: this._defaultMessageFragments,
+          action: this._defaultActionFragments,
         },
         data,
         {
@@ -264,14 +265,14 @@ export class NgGqlUserBusService {
       .pipe(map(record => record.restorePassword));
   }
 
-  private login$(data: LoginPayload): Observable<UserResponse> {
-    return this.requestService
+  private _login$(data: LoginPayload): Observable<UserResponse> {
+    return this._requestService
       .customMutation$<UserResponse, 'login', LoginPayload>(
         'login',
         {
-          user: this.defaultUserFragments,
-          message: this.defaultMessageFragments,
-          action: this.defaultActionFragments,
+          user: this._defaultUserFragments,
+          message: this._defaultMessageFragments,
+          action: this._defaultActionFragments,
         },
         data,
         {
@@ -288,22 +289,22 @@ export class NgGqlUserBusService {
           if (isValue(userResponse.action)) {
             const token = userResponse.action.data?.token;
             setTimeout(() => {
-              this.ngGqlStorage.updateToken(token ?? null);
+              this._storage.updateToken(token ?? null);
             }, 100);
           }
           if (isValue(userResponse.user)) {
-            this.ngGqlStorage.updateUser(record.login.user);
+            this._storage.updateUser(record.login.user);
           }
           return record.login;
         }),
       );
   }
 
-  private otpRequest$(data: OTPRequestPayload): Observable<OTPResponse> {
-    return this.requestService
+  private _otpRequest$(data: OTPRequestPayload): Observable<OTPResponse> {
+    return this._requestService
       .customMutation$<OTPResponse, 'OTPRequest', OTPRequestPayload>(
         'OTPRequest',
-        this.defaultOTPResponceFragments,
+        this._defaultOTPResponceFragments,
         data,
         {
           requiredFields: ['login'],
@@ -313,14 +314,14 @@ export class NgGqlUserBusService {
       .pipe(map(record => record.OTPRequest));
   }
 
-  private registrationApp$(data: RegistrationPayload): Observable<UserResponse> {
-    return this.requestService
+  private _registrationApp$(data: RegistrationPayload): Observable<UserResponse> {
+    return this._requestService
       .customMutation$<UserResponse, 'registration', RegistrationPayload>(
         'registration',
         {
-          user: this.defaultUserFragments,
-          message: this.defaultMessageFragments,
-          action: this.defaultActionFragments,
+          user: this._defaultUserFragments,
+          message: this._defaultMessageFragments,
+          action: this._defaultActionFragments,
         },
         data,
         {
@@ -334,26 +335,26 @@ export class NgGqlUserBusService {
       .pipe(map(record => record.registration));
   }
 
-  private logout$(): Observable<Response> {
-    return this.requestService
+  private _logout$(): Observable<Response> {
+    return this._requestService
       .customMutation$(
         'logout',
         {
-          message: this.defaultMessageFragments,
-          action: this.defaultActionFragments,
+          message: this._defaultMessageFragments,
+          action: this._defaultActionFragments,
         },
         {},
       )
       .pipe(map(record => record.logout));
   }
 
-  private userDelete$(otp: string): Observable<Response> {
-    return this.requestService
+  private _userDelete$(otp: string): Observable<Response> {
+    return this._requestService
       .customMutation$(
         'userDelete',
         {
-          message: this.defaultMessageFragments,
-          action: this.defaultActionFragments,
+          message: this._defaultMessageFragments,
+          action: this._defaultActionFragments,
         },
         {otp},
         {requiredFields: ['otp']},
@@ -361,8 +362,8 @@ export class NgGqlUserBusService {
       .pipe(map(record => record.userDelete));
   }
 
-  private locationCreate$(location: InputLocation): Observable<boolean> {
-    return this.requestService
+  private _locationCreate$(location: InputLocation): Observable<boolean> {
+    return this._requestService
       .customMutation$<boolean, 'locationCreate', {location: InputLocation}>(
         'locationCreate',
         true,
@@ -374,8 +375,8 @@ export class NgGqlUserBusService {
       .pipe(map(record => record.locationCreate));
   }
 
-  private locationDelete$(locationId: string): Observable<boolean> {
-    return this.requestService
+  private _locationDelete$(locationId: string): Observable<boolean> {
+    return this._requestService
       .customMutation$<boolean, 'locationDelete', {locationId: string}>(
         'locationDelete',
         true,
@@ -389,8 +390,8 @@ export class NgGqlUserBusService {
       .pipe(map(record => record.locationDelete));
   }
 
-  private locationSetIsDefault$(locationId: string): Observable<boolean> {
-    return this.requestService
+  private _locationSetIsDefault$(locationId: string): Observable<boolean> {
+    return this._requestService
       .customMutation$<boolean, 'locationSetIsDefault', {locationId: string}>(
         'locationSetIsDefault',
         true,

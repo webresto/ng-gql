@@ -7,11 +7,11 @@ import {generateUUID} from '../models';
 
 @Injectable()
 export class XDeviceIdInterceptor implements HttpInterceptor {
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  constructor(@Inject(DOCUMENT) private _document: Document) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const savedDeviceId = localStorage.getItem('deviceId');
-    const deviceId = savedDeviceId ?? generateUUID(this.document.defaultView);
+    const deviceId = savedDeviceId ?? generateUUID(this._document.defaultView);
     if (!isValue(savedDeviceId)) {
       localStorage.setItem('deviceId', deviceId);
     }

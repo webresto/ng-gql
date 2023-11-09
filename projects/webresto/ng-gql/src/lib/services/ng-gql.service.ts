@@ -1,7 +1,12 @@
 import {Inject, Injectable} from '@angular/core';
-import {createSubject, deepClone, distinctUntilObjectChanged, isValue} from '@axrl/common';
-import type {Observable} from 'rxjs';
-import {BehaviorSubject, exhaustMap, filter, map, of, tap} from 'rxjs';
+import {
+  createObservable,
+  createSubject,
+  deepClone,
+  distinctUntilObjectChanged,
+  isValue,
+} from '@axrl/common';
+import {BehaviorSubject, Observable, exhaustMap, filter, map, tap} from 'rxjs';
 import type {
   CheckPhoneCodeInput,
   CheckPhoneResponse,
@@ -37,20 +42,20 @@ export class NgGqlService {
   private _pendingLoadNavigation = createSubject<boolean>(false);
 
   constructor(
-    private requestService: RequestService,
-    private storage: NgGqlStoreService,
-    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig,
+    private _requestService: RequestService,
+    private _storage: NgGqlStoreService,
+    @Inject(NG_GQL_CONFIG) private _config: NgGqlConfig,
     @Inject(NAVIGATION_FRAGMENTS)
-    private defaultNavigationFragments: ValuesOrBoolean<Navigation>,
+    private _defaultNavigationFragments: ValuesOrBoolean<Navigation>,
     @Inject(MAINTENANCE_FRAGMENTS)
-    private defaultMaintenanceFragments: ValuesOrBoolean<Maintenance>,
+    private _defaultMaintenanceFragments: ValuesOrBoolean<Maintenance>,
     @Inject(GROUP_FRAGMENTS)
-    private defaultGroupFragments: ValuesOrBoolean<Group>,
-    @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>,
+    private _defaultGroupFragments: ValuesOrBoolean<Group>,
+    @Inject(DISH_FRAGMENTS) private _defaultDishFragments: ValuesOrBoolean<Dish>,
   ) {}
 
   getNgGqlConfig(): NgGqlConfig {
-    return deepClone(this.config);
+    return deepClone(this._config);
   }
 
   /**
@@ -128,8 +133,8 @@ export class NgGqlService {
   }
 
   getMaintenance$(): Observable<Maintenance> {
-    return this.requestService
-      .queryAndSubscribe('maintenance', 'maintenance', this.defaultMaintenanceFragments, 'id')
+    return this._requestService
+      .queryAndSubscribe('maintenance', 'maintenance', this._defaultMaintenanceFragments, 'id')
       .pipe(
         filter(result => result.length > 0),
         map(res => res[0]),
@@ -147,14 +152,14 @@ export class NgGqlService {
     const getIdsFromPartialDish = (dishes?: Array<Partial<Group>>): string[] =>
       dishes?.map(dish => dish.id).filter((id): id is string => isValue(id)) ?? [];
 
-    return this.storage.groups.pipe(
+    return this._storage.groups.pipe(
       exhaustMap(groups => {
         const group = groups.find(g => g.slug === slug);
         if (isValue(group)) {
-          return of(group);
+          return createObservable(group);
         } else {
-          return this.requestService
-            .customQuery$<Group, 'group', VCriteria>('group', this.defaultGroupFragments, {
+          return this._requestService
+            .customQuery$<Group, 'group', VCriteria>('group', this._defaultGroupFragments, {
               criteria: {
                 slug,
                 concept,
@@ -169,7 +174,7 @@ export class NgGqlService {
                   childGroup.dishesIds = getIdsFromPartialDish(childGroup.dishes);
                 });
                 groups.push(group);
-                this.storage.updateMenuGroups(groups);
+                this._storage.updateMenuGroups(groups);
                 return group;
               }),
             );
@@ -187,7 +192,7 @@ export class NgGqlService {
   addAmountToDish(sourceDish: Dish): Dish {
     return {
       ...sourceDish,
-      additionalInfo: this.getAdditionalInfo(sourceDish),
+      additionalInfo: this._getAdditionalInfo(sourceDish),
       isLoading: sourceDish.isLoading ?? createSubject<boolean>(false),
       modifiers: sourceDish.modifiers
         ? sourceDish.modifiers.map((groupModifier, groupIndex) => ({
@@ -248,7 +253,7 @@ export class NgGqlService {
       confirmCode: true,
     };
     const vOb = customvOb ? {...phonevOb, ...customvOb} : phonevOb;
-    return this.requestService
+    return this._requestService
       .customQuery$<PhoneKnowledge, 'isKnownPhone', {phone: Phone}>(
         'isKnownPhone',
         vOb,
@@ -261,7 +266,7 @@ export class NgGqlService {
   }
 
   phoneKnowledgeGetCode$(phone: Phone): Observable<CheckPhoneResponse[]> {
-    return this.requestService
+    return this._requestService
       .customQuery$<CheckPhoneResponse, 'phoneKnowledgeGetCode', {phone: Phone}>(
         'phoneKnowledgeGetCode',
         {
@@ -284,7 +289,7 @@ export class NgGqlService {
   }
 
   phoneKnowledgeSetCode$(data: CheckPhoneCodeInput): Observable<CheckPhoneResponse> {
-    return this.requestService
+    return this._requestService
       .customMutation$<CheckPhoneResponse, 'phoneKnowledgeSetCode', CheckPhoneCodeInput>(
         'phoneKnowledgeSetCode',
         {
@@ -314,20 +319,20 @@ export class NgGqlService {
   }
 
   private _getDishes(items: string[], isId: boolean = true): Observable<Dish[]> {
-    return this.storage.dishes.pipe(
+    return this._storage.dishes.pipe(
       exhaustMap(dishes => {
         const dishesInStock = dishes.filter(item => items.includes(isId ? item.id : item.slug));
 
         if (dishesInStock.length == items.length) {
-          return of(dishesInStock);
+          return createObservable(dishesInStock);
         } else {
           const dishesNotInStock = items.filter(
             item => !dishes.find(dish => item === (isId ? dish.id : dish.slug)),
           );
           const criteriaKey = isId ? 'id' : 'slug';
 
-          return this.requestService
-            .customQuery$<Dish, 'dish', VCriteria>('dish', this.defaultDishFragments, {
+          return this._requestService
+            .customQuery$<Dish, 'dish', VCriteria>('dish', this._defaultDishFragments, {
               criteria: {
                 [criteriaKey]: dishesNotInStock,
               },
@@ -338,7 +343,7 @@ export class NgGqlService {
                   Array.isArray(loadedDishes.dish) ? loadedDishes.dish : [loadedDishes.dish]
                 ).map(dish => this.addAmountToDish(dish));
                 dishes.push(...result);
-                this.storage.updateDishes(dishes);
+                this._storage.updateDishes(dishes);
                 return [...dishesInStock, ...result];
               }),
             );
@@ -347,7 +352,7 @@ export class NgGqlService {
     );
   }
 
-  private getAdditionalInfo(dish: Partial<Dish>): Dish['additionalInfo'] {
+  private _getAdditionalInfo(dish: Partial<Dish>): Dish['additionalInfo'] {
     if (
       dish.additionalInfo &&
       typeof dish.additionalInfo == 'string' &&
@@ -367,22 +372,22 @@ export class NgGqlService {
     options?: NavigationLoader<T>,
   ): Observable<T[]> {
     this._pendingLoadNavigation.next(true);
-    return this.storage.navigation.pipe(
+    return this._storage.navigation.pipe(
       exhaustMap(data => {
         return isValue(data)
-          ? of(<T[]>data)
-          : this.requestService
+          ? createObservable(<T[]>data)
+          : this._requestService
               .queryAndSubscribe(
                 options?.nameQuery ?? 'navigation',
                 options?.nameSubscribe ?? 'navigation',
                 options?.queryObject ??
-                  <NavigationLoader<T>['queryObject']>this.defaultNavigationFragments,
+                  <NavigationLoader<T>['queryObject']>this._defaultNavigationFragments,
                 options?.uniqueKeyForCompareItem ??
                   <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId',
               )
               .pipe(
                 map(navigationData => {
-                  this.storage.updateNavigation(navigationData);
+                  this._storage.updateNavigation(navigationData);
                   return navigationData;
                 }),
               );
@@ -396,14 +401,14 @@ export class NgGqlService {
     topLevelGroupId?: string,
   ): Observable<NavbarMenuLink[]> {
     this._pendingLoadNavBar.next(true);
-    return this.storage.navBarMenus.pipe(
+    return this._storage.navBarMenus.pipe(
       exhaustMap(items => {
         const item = items.find(
           element => element.concept === concept && element.topLevelGroupId === topLevelGroupId,
         );
         return isValue(item)
-          ? of(item.menu)
-          : this.requestService
+          ? createObservable(item.menu)
+          : this._requestService
               .customQuery$<NavbarMenuLink, 'menu'>('menu', {
                 name: true,
                 slug: true,
@@ -412,9 +417,12 @@ export class NgGqlService {
               })
               .pipe(
                 map(data => {
-                  const result = Array.isArray(data.menu) ? data.menu : [data.menu];
+                  const rawResult = Array.isArray(data.menu) ? data.menu : [data.menu];
+                  const result = rawResult.reduce<NavbarMenuLink[]>(this._addIfItemNotExist, []);
                   const newItems = [...items, {concept, topLevelGroupId, menu: result}];
-                  this.storage.updateNavBarMenus(newItems);
+
+                  this._storage.updateNavBarMenus(newItems);
+
                   return result;
                 }),
               );
@@ -422,4 +430,17 @@ export class NgGqlService {
       tap(() => this._pendingLoadNavBar.next(false)),
     );
   }
+
+  private _addIfItemNotExist = <T extends {id: string | number}>(
+    accumulator: T[],
+    current: T,
+  ): T[] => {
+    const isAdded = accumulator.find(item => item.id === current.id);
+
+    if (!isValue(isAdded)) {
+      accumulator.push(current);
+    }
+
+    return accumulator;
+  };
 }

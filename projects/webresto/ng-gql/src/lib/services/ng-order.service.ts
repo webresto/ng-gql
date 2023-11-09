@@ -56,20 +56,20 @@ import {NqGqlLocalStorageWrapper} from './storage-wrapper';
 export class NgOrderService {
   private _orderBus = new EventEmitter<CartBusEvent>();
 
-  private _order$: Observable<Order> = this.storageWrapper.storageOrderIdToken$.pipe(
+  private readonly _order$: Observable<Order> = this._storageWrapper.storageOrderIdToken$.pipe(
     switchMap(storageOrderIdToken =>
       fromEvent<StorageEvent>(window, 'storage', {
         passive: true,
       }).pipe(
-        startWith(this.storageWrapper.startStorageEventFactory(storageOrderIdToken)),
+        startWith(this._storageWrapper.startStorageEventFactory(storageOrderIdToken)),
         filter(event => event.key === storageOrderIdToken),
         distinctUntilKeyChanged('key'),
         switchMap(event => {
-          const storageOrderId = this.storageWrapper.getOrderId(
+          const storageOrderId = this._storageWrapper.getOrderId(
             storageOrderIdToken,
             event.newValue ?? undefined,
           );
-          return this.loadCurrentOrNewOrder(storageOrderId, storageOrderIdToken);
+          return this._loadCurrentOrNewOrder(storageOrderId, storageOrderIdToken);
         }),
       ),
     ),
@@ -77,8 +77,8 @@ export class NgOrderService {
       const storageOrderId = order.id;
 
       return combineLatest([
-        this.getPaymentMethods$(storageOrderId),
-        this.ngGqlUser.getUser$(),
+        this._getPaymentMethods$(storageOrderId),
+        this._ngGqlUser.getUser$(),
         this.getPickupPoints(),
       ]).pipe(
         map(([methods, user, points]) => {
@@ -113,7 +113,7 @@ export class NgOrderService {
             }
 
             if (!isValue(order.customer?.name)) {
-              order.customer.name = this.getOrderCustomerName(user);
+              order.customer.name = this._getOrderCustomerName(user);
             }
 
             if (!isValue(order.customer?.phone)) {
@@ -121,7 +121,7 @@ export class NgOrderService {
             }
 
             if (!isValue(order.customer?.phone.code)) {
-              order.customer.phone.code = user.phone?.code ?? this.config.phoneCode;
+              order.customer.phone.code = user.phone?.code ?? this._config.phoneCode;
             }
 
             if (!isValue(order.customer?.phone.number)) {
@@ -129,8 +129,8 @@ export class NgOrderService {
             }
           }
 
-          this.ngGqlStorage.updateOrder(order);
-          this.ngGqlStorage.updatePaymentMethods(methods);
+          this._storage.updateOrder(order);
+          this._storage.updatePaymentMethods(methods);
 
           return order;
         }),
@@ -155,21 +155,21 @@ export class NgOrderService {
       const reducer = (busEventData: CartBusEvent): Observable<Order | CheckResponse> => {
         switch (busEventData.event) {
           case 'add':
-            return this.addDishToOrder$(busEventData.data);
+            return this._addDishToOrder$(busEventData.data);
           case 'remove':
-            return this.removeDishFromOrder$(busEventData.data);
+            return this._removeDishFromOrder$(busEventData.data);
           case 'check':
-            return this.checkOrder$(busEventData.data);
+            return this._checkOrder$(busEventData.data);
           case 'order':
-            return this.sendOrder$(busEventData.data);
+            return this._sendOrder$(busEventData.data);
           case 'clone':
-            return this.cloneOrder$(busEventData.data);
+            return this._cloneOrder$(busEventData.data);
           case 'update':
-            return this.updateOrder$(busEventData.data);
+            return this._updateOrder$(busEventData.data);
           case 'setDishAmount':
-            return this.setDishAmount$(busEventData.data);
+            return this._setDishAmount$(busEventData.data);
           case 'setCommentToDish':
-            return this.setDishComment$(busEventData.data);
+            return this._setDishComment$(busEventData.data);
         }
       };
       return reducer(busEvent).pipe(
@@ -182,11 +182,11 @@ export class NgOrderService {
           }
 
           if (isValue(result.message) && typeof result.message === 'object') {
-            this.requestService.emitMessageEvent(result.message);
+            this._requestService.emitMessageEvent(result.message);
           }
 
           if ('action' in result && isValue(result.action)) {
-            this.requestService.emitActionEvent(result.action);
+            this._requestService.emitActionEvent(result.action);
           }
         }),
         catchError((err: unknown) => {
@@ -196,46 +196,46 @@ export class NgOrderService {
           if (busEvent.errorCb) {
             busEvent.errorCb(err);
           }
-          if (this.config.debugMode) {
+          if (this._config.debugMode) {
             alert(JSON.stringify(err));
           }
           return of(() => {});
         }),
       );
     }),
-    mergeWith(this.userBusService.userBus$),
+    mergeWith(this._userBusService.userBus$),
   );
 
-  private _orderBusSubscription$ =
-    this.config.busSubscribeMode === 'subscribe'
+  private readonly _orderBusSubscription$ =
+    this._config.busSubscribeMode === 'subscribe'
       ? this._orderBus$.subscribe({
           next: () => {},
           error: () => {},
         })
       : undefined;
-  private _orderSubscription$ = this._order$.subscribe();
+  private readonly _orderSubscription$ = this._order$.subscribe();
 
   get orderBus$(): Observable<void | (() => void)> {
     return this._orderBus$;
   }
 
   constructor(
-    private requestService: RequestService,
-    private ngGqlStorage: NgGqlStoreService,
-    private storageWrapper: NqGqlLocalStorageWrapper,
-    private userBusService: NgGqlUserBusService,
-    private ngGqlService: NgGqlService,
-    private ngGqlUser: NgGqlUserService,
-    @Inject(NG_GQL_CONFIG) private config: NgGqlConfig,
+    private _requestService: RequestService,
+    private _storage: NgGqlStoreService,
+    private _storageWrapper: NqGqlLocalStorageWrapper,
+    private _userBusService: NgGqlUserBusService,
+    private _ngGqlService: NgGqlService,
+    private _ngGqlUser: NgGqlUserService,
+    @Inject(NG_GQL_CONFIG) private _config: NgGqlConfig,
     @Inject(PAYMENT_METHOD_FRAGMENTS)
-    private defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
+    private _defaultPaymentMethodFragments: ValuesOrBoolean<PaymentMethod>,
     @Inject(ORDER_FRAGMENTS)
-    private defaultOrderFragments: ValuesOrBoolean<Order>,
-    @Inject(DISH_FRAGMENTS) private defaultDishFragments: ValuesOrBoolean<Dish>,
+    private _defaultOrderFragments: ValuesOrBoolean<Order>,
+    @Inject(DISH_FRAGMENTS) private _defaultDishFragments: ValuesOrBoolean<Dish>,
     @Inject(ACTION_FRAGMENTS)
-    private defaultActionFragments: ValuesOrBoolean<Action>,
+    private _defaultActionFragments: ValuesOrBoolean<Action>,
     @Inject(MESSAGE_FRAGMENTS)
-    private defaultMessageFragments: ValuesOrBoolean<Message>,
+    private _defaultMessageFragments: ValuesOrBoolean<Message>,
   ) {}
 
   /**
@@ -243,11 +243,11 @@ export class NgOrderService {
    * @see this.StorageWrapper.updateStorageOrderIdToken()
    */
   updateStorageOrderIdToken(newToken: string): void {
-    this.storageWrapper.updateStorageOrderIdToken(newToken);
+    this._storageWrapper.updateStorageOrderIdToken(newToken);
   }
 
   paymentLink$(phone: string, fromPhone: string, orderId: string): Observable<any> {
-    return this.requestService
+    return this._requestService
       .customMutation$(
         'paymentLink',
         {
@@ -266,10 +266,10 @@ export class NgOrderService {
       )
       .pipe(
         catchError(error => {
-          if (this.config.debugMode) {
+          if (this._config.debugMode) {
             alert(error);
           }
-          this.requestService.emitMessageEvent({
+          this._requestService.emitMessageEvent({
             type: 'info',
             title: 'Не удалось отправить ссылку для оплаты.',
             message: error.message,
@@ -284,7 +284,7 @@ export class NgOrderService {
    * @returns Возвращает поток Observable с массивом доступных для этого заказа способов оплаты `PaymentMethod`.
    */
   getOrderPaymentMethods$(): Observable<PaymentMethod[]> {
-    return this.ngGqlStorage.paymentMethods;
+    return this._storage.paymentMethods;
   }
 
   /**
@@ -292,7 +292,7 @@ export class NgOrderService {
    * @returns Возвращает поток Observable с данными текущего заказа, оформление которого не завершено.
    */
   getOrder(): Observable<Order> {
-    return this.ngGqlStorage.order;
+    return this._storage.order;
   }
 
   /**
@@ -305,11 +305,11 @@ export class NgOrderService {
    * @param id - id загружаемого заказа.
    *  */
   loadOrder$(id: string, isShort: boolean = false): Observable<Order> {
-    return this.requestService
+    return this._requestService
       .queryAndSubscribe<Order, 'order', 'order', {orderId: string} | {shortId: string}>(
         'order',
         'order',
-        this.defaultOrderFragments,
+        this._defaultOrderFragments,
         'id',
         id
           ? {
@@ -325,7 +325,7 @@ export class NgOrderService {
           const dishesIds = order.dishes
             .map(orderDish => orderDish.dish?.id)
             .filter((dishId): dishId is string => isValue(dishId));
-          return this.ngGqlService.getDishes$(dishesIds).pipe(
+          return this._ngGqlService.getDishes$(dishesIds).pipe(
             map(dishes => {
               order.dishes.forEach(orderDish => {
                 orderDish.dish = dishes.find(dish => dish.id === orderDish.dish?.id);
@@ -623,7 +623,7 @@ export class NgOrderService {
       this._orderBusSubscription$.unsubscribe();
     }
     this._orderSubscription$.unsubscribe();
-    this.storageWrapper.destroy();
+    this._storageWrapper.destroy();
     Object.values(this)
       .filter((property): property is EventEmitter<unknown> => property instanceof EventEmitter)
       .forEach(property => property.complete());
@@ -632,10 +632,14 @@ export class NgOrderService {
   getDishRecomended(dishId: string): Observable<Dish[]> {
     return this.getOrder().pipe(
       switchMap(order =>
-        this.requestService
-          .customQuery$<Dish, 'recomendedForDish'>('recomendedForDish', this.defaultDishFragments, {
-            dishId,
-          })
+        this._requestService
+          .customQuery$<Dish, 'recomendedForDish'>(
+            'recomendedForDish',
+            this._defaultDishFragments,
+            {
+              dishId,
+            },
+          )
           .pipe(
             map(data => {
               const orderDishes = order.dishes.map(orderDish => orderDish.dish?.id);
@@ -652,10 +656,10 @@ export class NgOrderService {
   getOrderRecommended(): Observable<Dish[]> {
     return this.getOrder().pipe(
       switchMap(order =>
-        this.requestService
+        this._requestService
           .customQuery$<Dish, 'recomendedForOrder'>(
             'recomendedForOrder',
-            this.defaultDishFragments,
+            this._defaultDishFragments,
             {orderId: order.id},
           )
           .pipe(
@@ -672,13 +676,13 @@ export class NgOrderService {
   }
 
   getPickupPoints(): Observable<PickupPoint[]> {
-    return this.ngGqlStorage.pickupPoints$.pipe(
+    return this._storage.pickupPoints$.pipe(
       exhaustMap(data => (isValue(data) ? of(data) : this._getPickupPoints())),
     );
   }
 
   private _getPickupPoints(): Observable<PickupPoint[]> {
-    return this.requestService
+    return this._requestService
       .customQuery$<PickupPoint, 'pickuppoints'>('pickuppoints', {
         id: true,
         address: true,
@@ -688,17 +692,17 @@ export class NgOrderService {
       .pipe(
         map(data => {
           const result = Array.isArray(data.pickuppoints) ? data.pickuppoints : [data.pickuppoints];
-          this.ngGqlStorage.updatePickupPoints(result);
+          this._storage.updatePickupPoints(result);
           return result;
         }),
       );
   }
 
-  private getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
-    return this.requestService
+  private _getPaymentMethods$(orderId: string | undefined): Observable<PaymentMethod[]> {
+    return this._requestService
       .customQuery$<PaymentMethod, 'paymentMethod', {orderId: string}>(
         'paymentMethod',
-        this.defaultPaymentMethodFragments,
+        this._defaultPaymentMethodFragments,
         {orderId: orderId ?? ''},
         {
           fieldsTypeMap: new Map([['orderId', 'String!']]),
@@ -713,7 +717,7 @@ export class NgOrderService {
       );
   }
 
-  private getOrderCustomerName(user: User | null): string | null {
+  private _getOrderCustomerName(user: User | null): string | null {
     if (isValue(user)) {
       if (isValue(user.firstName) && isValue(user.lastName)) {
         return `${user?.firstName ?? ''} ${user?.lastName ?? ''}`;
@@ -729,14 +733,14 @@ export class NgOrderService {
     }
   }
 
-  private checkOrder$(data: CheckOrderInput): Observable<CheckResponse> {
-    return this.requestService
+  private _checkOrder$(data: CheckOrderInput): Observable<CheckResponse> {
+    return this._requestService
       .customMutation$<CheckResponse, 'checkOrder', {orderCheckout: CheckOrderInput}>(
         'checkOrder',
         {
-          order: this.defaultOrderFragments,
-          message: this.defaultMessageFragments,
-          action: this.defaultActionFragments,
+          order: this._defaultOrderFragments,
+          message: this._defaultMessageFragments,
+          action: this._defaultActionFragments,
         },
         {orderCheckout: data},
         {
@@ -746,31 +750,31 @@ export class NgOrderService {
       .pipe(map(data => data.checkOrder));
   }
 
-  private setDishAmount$(data: RemoveOrSetAmountToDish): Observable<Order> {
-    return this.requestService
+  private _setDishAmount$(data: RemoveOrSetAmountToDish): Observable<Order> {
+    return this._requestService
       .customMutation$<Order, 'orderSetDishAmount', RemoveOrSetAmountToDish>(
         'orderSetDishAmount',
-        this.defaultOrderFragments,
+        this._defaultOrderFragments,
         data,
       )
       .pipe(map(data => data.orderSetDishAmount));
   }
 
-  private setDishComment$(data: SetDishCommentInput): Observable<Order> {
-    return this.requestService
+  private _setDishComment$(data: SetDishCommentInput): Observable<Order> {
+    return this._requestService
       .customMutation$<Order, 'orderSetDishComment', SetDishCommentInput>(
         'orderSetDishComment',
-        this.defaultOrderFragments,
+        this._defaultOrderFragments,
         data,
       )
       .pipe(map(data => data.orderSetDishComment));
   }
 
-  private cloneOrder$(sendOrderData: SendOrderInput): Observable<Order> {
-    return this.requestService
+  private _cloneOrder$(sendOrderData: SendOrderInput): Observable<Order> {
+    return this._requestService
       .customMutation$<Order, 'orderClone', {orderId: string}>(
         'orderClone',
-        this.defaultOrderFragments,
+        this._defaultOrderFragments,
 
         {
           orderId: sendOrderData.orderId,
@@ -785,12 +789,12 @@ export class NgOrderService {
             if (isValue(sendOrderData.orderIdFactory)) {
               const newOrderId = sendOrderData.orderIdFactory();
               if (newOrderId) {
-                this.storageWrapper.setOrderId(newOrderId);
+                this._storageWrapper.setOrderId(newOrderId);
               } else {
-                this.storageWrapper.removeOrderId(newOrderId);
+                this._storageWrapper.removeOrderId(newOrderId);
               }
             } else {
-              this.storageWrapper.removeOrderId();
+              this._storageWrapper.removeOrderId();
             }
           }
           return data.orderClone;
@@ -798,26 +802,26 @@ export class NgOrderService {
       );
   }
 
-  private updateOrder$(order: ScanFormType<OrderForm>['value']): Observable<Order> {
-    return this.requestService
+  private _updateOrder$(order: ScanFormType<OrderForm>['value']): Observable<Order> {
+    return this._requestService
       .customMutation$<
         Order,
         'orderUpdate',
         {
           order: ScanFormType<OrderForm>['value'];
         }
-      >('orderUpdate', this.defaultOrderFragments, {order})
+      >('orderUpdate', this._defaultOrderFragments, {order})
       .pipe(map(data => data.orderUpdate));
   }
 
-  private sendOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
-    return this.requestService
+  private _sendOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
+    return this._requestService
       .customMutation$<CheckResponse, 'sendOrder', {orderId: string}>(
         'sendOrder',
         <ValuesOrBoolean<CheckResponse>>{
-          order: this.defaultOrderFragments,
-          message: this.defaultMessageFragments,
-          action: this.defaultActionFragments,
+          order: this._defaultOrderFragments,
+          message: this._defaultMessageFragments,
+          action: this._defaultActionFragments,
         },
         {
           orderId: sendOrderData.orderId,
@@ -832,12 +836,12 @@ export class NgOrderService {
             if (isValue(sendOrderData.orderIdFactory)) {
               const newOrderId = sendOrderData.orderIdFactory();
               if (newOrderId) {
-                this.storageWrapper.setOrderId(newOrderId);
+                this._storageWrapper.setOrderId(newOrderId);
               } else {
-                this.storageWrapper.removeOrderId(newOrderId);
+                this._storageWrapper.removeOrderId(newOrderId);
               }
             } else {
-              this.storageWrapper.removeOrderId();
+              this._storageWrapper.removeOrderId();
             }
           }
           return data.sendOrder;
@@ -845,32 +849,32 @@ export class NgOrderService {
       );
   }
 
-  private addDishToOrder$(data: AddToOrderInput): Observable<Order> {
-    return this.requestService
+  private _addDishToOrder$(data: AddToOrderInput): Observable<Order> {
+    return this._requestService
       .customMutation$<Order, 'orderAddDish', AddToOrderInput>(
         'orderAddDish',
-        this.defaultOrderFragments,
+        this._defaultOrderFragments,
         data,
       )
       .pipe(map(data => data.orderAddDish));
   }
 
-  private removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
-    return this.requestService
+  private _removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
+    return this._requestService
       .customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>(
         'orderRemoveDish',
-        this.defaultOrderFragments,
+        this._defaultOrderFragments,
         data,
         {requiredFields: ['orderDishId', 'id']},
       )
       .pipe(map(data => data.orderRemoveDish));
   }
 
-  private loadCurrentOrNewOrder(id: string, token: string): Observable<Order> {
+  private _loadCurrentOrNewOrder(id: string, token: string): Observable<Order> {
     return this.loadOrder$(id).pipe(
       switchMap(order => {
         if (order.state === 'ORDER') {
-          const newId = this.storageWrapper.getOrderId(token, undefined, true);
+          const newId = this._storageWrapper.getOrderId(token, undefined, true);
           return this.loadOrder$(newId);
         } else {
           return of(order);

@@ -8,8 +8,8 @@ import {NgGqlStoreService, NgGqlUserService} from './../services';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
-    private ngGqlUser: NgGqlUserService,
-    private storage: NgGqlStoreService,
+    private _ngGqlUser: NgGqlUserService,
+    private _storage: NgGqlStoreService,
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -21,14 +21,14 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return operationName === 'loadLogin' || operationName === 'loadRestorePassword'
       ? next.handle(request)
-      : this.ngGqlUser.getToken$().pipe(
+      : this._ngGqlUser.getToken$().pipe(
           exhaustMap(userToken => {
             if (isValue(userToken)) {
               const payloadEncoded = userToken.split('.')[1];
               try {
                 const payload = JSON.parse(atob(payloadEncoded));
                 if (Date.now() / 1000 > payload.exp) {
-                  this.storage.updateToken(null);
+                  this._storage.updateToken(null);
                   return next.handle(request);
                 } else {
                   return next.handle(
@@ -40,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
                   );
                 }
               } catch (error) {
-                this.storage.updateToken(null);
+                this._storage.updateToken(null);
                 return next.handle(request);
               }
             } else {

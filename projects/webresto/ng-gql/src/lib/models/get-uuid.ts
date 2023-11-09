@@ -14,12 +14,12 @@ export function generateUUID(win: (Window & typeof globalThis) | null): string {
   providedIn: 'root',
 })
 export class GenerateUUIDHelper {
-  private win: (Window & typeof globalThis) | null;
+  _win: (Window & typeof globalThis) | null;
   constructor() {
-    this.win = inject(DOCUMENT).defaultView;
+    this._win = inject(DOCUMENT).defaultView;
   }
 
   getGUID(): string {
-    return generateUUID(this.win);
+    return generateUUID(this._win);
   }
 }

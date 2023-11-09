@@ -31,18 +31,18 @@
 
 ### constructor
 
-• **new NgGqlUserService**(`requestService`, `ngGqlStorage`, `_userBus`, `defaultUserOrderHystoryFragments`, `defaultUserFragments`, `defaultuserLocationFragments`): [`NgGqlUserService`](NgGqlUserService.md)
+• **new NgGqlUserService**(`_requestService`, `_storage`, `_userBus`, `_defaultUserOrderHystoryFragments`, `_defaultUserFragments`, `_defaultuserLocationFragments`): [`NgGqlUserService`](NgGqlUserService.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `requestService` | [`RequestService`](RequestService.md) |
-| `ngGqlStorage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
+| `_requestService` | [`RequestService`](RequestService.md) |
+| `_storage` | [`NgGqlStoreService`](NgGqlStoreService.md) |
 | `_userBus` | [`NgGqlUserBusService`](NgGqlUserBusService.md) |
-| `defaultUserOrderHystoryFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)\> |
-| `defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`User`](../interfaces/User.md)\> |
-| `defaultuserLocationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`UserLocation`](../README.md#userlocation)\> |
+| `_defaultUserOrderHystoryFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`UserOrderHystory`](../interfaces/UserOrderHystory.md)\> |
+| `_defaultUserFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`User`](../interfaces/User.md)\> |
+| `_defaultuserLocationFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`UserLocation`](../README.md#userlocation)\> |
 
 #### Returns
 
