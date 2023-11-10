@@ -19,6 +19,7 @@
 - [sortOrder](BonusProgram.md#sortorder)
 - [description](BonusProgram.md#description)
 - [enable](BonusProgram.md#enable)
+- [name](BonusProgram.md#name)
 
 ## Properties
 
@@ -59,3 +60,9 @@ ___
 ### enable
 
 • **enable**: `boolean`
+
+___
+
+### name
+
+• **name**: `string`

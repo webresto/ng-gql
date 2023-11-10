@@ -127,6 +127,15 @@ export class NgOrderService {
             if (!isValue(order.customer?.phone.number)) {
               order.customer.phone.number = user.phone?.number;
             }
+
+            if (!isValue(order.spendBonus)) {
+              order.spendBonus = {
+                adapter: null,
+                amount: null,
+                bonusProgramId: null,
+                bonusProgramName: null,
+              };
+            }
           }
 
           this._storage.updateOrder(order);

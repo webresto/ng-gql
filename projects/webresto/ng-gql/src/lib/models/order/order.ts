@@ -57,10 +57,10 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
 }
 
 export interface InputSpendBonus {
-  bonusProgramId: string;
-  amount: number;
-  adapter: string;
-  bonusProgramName: string;
+  bonusProgramId: string | null;
+  amount: number | null;
+  adapter: string | null;
+  bonusProgramName: string | null;
 }
 
 export interface PromotionState {

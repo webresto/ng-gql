@@ -30,6 +30,7 @@ export interface BonusProgram extends BaseModelWithCustomData {
   sortOrder: number;
   description: string;
   enable: boolean;
+  name: string;
 }
 
 export interface UserBonusProgram extends BaseModelWithCustomData {

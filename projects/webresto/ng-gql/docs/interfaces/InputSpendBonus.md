@@ -13,22 +13,22 @@
 
 ### bonusProgramId
 
-• **bonusProgramId**: `string`
+• **bonusProgramId**: ``null`` \| `string`
 
 ___
 
 ### amount
 
-• **amount**: `number`
+• **amount**: ``null`` \| `number`
 
 ___
 
 ### adapter
 
-• **adapter**: `string`
+• **adapter**: ``null`` \| `string`
 
 ___
 
 ### bonusProgramName
 
-• **bonusProgramName**: `string`
+• **bonusProgramName**: ``null`` \| `string`
