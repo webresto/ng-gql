@@ -20,6 +20,8 @@
 - [description](BonusProgram.md#description)
 - [enable](BonusProgram.md#enable)
 - [name](BonusProgram.md#name)
+- [detailInfoLink](BonusProgram.md#detailinfolink)
+- [coveragePercentage](BonusProgram.md#coveragepercentage)
 
 ## Properties
 
@@ -66,3 +68,15 @@ ___
 ### name
 
 • **name**: `string`
+
+___
+
+### detailInfoLink
+
+• **detailInfoLink**: `string`
+
+___
+
+### coveragePercentage
+
+• **coveragePercentage**: `number`

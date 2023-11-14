@@ -90,6 +90,8 @@ export const BONUS_PROGRAM_FRAGMENTS = new InjectionToken<ValuesOrBoolean<BonusP
     factory: (): ValuesOrBoolean<BonusProgram> => ({
       id: true,
       name: true,
+      coveragePercentage: true,
+      detailInfoLink: true,
       adapter: true,
       sortOrder: true,
       description: true,

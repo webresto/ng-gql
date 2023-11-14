@@ -31,6 +31,8 @@ export interface BonusProgram extends BaseModelWithCustomData {
   description: string;
   enable: boolean;
   name: string;
+  detailInfoLink: string;
+  coveragePercentage: number;
 }
 
 export interface UserBonusProgram extends BaseModelWithCustomData {
