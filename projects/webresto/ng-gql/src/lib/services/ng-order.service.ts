@@ -487,13 +487,16 @@ export class NgOrderService {
             number: customer.phone.number,
           },
         },
-        spendBonus: options.orderForm.spendBonus,
         comment: options.orderForm.comment,
         pickupPointId: options.orderForm.pickupPoint?.id,
         locationId: options.orderForm.locationId,
         customData: options.orderForm.customData,
         date: options.orderForm.date,
       };
+
+      if (isValue(options.orderForm.spendBonus?.amount)) {
+        data.spendBonus = options.orderForm.spendBonus;
+      }
 
       this._orderBus.emit({
         event: 'check',
