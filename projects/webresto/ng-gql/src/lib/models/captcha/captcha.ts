@@ -1,4 +1,4 @@
-export interface CaptchaJob<T=string> {
+export interface CaptchaJob<T = string> {
   id: string;
   task: T;
 }

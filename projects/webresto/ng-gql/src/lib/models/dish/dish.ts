@@ -34,6 +34,10 @@ export interface Dish extends BaseModelWithCustomData {
   discountAmount: number | null;
   discountType: DiscountType | null;
   isLoading?: BehaviorSubject<boolean>;
+  seoDescription: string | null;
+  seoKeywords: string | null;
+  seoText: string | null;
+  seoTitle: string | null;
 }
 
 export interface DishTag {

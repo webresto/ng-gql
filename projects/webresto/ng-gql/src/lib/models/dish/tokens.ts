@@ -3,6 +3,7 @@ import {GROUP_MODIFIER_FRAGMENTS} from '../group-modifier';
 import {IMAGE_FRAGMENTS} from '../image';
 import {ValuesOrBoolean} from '../values-or-boolean';
 import {Dish} from './dish';
+
 /**
  * InjectionToken с объектом ValuesOrBoolean<Dish>, используемым в запросе блюд.
  */
@@ -40,6 +41,10 @@ export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>('DISH_FR
         id: true,
         dishesPlaceholder: imageFragments,
       },
+      seoDescription: true,
+      seoKeywords: true,
+      seoText: true,
+      seoTitle: true,
     };
   },
 });

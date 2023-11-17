@@ -41,6 +41,10 @@
 - [discountAmount](Dish.md#discountamount)
 - [discountType](Dish.md#discounttype)
 - [isLoading](Dish.md#isloading)
+- [seoDescription](Dish.md#seodescription)
+- [seoKeywords](Dish.md#seokeywords)
+- [seoText](Dish.md#seotext)
+- [seoTitle](Dish.md#seotitle)
 
 ## Properties
 
@@ -213,3 +217,27 @@ ___
 ### isLoading
 
 • `Optional` **isLoading**: `BehaviorSubject`\<`boolean`\>
+
+___
+
+### seoDescription
+
+• **seoDescription**: ``null`` \| `string`
+
+___
+
+### seoKeywords
+
+• **seoKeywords**: ``null`` \| `string`
+
+___
+
+### seoText
+
+• **seoText**: ``null`` \| `string`
+
+___
+
+### seoTitle
+
+• **seoTitle**: ``null`` \| `string`

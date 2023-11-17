@@ -328,8 +328,8 @@ export class RequestService {
             const final = isValue(updatedValue)
               ? updateFn(store, deepClone(updatedValue))
               : Array.isArray(store)
-              ? store
-              : <T[]>[store];
+                ? store
+                : <T[]>[store];
 
             return final;
           }),

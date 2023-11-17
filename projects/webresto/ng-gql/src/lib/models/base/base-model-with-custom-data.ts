@@ -4,6 +4,6 @@
  */
 export interface BaseModelWithCustomData {
   customData: {
-    [ key: string ]: string | any | null;
+    [key: string]: string | any | null;
   } | null;
 }

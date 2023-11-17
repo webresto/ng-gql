@@ -1,16 +1,17 @@
-import { InjectionToken } from '@angular/core';
-import { CaptchaJob } from './captcha';
-import { ValuesOrBoolean } from '../values-or-boolean';
+import {InjectionToken} from '@angular/core';
+import {ValuesOrBoolean} from '../values-or-boolean';
+import {CaptchaJob} from './captcha';
 /**
  * InjectionToken с объектом ValuesOrBoolean<CaptchaJob>.
  */
-export const CAPTCHA_GET_JOB_FRAGMENTS = new InjectionToken<
-  ValuesOrBoolean<CaptchaJob>
->('CAPTCHA_GET_JOB_FRAGMENTS', {
-  factory: () => {
-    return {
-      id: true,
-      task: true,
-    };
+export const CAPTCHA_GET_JOB_FRAGMENTS = new InjectionToken<ValuesOrBoolean<CaptchaJob>>(
+  'CAPTCHA_GET_JOB_FRAGMENTS',
+  {
+    factory: (): ValuesOrBoolean<CaptchaJob> => {
+      return {
+        id: true,
+        task: true,
+      };
+    },
   },
-});
+);

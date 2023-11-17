@@ -32,8 +32,8 @@ export function groupModifierFormValidator(control: AbstractControl): Validation
         groupAmount > value.maxAmount
       ) {
         return {
-          [value.group
-            .name]: `Можно добавить не более ${value.maxAmount} доп. опций. в этой группе опций.`,
+          [value.group.name]:
+            `Можно добавить не более ${value.maxAmount} доп. опций. в этой группе опций.`,
         };
       } else {
         return null;

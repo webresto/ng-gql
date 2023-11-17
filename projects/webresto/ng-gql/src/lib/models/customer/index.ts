@@ -1,2 +1,2 @@
-export { Customer, Phone, PhoneKnowledge, CheckPhoneCodeInput, CheckPhoneResponse } from './customer';
+export {CheckPhoneCodeInput, CheckPhoneResponse, Customer, Phone, PhoneKnowledge} from './customer';
 export * from './tokens';
