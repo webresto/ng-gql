@@ -12,7 +12,7 @@ export interface Dish extends BaseModelWithCustomData {
   slug: string;
   description: string;
   price: number;
-  oldPrice: number | null;
+  salePrice: number | null;
   weight: number;
   balance: number;
   sortOrder: number;

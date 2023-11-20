@@ -41,6 +41,7 @@ export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>('DISH_FR
         id: true,
         dishesPlaceholder: imageFragments,
       },
+      salePrice: true,
       seoDescription: true,
       seoKeywords: true,
       seoText: true,

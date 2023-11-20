@@ -19,7 +19,7 @@ export interface Modifier<T extends Dish = Dish> {
     | 'additionalInfo'
     | 'name'
     | 'description'
-    | 'oldPrice'
+    | 'salePrice'
     | 'price'
     | 'weight'
     | 'balance'

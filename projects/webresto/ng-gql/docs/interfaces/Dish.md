@@ -19,7 +19,7 @@
 - [slug](Dish.md#slug)
 - [description](Dish.md#description)
 - [price](Dish.md#price)
-- [oldPrice](Dish.md#oldprice)
+- [salePrice](Dish.md#saleprice)
 - [weight](Dish.md#weight)
 - [balance](Dish.md#balance)
 - [sortOrder](Dish.md#sortorder)
@@ -88,9 +88,9 @@ ___
 
 ___
 
-### oldPrice
+### salePrice
 
-• **oldPrice**: ``null`` \| `number`
+• **salePrice**: ``null`` \| `number`
 
 ___
 
