@@ -54,6 +54,7 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   pickupPoint: PickupPoint | null;
   spendBonus: InputSpendBonus | null;
   bonusesTotal: number;
+  promotionUnorderable: boolean;
 }
 
 export interface InputSpendBonus {

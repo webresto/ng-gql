@@ -51,6 +51,7 @@
 - [pickupPoint](Order.md#pickuppoint)
 - [spendBonus](Order.md#spendbonus)
 - [bonusesTotal](Order.md#bonusestotal)
+- [promotionUnorderable](Order.md#promotionunorderable)
 
 ## Properties
 
@@ -247,3 +248,9 @@ ___
 ### bonusesTotal
 
 • **bonusesTotal**: `number`
+
+___
+
+### promotionUnorderable
+
+• **promotionUnorderable**: `boolean`
