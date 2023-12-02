@@ -1,11 +1,9 @@
-import type {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import type {BehaviorSubject} from 'rxjs';
 import type {
   AddToOrderInput,
   CheckOrderInput,
   CheckResponse,
   Order,
-  OrderForm,
   RemoveOrSetAmountToDish,
   SetDishCommentInput,
 } from './order/order';
@@ -53,7 +51,7 @@ export interface CartBusEventAdd extends CartBusEventBase<Order> {
 export interface CartBusEventUpdate extends CartBusEventBase<Order> {
   event: 'update';
   /** Данные для операции */
-  data: ScanFormType<OrderForm>['value'];
+  data: UpdateOrderInput;
 }
 
 /**
@@ -105,6 +103,16 @@ export interface CartBusEventCheck extends CartBusEventBase<CheckResponse> {
 export interface SendOrderInput {
   orderId: string;
   orderIdFactory?: () => string | undefined;
+}
+
+/**
+ * @interface UpdateOrderInput
+ * Данные для обновления данных в заказе
+ */
+export interface UpdateOrderInput {
+  id: Order['id'];
+  trifleFrom?: Order['trifleFrom'];
+  promotionCodeString?: Order['promotionCodeString'];
 }
 
 /**

@@ -32,7 +32,7 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   message: string | null;
   deliveryCost: number;
   totalWeight: number;
-  trifleFrom: number;
+  trifleFrom: number | null;
   total: number;
   orderTotal: number;
   discountTotal: number;
@@ -55,6 +55,10 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   spendBonus: InputSpendBonus | null;
   bonusesTotal: number;
   promotionUnorderable: boolean;
+  promotionCodeString: string | null;
+  promotionFlatDiscount: number | null;
+  promotionDelivery: Record<string, any> | null;
+  promotionCodeCheckValidTill: string | null;
 }
 
 export interface InputSpendBonus {

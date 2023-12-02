@@ -52,6 +52,10 @@
 - [spendBonus](Order.md#spendbonus)
 - [bonusesTotal](Order.md#bonusestotal)
 - [promotionUnorderable](Order.md#promotionunorderable)
+- [promotionCodeString](Order.md#promotioncodestring)
+- [promotionFlatDiscount](Order.md#promotionflatdiscount)
+- [promotionDelivery](Order.md#promotiondelivery)
+- [promotionCodeCheckValidTill](Order.md#promotioncodecheckvalidtill)
 
 ## Properties
 
@@ -121,7 +125,7 @@ ___
 
 ### trifleFrom
 
-• **trifleFrom**: `number`
+• **trifleFrom**: ``null`` \| `number`
 
 ___
 
@@ -254,3 +258,27 @@ ___
 ### promotionUnorderable
 
 • **promotionUnorderable**: `boolean`
+
+___
+
+### promotionCodeString
+
+• **promotionCodeString**: ``null`` \| `string`
+
+___
+
+### promotionFlatDiscount
+
+• **promotionFlatDiscount**: ``null`` \| `number`
+
+___
+
+### promotionDelivery
+
+• **promotionDelivery**: ``null`` \| `Record`\<`string`, `any`\>
+
+___
+
+### promotionCodeCheckValidTill
+
+• **promotionCodeCheckValidTill**: ``null`` \| `string`

@@ -47,6 +47,7 @@
 - [NavBarMenu](interfaces/NavBarMenu.md)
 - [NgGqlConfig](interfaces/NgGqlConfig.md)
 - [SendOrderInput](interfaces/SendOrderInput.md)
+- [UpdateOrderInput](interfaces/UpdateOrderInput.md)
 - [OrderDish](interfaces/OrderDish.md)
 - [Order](interfaces/Order.md)
 - [InputSpendBonus](interfaces/InputSpendBonus.md)

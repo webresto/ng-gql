@@ -34,6 +34,7 @@ import type {
   RemoveOrSetAmountToDish,
   SendOrderInput,
   SetDishCommentInput,
+  UpdateOrderInput,
   User,
   ValuesOrBoolean,
 } from '../models';
@@ -441,13 +442,21 @@ export class NgOrderService {
     successCb?: (order: Order) => void;
     errorCb?: (err: unknown) => void;
   }): void {
-    this._orderBus.emit({
-      event: 'update',
-      data: options.data,
-      isLoading: options.loading,
-      errorCb: options.errorCb,
-      successCb: options.successCb,
-    });
+    if (isValue(options.data.id)) {
+      const data: UpdateOrderInput = {
+        id: options.data.id,
+        promotionCodeString: options.data.promotionCodeString,
+        trifleFrom: options.data.trifleFrom,
+      };
+
+      this._orderBus.emit({
+        event: 'update',
+        data,
+        isLoading: options.loading,
+        errorCb: options.errorCb,
+        successCb: options.successCb,
+      });
+    }
   }
 
   /**
@@ -814,15 +823,15 @@ export class NgOrderService {
       );
   }
 
-  private _updateOrder$(order: ScanFormType<OrderForm>['value']): Observable<Order> {
+  private _updateOrder$(data: UpdateOrderInput): Observable<Order> {
     return this._requestService
       .customMutation$<
         Order,
         'orderUpdate',
         {
-          order: ScanFormType<OrderForm>['value'];
+          order: UpdateOrderInput;
         }
-      >('orderUpdate', this._defaultOrderFragments, {order})
+      >('orderUpdate', this._defaultOrderFragments, {order: data})
       .pipe(map(data => data.orderUpdate));
   }
 
