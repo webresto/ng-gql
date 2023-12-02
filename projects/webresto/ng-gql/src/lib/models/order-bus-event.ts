@@ -111,6 +111,7 @@ export interface SendOrderInput {
  */
 export interface UpdateOrderInput {
   id: Order['id'];
+  comment?: Order['comment'];
   trifleFrom?: Order['trifleFrom'];
   promotionCodeString?: Order['promotionCodeString'];
 }

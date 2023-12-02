@@ -831,7 +831,14 @@ export class NgOrderService {
         {
           order: UpdateOrderInput;
         }
-      >('orderUpdate', this._defaultOrderFragments, {order: data})
+      >(
+        'orderUpdate',
+        this._defaultOrderFragments,
+        {order: data},
+        {
+          fieldsTypeMap: new Map([['order', 'InputOrderUpdate']]),
+        },
+      )
       .pipe(map(data => data.orderUpdate));
   }
 

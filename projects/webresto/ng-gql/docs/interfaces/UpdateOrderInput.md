@@ -8,6 +8,7 @@ UpdateOrderInput
 ### Properties
 
 - [id](UpdateOrderInput.md#id)
+- [comment](UpdateOrderInput.md#comment)
 - [trifleFrom](UpdateOrderInput.md#triflefrom)
 - [promotionCodeString](UpdateOrderInput.md#promotioncodestring)
 
@@ -16,6 +17,12 @@ UpdateOrderInput
 ### id
 
 • **id**: `string`
+
+___
+
+### comment
+
+• `Optional` **comment**: `string`
 
 ___
 

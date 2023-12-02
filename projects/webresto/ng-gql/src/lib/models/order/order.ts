@@ -133,7 +133,6 @@ export interface CheckResponse {
 
 export interface OrderAdditionalFields {
   locationId?: string | undefined;
-  promocode?: string | undefined;
 }
 
 export type OrderForm = Order & OrderAdditionalFields;
