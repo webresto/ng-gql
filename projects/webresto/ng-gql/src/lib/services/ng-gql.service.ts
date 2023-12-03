@@ -124,6 +124,7 @@ export class NgGqlService {
           id: group.id,
           name: group.name,
           icon: group.icon,
+          slug: group.slug,
           link: [[`/menu/${group.slug}`], undefined],
         }));
 

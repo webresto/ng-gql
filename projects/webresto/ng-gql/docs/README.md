@@ -210,7 +210,7 @@ ___
 
 ### NavBarLinkItem
 
-Ƭ **NavBarLinkItem**: `Omit`\<[`NavbarMenuLink`](README.md#navbarmenulink), ``"slug"``\> & \{ `link`: [`string`[], `string` \| `undefined`]  }
+Ƭ **NavBarLinkItem**: [`NavbarMenuLink`](README.md#navbarmenulink) & \{ `link`: [`string`[], `string` \| `undefined`]  }
 
 ___
 
