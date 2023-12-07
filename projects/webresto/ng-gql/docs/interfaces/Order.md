@@ -53,9 +53,6 @@
 - [bonusesTotal](Order.md#bonusestotal)
 - [promotionUnorderable](Order.md#promotionunorderable)
 - [promotionCodeString](Order.md#promotioncodestring)
-- [promotionFlatDiscount](Order.md#promotionflatdiscount)
-- [promotionDelivery](Order.md#promotiondelivery)
-- [promotionCodeCheckValidTill](Order.md#promotioncodecheckvalidtill)
 
 ## Properties
 
@@ -264,21 +261,3 @@ ___
 ### promotionCodeString
 
 • **promotionCodeString**: ``null`` \| `string`
-
-___
-
-### promotionFlatDiscount
-
-• **promotionFlatDiscount**: ``null`` \| `number`
-
-___
-
-### promotionDelivery
-
-• **promotionDelivery**: ``null`` \| `Record`\<`string`, `any`\>
-
-___
-
-### promotionCodeCheckValidTill
-
-• **promotionCodeCheckValidTill**: ``null`` \| `string`

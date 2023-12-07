@@ -56,9 +56,6 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   bonusesTotal: number;
   promotionUnorderable: boolean;
   promotionCodeString: string | null;
-  promotionFlatDiscount: number | null;
-  promotionDelivery: Record<string, any> | null;
-  promotionCodeCheckValidTill: string | null;
 }
 
 export interface InputSpendBonus {
