@@ -410,12 +410,18 @@ export class NgGqlService {
         return isValue(item)
           ? createObservable(item.menu)
           : this._requestService
-              .customQuery$<NavbarMenuLink, 'menu'>('menu', {
-                name: true,
-                slug: true,
-                id: true,
-                icon: true,
-              })
+              .customQuery$<NavbarMenuLink, 'menu'>(
+                'menu',
+                {
+                  name: true,
+                  slug: true,
+                  id: true,
+                  icon: true,
+                },
+                {
+                  concept,
+                },
+              )
               .pipe(
                 map(data => {
                   const rawResult = Array.isArray(data.menu) ? data.menu : [data.menu];
