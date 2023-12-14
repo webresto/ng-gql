@@ -447,6 +447,10 @@ export class NgOrderService {
         id: options.data.id,
         promotionCodeString: options.data.promotionCodeString,
         trifleFrom: options.data.trifleFrom,
+        comment: options.data.comment,
+        date: options.data.date,
+        isSelfService: options.data.selfService,
+        paymentMethodId: options.data.paymentMethod?.id,
       };
 
       this._orderBus.emit({

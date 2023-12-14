@@ -7,6 +7,7 @@ import type {
   RemoveOrSetAmountToDish,
   SetDishCommentInput,
 } from './order/order';
+import {PaymentMethod} from './payment-method';
 
 /**
  * @alias @event CartBusEvent
@@ -114,6 +115,10 @@ export interface UpdateOrderInput {
   comment?: Order['comment'];
   trifleFrom?: Order['trifleFrom'];
   promotionCodeString?: Order['promotionCodeString'];
+
+  date?: Order['date'];
+  isSelfService?: Order['selfService'];
+  paymentMethodId?: PaymentMethod['id'];
 }
 
 /**
