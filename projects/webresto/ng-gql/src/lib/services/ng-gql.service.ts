@@ -398,14 +398,14 @@ export class NgGqlService {
   }
 
   private _loadNavBarMenu(
-    concept?: string,
+    concept: string = 'origin',
     topLevelGroupId?: string,
   ): Observable<NavbarMenuLink[]> {
     this._pendingLoadNavBar.next(true);
     return this._storage.navBarMenus.pipe(
       exhaustMap(items => {
         const item = items.find(
-          element => element.concept === concept && element.topLevelGroupId === topLevelGroupId,
+          element => element.concept === concept || element.topLevelGroupId === topLevelGroupId,
         );
         return isValue(item)
           ? createObservable(item.menu)
