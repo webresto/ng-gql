@@ -22,6 +22,13 @@ import {PickupPoint} from '../pickupPoint';
  */
 export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER';
 
+interface OrderDeliveryState {
+  deliveryTimeMinutes: number
+  allowed: boolean
+  cost: number
+  message: string
+}
+
 export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   id: string;
   shortId: string;
@@ -56,6 +63,7 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   bonusesTotal: number;
   promotionUnorderable: boolean;
   promotionCodeString: string | null;
+  delivery: OrderDeliveryState  | null;
 }
 
 export interface InputSpendBonus {

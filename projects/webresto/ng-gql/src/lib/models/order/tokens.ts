@@ -55,6 +55,12 @@ export const ORDER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Order>>('ORDER
         message: true,
         state: true,
       },
+      delivery: {
+        deliveryTimeMinutes: true,
+        allowed: true,
+        cost: true,
+        message: true
+      },
       promotionUnorderable: true,
       promotionCodeString: true,
       orderDate: true,
