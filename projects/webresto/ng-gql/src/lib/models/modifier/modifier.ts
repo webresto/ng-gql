@@ -16,6 +16,7 @@ export interface Modifier<T extends Dish = Dish> {
   dish: Pick<
     T,
     | 'id'
+    | 'rmsId'
     | 'additionalInfo'
     | 'name'
     | 'description'

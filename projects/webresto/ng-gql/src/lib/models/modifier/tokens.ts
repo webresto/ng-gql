@@ -18,6 +18,7 @@ export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
         defaultAmount: true,
         dish: {
           id: true,
+          rmsId: true,
           name: true,
           description: true,
           price: true,

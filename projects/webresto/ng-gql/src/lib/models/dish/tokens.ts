@@ -14,6 +14,7 @@ export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>('DISH_FR
     return {
       customData: true,
       id: true,
+      rmsId: true,
       name: true,
       slug: true,
       description: true,
