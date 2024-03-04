@@ -14,6 +14,7 @@ export const ORDER_DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<OrderDish
       const dishFragments = inject(DISH_FRAGMENTS);
       return {
         id: true,
+        rmsId: true,
         amount: true,
         dish: {
           id: true,
