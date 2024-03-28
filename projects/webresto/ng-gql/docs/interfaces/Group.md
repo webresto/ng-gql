@@ -8,6 +8,7 @@
 - [description](Group.md#description)
 - [name](Group.md#name)
 - [slug](Group.md#slug)
+- [concept](Group.md#concept)
 - [icon](Group.md#icon)
 - [visible](Group.md#visible)
 - [sortOrder](Group.md#sortorder)
@@ -41,6 +42,12 @@ ___
 ### slug
 
 • `Optional` **slug**: `string`
+
+___
+
+### concept
+
+• `Optional` **concept**: `string`
 
 ___
 

@@ -6,6 +6,7 @@ export interface Group {
   description: string;
   name: string;
   slug?: string;
+  concept?: string;
   icon?: string;
   visible: boolean;
   sortOrder: number;

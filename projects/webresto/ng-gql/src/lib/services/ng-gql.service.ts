@@ -155,7 +155,7 @@ export class NgGqlService {
 
     return this._storage.groups.pipe(
       exhaustMap(groups => {
-        const group = groups.find(g => g.slug === slug);
+        const group = groups.find(g => g.slug === slug && g.concept === concept);
         if (isValue(group)) {
           return createObservable(group);
         } else {
@@ -259,12 +259,11 @@ export class NgGqlService {
     };
     const vOb = customvOb ? {...phonevOb, ...customvOb} : phonevOb;
     return this._requestService
-      .customQuery$<PhoneKnowledge, 'isKnownPhone', {phone: Phone}>(
+      .customQuery$<
+        PhoneKnowledge,
         'isKnownPhone',
-        vOb,
-        {phone},
-        {fieldsTypeMap: new Map([['phone', 'InputPhone!']])},
-      )
+        {phone: Phone}
+      >('isKnownPhone', vOb, {phone}, {fieldsTypeMap: new Map([['phone', 'InputPhone!']])})
       .pipe(
         map(data => (Array.isArray(data.isKnownPhone) ? data.isKnownPhone : [data.isKnownPhone])),
       );

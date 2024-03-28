@@ -7,7 +7,7 @@ import {Group} from './group';
  * InjectionToken с объектом ValuesOrBoolean<Group>, используемым в запросе Group с сервера.
  */
 export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>('GROUP_FRAGMENTS', {
-  factory: () => {
+  factory: (): ValuesOrBoolean<Group> => {
     const imageFragments = inject(IMAGE_FRAGMENTS);
     const groupFragment: ValuesOrBoolean<Group> = {
       id: true,
@@ -16,6 +16,7 @@ export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>('GROUP
       sortOrder: true,
       visible: true,
       slug: true,
+      concept: true,
       discount: true,
       dishesPlaceholder: imageFragments,
       dishes: {
