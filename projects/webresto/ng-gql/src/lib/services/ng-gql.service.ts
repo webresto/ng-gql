@@ -149,7 +149,7 @@ export class NgGqlService {
    * Чтобы обновлять значение в `initGroupSlug$` используется метод `updateInitGroupSlug`
    * @returns
    */
-  getGroup(slug: string, concept: string = 'origin'): Observable<Group> {
+  getGroup(slug: string, concept: string = 'origin'): Observable<Group | null> {
     const getIdsFromPartialDish = (dishes?: Array<Partial<Group>>): string[] =>
       dishes?.map(dish => dish.id).filter((id): id is string => isValue(id)) ?? [];
 
@@ -170,13 +170,17 @@ export class NgGqlService {
               map(data => {
                 const group = deepClone(Array.isArray(data.group) ? data.group[0] : data.group);
 
-                group.dishesIds = getIdsFromPartialDish(group.dishes);
-                group.childGroups.forEach(childGroup => {
-                  childGroup.dishesIds = getIdsFromPartialDish(childGroup.dishes);
-                });
-                groups.push(group);
-                this._storage.updateMenuGroups(groups);
-                return group;
+                if (isValue(group)) {
+                  group.dishesIds = getIdsFromPartialDish(group.dishes);
+                  group.childGroups.forEach(childGroup => {
+                    childGroup.dishesIds = getIdsFromPartialDish(childGroup.dishes);
+                  });
+                  groups.push(group);
+                  this._storage.updateMenuGroups(groups);
+                  return group;
+                } else {
+                  return null;
+                }
               }),
             );
         }

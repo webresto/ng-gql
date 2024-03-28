@@ -25,11 +25,11 @@ CartBusEventAdd
 
 • `Optional` **successCb**: (`result`: [`Order`](Order.md)\<[`Dish`](Dish.md)\>) => `void`
 
+Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
+
 #### Type declaration
 
 ▸ (`result`): `void`
-
-Пользовательский callback, который дополнительно будет выполнен в случае успешной операции
 
 ##### Parameters
 
@@ -51,11 +51,11 @@ ___
 
 • `Optional` **errorCb**: (`err`: `unknown`) => `void`
 
+Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
+
 #### Type declaration
 
 ▸ (`err`): `void`
-
-Пользовательский callback, будет который дополнительно  выполнен в случае успешной операции
 
 ##### Parameters
 

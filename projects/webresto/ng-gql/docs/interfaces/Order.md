@@ -53,6 +53,7 @@
 - [bonusesTotal](Order.md#bonusestotal)
 - [promotionUnorderable](Order.md#promotionunorderable)
 - [promotionCodeString](Order.md#promotioncodestring)
+- [delivery](Order.md#delivery)
 
 ## Properties
 
@@ -261,3 +262,9 @@ ___
 ### promotionCodeString
 
 • **promotionCodeString**: ``null`` \| `string`
+
+___
+
+### delivery
+
+• **delivery**: ``null`` \| `OrderDeliveryState`

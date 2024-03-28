@@ -142,7 +142,7 @@ ___
 
 ### getGroup
 
-▸ **getGroup**(`slug`, `concept?`): `Observable`\<[`Group`](../interfaces/Group.md)\>
+▸ **getGroup**(`slug`, `concept?`): `Observable`\<``null`` \| [`Group`](../interfaces/Group.md)\>
 
 Внутренний метод, используемый для загрузки основного - "корневого" списка групп.
 
@@ -155,7 +155,7 @@ ___
 
 #### Returns
 
-`Observable`\<[`Group`](../interfaces/Group.md)\>
+`Observable`\<``null`` \| [`Group`](../interfaces/Group.md)\>
 
 ___
 

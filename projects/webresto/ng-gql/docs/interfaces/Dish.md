@@ -15,6 +15,7 @@
 
 - [customData](Dish.md#customdata)
 - [id](Dish.md#id)
+- [rmsId](Dish.md#rmsid)
 - [name](Dish.md#name)
 - [slug](Dish.md#slug)
 - [description](Dish.md#description)
@@ -61,6 +62,12 @@ ___
 ### id
 
 • **id**: `string`
+
+___
+
+### rmsId
+
+• **rmsId**: `string`
 
 ___
 
