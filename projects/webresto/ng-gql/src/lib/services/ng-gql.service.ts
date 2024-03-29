@@ -408,7 +408,7 @@ export class NgGqlService {
     return this._storage.navBarMenus.pipe(
       exhaustMap(items => {
         const item = items.find(
-          element => element.concept === concept || element.topLevelGroupId === topLevelGroupId,
+          element => element.concept === concept && element.topLevelGroupId === topLevelGroupId,
         );
         return isValue(item)
           ? createObservable(item.menu)
