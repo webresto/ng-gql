@@ -658,8 +658,8 @@ export class NgOrderService {
     return this.getOrder().pipe(
       switchMap(order =>
         this._requestService
-          .customQuery$<Dish, 'recomendedForDish'>(
-            'recomendedForDish',
+          .customQuery$<Dish, 'recommendedForDish'>(
+            'recommendedForDish',
             this._defaultDishFragments,
             {
               dishId,
@@ -668,9 +668,9 @@ export class NgOrderService {
           .pipe(
             map(data => {
               const orderDishes = order.dishes.map(orderDish => orderDish.dish?.id);
-              const array = Array.isArray(data.recomendedForDish)
-                ? data.recomendedForDish
-                : [data.recomendedForDish];
+              const array = Array.isArray(data.recommendedForDish)
+                ? data.recommendedForDish
+                : [data.recommendedForDish];
               return array.filter(dish => !orderDishes.includes(dish.id));
             }),
           ),
@@ -682,17 +682,16 @@ export class NgOrderService {
     return this.getOrder().pipe(
       switchMap(order =>
         this._requestService
-          .customQuery$<Dish, 'recomendedForOrder'>(
-            'recomendedForOrder',
-            this._defaultDishFragments,
-            {orderId: order.id},
-          )
+          .customQuery$<
+            Dish,
+            'recommendedForOrder'
+          >('recommendedForOrder', this._defaultDishFragments, {orderId: order.id})
           .pipe(
             map(data => {
               const orderDishes = order.dishes.map(orderDish => orderDish.dish?.id);
-              const array = Array.isArray(data.recomendedForOrder)
-                ? data.recomendedForOrder
-                : [data.recomendedForOrder];
+              const array = Array.isArray(data.recommendedForOrder)
+                ? data.recommendedForOrder
+                : [data.recommendedForOrder];
               return array.filter(dish => !orderDishes.includes(dish.id));
             }),
           ),
@@ -777,21 +776,21 @@ export class NgOrderService {
 
   private _setDishAmount$(data: RemoveOrSetAmountToDish): Observable<Order> {
     return this._requestService
-      .customMutation$<Order, 'orderSetDishAmount', RemoveOrSetAmountToDish>(
+      .customMutation$<
+        Order,
         'orderSetDishAmount',
-        this._defaultOrderFragments,
-        data,
-      )
+        RemoveOrSetAmountToDish
+      >('orderSetDishAmount', this._defaultOrderFragments, data)
       .pipe(map(data => data.orderSetDishAmount));
   }
 
   private _setDishComment$(data: SetDishCommentInput): Observable<Order> {
     return this._requestService
-      .customMutation$<Order, 'orderSetDishComment', SetDishCommentInput>(
+      .customMutation$<
+        Order,
         'orderSetDishComment',
-        this._defaultOrderFragments,
-        data,
-      )
+        SetDishCommentInput
+      >('orderSetDishComment', this._defaultOrderFragments, data)
       .pipe(map(data => data.orderSetDishComment));
   }
 
@@ -883,22 +882,21 @@ export class NgOrderService {
 
   private _addDishToOrder$(data: AddToOrderInput): Observable<Order> {
     return this._requestService
-      .customMutation$<Order, 'orderAddDish', AddToOrderInput>(
+      .customMutation$<
+        Order,
         'orderAddDish',
-        this._defaultOrderFragments,
-        data,
-      )
+        AddToOrderInput
+      >('orderAddDish', this._defaultOrderFragments, data)
       .pipe(map(data => data.orderAddDish));
   }
 
   private _removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
     return this._requestService
-      .customMutation$<Order, 'orderRemoveDish', RemoveOrSetAmountToDish>(
+      .customMutation$<
+        Order,
         'orderRemoveDish',
-        this._defaultOrderFragments,
-        data,
-        {requiredFields: ['orderDishId', 'id']},
-      )
+        RemoveOrSetAmountToDish
+      >('orderRemoveDish', this._defaultOrderFragments, data, {requiredFields: ['orderDishId', 'id']})
       .pipe(map(data => data.orderRemoveDish));
   }
 

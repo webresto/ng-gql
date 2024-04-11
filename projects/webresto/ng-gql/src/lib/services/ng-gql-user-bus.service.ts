@@ -179,11 +179,11 @@ export class NgGqlUserBusService {
     data: CaptchaJobPayload,
   ): Observable<CaptchaJob<T>> {
     return this._requestService
-      .customQuery$<CaptchaJob<T>, 'captchaGetJob', CaptchaJobPayload>(
+      .customQuery$<
+        CaptchaJob<T>,
         'captchaGetJob',
-        this._defaultCaptchaGetJobFragments,
-        data,
-      )
+        CaptchaJobPayload
+      >('captchaGetJob', this._defaultCaptchaGetJobFragments, data)
       .pipe(
         map(data => {
           const job: CaptchaJob<T> = deepClone(
