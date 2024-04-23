@@ -24,4 +24,4 @@ ___
 
 ### action
 
-• **action**: ``null`` \| `Partial`\<[`Action`](Action.md)\<`any`\>\>
+• **action**: ``null`` \| `Partial`\<[`Action`](../README.md#action)\>

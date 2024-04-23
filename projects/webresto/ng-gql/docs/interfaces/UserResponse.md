@@ -28,7 +28,7 @@ ___
 
 ### action
 
-• **action**: [`Action`](Action.md)\<`any`\>
+• **action**: [`Action`](../README.md#action)
 
 #### Inherited from
 

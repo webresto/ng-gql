@@ -29,8 +29,9 @@
 - [CheckPhoneResponse](interfaces/CheckPhoneResponse.md)
 - [Dish](interfaces/Dish.md)
 - [DishTag](interfaces/DishTag.md)
+- [DialogBoxButton](interfaces/DialogBoxButton.md)
+- [DialogBoxProduct](interfaces/DialogBoxProduct.md)
 - [Message](interfaces/Message.md)
-- [Action](interfaces/Action.md)
 - [GroupModifier](interfaces/GroupModifier.md)
 - [Group](interfaces/Group.md)
 - [Image](interfaces/Image.md)
@@ -84,6 +85,8 @@
 ### Type Aliases
 
 - [DiscountType](README.md#discounttype)
+- [DialogBoxConfig](README.md#dialogboxconfig)
+- [Action](README.md#action)
 - [VCriteria](README.md#vcriteria)
 - [GQLRequestVariables](README.md#gqlrequestvariables)
 - [PartialGroupNullable](README.md#partialgroupnullable)
@@ -161,6 +164,18 @@
 ### DiscountType
 
 Ƭ **DiscountType**: ``"FIXED"`` \| ``"PERCENT"``
+
+___
+
+### DialogBoxConfig
+
+Ƭ **DialogBoxConfig**: [`DialogBoxButton`](interfaces/DialogBoxButton.md) \| [`DialogBoxProduct`](interfaces/DialogBoxProduct.md)
+
+___
+
+### Action
+
+Ƭ **Action**: \{ `id`: `string` ; `type`: `string` ; `data`: `any`  } \| \{ `id`: `string` ; `type`: ``"Redirect"`` ; `data`: \{ `link`: `string`  }  } \| \{ `id`: `string` ; `type`: ``"dialog-box"`` ; `data`: \{ `askId`: `string` ; `answerId`: `string` \| ``null`` ; `deviceId`: `string` ; `config`: [`DialogBoxConfig`](README.md#dialogboxconfig)  }  }
 
 ___
 
@@ -362,7 +377,7 @@ ___
 
 ### ACTION\_FRAGMENTS
 
-• `Const` **ACTION\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Action`](interfaces/Action.md)\<`any`\>\>\>
+• `Const` **ACTION\_FRAGMENTS**: `InjectionToken`\<[`ValuesOrBoolean`](README.md#valuesorboolean)\<[`Action`](README.md#action)\>\>
 
 InjectionToken с объектом ValuesOrBoolean<Action>, используемым в запросе Action с сервера.
 

@@ -89,7 +89,7 @@ export class RequestService {
     return this._messages$;
   }
 
-  getActionEmitter(): Observable<Partial<Action<any>>> {
+  getActionEmitter(): Observable<Partial<Action>> {
     return this._actions$;
   }
 

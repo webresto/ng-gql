@@ -28,7 +28,7 @@
 | Name | Type |
 | :------ | :------ |
 | `_apollo` | [`ApolloService`](ApolloService.md) |
-| `_defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
+| `_defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../README.md#action)\> |
 | `_defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Message`](../interfaces/Message.md)\> |
 
 #### Returns
@@ -61,7 +61,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `action` | `Partial`\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
+| `action` | `Partial`\<[`Action`](../README.md#action)\> |
 
 #### Returns
 
@@ -81,11 +81,11 @@ ___
 
 ### getActionEmitter
 
-▸ **getActionEmitter**(): `Observable`\<`Partial`\<[`Action`](../interfaces/Action.md)\<`any`\>\>\>
+▸ **getActionEmitter**(): `Observable`\<`Partial`\<[`Action`](../README.md#action)\>\>
 
 #### Returns
 
-`Observable`\<`Partial`\<[`Action`](../interfaces/Action.md)\<`any`\>\>\>
+`Observable`\<`Partial`\<[`Action`](../README.md#action)\>\>
 
 ___
 

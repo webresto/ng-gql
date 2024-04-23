@@ -50,7 +50,7 @@
 | `_defaultPaymentMethodFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`PaymentMethod`](../interfaces/PaymentMethod.md)\> |
 | `_defaultOrderFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Order`](../interfaces/Order.md)\<[`Dish`](../interfaces/Dish.md)\>\> |
 | `_defaultDishFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Dish`](../interfaces/Dish.md)\> |
-| `_defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../interfaces/Action.md)\<`any`\>\> |
+| `_defaultActionFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Action`](../README.md#action)\> |
 | `_defaultMessageFragments` | [`ValuesOrBoolean`](../README.md#valuesorboolean)\<[`Message`](../interfaces/Message.md)\> |
 
 #### Returns

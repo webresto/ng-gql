@@ -1,3 +1,5 @@
+import {DialogBoxConfig} from './dialog-box';
+
 export class EventMessage {
   type: string;
   title: string;
@@ -17,8 +19,26 @@ export interface Message {
   message: string;
 }
 
-export interface Action<T = any> {
-  id: string;
-  type: string;
-  data: T;
-}
+export type Action =
+  | {
+      id: string;
+      type: string;
+      data: any;
+    }
+  | {
+      id: string;
+      type: 'Redirect';
+      data: {
+        link: string;
+      };
+    }
+  | {
+      id: string;
+      type: 'dialog-box';
+      data: {
+        askId: string;
+        answerId: string | null;
+        deviceId: string;
+        config: DialogBoxConfig;
+      };
+    };
