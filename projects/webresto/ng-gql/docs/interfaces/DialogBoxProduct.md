@@ -109,7 +109,7 @@ ___
 
 ### options
 
-• **options**: `DialogOptionProduct`[]
+• **options**: [`DialogOptionProduct`](DialogOptionProduct.md)[]
 
 ___
 

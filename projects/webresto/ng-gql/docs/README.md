@@ -31,6 +31,8 @@
 - [DishTag](interfaces/DishTag.md)
 - [DialogBoxButton](interfaces/DialogBoxButton.md)
 - [DialogBoxProduct](interfaces/DialogBoxProduct.md)
+- [DialogOptionProduct](interfaces/DialogOptionProduct.md)
+- [DialogOptionButton](interfaces/DialogOptionButton.md)
 - [Message](interfaces/Message.md)
 - [GroupModifier](interfaces/GroupModifier.md)
 - [Group](interfaces/Group.md)

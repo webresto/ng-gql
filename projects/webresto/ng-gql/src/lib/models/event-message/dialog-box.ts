@@ -55,11 +55,11 @@ interface DialogOptionBase {
   label: string;
 }
 
-interface DialogOptionProduct extends DialogOptionBase {
+export interface DialogOptionProduct extends DialogOptionBase {
   product: Dish;
 }
 
-interface DialogOptionButton extends DialogOptionBase {
+export interface DialogOptionButton extends DialogOptionBase {
   /**
    * By default:
    * * 1st - primary, 2st - secondary, 3 - link, 4 - abort
