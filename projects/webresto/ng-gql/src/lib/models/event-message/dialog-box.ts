@@ -71,5 +71,6 @@ export interface DialogOptionButton extends DialogOptionBase {
    */
   button?: {
     type: 'primary' | 'secondary' | 'link' | 'abort';
+    label: string;
   };
 }

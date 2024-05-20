@@ -51,3 +51,4 @@ By default:
 | Name | Type |
 | :------ | :------ |
 | `type` | ``"primary"`` \| ``"secondary"`` \| ``"link"`` \| ``"abort"`` |
+| `label` | `string` |
