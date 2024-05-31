@@ -1,0 +1,2 @@
+# @webresto/ng-gql
+<span class="badge-npmversion"><a href="https://npmjs.org/package/@webresto/ng-gql" title="View this project on NPM"><img src="https://img.shields.io/npm/v/@webresto/ng-gql.svg" alt="NPM version" /></a></span>
