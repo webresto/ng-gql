@@ -16,6 +16,7 @@
 - [message](DialogBoxProduct.md#message)
 - [title](DialogBoxProduct.md#title)
 - [timeout](DialogBoxProduct.md#timeout)
+- [emitTime](DialogBoxProduct.md#emittime)
 - [defaultOptionId](DialogBoxProduct.md#defaultoptionid)
 - [options](DialogBoxProduct.md#options)
 - [optionsType](DialogBoxProduct.md#optionstype)
@@ -90,6 +91,18 @@ It is recommended to close it automaticaly
 #### Inherited from
 
 DialogBoxBase.timeout
+
+___
+
+### emitTime
+
+• **emitTime**: `number`
+
+Unix timestamp when message emitted
+
+#### Inherited from
+
+DialogBoxBase.emitTime
 
 ___
 

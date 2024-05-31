@@ -32,6 +32,8 @@ interface DialogBoxBase {
    * It is recommended to close it automaticaly
    */
   timeout?: number;
+  /** Unix timestamp when message emitted */
+  emitTime: number;
   /**
    * If no response comes, the backend will do it automatically
    * Also the frontend can send this by default
@@ -69,5 +71,6 @@ export interface DialogOptionButton extends DialogOptionBase {
    */
   button?: {
     type: 'primary' | 'secondary' | 'link' | 'abort';
+    label: string;
   };
 }
