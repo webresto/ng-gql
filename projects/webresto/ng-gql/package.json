@@ -21,6 +21,6 @@
     "@axrl/common": ">=1.0.35",
     "@axrl/ngx-extended-form-builder": ">=1.2.10",
     "crypto-puzzle": "^4.0.2",
-    "@webresto/worktime": "2.0.0-build.3"
+    "@webresto/worktime": "^2.0.0"
   }
 }
