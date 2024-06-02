@@ -2,7 +2,13 @@ import {formatDate} from '@angular/common';
 import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isValue} from '@axrl/common';
 import {ScanFormType} from '@axrl/ngx-extended-form-builder';
-import {RestrictionsOrder, WorkTime, WorkTimeValidator} from '@webresto/worktime';
+import {
+  RestrictionsOrder,
+  WorkTime,
+  WorkTimeValidator,
+  ScheduleValidator,
+  TimeZoneIdentifier,
+} from '@webresto/worktime';
 import {OrderForm} from './order';
 
 function setErrorsToControl(
@@ -25,6 +31,40 @@ function setErrorsToControl(
 
   return null;
 }
+
+export function orderDateValidator(
+  restrictionsData: RestrictionsOrder | null | undefined,
+  scheduleValidator: ScheduleValidator,
+): ValidatorFn {
+  return (control: AbstractControl<string | null>) => {
+    const controlValue: string | null = control.value;
+    if (isValue(controlValue)) {
+      if (!isValue(restrictionsData)) {
+        // eslint-disable-next-line no-console
+        console.log(restrictionsData, 1222);
+        return {['Error']: 'restrictions not defined'};
+      } else {
+        const tzOffset: string = TimeZoneIdentifier.getTimeZoneGMTOffsetfromNameZone(
+          restrictionsData.timezone,
+        );
+
+        // Если интервал не задан то валидатор пропустит это, в дальнейщем планируется что время работы будет только определятся через интервалы.
+        if (!scheduleValidator.schedule || !scheduleValidator.schedule.length) {
+          return null;
+        }
+
+        if (scheduleValidator.doesTimeFallWithin(new Date(`${controlValue} ${tzOffset}`))) {
+          return null;
+        } else {
+          return {['Order date']: 'Orders are not possible at this time'};
+        }
+      }
+    } else {
+      return {['Error']: 'order date is corupted'};
+    }
+  };
+}
+
 
 export function deliveryDateValidator(
   restrictionsData: RestrictionsOrder | null | undefined,
@@ -162,7 +202,7 @@ export function addressStreetIdValidator(form: AbstractControl): ValidationError
 
   const errors =
     isDelieveryToAddress && (!isValue(controlValue) || controlValue === '')
-      ? {['Street']: 'Нужно выбрать из списка'}
+      ? {['Street']: 'You need to select from the list'}
       : null;
   return setErrorsToControl(errors, controlStreet);
 }
@@ -190,7 +230,7 @@ export function pickupPointIdValidator(form: AbstractControl): ValidationErrors 
   const errors =
     selfService && (!isValue(controlValue) || controlValue === '')
       ? {
-          ['Адрес самовывоза']: 'Не выбран адрес самовывоза.',
+          ['Pickup address']: 'Pickup address not selected.',
         }
       : null;
   return setErrorsToControl(errors, control);
