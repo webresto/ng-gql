@@ -306,6 +306,15 @@ export class NgOrderService {
   }
 
   /**
+   * @method () removeOrder
+   * @returns Remove order
+   */
+  removeOrder(): void {
+    this._storageWrapper.removeOrderId();
+    return;
+  }
+
+  /**
    * @method loadOrder$()
    *
    * Метод загружает заказ и делает подписку для получения по нему обновлений.
