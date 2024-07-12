@@ -327,7 +327,7 @@ export class NgOrderService {
                 true,
               );
               this._storageWrapper.setOrderId(storageOrderId);
-              return this._loadCurrentOrNewOrder(storageOrderId, storageOrderIdToken);
+              return this.loadOrder$(storageOrderId);
             }),
           ),
         ),
