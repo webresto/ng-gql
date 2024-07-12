@@ -310,7 +310,7 @@ export class NgOrderService {
    * @method () resetOrder
    * @returns Remove order
    */
-  resetOrder(token: string): void {
+  resetOrder(): void {
     this._storageWrapper.storageOrderIdToken$
       .pipe(
         switchMap(storageOrderIdToken =>
