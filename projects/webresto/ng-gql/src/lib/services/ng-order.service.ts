@@ -43,6 +43,7 @@ import {
   DISH_FRAGMENTS,
   MESSAGE_FRAGMENTS,
   NG_GQL_CONFIG,
+  ORDERID_FACTORY_FN,
   ORDER_FRAGMENTS,
   PAYMENT_METHOD_FRAGMENTS,
 } from '../models';
@@ -281,7 +282,7 @@ export class NgOrderService {
           }
           this._requestService.emitMessageEvent({
             type: 'info',
-            title: 'Не удалось отправить ссылку для оплаты.',
+            title: 'Failed to send payment link.',
             message: error.message,
           });
           return of(() => {});
@@ -306,11 +307,33 @@ export class NgOrderService {
   }
 
   /**
-   * @method () removeOrder
+   * @method () resetOrder
    * @returns Remove order
    */
-  removeOrder(): void {
-    this._storageWrapper.removeOrderId();
+  resetOrder(token: string): void {
+    this._storageWrapper.storageOrderIdToken$
+      .pipe(
+        switchMap(storageOrderIdToken =>
+          fromEvent<StorageEvent>(window, 'storage', {
+            passive: true,
+          }).pipe(
+            startWith(this._storageWrapper.startStorageEventFactory(storageOrderIdToken)),
+            filter(event => event.key === storageOrderIdToken),
+            distinctUntilKeyChanged('key'),
+            switchMap(event => {
+              const storageOrderId = this._storageWrapper.getOrderId(
+                storageOrderIdToken,
+                event.newValue ?? undefined,
+                true,
+              );
+              this._storageWrapper.setOrderId(storageOrderId);
+              return this._loadCurrentOrNewOrder(storageOrderId, storageOrderIdToken);
+            }),
+          ),
+        ),
+      )
+      .subscribe();
+
     return;
   }
 
