@@ -65,7 +65,6 @@ export function orderDateValidator(
   };
 }
 
-
 export function deliveryDateValidator(
   restrictionsData: RestrictionsOrder | null | undefined,
   workTimeValidator: WorkTimeValidator,
@@ -217,6 +216,20 @@ export function addressHomeValidator(form: AbstractControl): ValidationErrors | 
     isDelieveryToAddress && (!isValue(controlValue) || controlValue === '')
       ? {['Home']: 'Required'}
       : null;
+  return setErrorsToControl(errors, control);
+}
+
+export function contactMethodValidator(form: AbstractControl): ValidationErrors | null {
+  const control = (<ScanFormType<OrderForm>>form).controls.contactMethods;
+  const controlValues = control?.value;
+
+  const errors =
+    Array.isArray(controlValues) &&
+    controlValues?.length > 1 &&
+    (isValue(controlValues?.[0]) || controlValues?.[0] !== '')
+      ? null
+      : {['Contact method']: 'Required'};
+
   return setErrorsToControl(errors, control);
 }
 
