@@ -225,7 +225,7 @@ export function contactMethodValidator(form: AbstractControl): ValidationErrors 
 
   const errors =
     Array.isArray(controlValues) &&
-    controlValues?.length > 1 &&
+    controlValues?.length > 0 &&
     (isValue(controlValues?.[0]) || controlValues?.[0] !== '')
       ? null
       : {['Contact method']: 'Required'};
