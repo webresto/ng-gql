@@ -41,7 +41,7 @@ export const USER_DEVICES_FRAGMENTS = new InjectionToken<ValuesOrBoolean<UserDev
       id: true,
       name: true,
       userAgent: true,
-      isLogined: true,
+      isLoggedIn: true,
       userId: true,
       lastIP: true,
       loginTime: true,

@@ -59,7 +59,7 @@ export interface UserDevice extends BaseModelWithCustomData {
   id: string;
   name: string;
   userAgent: string;
-  isLogined: boolean;
+  isLoggedIn: boolean;
   userId: string;
   lastIP: string;
   loginTime: number;
