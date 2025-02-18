@@ -56,7 +56,7 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   date: string | null;
   orderDate: string | null;
   personsCount: number | null;
-  deliveryStatus: string | null;
+  rmsOrderStatus: string | null;
   promotionState: PromotionState[];
   pickupPoint: PickupPoint | null;
   spendBonus: InputSpendBonus | null;

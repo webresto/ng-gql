@@ -46,7 +46,7 @@
 - [date](Order.md#date)
 - [orderDate](Order.md#orderdate)
 - [personsCount](Order.md#personscount)
-- [deliveryStatus](Order.md#deliverystatus)
+- [rmsOrderStatus](Order.md#rmsOrderStatus)
 - [promotionState](Order.md#promotionstate)
 - [pickupPoint](Order.md#pickuppoint)
 - [spendBonus](Order.md#spendbonus)
@@ -223,9 +223,9 @@ ___
 
 ___
 
-### deliveryStatus
+### rmsOrderStatus
 
-• **deliveryStatus**: ``null`` \| `string`
+• **rmsOrderStatus**: ``null`` \| `string`
 
 ___
 
