@@ -1,6 +1,7 @@
 import type {BehaviorSubject} from 'rxjs';
 import type {
   AddToOrderInput,
+  Address,
   CheckOrderInput,
   CheckResponse,
   Order,
@@ -112,17 +113,19 @@ export interface SendOrderInput {
  */
 export interface UpdateOrderInput {
   id: Order['id'];
-  comment?: Order['comment'];
-  trifleFrom?: Order['trifleFrom'];
+  comment?: Order['comment'] | undefined;
+  trifleFrom?: Order['trifleFrom'] | undefined;
   promotionCodeString?: Order['promotionCodeString'];
 
-  date?: Order['date'];
-  isSelfService?: Order['selfService'];
-  paymentMethodId?: PaymentMethod['id'];
+  date?: Order['date'] | undefined;
+  isSelfService?: Order['selfService'] | undefined;
+  paymentMethodId?: PaymentMethod['id'] | undefined;
+  address: Partial<Address> | undefined;
+  pickupPoint: string | undefined;
 }
 
 /**
- * @event CartBusEventSend
+ * @event CartBusEventSen
  * Отправка заказа на оформление */
 export interface CartBusEventSend extends CartBusEventBase<CheckResponse> {
   event: 'order';

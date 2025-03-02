@@ -483,6 +483,8 @@ export class NgOrderService {
         date: options.data.date,
         isSelfService: options.data.selfService,
         paymentMethodId: options.data.paymentMethod?.id,
+        address: options.data.address,
+        pickupPoint: options.data.pickupPoint?.id
       };
 
       this._orderBus.emit({
@@ -492,6 +494,8 @@ export class NgOrderService {
         errorCb: options.errorCb,
         successCb: options.successCb,
       });
+    } else {
+      console.error(`NG-GQL > updateOrder has no order.id`)
     }
   }
 
