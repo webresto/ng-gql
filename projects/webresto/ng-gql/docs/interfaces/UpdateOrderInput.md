@@ -12,7 +12,7 @@ UpdateOrderInput
 - [trifleFrom](UpdateOrderInput.md#triflefrom)
 - [promotionCodeString](UpdateOrderInput.md#promotioncodestring)
 - [date](UpdateOrderInput.md#date)
-- [isSelfService](UpdateOrderInput.md#isselfservice)
+- [selfService](UpdateOrderInput.md#selfService)
 - [paymentMethodId](UpdateOrderInput.md#paymentmethodid)
 
 ## Properties
@@ -47,9 +47,9 @@ ___
 
 ___
 
-### isSelfService
+### selfService
 
-• `Optional` **isSelfService**: `boolean`
+• `Optional` **selfService**: `boolean`
 
 ___
 

@@ -118,7 +118,7 @@ export interface UpdateOrderInput {
   promotionCodeString?: Order['promotionCodeString'];
 
   date?: Order['date'] | undefined;
-  isSelfService?: Order['selfService'] | undefined;
+  selfService?: Order['selfService'] | undefined;
   paymentMethodId?: PaymentMethod['id'] | undefined;
   address: Partial<Address> | undefined;
   pickupPoint: string | undefined;

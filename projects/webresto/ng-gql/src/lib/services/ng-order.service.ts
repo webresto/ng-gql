@@ -481,7 +481,7 @@ export class NgOrderService {
         trifleFrom: options.data.trifleFrom,
         comment: options.data.comment,
         date: options.data.date,
-        isSelfService: options.data.selfService,
+        selfService: options.data.selfService,
         paymentMethodId: options.data.paymentMethod?.id,
         address: options.data.address,
         pickupPoint: options.data.pickupPoint?.id
