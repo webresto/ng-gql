@@ -939,7 +939,7 @@ export class NgOrderService {
   private _loadCurrentOrNewOrder(id: string, token: string): Observable<Order> {
     return this.loadOrder$(id).pipe(
       switchMap(order => {
-        if (order.state === 'ORDER') {
+        if (order.state === 'ORDER' || order.state === 'DONE' || order.state === 'REJECT') {
           const newId = this._storageWrapper.getOrderId(token, undefined, true);
           return this.loadOrder$(newId);
         } else {
@@ -948,4 +948,5 @@ export class NgOrderService {
       }),
     );
   }
+
 }
