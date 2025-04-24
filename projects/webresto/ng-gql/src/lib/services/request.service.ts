@@ -126,7 +126,11 @@ export class RequestService {
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables?: V,
-    paramOptions?: QueryGenerationParam<V>,
+    paramOptions?: QueryGenerationParam<V> & {
+      fetchPolicy?: import('@apollo/client/core').WatchQueryFetchPolicy;
+      errorPolicy?: import('@apollo/client/core').ErrorPolicy;
+      context?: any;
+    },
   ): Observable<Record<N, T | T[]>> {
     return this._apollo
       .watchQuery<Record<N, T | T[]>, V>({
@@ -138,6 +142,9 @@ export class RequestService {
           fieldsTypeMap: paramOptions?.fieldsTypeMap,
         })}`,
         variables,
+        fetchPolicy: paramOptions?.fetchPolicy ?? 'cache-first',
+        errorPolicy: paramOptions?.errorPolicy,
+        context: paramOptions?.context,
       })
       .pipe(
         map(res => (res.error || res.errors ? null : res.data)),
