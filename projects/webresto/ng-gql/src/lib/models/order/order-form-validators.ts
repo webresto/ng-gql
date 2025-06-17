@@ -32,6 +32,13 @@ function setErrorsToControl(
   return null;
 }
 
+/**
+ * Creates a validator that checks if the order date falls within the allowed
+ * schedule.
+ *
+ * @param restrictionsData Data describing ordering restrictions.
+ * @param scheduleValidator Schedule validator used to verify working intervals.
+ */
 export function orderDateValidator(
   restrictionsData: RestrictionsOrder | null | undefined,
   scheduleValidator: ScheduleValidator,
@@ -65,6 +72,13 @@ export function orderDateValidator(
   };
 }
 
+/**
+ * Builds a validator that verifies whether a chosen delivery date is within
+ * the range allowed by the restrictions data and work time settings.
+ *
+ * @param restrictionsData Ordering restrictions with timezone information.
+ * @param workTimeValidator Helper providing work time calculations.
+ */
 export function deliveryDateValidator(
   restrictionsData: RestrictionsOrder | null | undefined,
   workTimeValidator: WorkTimeValidator,
@@ -111,6 +125,13 @@ export function deliveryDateValidator(
   };
 }
 
+/**
+ * Creates a validator ensuring the selected delivery time fits within the
+ * allowed working hours and respects the minimum delivery interval.
+ *
+ * @param restrictionsData Ordering restrictions for the restaurant.
+ * @param workTimeValidator Utility used for work time calculations.
+ */
 export function deliveryTimeValidator(
   restrictionsData: RestrictionsOrder | null | undefined,
   workTimeValidator: WorkTimeValidator,
@@ -179,6 +200,10 @@ export function deliveryTimeValidator(
   };
 }
 
+/**
+ * Validates that the street field is filled when delivery to an address is
+ * selected.
+ */
 export function addressStreetValidator(form: AbstractControl): ValidationErrors | null {
   const formValue = form.value;
   const control = (<ScanFormType<OrderForm>>form).controls?.address?.controls?.street;
@@ -192,6 +217,10 @@ export function addressStreetValidator(form: AbstractControl): ValidationErrors 
   return setErrorsToControl(errors, control);
 }
 
+/**
+ * Validates that the street value is selected from the provided list when
+ * delivery to an address is chosen.
+ */
 export function addressStreetIdValidator(form: AbstractControl): ValidationErrors | null {
   const formValue = form.value;
   const controlStreetId = (<ScanFormType<OrderForm>>form).controls?.address?.controls?.streetId;
@@ -206,6 +235,10 @@ export function addressStreetIdValidator(form: AbstractControl): ValidationError
   return setErrorsToControl(errors, controlStreet);
 }
 
+/**
+ * Ensures that the house number is provided when delivery to an address is
+ * required.
+ */
 export function addressHomeValidator(form: AbstractControl): ValidationErrors | null {
   const formValue = form.value;
   const control = (<ScanFormType<OrderForm>>form).controls?.address?.controls?.home;
@@ -219,6 +252,9 @@ export function addressHomeValidator(form: AbstractControl): ValidationErrors | 
   return setErrorsToControl(errors, control);
 }
 
+/**
+ * Validates that at least one contact method is provided by the user.
+ */
 export function contactMethodValidator(form: AbstractControl): ValidationErrors | null {
   const control = (<ScanFormType<OrderForm>>form).controls.contactMethods;
   const controlValues = control?.value;
@@ -233,6 +269,10 @@ export function contactMethodValidator(form: AbstractControl): ValidationErrors 
   return setErrorsToControl(errors, control);
 }
 
+/**
+ * Checks that a pickup point is selected when the order is marked for
+ * self-service pickup.
+ */
 export function pickupPointIdValidator(form: AbstractControl): ValidationErrors | null {
   const selfService: boolean = form.value?.selfService;
   const control = <AbstractControl<string> | undefined>(
@@ -249,6 +289,9 @@ export function pickupPointIdValidator(form: AbstractControl): ValidationErrors 
   return setErrorsToControl(errors, control);
 }
 
+/**
+ * Returns a simple validator that checks a control for a non-empty value.
+ */
 export function isReqiredFieldValidator(controlName: string): ValidatorFn {
   return control =>
     !isValue(control.value) || control.value === '' ? {[controlName]: 'Required'} : null;

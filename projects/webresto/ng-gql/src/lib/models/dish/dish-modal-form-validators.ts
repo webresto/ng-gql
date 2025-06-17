@@ -4,6 +4,12 @@ import {GroupModifier} from '../group-modifier';
 import {Modifier} from '../modifier';
 import {Dish} from './dish';
 
+/**
+ * Checks that the number of selected child modifiers is within the allowed
+ * range of the group modifier. Returns an error keyed by the group name if the
+ * selected amount is invalid.
+ */
+
 export function groupModifierFormValidator(control: AbstractControl): ValidationErrors | null {
   const value = <Partial<GroupModifier<Dish>>>control.value;
   const groupAmount = value.childModifiers?.reduce(
@@ -42,6 +48,11 @@ export function groupModifierFormValidator(control: AbstractControl): Validation
   }
 }
 
+/**
+ * Validates a single modifier ensuring its amount is within the configured
+ * minimum and maximum. Returns an error keyed by the dish name when the amount
+ * is out of range.
+ */
 export function modifierFormValidator(control: AbstractControl): ValidationErrors | null {
   const value = <Partial<Modifier<Dish>>>control.value;
   const amount = value.amount || value.defaultAmount || 0;
