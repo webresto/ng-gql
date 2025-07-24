@@ -48,7 +48,6 @@ export function orderDateValidator(
     if (isValue(controlValue)) {
       if (!isValue(restrictionsData)) {
         // eslint-disable-next-line no-console
-        console.log(restrictionsData, 1222);
         return {['Error']: 'restrictions not defined'};
       } else {
         const tzOffset: string = TimeZoneIdentifier.getTimeZoneGMTOffsetfromNameZone(

@@ -39,6 +39,7 @@ export interface Dish extends BaseModelWithCustomData {
   seoKeywords: string | null;
   seoText: string | null;
   seoTitle: string | null;
+  notForSale: boolean
 }
 
 export interface DishTag {

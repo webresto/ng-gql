@@ -47,6 +47,7 @@ export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>('DISH_FR
       seoKeywords: true,
       seoText: true,
       seoTitle: true,
+      notForSale: true,
     };
   },
 });
