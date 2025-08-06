@@ -7,5 +7,5 @@ import {Image} from './image';
  */
 
 export const IMAGE_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Image>>('IMAGE_FRAGMENTS', {
-  factory: () => ({id: true, uploadDate: true, images: true}),
+  factory: () => ({id: true, uploadDate: true, variant: true}),
 });
