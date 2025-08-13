@@ -19,7 +19,7 @@ export function httpLinkFactory(
   cache: InMemoryCache;
 } {
   const win = document.defaultView;
-  const savedDeviceId = localStorage.getItem('deviceId');
+  const savedDeviceId = localStorage.getItem('restocore-deviceId');
   const deviceId = savedDeviceId ?? generateUUID(win);
 
   // Create a WebSocket link:
@@ -27,11 +27,11 @@ export function httpLinkFactory(
     new SubscriptionClient(config.url.replace('http', 'ws'), {
       reconnect: true,
       connectionParams: (): ConnectionParamsOptions => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('restocore-token');
         return isValue(token)
           ? {
               'X-Device-Id': deviceId,
-              authorization: localStorage.getItem('token'),
+              authorization: localStorage.getItem('restocore-token'),
             }
           : {
               'X-Device-Id': deviceId,

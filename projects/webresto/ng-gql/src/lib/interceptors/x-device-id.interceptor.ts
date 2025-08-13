@@ -10,10 +10,10 @@ export class XDeviceIdInterceptor implements HttpInterceptor {
   constructor(@Inject(DOCUMENT) private _document: Document) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const savedDeviceId = localStorage.getItem('deviceId');
+    const savedDeviceId = localStorage.getItem('restocore-deviceId');
     const deviceId = savedDeviceId ?? generateUUID(this._document.defaultView);
     if (!isValue(savedDeviceId)) {
-      localStorage.setItem('deviceId', deviceId);
+      localStorage.setItem('restocore-deviceId', deviceId);
     }
     return next.handle(
       request.clone({

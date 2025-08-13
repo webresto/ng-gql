@@ -23,7 +23,7 @@ export class NgGqlStoreService {
   private _userLocations = createSubject<UserLocationResponse>(null);
   private _orderHystory = createSubject<UserOrderHystory[]>([]);
   private _navigation = createSubject<NavigationBase[] | null>(null);
-  private _token = createSubject<string | null>(localStorage.getItem('token'));
+  private _token = createSubject<string | null>(localStorage.getItem('restocore-token'));
   private _user = createSubject<User | null>(null);
   private _paymentMethods = createSubject<PaymentMethod[] | null>(null);
   private _pickupPoints = createSubject<PickupPoint[] | null>(null);
@@ -69,9 +69,9 @@ export class NgGqlStoreService {
 
   updateToken(newToken: string | null): void {
     if (isValue(newToken)) {
-      localStorage.setItem('token', newToken);
+      localStorage.setItem('restocore-token', newToken);
     } else {
-      localStorage.removeItem('token');
+      localStorage.removeItem('restocore-token');
     }
     this._token.next(newToken);
   }
