@@ -240,12 +240,23 @@ export class NgGqlUserService {
     this._storage.updateToken(null);
     this._storage.updateUser(null);
 
-    const res = await this._userBus.emitToBus<'logout', null, Response>({
-      type: 'logout',
-      payload: null,
-      loading,
-    });
-    return res;
+    const reloadTimeout = setTimeout(() => {
+      console.warn('Logout timeout exceeded, reloading page...');
+      window.location.reload();
+    }, 5000);
+
+    try {
+      const res = await this._userBus.emitToBus<'logout', null, Response>({
+        type: 'logout',
+        payload: null,
+        loading,
+      });
+      clearTimeout(reloadTimeout);
+      return res;
+    } catch (error) {
+      window.location.reload();
+      throw error;
+    }
   }
 
   async userDelete(otp: string, loading?: BehaviorSubject<boolean>): Promise<Response> {
