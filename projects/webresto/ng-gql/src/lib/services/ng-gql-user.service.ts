@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, Injector} from '@angular/core';
 import {isValue} from '@axrl/common';
 import Puzzle from 'crypto-puzzle';
 import {
@@ -59,7 +59,7 @@ export class NgGqlUserService {
   );
 
   constructor(
-    private _requestService: RequestService,
+    private _injector: Injector,
     private _storage: NgGqlStoreService,
     private _userBus: NgGqlUserBusService,
     @Inject(USER_ORDER_HYSTORY_FRAGMENTS)
@@ -69,6 +69,10 @@ export class NgGqlUserService {
     @Inject(USER_LOCATION_FRAGMENTS)
     private _defaultuserLocationFragments: ValuesOrBoolean<UserLocation>,
   ) {}
+
+  private get _requestService(): RequestService {
+    return this._injector.get(RequestService);
+  }
 
   updateStorageUser(newUser: User | null): void {
     this._storage.updateUser(newUser);
