@@ -237,28 +237,26 @@ export class NgGqlUserService {
   }
 
   async logout(loading?: BehaviorSubject<boolean>): Promise<Response> {
+    this._storage.updateToken(null);
+    this._storage.updateUser(null);
+
     const res = await this._userBus.emitToBus<'logout', null, Response>({
       type: 'logout',
       payload: null,
       loading,
     });
-
-    this._storage.updateToken(null);
-    this._storage.updateUser(null);
-
     return res;
   }
 
   async userDelete(otp: string, loading?: BehaviorSubject<boolean>): Promise<Response> {
+    this._storage.updateToken(null);
+    this._storage.updateUser(null);
+
     const res = await this._userBus.emitToBus<'userDelete', string, Response>({
       type: 'userDelete',
       payload: otp,
       loading,
     });
-
-    this._storage.updateToken(null);
-    this._storage.updateUser(null);
-
     return res;
   }
 
