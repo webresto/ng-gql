@@ -1,5 +1,6 @@
 import type {ApolloLink, InMemoryCacheConfig} from '@apollo/client/core';
 import {InMemoryCache, split} from '@apollo/client/core';
+import {onError} from '@apollo/client/link/error';
 import {WebSocketLink} from '@apollo/client/link/ws';
 import {getMainDefinition} from '@apollo/client/utilities';
 import {isValue} from '@axrl/common';
@@ -10,10 +11,13 @@ import {ConnectionParamsOptions, SubscriptionClient} from 'subscriptions-transpo
 import {generateUUID} from './get-uuid';
 import {NgGqlConfig} from './ng-gql-config';
 
+import {NgGqlUserService} from '../services';
+
 export function httpLinkFactory(
   httpLink: HttpLink,
   document: Document,
   config: NgGqlConfig,
+  userService: NgGqlUserService,
 ): {
   link: ApolloLink;
   cache: InMemoryCache;
@@ -40,18 +44,31 @@ export function httpLinkFactory(
     }),
   );
 
+  // Error link to handle logout on specific errors
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+      graphQLErrors.forEach(({ message }) => {
+        if (message.includes('Logged in device not found')) {
+          userService.logout();
+        }
+      });
+    }
+  });
+
   // using the ability to split links, you can send data to each link
   // depending on what kind of operation is being sent
-  const link = split(
-    // split based on operation type
-    ({query}) => {
-      const {kind, operation} = <OperationDefinitionNode>getMainDefinition(query);
-      return kind === 'OperationDefinition' && operation === 'subscription';
-    },
-    ws,
-    httpLink.create({
-      uri: config.url,
-    }),
+  const link = errorLink.concat(
+    split(
+      // split based on operation type
+      ({query}) => {
+        const {kind, operation} = <OperationDefinitionNode>getMainDefinition(query);
+        return kind === 'OperationDefinition' && operation === 'subscription';
+      },
+      ws,
+      httpLink.create({
+        uri: config.url,
+      }),
+    ),
   );
 
   const defaultCacheConfig: InMemoryCacheConfig = {

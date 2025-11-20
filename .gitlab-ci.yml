@@ -3,7 +3,7 @@ stages:
 
 publish:
   stage: publish
-  only: [master] 
+  only: [main] 
   script:
     - >
      export NVM_DIR="$HOME/.nvm" 

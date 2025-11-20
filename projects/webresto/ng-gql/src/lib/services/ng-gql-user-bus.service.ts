@@ -1,4 +1,4 @@
-import {EventEmitter, Inject, Injectable} from '@angular/core';
+import {EventEmitter, Inject, Injectable, Injector} from '@angular/core';
 import {deepClone, isValue} from '@axrl/common';
 import {BehaviorSubject, Observable, catchError, concatMap, map, of, switchMap} from 'rxjs';
 import {
@@ -111,7 +111,7 @@ export class NgGqlUserBusService {
   );
 
   constructor(
-    private _requestService: RequestService,
+    private _injector: Injector,
     private _storage: NgGqlStoreService,
     @Inject(ACTION_FRAGMENTS)
     private _defaultActionFragments: ValuesOrBoolean<Action>,
@@ -124,6 +124,10 @@ export class NgGqlUserBusService {
     @Inject(OTP_RESPONSE_FRAGMENTS)
     private _defaultOTPResponceFragments: ValuesOrBoolean<OTPResponse>,
   ) {}
+
+  private get _requestService(): RequestService {
+    return this._injector.get(RequestService);
+  }
 
   emitToBus<T extends UserBusEventType, P extends UserBusEvent['payload'], R>(data: {
     type: T;

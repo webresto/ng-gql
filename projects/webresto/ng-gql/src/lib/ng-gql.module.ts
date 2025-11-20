@@ -46,7 +46,7 @@ import {
     {
       provide: APOLLO_OPTIONS,
       useFactory: httpLinkFactory,
-      deps: [HttpLink, DOCUMENT, NG_GQL_CONFIG],
+      deps: [HttpLink, DOCUMENT, NG_GQL_CONFIG, NgGqlUserService],
     },
   ],
   declarations: [],
