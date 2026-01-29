@@ -40,6 +40,7 @@ export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>('DISH_FR
       groupId: true,
       parentGroup: {
         id: true,
+        slug: true,
         dishesPlaceholder: imageFragments,
       },
       salePrice: true,

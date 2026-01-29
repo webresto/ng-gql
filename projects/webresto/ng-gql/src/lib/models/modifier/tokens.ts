@@ -28,6 +28,7 @@ export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
           groupId: true,
           parentGroup: {
             id: true,
+            slug: true,
             dishesPlaceholder: imageFragments,
           },
           images: imageFragments,

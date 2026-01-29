@@ -21,7 +21,7 @@ export interface Dish extends BaseModelWithCustomData {
   additionalInfo?: string | number | {[key: string]: string | any} | null;
   images: Array<Partial<Image>>;
   groupId?: string;
-  parentGroup: Partial<Pick<Group, 'id' | 'dishesPlaceholder'>>;
+  parentGroup: Partial<Pick<Group, 'id' | 'slug' | 'dishesPlaceholder'>>;
   modifiers?: Array<Partial<GroupModifier<Dish>>> | undefined;
   carbohydrateAmount?: number;
   carbohydrateFullAmount?: number;
