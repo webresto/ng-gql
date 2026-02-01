@@ -41,36 +41,7 @@ export class AppModule { }
 
 Description of the [configuration object](interfaces/NgGqlConfig.md).
 
+## Usage
+See the [documentation](docs/README.md). 
 
 This is the README for the graphql module.
-
-## Network Availability Handling
-
-The library provides a built-in mechanism to handle network connectivity issues and API unavailability.
-
-### NgGqlAvailabilityService
-
-This service manages the state of the API connection. You can inject it into your components to check if the API is currently considered unavailable.
-
-```typescript
-import { NgGqlAvailabilityService } from '@webresto/ng-gql';
-
-export class MyComponent {
-  isApiUnavailable$ = this.availabilityService.isApiUnavailable$;
-
-  constructor(private availabilityService: NgGqlAvailabilityService) {}
-}
-```
-
-### Automatic Error Handling
-
-The `ApolloService` and `httpLinkFactory` automatically detect network errors (e.g., connection refused, offline). When a network error occurs:
-
-1.  The API state is marked as **unavailable**.
-2.  `isApiUnavailable$` emits `true`.
-3.  The service automatically starts a background health check, polling the API every 5 seconds.
-4.  Once the API becomes reachable again, `isApiUnavailable$` emits `false`, and the health check stops.
-
-### Debug Mode
-
-If `debugMode` is enabled in your `NgGqlConfig`, the library will also show browser alerts (`alert()`) when a connection error occurs.

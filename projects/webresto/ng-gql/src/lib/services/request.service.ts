@@ -1,9 +1,9 @@
-import { EventEmitter, Inject, Injectable } from '@angular/core';
-import { OperationVariables } from '@apollo/client';
-import { deepClone, isValue } from '@axrl/common';
-import type { ExtraSubscriptionOptions } from 'apollo-angular';
-import { gql } from 'apollo-angular';
-import type { Observable } from 'rxjs';
+import {EventEmitter, Inject, Injectable} from '@angular/core';
+import {OperationVariables} from '@apollo/client';
+import {deepClone, isValue} from '@axrl/common';
+import type {ExtraSubscriptionOptions} from 'apollo-angular';
+import {gql} from 'apollo-angular';
+import type {Observable} from 'rxjs';
 import {
   distinctUntilKeyChanged,
   filter,
@@ -13,25 +13,25 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import type { Action, GQLRequestVariables, Message, ValuesOrBoolean } from '../models';
-import { ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, generateQueryString } from '../models';
-import { ApolloService } from './apollo.service';
+import type {Action, GQLRequestVariables, Message, ValuesOrBoolean} from '../models';
+import {ACTION_FRAGMENTS, MESSAGE_FRAGMENTS, generateQueryString} from '../models';
+import {ApolloService} from './apollo.service';
 
 /**
- * Configuration object for generating part of the query string with a description of operation parameter types.
+ * Объект настройки генерации части строки запроса с описанием типов параметров операции.
  */
 export interface QueryGenerationParam<V> {
   /**
-   * Optional array of query parameter key names for which a mandatory type was set in the schema
-   * (e.g., the parameter type is String! instead of String).
-   * IMPORTANT! EXCEPT for keys for which type names are passed in `fieldsTypeMap`.
+   * Необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
+   * (например у параметра указан тип String!, а не String).
+   * ВАЖНО! КРОМЕ ключей, для которых названия типов передаются в `fieldsTypeMap`.
    */
   requiredFields?: Array<keyof V>;
 
   /**
-   * Optional Map object containing query parameter names as keys,
-   * and strings representing their corresponding types defined in the GraphQL server schema as values.
-   * IMPORTANT! The string must also include the "!" symbol if the parameter is defined as mandatory in the schema.
+   * Необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
+   * а в качестве значения - строки-названия соответствующих им типов, определенных в схеме сервера GraphQL.
+   * ВАЖНО! Строка также должна включать символ "!", если в схеме параметр определен как обязательный.
    */
   fieldsTypeMap?: Map<keyof V, string>;
 }
@@ -42,10 +42,10 @@ export class RequestService {
   private _eventAction: EventEmitter<Partial<Action>> = new EventEmitter();
 
   /**
-   * Observable stream that will receive events for the current order in the checkout process, implying some actions on the frontend side performed by the user
-   * (navigating to the payment page or, for example, opening a dialog box with a promotional dish offer, promotions, etc.)
-   * To get the stream, use the method @method this.getActionEmitter()
-   * To send custom messages to the stream, use @method this.emitActionEvent()
+   * Поток Observable, в который будут поступать события по текущему заказу в процессе оформления, подразумевающие совершение каких-либо действий на стороне фронта и выполняемых пользователем
+   * (переход на страницу оплаты или, к примеру, открытие диалогового окна с предложением блюда по акции, акции и т.п. )
+   * Для получения потока используется метод @method this.getActionEmitter()
+   * Для отправки в поток кастомных сообщений испльзуется @method this.emitActionEvent()
    */
   private readonly _actions$ = this.customSubscribe$<Action, 'action'>(
     'action',
@@ -57,9 +57,9 @@ export class RequestService {
   );
 
   /**
-   * Observable stream that will receive informational messages for the current order (dish added/removed/order placed).
-   * To get the stream, use the method @method this.getMessageEmitter()
-   * To send custom messages to the stream, use @method this.emitMessageEvent()
+   * Поток Observable, в который будут поступать информационные сообщения по текущему заказу (блюдо добавлено/удалено/заказ оформлен).
+   * Для получения потока используется метод @method this.getMessageEmitter()
+   * Для отправки в поток кастомных сообщений испльзуется @method this.emitMessageEvent()
    */
   private readonly _messages$ = this.customSubscribe$<Message, 'message'>(
     'message',
@@ -76,7 +76,7 @@ export class RequestService {
     private _defaultActionFragments: ValuesOrBoolean<Action>,
     @Inject(MESSAGE_FRAGMENTS)
     private _defaultMessageFragments: ValuesOrBoolean<Message>,
-  ) { }
+  ) {}
 
   emitMessageEvent(message: Partial<Message>): void {
     this._eventMessage.emit(message);
@@ -94,29 +94,29 @@ export class RequestService {
   }
 
   /**
-   * @method customQuery$() for executing "query" type requests to the GraphQL API server
-   * @typeParam T Type of requested data, based on which the object @param queryObject is built.
-   * @typeParam N String name of the operation from the GraphQL server schema.
-   * @typeParam V = GQLRequestVariables Description of the object type with variables for executing the operation, described in the GraphQL server schema.
-   * @param name - operation name declared in the GraphQL server schema.
-   * @param queryObject - source object for information about the structure of requested data in the form of an object implementing the ValuesOrBoolean<T> interface.
+   * @method customQuery$() для выполнения запросов типа "query" к серверу API GraphQL
+   * @typeParam T Тип запрашиваемых данных, по которому построен объект @param queryObject.
+   * @typeParam N Строка-название операции из схемы сервера GraphQL.
+   * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
+   * @param name - название операции, объвленное в схеме сервера GraphQL.
+   * @param queryObject - объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>.
    * @see @alias ValuesOrBoolean<T>
    *
-   * @param variables - optional - object with variables that will be used as request parameters.
-   *  Key names in the object must correspond to parameter names declared in the server's GraphQL schema.
-   *  Allowed value types for parameters are number, string, object, or boolean.
-   *  If some parameters are marked as optional in the server's GraphQL schema, these key names need to be additionally passed in requiredFields,
-   *  so that the query string generator makes appropriate type markings in the resulting query string.
-   * @param paramOptions - optional - Configuration object for generating part of the query string with a description of operation parameter types.
-   * @param options.requiredFields - optional array of query parameter key names for which a mandatory type was set in the schema
-   * EXCEPT for keys for which type names are passed in `options.fieldsTypeMap`.
-   *    (e.g., the parameter type is String! instead of String).
-   * @param options.fieldsTypeMap - optional Map object containing query parameter names as keys,
-   * and a string with the name of its type defined in the GraphQL server schema as a value.
-   * IMPORTANT! - the string must also include the "!" symbol if the parameter is defined as mandatory in the schema.
+   * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
+   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
+   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
+   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как необязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
+   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
+   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
+   * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
+   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
+   *    (например у параметра указан тип String!, а не String).
+   * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
+   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
+   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
    *
-   * @returns - Observable stream with the result of receiving data from the server in the form of an object with one key N (operation name), the value of which is the directly requested data
-   *  as a single object or an array.
+   * @returns - Observable поток с результатом получения данных от сервера в формате объекта с одним ключом N (название операции), значение которого - непосредственно запрошенные данные
+   *  в виде одиночного объекта либо массива.
    **/
   customQuery$<
     T extends {},
@@ -153,27 +153,27 @@ export class RequestService {
   }
 
   /**
-   * @method customMutation$() for executing "mutation" type requests to the GraphQL API server
-   * @typeParam T Type of mutated data, based on which the object @param queryObject is built
-   * @typeParam N String name of the operation from the GraphQL server schema.
-   * @typeParam V = GQLRequestVariables Description of the object type with variables for executing the operation, described in the GraphQL server schema.
-   * @param name - operation name declared in the GraphQL server schema.
-   * @param queryObject - source object for information about the structure of requested data in the form of an object implementing the ValuesOrBoolean<T> interface.
+   * @method customMutation$() для выполнения запросов типа "mutation" к серверу API GraphQL
+   * @typeParam T Тип мутируемых данных, по которому построен объект @param queryObject
+   * @typeParam N Строка-название операции из схемы сервера GraphQL.
+   * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
+   * @param name - название операции, объвленное в схеме сервера GraphQL.
+   * @param queryObject - объект-источник информации о структуре запрашиваемых данных в виде обьекта, реализующего интерфейс ValuesOrBoolean<T>.
    * @see @alias ValuesOrBoolean<T>
-   * @param variables - mandatory - object with variables that will be used as request parameters.
-   *  Key names in the object must correspond to parameter names declared in the server's GraphQL schema.
-   *  Allowed value types for parameters are number, string, object, or boolean.
-   *  If some parameters are marked as mandatory in the server's GraphQL schema, these key names need to be additionally passed in requiredFields,
-   *  so that the query string generator makes appropriate type markings in the resulting query string.
-   * @param paramOptions - optional - Configuration object for generating part of the query string with a description of operation parameter types.
-   * @param options.requiredFields - optional array of query parameter key names for which a mandatory type was set in the schema
-   * EXCEPT for keys for which type names are passed in `options.fieldsTypeMap`.
-   *    (e.g., the parameter type is String! instead of String).
-   * @param options.fieldsTypeMap - optional Map object containing query parameter names as keys,
-   * and a string with the name of its type defined in the GraphQL server schema as a value.
-   * IMPORTANT! - the string must also include the "!" symbol if the parameter is defined as mandatory in the schema.
+   * @param variables - обязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
+   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
+   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
+   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
+   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
+   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
+   * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
+   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
+   *    (например у параметра указан тип String!, а не String).
+   * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
+   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
+   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
    *
-   * @returns - Observable stream with the result of operation execution in the form of an object with one key N (operation name), the value of which is the direct result of the operation.
+   * @returns - Observable поток с результатом выполнения операции в формате объекта с одним ключом N (название операции), значение которого - непосредственно результат операции.
    **/
   customMutation$<T extends {}, N extends `${string}`, V = GQLRequestVariables>(
     name: N,
@@ -199,30 +199,30 @@ export class RequestService {
   }
 
   /**
-   * @method customSubscribe$() for executing "subscription" type requests to the GraphQL API server
-   * @typeParam T Type of data for which subscription for updates is made and based on which the object @param queryObject is built
-   * @typeParam N String name of the operation from the GraphQL server schema.
-   * @typeParam V = GQLRequestVariables Description of the object type with variables for executing the operation, described in the GraphQL server schema.
-   * @param name - operation name declared in the GraphQL server schema.
-   * @param queryObject - source object for information about the structure of data subscribed to, implementing the ValuesOrBoolean<T> interface.
+   * @method customSubscribe$() для выполнения запросов типа "subscription" к серверу API GraphQL
+   * @typeParam T Тип данных, на обновление которых производится подписка и по которому построен объект @param queryObject
+   * @typeParam N Строка-название операции из схемы сервера GraphQL.
+   * @typeParam V = GQLRequestVariables Описание типа объекта с переменными для выполнения операции, описанными в схеме сервера GraphQL.
+   * @param name - название операции, объвленное в схеме сервера GraphQL.
+   * @param queryObject - объект-источник информации о структуре данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>.
    * @see @alias ValuesOrBoolean<T>
-   * @param variables - optional - object with variables that will be used as request parameters.
-   *  Key names in the object must correspond to parameter names declared in the server's GraphQL schema.
-   *  Allowed value types for parameters are number, string, object, or boolean.
-   *  If some parameters are marked as mandatory in the server's GraphQL schema, these key names need to be additionally passed in requiredFields,
-   *  so that the query string generator makes appropriate type markings in the resulting query string.
-   * @param paramOptions - optional - Configuration object for generating part of the query string with a description of operation parameter types.
-   * @param options.requiredFields - optional array of query parameter key names for which a mandatory type was set in the schema
-   * EXCEPT for keys for which type names are passed in `options.fieldsTypeMap`.
-   *    (e.g., the parameter type is String! instead of String).
-   * @param options.fieldsTypeMap - optional Map object containing query parameter names as keys,
-   * and a string with the name of its type defined in the GraphQL server schema as a value.
-   * IMPORTANT! - the string must also include the "!" symbol if the parameter is defined as mandatory in the schema.
+   * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
+   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
+   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
+   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
+   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
+   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
+   * @param options.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
+   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
+   *    (например у параметра указан тип String!, а не String).
+   * @param options.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
+   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
+   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
    *
-   * @returns - Observable stream with data of type T that will arrive within the made subscription.
-   * IMPORTANT! Only updates for data subscribed to will arrive in the stream.
-   * Initial data does not arrive in this stream - it needs to be obtained separately (e.g., using the customQuery$ method).
-   * In situations where it is required to get some data and subscribe to updates for it, the queryAndSubscribe method can also be used for convenience.
+   * @returns - Observable поток с данными типа T, которые будут поступать в рамках сделанной подписки.
+   * ВАЖНО! В потоке будут поступать только обновления для данных, на которые сделана подписка.
+   * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
+   * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
    * @see this.queryAndSubscribe
    **/
   customSubscribe$<T extends {}, N extends `${string}`, V = GQLRequestVariables>(
@@ -240,7 +240,7 @@ export class RequestService {
       fieldsTypeMap: paramOptions?.fieldsTypeMap,
     });
     return this._apollo
-      .subscribe<Record<N, T>, V>({ query: gql`subscription ${q}`, variables }, extra)
+      .subscribe<Record<N, T>, V>({query: gql`subscription ${q}`, variables}, extra)
       .pipe(
         map(result => result.data),
         filter((res): res is Record<N, T> => !!res),
@@ -250,28 +250,28 @@ export class RequestService {
 
   /**
    * @method queryAndSubscribe()
-   * Method combining retrieval of some initial data and subscription to their updates.
-   * @param nameQuery - name of the "query" type operation - data request, declared in the GraphQL server schema.
-   * @param nameSubscribe - name of the "subscription" type operation, declared in the GraphQL server schema for the requested data.
-   * @param queryObject - source object for information about the structure of requested data to which subscription is made, implementing the ValuesOrBoolean<T> interface.
+   * Метод, объединяющий получение неких первоначальных данных и подписку на их обновление.
+   * @param nameQuery - название операции типа "query" - запроса данных, объвленное в схеме сервера GraphQL.
+   * @param nameSubscribe - название операции типа "subscription", объвленное в схеме сервера GraphQL  для запрашиваемых данных.
+   * @param queryObject - объект-источник информации о структуре запрашиваемых данных, на которые происходит подписка, реализующий интерфейс ValuesOrBoolean<T>.
    * @see @alias ValuesOrBoolean<T>
-   * @param uniqueKeyForCompareItem - name of the key whose value is unique for the requested data (e.g., 'id').
-   * Required for the operation of the internal helper function to update the initial data set with actual data received within the subscription.
-   * @param variables - optional - object with variables that will be used as request parameters.
-   *  Key names in the object must correspond to parameter names declared in the server's GraphQL schema.
-   *  Allowed value types for parameters are number, string, object, or boolean.
-   *  If some parameters are marked as mandatory in the server's GraphQL schema, these key names need to be additionally passed in requiredFields,
-   *  so that the query string generator makes appropriate type markings in the resulting query string.
-   * @param paramOptions - optional - Configuration object for generating part of the query string with a description of operation parameter types.
-   * @param paramOptions.requiredFields - optional array of query parameter key names for which a mandatory type was set in the schema
-   * EXCEPT for keys for which type names are passed in `options.fieldsTypeMap`.
-   *    (e.g., the parameter type is String! instead of String).
-   * @param paramOptions.fieldsTypeMap - optional Map object containing query parameter names as keys,
-   * and a string with the name of its type defined in the GraphQL server schema as a value.
-   * IMPORTANT! - the string must also include the "!" symbol if the parameter is defined as mandatory in the schema.
-   * @returns - Observable stream with data that will arrive within the made subscription.
-   * Important! Only updates for data subscribed to will arrive in the stream.
-   * Initial data does not arrive in this stream - it needs to be obtained separately (e.g., using the customQuery$ method).
+   * @param uniqueKeyForCompareItem - наименование ключа, значение которого является уникальным для запрашиваемых данных (например,'id').
+   * Необходим для работы внутренней вспомогательной функции обновления изначального набора данных актуальными данными, поступившими в рамках подписки.
+   * @param variables - необязательный - объект с переменными, которые будут использованы в качестве параметров запроса.
+   *  Названия ключей в объекте должны соответствовать названиям параметров, объявленным в GrapQL-схеме сервера.
+   *  В качестве типа значений у параметров допустимо использовать типы - number, string, object или boolean.
+   *  Если в GrapQL-схеме на сервере какие-то из параметров отмечены как обязательные, то названия этих ключей требуется дополнительно передать в requiredFields,
+   *  чтобы генератор строки запроса сделал соответствующие отметки о типе в результирующей строке запроса.
+   * @param paramOptions - необязательный - Обект настройки генерации части строки запроса с описанием типов параметров операции.
+   * @param paramOptions.requiredFields - необязательный массив названий ключей параметров запроса, для которых в схеме был установлен обязательный тип
+   * КРОМЕ ключей, для которых названия типов передаются в `options.fieldsTypeMap`.
+   *    (например у параметра указан тип String!, а не String).
+   * @param paramOptions.fieldsTypeMap - необязательный объект Map, в качестве ключей содержащий названия параметров запроса,
+   * а в качестве значения - строку с названием его типа, определенного в схеме сервера GraphQL.
+   * ВАЖНО! - строка также должна включать символ "!", если в схеме параметр определен как обязательный.
+   * @returns - Observable поток с данными, которые будут поступать в рамках сделанной подписки.
+   * Важно! В потоке будут поступать только обновления для данных, на которые сделана подписка.
+   * Начальные данные в этом потоке не поступают - их требуется получать отдельно (например, используя метод customQuery$).
    **/
   queryAndSubscribe<
     T extends {},

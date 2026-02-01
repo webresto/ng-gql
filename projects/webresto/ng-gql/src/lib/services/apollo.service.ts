@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import type {
   ApolloQueryResult,
   FetchResult,
@@ -6,8 +6,8 @@ import type {
   QueryOptions,
   SubscriptionOptions,
 } from '@apollo/client/core';
-import { isValue } from '@axrl/common';
-import { Apollo } from 'apollo-angular';
+import {isValue} from '@axrl/common';
+import {Apollo} from 'apollo-angular';
 import type {
   EmptyObject,
   ExtraSubscriptionOptions,
@@ -15,17 +15,15 @@ import type {
   MutationResult,
   WatchQueryOptions,
 } from 'apollo-angular/types';
-import { Observable, catchError, map, throwError } from 'rxjs';
-import { NG_GQL_CONFIG, NgGqlConfig } from '../models';
+import {Observable, catchError, map, throwError} from 'rxjs';
+import {NG_GQL_CONFIG, NgGqlConfig} from '../models';
 
-import { NgGqlAvailabilityService } from './ng-gql-availability.service';
 @Injectable()
 export class ApolloService {
   constructor(
     private _apollo: Apollo,
     @Inject(NG_GQL_CONFIG) private _config: NgGqlConfig,
-    private _availabilityService: NgGqlAvailabilityService,
-  ) { }
+  ) {}
 
   watchQuery<TData, TVariables extends OperationVariables = EmptyObject>(
     options: WatchQueryOptions<TVariables, TData>,
@@ -42,9 +40,6 @@ export class ApolloService {
         console.log(error);
         if (this._config.debugMode) {
           alert(error);
-        }
-        if (error.networkError) {
-          this._availabilityService.setUnavailable();
         }
         return throwError(() => error);
       }),
@@ -65,9 +60,6 @@ export class ApolloService {
         if (this._config.debugMode) {
           alert(error);
         }
-        if (error.networkError) {
-          this._availabilityService.setUnavailable();
-        }
         return throwError(() => error);
       }),
     );
@@ -79,9 +71,6 @@ export class ApolloService {
         console.log(error);
         if (this._config.debugMode) {
           alert(error);
-        }
-        if (error.networkError) {
-          this._availabilityService.setUnavailable();
         }
         return throwError(() => error);
       }),
@@ -104,9 +93,6 @@ export class ApolloService {
         console.log(error);
         if (this._config.debugMode) {
           alert(error);
-        }
-        if (error.networkError) {
-          this._availabilityService.setUnavailable();
         }
         return throwError(() => error);
       }),

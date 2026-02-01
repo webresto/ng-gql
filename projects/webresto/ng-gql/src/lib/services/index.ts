@@ -1,5 +1,4 @@
 export * from './apollo.service';
-export * from './ng-gql-availability.service';
 export * from './ng-gql-storage.service';
 export * from './ng-gql-user-bus.service';
 export * from './ng-gql-user.service';

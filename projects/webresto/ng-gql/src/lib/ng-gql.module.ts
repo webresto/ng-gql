@@ -1,10 +1,10 @@
-import { DOCUMENT } from '@angular/common';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
-import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
-import { AuthInterceptor, MemoryInterceptor, XDeviceIdInterceptor } from './interceptors';
-import { NG_GQL_CONFIG, httpLinkFactory } from './models';
+import {DOCUMENT} from '@angular/common';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {NgModule} from '@angular/core';
+import {APOLLO_OPTIONS, ApolloModule} from 'apollo-angular';
+import {HttpLink} from 'apollo-angular/http';
+import {AuthInterceptor, MemoryInterceptor, XDeviceIdInterceptor} from './interceptors';
+import {NG_GQL_CONFIG, httpLinkFactory} from './models';
 import {
   ApolloService,
   NgGqlService,
@@ -14,7 +14,6 @@ import {
   NgOrderService,
   NqGqlLocalStorageWrapper,
   RequestService,
-  NgGqlAvailabilityService,
 } from './services';
 
 @NgModule({
@@ -29,7 +28,6 @@ import {
     NgGqlUserBusService,
     NqGqlLocalStorageWrapper,
     RequestService,
-    NgGqlAvailabilityService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MemoryInterceptor,
@@ -48,9 +46,9 @@ import {
     {
       provide: APOLLO_OPTIONS,
       useFactory: httpLinkFactory,
-      deps: [HttpLink, DOCUMENT, NG_GQL_CONFIG, NgGqlUserService, NgGqlAvailabilityService],
+      deps: [HttpLink, DOCUMENT, NG_GQL_CONFIG, NgGqlUserService],
     },
   ],
   declarations: [],
 })
-export class NgGqlModule { }
+export class NgGqlModule {}
