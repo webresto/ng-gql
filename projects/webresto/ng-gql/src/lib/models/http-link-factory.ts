@@ -1,23 +1,24 @@
-import type {ApolloLink, InMemoryCacheConfig} from '@apollo/client/core';
-import {InMemoryCache, split} from '@apollo/client/core';
-import {onError} from '@apollo/client/link/error';
-import {WebSocketLink} from '@apollo/client/link/ws';
-import {getMainDefinition} from '@apollo/client/utilities';
-import {isValue} from '@axrl/common';
-import {HttpLink} from 'apollo-angular/http';
-import {LocalStorageWrapper, persistCacheSync} from 'apollo3-cache-persist';
-import type {OperationDefinitionNode} from 'graphql';
-import {ConnectionParamsOptions, SubscriptionClient} from 'subscriptions-transport-ws';
-import {generateUUID} from './get-uuid';
-import {NgGqlConfig} from './ng-gql-config';
+import type { ApolloLink, InMemoryCacheConfig } from '@apollo/client/core';
+import { InMemoryCache, split } from '@apollo/client/core';
+import { onError } from '@apollo/client/link/error';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { isValue } from '@axrl/common';
+import { HttpLink } from 'apollo-angular/http';
+import { LocalStorageWrapper, persistCacheSync } from 'apollo3-cache-persist';
+import type { OperationDefinitionNode } from 'graphql';
+import { ConnectionParamsOptions, SubscriptionClient } from 'subscriptions-transport-ws';
+import { generateUUID } from './get-uuid';
+import { NgGqlConfig } from './ng-gql-config';
 
-import {NgGqlUserService} from '../services';
+import { NgGqlAvailabilityService, NgGqlUserService } from '../services';
 
 export function httpLinkFactory(
   httpLink: HttpLink,
   document: Document,
   config: NgGqlConfig,
   userService: NgGqlUserService,
+  availabilityService: NgGqlAvailabilityService,
 ): {
   link: ApolloLink;
   cache: InMemoryCache;
@@ -27,22 +28,31 @@ export function httpLinkFactory(
   const deviceId = savedDeviceId ?? generateUUID(win);
 
   // Create a WebSocket link:
-  const ws = new WebSocketLink(
-    new SubscriptionClient(config.url.replace('http', 'ws'), {
-      reconnect: true,
-      connectionParams: (): ConnectionParamsOptions => {
-        const token = localStorage.getItem('restocore-token');
-        return isValue(token)
-          ? {
-              'X-Device-Id': deviceId,
-              authorization: localStorage.getItem('restocore-token'),
-            }
-          : {
-              'X-Device-Id': deviceId,
-            };
-      },
-    }),
-  );
+  const subscriptionClient = new SubscriptionClient(config.url.replace('http', 'ws'), {
+    reconnect: true,
+    connectionParams: (): ConnectionParamsOptions => {
+      const token = localStorage.getItem('restocore-token');
+      return isValue(token)
+        ? {
+          'X-Device-Id': deviceId,
+          authorization: localStorage.getItem('restocore-token'),
+        }
+        : {
+          'X-Device-Id': deviceId,
+        };
+    },
+  });
+
+  // Handle WebSocket connection errors
+  subscriptionClient.onError((error) => {
+    console.warn('WebSocket connection error:', error);
+    if (config.debugMode) {
+      alert('Failed to establish connection with the server. Please check your internet connection.');
+    }
+    availabilityService.setUnavailable();
+  });
+
+  const ws = new WebSocketLink(subscriptionClient);
 
   // Error link to handle logout on specific errors
   const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -60,8 +70,8 @@ export function httpLinkFactory(
   const link = errorLink.concat(
     split(
       // split based on operation type
-      ({query}) => {
-        const {kind, operation} = <OperationDefinitionNode>getMainDefinition(query);
+      ({ query }) => {
+        const { kind, operation } = <OperationDefinitionNode>getMainDefinition(query);
         return kind === 'OperationDefinition' && operation === 'subscription';
       },
       ws,
@@ -102,8 +112,8 @@ export function httpLinkFactory(
 
   const cache = new InMemoryCache(
     isValue(config.apolloCacheConfig)
-      ? {...defaultCacheConfig, ...config.apolloCacheConfig}
-      : {...defaultCacheConfig},
+      ? { ...defaultCacheConfig, ...config.apolloCacheConfig }
+      : { ...defaultCacheConfig },
   );
   if (!isValue(config.usePersistCache) || config.usePersistCache) {
     persistCacheSync({

@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   createObservable,
   createSubject,
@@ -6,7 +6,7 @@ import {
   distinctUntilObjectChanged,
   isValue,
 } from '@axrl/common';
-import {BehaviorSubject, Observable, exhaustMap, filter, map, tap} from 'rxjs';
+import { BehaviorSubject, Observable, exhaustMap, filter, map, tap } from 'rxjs';
 import type {
   CheckPhoneCodeInput,
   CheckPhoneResponse,
@@ -32,11 +32,11 @@ import {
   NAVIGATION_FRAGMENTS,
   NG_GQL_CONFIG,
 } from '../models';
-import {NgGqlStoreService} from './ng-gql-storage.service';
-import {RequestService} from './request.service';
+import { NgGqlStoreService } from './ng-gql-storage.service';
+import { RequestService } from './request.service';
 
 @Injectable()
-/** Основной сервис для работы с библиотекой. Содержит все необходимые методы для управления сайтом. */
+/** Main service for working with the library. Contains all necessary methods for site management. */
 export class NgGqlService {
   private _pendingLoadNavBar = createSubject<boolean>(false);
   private _pendingLoadNavigation = createSubject<boolean>(false);
@@ -52,7 +52,7 @@ export class NgGqlService {
     @Inject(GROUP_FRAGMENTS)
     private _defaultGroupFragments: ValuesOrBoolean<Group>,
     @Inject(DISH_FRAGMENTS) private _defaultDishFragments: ValuesOrBoolean<Dish>,
-  ) {}
+  ) { }
 
   getNgGqlConfig(): NgGqlConfig {
     return deepClone(this._config);
@@ -60,24 +60,24 @@ export class NgGqlService {
 
   /**
    * @method getNavigation$()
-   * Используется для получения массива обьектов навигации для различных компонентов приложения.
-   * @param options - объект NavigationLoader. Обязателен, при использовании нестандартной схемы навигации в приложении.
+   * Used to get an array of navigation objects for various application components.
+   * @param options - NavigationLoader object. Mandatory when using a non-standard navigation scheme in the application.
    * @see @interface NavigationLoader<T>
    */
   getNavigation$<T extends NavigationBase>(options: NavigationLoader<T>): Observable<T[]>;
   /**
    * @method getNavigation$()
-   * Используется для получения массива обьектов навигации для различных компонентов приложения.
-   * Если приложение использует стандартную механику навигации, параметр `options` - не требуется.
+   * Used to get an array of navigation objects for various application components.
+   * If the application uses the standard navigation mechanism, the `options` parameter is not required.
    */
   getNavigation$(): Observable<Navigation[]>;
   /**
    * @method getNavigation$()
-   * Используется для получения массива обьектов навигации для различных компонентов приложения.
-   * Если приложение использует стандартную механику навигации, параметр `options` - не требуется.
-   * Если приложение использует нестандартную механику навигации, параметр `options` - обязательный.
-   * @param options - объект NavigationLoader.
-   * Обязателен, при использовании нестандартной схемы навигации в приложении.
+   * Used to get an array of navigation objects for various application components.
+   * If the application uses the standard navigation mechanism, the `options` parameter is not required.
+   * If the application uses a non-standard navigation mechanism, the `options` parameter is mandatory.
+   * @param options - NavigationLoader object.
+   * Mandatory when using a non-standard navigation scheme in the application.
    * @see @interface NavigationLoader<T>
    */
   getNavigation$<T extends NavigationBase = Navigation>(
@@ -89,7 +89,7 @@ export class NgGqlService {
     );
   }
 
-  /** Список ссылок для необходимого раздела навигации */
+  /** List of links for the required navigation section */
   getNavigationPoints(
     slug: 'header' | 'footer' | 'social' | string,
   ): Observable<NavigationsMenuItem[]> {
@@ -116,7 +116,7 @@ export class NgGqlService {
     );
   }
 
-  /** Возвращает ссылку на страницу, которая будет стартовой для меню */
+  /** Returns a link to the page that will be the start page for the menu */
   getStartMenuSlug(): Observable<[string[], string | undefined]> {
     return this.getNavBarMenu().pipe(
       map(menu => {
@@ -143,10 +143,10 @@ export class NgGqlService {
   }
 
   /**
-   * Внутренний метод, используемый для загрузки основного - "корневого" списка групп.
+   * Internal method used to load the main - "root" list of groups.
    * @param slug - init- slug.
-   * Либо принимается извне через внутренний поток `initGroupSlug$`, либо формируется на основании данных в массиве Navigation[], загруженном на старте приложения.
-   * Чтобы обновлять значение в `initGroupSlug$` используется метод `updateInitGroupSlug`
+   * Either accepted externally via the internal stream `initGroupSlug$`, or formed based on data in the Navigation[] array loaded at the start of the application.
+   * To update the value in `initGroupSlug$`, use the method `updateInitGroupSlug`.
    * @returns
    */
   getGroup(slug: string, concept: string = 'origin'): Observable<Group | null> {
@@ -190,9 +190,9 @@ export class NgGqlService {
 
   /**
    * @method addAmountToDish()
-   * Метод-хелпер, используемый для добавления модификаторам блюда параметра amount и установки ему значения, в случае, если они у него имеются.
-   * @param sourceDish - объект с исходными данными блюда.
-   * @returns новый, дополненный объект с данными блюда.
+   * Helper method used to add the amount parameter to dish modifiers and set its value if they have it.
+   * @param sourceDish - object with initial dish data.
+   * @returns new, augmented object with dish data.
    */
   addAmountToDish(sourceDish: Dish): Dish {
     return {
@@ -201,21 +201,21 @@ export class NgGqlService {
       isLoading: sourceDish.isLoading ?? createSubject<boolean>(false),
       modifiers: sourceDish.modifiers
         ? sourceDish.modifiers.map((groupModifier, groupIndex) => ({
-            ...groupModifier,
-            childModifiers: groupModifier.childModifiers
-              ?.filter(childModifier => isValue(childModifier.dish))
-              .map((childModifier, childIndex) => ({
-                ...childModifier,
-                amount:
-                  groupIndex === 0 &&
+          ...groupModifier,
+          childModifiers: groupModifier.childModifiers
+            ?.filter(childModifier => isValue(childModifier.dish))
+            .map((childModifier, childIndex) => ({
+              ...childModifier,
+              amount:
+                groupIndex === 0 &&
                   childIndex === 0 &&
                   groupModifier.childModifiers?.length === 2 &&
                   groupModifier.minAmount === 1 &&
                   groupModifier.maxAmount === 1
-                    ? 1
-                    : childModifier.defaultAmount ?? 0,
-              })),
-          }))
+                  ? 1
+                  : childModifier.defaultAmount ?? 0,
+            })),
+        }))
         : [],
     };
   }
@@ -241,8 +241,8 @@ export class NgGqlService {
 
   /**
    * @method isKnownPhone$
-   * Проверяет переданный номер телефона на "знакомость".
-   * @param phone - Объект с данными номера телефона.
+   * Checks the passed phone number for "familiarity".
+   * @param phone - Object with phone number data.
    * @returns
    */
   isKnownPhone$(
@@ -257,13 +257,13 @@ export class NgGqlService {
       codeTime: true,
       confirmCode: true,
     };
-    const vOb = customvOb ? {...phonevOb, ...customvOb} : phonevOb;
+    const vOb = customvOb ? { ...phonevOb, ...customvOb } : phonevOb;
     return this._requestService
       .customQuery$<
         PhoneKnowledge,
         'isKnownPhone',
-        {phone: Phone}
-      >('isKnownPhone', vOb, {phone}, {fieldsTypeMap: new Map([['phone', 'InputPhone!']])})
+        { phone: Phone }
+      >('isKnownPhone', vOb, { phone }, { fieldsTypeMap: new Map([['phone', 'InputPhone!']]) })
       .pipe(
         map(data => (Array.isArray(data.isKnownPhone) ? data.isKnownPhone : [data.isKnownPhone])),
       );
@@ -271,7 +271,7 @@ export class NgGqlService {
 
   phoneKnowledgeGetCode$(phone: Phone): Observable<CheckPhoneResponse[]> {
     return this._requestService
-      .customQuery$<CheckPhoneResponse, 'phoneKnowledgeGetCode', {phone: Phone}>(
+      .customQuery$<CheckPhoneResponse, 'phoneKnowledgeGetCode', { phone: Phone }>(
         'phoneKnowledgeGetCode',
         {
           type: true,
@@ -280,8 +280,8 @@ export class NgGqlService {
           confirmed: true,
           firstbuy: true,
         },
-        {phone},
-        {fieldsTypeMap: new Map([['phone', 'InputPhone!']])},
+        { phone },
+        { fieldsTypeMap: new Map([['phone', 'InputPhone!']]) },
       )
       .pipe(
         map(data =>
@@ -381,20 +381,20 @@ export class NgGqlService {
         return isValue(data)
           ? createObservable(<T[]>data)
           : this._requestService
-              .queryAndSubscribe(
-                options?.nameQuery ?? 'navigation',
-                options?.nameSubscribe ?? 'navigation',
-                options?.queryObject ??
-                  <NavigationLoader<T>['queryObject']>this._defaultNavigationFragments,
-                options?.uniqueKeyForCompareItem ??
-                  <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId',
-              )
-              .pipe(
-                map(navigationData => {
-                  this._storage.updateNavigation(navigationData);
-                  return navigationData;
-                }),
-              );
+            .queryAndSubscribe(
+              options?.nameQuery ?? 'navigation',
+              options?.nameSubscribe ?? 'navigation',
+              options?.queryObject ??
+              <NavigationLoader<T>['queryObject']>this._defaultNavigationFragments,
+              options?.uniqueKeyForCompareItem ??
+              <NavigationLoader<T>['uniqueKeyForCompareItem']>'mnemonicId',
+            )
+            .pipe(
+              map(navigationData => {
+                this._storage.updateNavigation(navigationData);
+                return navigationData;
+              }),
+            );
       }),
       tap(() => this._pendingLoadNavigation.next(false)),
     );
@@ -413,35 +413,35 @@ export class NgGqlService {
         return isValue(item)
           ? createObservable(item.menu)
           : this._requestService
-              .customQuery$<NavbarMenuLink, 'menu'>(
-                'menu',
-                {
-                  name: true,
-                  slug: true,
-                  id: true,
-                  icon: true,
-                },
-                {
-                  concept,
-                },
-              )
-              .pipe(
-                map(data => {
-                  const rawResult = Array.isArray(data.menu) ? data.menu : [data.menu];
-                  const result = rawResult.reduce<NavbarMenuLink[]>(this._addIfItemNotExist, []);
-                  const newItems = [...items, {concept, topLevelGroupId, menu: result}];
+            .customQuery$<NavbarMenuLink, 'menu'>(
+              'menu',
+              {
+                name: true,
+                slug: true,
+                id: true,
+                icon: true,
+              },
+              {
+                concept,
+              },
+            )
+            .pipe(
+              map(data => {
+                const rawResult = Array.isArray(data.menu) ? data.menu : [data.menu];
+                const result = rawResult.reduce<NavbarMenuLink[]>(this._addIfItemNotExist, []);
+                const newItems = [...items, { concept, topLevelGroupId, menu: result }];
 
-                  this._storage.updateNavBarMenus(newItems);
+                this._storage.updateNavBarMenus(newItems);
 
-                  return result;
-                }),
-              );
+                return result;
+              }),
+            );
       }),
       tap(() => this._pendingLoadNavBar.next(false)),
     );
   }
 
-  private _addIfItemNotExist = <T extends {id: string | number}>(
+  private _addIfItemNotExist = <T extends { id: string | number }>(
     accumulator: T[],
     current: T,
   ): T[] => {
