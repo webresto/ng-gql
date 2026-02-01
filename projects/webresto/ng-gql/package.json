@@ -1,6 +1,6 @@
 {
   "name": "@webresto/ng-gql",
-  "version": "2.1.2",
+  "version": "2.1.4",
   "repository": {
     "type": "git",
     "url": "https://git.hm/webresto/ng-graphql.git"
