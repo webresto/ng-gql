@@ -19,7 +19,8 @@ jobs:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm install 2>&1 || true && TZ=GMT-3 npm run test
+      - run: npm install --legacy-peer-deps
+      - run: TZ=GMT-3 npm run test --if-present
       - run: npm run build
 
       - name: Publish to npm (master)

@@ -21,7 +21,8 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@webresto'
 
-      - run: npm install 2>&1 || true && TZ=GMT-3 npm run test
+      - run: npm install --legacy-peer-deps
+      - run: TZ=GMT-3 npm run test --if-present
       - run: npm run build
 
       - name: Publish to GitHub Packages
