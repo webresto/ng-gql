@@ -15,8 +15,6 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     environment: npm
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +23,6 @@ jobs:
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
-          always-auth: true
 
       - run: npm install --legacy-peer-deps
       - run: TZ=GMT-3 npm run test --if-present
