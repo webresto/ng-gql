@@ -938,7 +938,8 @@ export class NgOrderService {
 
   private _loadCurrentOrNewOrder(id: string, token: string): Observable<Order> {
     return this.loadOrder$(id).pipe(
-      switchMap(order => {
+      // If rejected order keeps emitting updates, do not restart the new-cart request loop.
+      exhaustMap(order => {
         if (order.state === 'ORDER' || order.state === 'DONE' || order.state === 'REJECT') {
           const newId = this._storageWrapper.getOrderId(token, undefined, true);
           return this.loadOrder$(newId);
