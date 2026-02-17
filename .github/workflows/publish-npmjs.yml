@@ -1,12 +1,16 @@
 name: Publish Package to npmjs
+
 on:
   push:
     branches:
+      - master
       - alpha
       - next
+
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,7 +22,15 @@ jobs:
       - run: npm install 2>&1 || true && TZ=GMT-3 npm run test
       - run: npm run build
 
-      - name: Publish preview to npm
+      - name: Publish to npm (master)
+        if: github.ref_name == 'master'
+        run: npm publish
+        working-directory: ./dist
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish preview to npm (alpha/next)
+        if: github.ref_name != 'master'
         working-directory: ./dist
         run: |
           set -euo pipefail
