@@ -21,9 +21,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
 
+      - run: node -v && npm -v
       - run: npm install --legacy-peer-deps
       - run: TZ=GMT-3 npm run test --if-present
       - run: npm run build
