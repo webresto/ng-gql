@@ -7,9 +7,16 @@ on:
       - alpha
       - next
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: npm
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -18,6 +25,7 @@ jobs:
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
+          always-auth: true
 
       - run: npm install --legacy-peer-deps
       - run: TZ=GMT-3 npm run test --if-present
@@ -25,10 +33,8 @@ jobs:
 
       - name: Publish to npm (master)
         if: github.ref_name == 'master'
-        run: npm publish
+        run: npm publish --provenance --access public
         working-directory: ./dist
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish preview to npm (alpha/next)
         if: github.ref_name != 'master'
@@ -38,6 +44,4 @@ jobs:
           BRANCH=${GITHUB_REF_NAME}
           BASE_VERSION=$(node -p "require('./package.json').version.split('-')[0]")
           npm version "${BASE_VERSION}-${BRANCH}.${GITHUB_RUN_NUMBER}" --no-git-tag-version
-          npm publish --tag "$BRANCH"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --provenance --access public --tag "$BRANCH"
