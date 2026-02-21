@@ -210,6 +210,12 @@ export class NgOrderService {
           if (this._config.debugMode) {
             alert(JSON.stringify(err));
           }
+          const message = err instanceof Error ? err.message : JSON.stringify(err);
+          this._requestService.emitMessageEvent({
+            type: 'error',
+            title: 'Error',
+            message,
+          });
           return of(() => {});
         }),
       );
