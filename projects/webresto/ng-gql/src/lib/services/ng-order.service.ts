@@ -549,6 +549,10 @@ export class NgOrderService {
         date: options.orderForm.date,
       };
 
+      if (isValue(this._config.platform)) {
+        data.platform = this._config.platform;
+      }
+
       if (isValue(options.orderForm.spendBonus?.amount)) {
         data.spendBonus = options.orderForm.spendBonus;
       }

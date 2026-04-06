@@ -36,6 +36,12 @@ export interface NgGqlConfig {
   orderIdStorageToken?: string | null;
 
   /**
+   * Платформа, которая будет отправляться в checkOrder.
+   * Например: `web`, `ios`, `android`, `telegram-webapp`.
+   */
+  platform?: string | null;
+
+  /**
    * Телефонный код страны
    */
   phoneCode: string | null;
@@ -59,4 +65,3 @@ export interface NgGqlConfig {
    */
   debugMode?: boolean;
 }
-

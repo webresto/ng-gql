@@ -119,6 +119,7 @@ export interface SetDishCommentInput {
 export interface CheckOrderInput extends Partial<BaseModelWithCustomData> {
   orderId: string;
   paymentMethodId?: string;
+  platform?: string;
   selfService: boolean;
   pickupPointId?: string;
   locationId?: string;
