@@ -13,6 +13,7 @@ import {
   map,
   mergeWith,
   of,
+  scan,
   startWith,
   switchMap,
 } from 'rxjs';
@@ -338,6 +339,51 @@ export class NgOrderService {
   }
 
   /**
+   * @method loadOrdersByIds$()
+   *
+   * Загружает несколько заказов по массиву orderIds одним запросом и подписывается на их обновления
+   * через одну WebSocket-подписку. При изменении любого из заказов сервер присылает обновлённый объект,
+   * который мерджится в локальный массив по id.
+   *
+   * @param orderIds - массив id загружаемых заказов.
+   */
+  loadOrdersByIds$(orderIds: string[]): Observable<Order[]> {
+    return this._requestService
+      .customQuery$<Order, 'orders', {orderIds: string[]}>(
+        'orders',
+        this._defaultOrderFragments,
+        {orderIds},
+        {fieldsTypeMap: new Map([['orderIds', '[String!]!']])},
+      )
+      .pipe(
+        map(data => (Array.isArray(data.orders) ? data.orders : [data.orders])),
+        switchMap(orders => {
+          const subscribeIds = orders.map(o => o.id).filter(isValue);
+          return this._requestService
+            .customSubscribe$<Order, 'orders', {orderIds: string[]}>(
+              'orders',
+              this._defaultOrderFragments,
+              {orderIds: subscribeIds},
+              {fieldsTypeMap: new Map([['orderIds', '[String!]!']])},
+            )
+            .pipe(
+              startWith(null),
+              scan((store, updated) => {
+                if (!updated) return store;
+                const idx = store.findIndex(o => o.id === updated.id);
+                if (idx >= 0) {
+                  const next = [...store];
+                  next[idx] = {...store[idx], ...updated};
+                  return next;
+                }
+                return store;
+              }, orders),
+            );
+        }),
+      );
+  }
+
+  /**
    * @method loadOrder$()
    *
    * Метод загружает заказ и делает подписку для получения по нему обновлений.
@@ -345,7 +391,7 @@ export class NgOrderService {
    * (например, данные для страницы "Спасибо за заказ").
    *
    * @param id - id загружаемого заказа.
-   *  */
+   */
   loadOrder$(id: string, isShort: boolean = false): Observable<Order> {
     return this._requestService
       .queryAndSubscribe<Order, 'order', 'order', {orderId: string} | {shortId: string}>(
