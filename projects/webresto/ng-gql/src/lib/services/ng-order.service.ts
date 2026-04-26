@@ -3,9 +3,11 @@ import {deepClone, isValue} from '@axrl/common';
 import type {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import type {BehaviorSubject, Observable} from 'rxjs';
 import {
+  EMPTY,
   catchError,
   combineLatest,
   concatMap,
+  distinctUntilChanged,
   distinctUntilKeyChanged,
   exhaustMap,
   filter,
@@ -60,13 +62,13 @@ export class NgOrderService {
   private _orderBus = new EventEmitter<CartBusEvent>();
 
   private readonly _order$: Observable<Order> = this._storageWrapper.storageOrderIdToken$.pipe(
-    switchMap(storageOrderIdToken =>
-      fromEvent<StorageEvent>(window, 'storage', {
+    switchMap(storageOrderIdToken => {
+      return fromEvent<StorageEvent>(window, 'storage', {
         passive: true,
       }).pipe(
         startWith(this._storageWrapper.startStorageEventFactory(storageOrderIdToken)),
         filter(event => event.key === storageOrderIdToken),
-        distinctUntilKeyChanged('key'),
+        distinctUntilChanged((a, b) => a.newValue === b.newValue),
         switchMap(event => {
           const storageOrderId = this._storageWrapper.getOrderId(
             storageOrderIdToken,
@@ -74,8 +76,8 @@ export class NgOrderService {
           );
           return this._loadCurrentOrNewOrder(storageOrderId, storageOrderIdToken);
         }),
-      ),
-    ),
+      );
+    }),
     switchMap(order => {
       const storageOrderId = order.id;
 
@@ -954,7 +956,16 @@ export class NgOrderService {
                 this._storageWrapper.removeOrderId(newOrderId);
               }
             } else {
-              this._storageWrapper.removeOrderId();
+              // Проверяем: если _loadCurrentOrNewOrder уже записал новый id в storage
+              // (через subscription, которая пришла раньше), не стираем его —
+              // иначе _order$ сгенерирует ещё один лишний id.
+              const currentStorageId = this._storageWrapper.currentStorageOrderIdToken
+                ? this._storageWrapper.getOrderId(this._storageWrapper.currentStorageOrderIdToken)
+                : null;
+              const alreadyRotated = isValue(currentStorageId) && currentStorageId !== sendOrderData.orderId;
+              if (!alreadyRotated) {
+                this._storageWrapper.removeOrderId();
+              }
             }
           }
           return data.sendOrder;
@@ -969,7 +980,7 @@ export class NgOrderService {
         'orderAddDish',
         AddToOrderInput
       >('orderAddDish', this._defaultOrderFragments, data)
-      .pipe(map(data => data.orderAddDish));
+      .pipe(map(res => res.orderAddDish));
   }
 
   private _removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
@@ -986,8 +997,11 @@ export class NgOrderService {
     return this.loadOrder$(id).pipe(
       switchMap(order => {
         if (order.state === 'ORDER' || order.state === 'DONE' || order.state === 'REJECT') {
-          const newId = this._storageWrapper.getOrderId(token, undefined, true);
-          return this.loadOrder$(newId);
+          // Ротируем id через storageWrapper с диспатчем storage event —
+          // это переключит switchMap в _order$ на новый id и завершит
+          // текущую подписку на старый заказ, предотвращая бесконечную генерацию.
+          this._storageWrapper.rotateOrderId();
+          return EMPTY;
         } else {
           return of(order);
         }

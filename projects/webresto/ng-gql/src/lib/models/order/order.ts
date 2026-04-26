@@ -20,7 +20,7 @@ import {PickupPoint} from '../pickupPoint';
  *  `ORDER` - заказ успешно оформлен. Это финальный статус и он не подразумевает, что заказ также был доставлен.
 		Данные о выполненной доставке могут быть получены от RMS (`Order.rmsDelivered`).
  */
-export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER' | 'DONE' | 'REJECT';
+export type OrderState = 'NEW' | 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER' | 'COOKING' | 'ON_THE_WAY' | 'DONE' | 'REJECT';
 
 interface OrderDeliveryState {
   deliveryTimeMinutes: number;

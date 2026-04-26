@@ -46,7 +46,7 @@ export class ApolloService {
     );
   }
 
-  query<T, V = EmptyObject>(options: QueryOptions<V, T>): Observable<ApolloQueryResult<T>> {
+  query<T, V extends OperationVariables = EmptyObject>(options: QueryOptions<V, T>): Observable<ApolloQueryResult<T>> {
     return this._apollo.query<T, V>(options).pipe(
       map(data => {
         if (isValue(data.error) || isValue(data.errors)) {
@@ -65,7 +65,7 @@ export class ApolloService {
     );
   }
 
-  mutate<T, V = EmptyObject>(options: MutationOptions<T, V>): Observable<MutationResult<T>> {
+  mutate<T, V extends OperationVariables = EmptyObject>(options: MutationOptions<T, V>): Observable<MutationResult<T>> {
     return this._apollo.mutate<T, V>(options).pipe(
       catchError(error => {
         console.log(error);
@@ -77,7 +77,7 @@ export class ApolloService {
     );
   }
 
-  subscribe<T, V = EmptyObject>(
+  subscribe<T, V extends OperationVariables = EmptyObject>(
     options: SubscriptionOptions<V, T>,
     extra?: ExtraSubscriptionOptions,
   ): Observable<FetchResult<T>> {

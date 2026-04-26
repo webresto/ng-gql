@@ -175,7 +175,7 @@ export class RequestService {
    *
    * @returns - Observable поток с результатом выполнения операции в формате объекта с одним ключом N (название операции), значение которого - непосредственно результат операции.
    **/
-  customMutation$<T extends {}, N extends `${string}`, V = GQLRequestVariables>(
+  customMutation$<T extends {}, N extends `${string}`, V extends OperationVariables = GQLRequestVariables>(
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables: V,
@@ -225,7 +225,7 @@ export class RequestService {
    * В ситуациях, где требуется получить некие данные и подписаться на обновления для них, также можно для удобства использовать метод queryAndSubscribe.
    * @see this.queryAndSubscribe
    **/
-  customSubscribe$<T extends {}, N extends `${string}`, V = GQLRequestVariables>(
+  customSubscribe$<T extends {}, N extends `${string}`, V extends OperationVariables = GQLRequestVariables>(
     name: N,
     queryObject: ValuesOrBoolean<T>,
     variables?: V,
@@ -278,7 +278,7 @@ export class RequestService {
     NQuery extends `${string}`,
     NSubscribe extends `${string}`,
     VQ extends OperationVariables = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
-    VS = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
+    VS extends OperationVariables = Exclude<GQLRequestVariables, 'query' | 'subscribe'>,
   >(
     nameQuery: NQuery,
     nameSubscribe: NSubscribe,

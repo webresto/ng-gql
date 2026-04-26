@@ -58,5 +58,11 @@ export interface NgGqlConfig {
    * Если true - ошибки в ответах от сервера API GraphQL дополнительно будут выводиться в alert()
    */
   debugMode?: boolean;
+
+  /**
+   * Идентификатор платформы (например 'web', 'pwa-ios', 'app-android').
+   * Может быть геттером для динамического определения платформы.
+   */
+  platform?: string | undefined;
 }
 

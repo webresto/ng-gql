@@ -7,6 +7,7 @@ import {AuthInterceptor, MemoryInterceptor, XDeviceIdInterceptor} from './interc
 import {NG_GQL_CONFIG, httpLinkFactory} from './models';
 import {
   ApolloService,
+  NgGqlAvailabilityService,
   NgGqlService,
   NgGqlStoreService,
   NgGqlUserBusService,
@@ -21,6 +22,7 @@ import {
   exports: [ApolloModule, HttpClientModule],
   providers: [
     ApolloService,
+    NgGqlAvailabilityService,
     NgOrderService,
     NgGqlService,
     NgGqlUserService,
