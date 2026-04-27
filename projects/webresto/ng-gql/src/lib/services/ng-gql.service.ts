@@ -116,11 +116,13 @@ export class NgGqlService {
     );
   }
 
-  /** Возвращает ссылку на страницу, которая будет стартовой для меню */
-  getStartMenuSlug(): Observable<[string[], string | undefined]> {
+  /** Возвращает ссылку на страницу, которая будет стартовой для меню, или null если меню пустое */
+  getStartMenuSlug(): Observable<[string[], string | undefined] | null> {
     return this.getNavBarMenu().pipe(
       map(menu => {
-        const navbarmenu: NavBarLinkItem[] = menu.map(group => ({
+        const filtered = menu.filter(Boolean);
+        if (filtered.length === 0) return null;
+        const navbarmenu: NavBarLinkItem[] = filtered.map(group => ({
           id: group.id,
           name: group.name,
           icon: group.icon,
@@ -427,7 +429,7 @@ export class NgGqlService {
               )
               .pipe(
                 map(data => {
-                  const rawResult = Array.isArray(data.menu) ? data.menu : [data.menu];
+                  const rawResult = (Array.isArray(data.menu) ? data.menu : [data.menu]).filter(Boolean);
                   const result = rawResult.reduce<NavbarMenuLink[]>(this._addIfItemNotExist, []);
                   const newItems = [...items, {concept, topLevelGroupId, menu: result}];
 
