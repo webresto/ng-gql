@@ -20,7 +20,7 @@ import {PickupPoint} from '../pickupPoint';
  *  `ORDER` - заказ успешно оформлен. Это финальный статус и он не подразумевает, что заказ также был доставлен.
 		Данные о выполненной доставке могут быть получены от RMS (`Order.rmsDelivered`).
  */
-export type OrderState = 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER' | 'DONE' | 'REJECT';
+export type OrderState = 'NEW' | 'CART' | 'CHECKOUT' | 'PAYMENT' | 'ORDER' | 'COOKING' | 'ON_THE_WAY' | 'DONE' | 'REJECT';
 
 interface OrderDeliveryState {
   deliveryTimeMinutes: number;
@@ -63,6 +63,7 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   bonusesTotal: number;
   promotionUnorderable: boolean;
   promotionCodeString: string | null;
+  promotionCodeDescription: string | null;
   delivery: OrderDeliveryState | null;
 }
 
@@ -135,6 +136,14 @@ export interface CheckResponse {
   order: Partial<Order>;
   message: Partial<Message> | null;
   action: Partial<Action> | null;
+}
+
+export interface PromotionCodeResponse {
+  order: Order;
+  promocodeValid: boolean | null;
+  promotionCodeString: string | null;
+  promotionCodeDescription: string | null;
+  message: Partial<Message> | null;
 }
 
 export interface OrderAdditionalFields {

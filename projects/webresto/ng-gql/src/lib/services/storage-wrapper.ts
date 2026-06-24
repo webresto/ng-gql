@@ -79,6 +79,20 @@ export class NqGqlLocalStorageWrapper {
     distinctUntilChanged(),
   );
 
+  get currentStorageOrderIdToken(): string | null {
+    return this._storageOrderIdToken$.getValue();
+  }
+
+  /**
+   * Генерирует новый orderId и сохраняет его через removeOrderId(newId),
+   * что диспатчит storage event — необходимо чтобы _order$ переключился
+   * на новый id и завершил подписку на старый заказ.
+   */
+  rotateOrderId(): void {
+    const newId = this._orderIdFactoryFn();
+    this.removeOrderId(newId);
+  }
+
   constructor(
     @Inject(NG_GQL_CONFIG) private _config: NgGqlConfig,
     @Inject(ORDERID_FACTORY_FN) private _orderIdFactoryFn: () => string,

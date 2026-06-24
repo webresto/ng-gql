@@ -1,10 +1,12 @@
 import type {BehaviorSubject} from 'rxjs';
+import type {Captcha} from './captcha';
 import type {
   AddToOrderInput,
   Address,
   CheckOrderInput,
   CheckResponse,
   Order,
+  PromotionCodeResponse,
   RemoveOrSetAmountToDish,
   SetDishCommentInput,
 } from './order/order';
@@ -22,7 +24,9 @@ export type CartBusEvent =
   | CartBusEventSetCommentToDish
   | CartBusEventCheck
   | CartBusEventSend
-  | CartBusEventClone;
+  | CartBusEventClone
+  | CartBusEventPromoCodeApply
+  | CartBusEventPromoCodeReset;
 
 /**
  * @event CartBusEventBase Базовый интерфейс событий в шине событий
@@ -124,6 +128,19 @@ export interface UpdateOrderInput {
   pickupPoint: string | undefined;
 }
 
+export interface PromoCodeApplyInput {
+  orderId: Order['id'];
+  promocode: string;
+}
+
+export interface PromoCodeApplyMutationInput extends PromoCodeApplyInput {
+  captcha: Captcha;
+}
+
+export interface PromoCodeResetInput {
+  orderId: Order['id'];
+}
+
 /**
  * @event CartBusEventSen
  * Отправка заказа на оформление */
@@ -138,4 +155,14 @@ export interface CartBusEventSend extends CartBusEventBase<CheckResponse> {
 export interface CartBusEventClone extends CartBusEventBase<Order> {
   event: 'clone';
   data: SendOrderInput;
+}
+
+export interface CartBusEventPromoCodeApply extends CartBusEventBase<PromotionCodeResponse> {
+  event: 'promoCodeApply';
+  data: PromoCodeApplyInput;
+}
+
+export interface CartBusEventPromoCodeReset extends CartBusEventBase<PromotionCodeResponse> {
+  event: 'promoCodeReset';
+  data: PromoCodeResetInput;
 }

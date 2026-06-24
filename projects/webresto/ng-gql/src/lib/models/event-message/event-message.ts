@@ -15,7 +15,7 @@ export class EventMessage {
 export interface Message {
   id: string;
   title: string;
-  type: 'info' | 'error' | 'warn';
+  type: 'info' | 'error' | 'warn' | 'success';
   message: string;
 }
 

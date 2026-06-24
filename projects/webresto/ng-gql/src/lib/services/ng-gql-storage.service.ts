@@ -77,10 +77,12 @@ export class NgGqlStoreService {
   }
 
   updateOrderHystory(newPart: UserOrderHystory[]): void {
-    const hystory = [...this._orderHystory.value];
-    hystory.push(...newPart);
-    this._orderHystory.next(hystory);
+    const existing = this._orderHystory.value;
+    const existingIds = new Set(existing.map((item: UserOrderHystory) => item.id));
+    const merged = [...existing, ...newPart.filter((item: UserOrderHystory) => !existingIds.has(item.id))];
+    this._orderHystory.next(merged);
   }
+
 
   updateUserLocations(newValue: UserLocationResponse): void {
     const current = this._userLocations.value;

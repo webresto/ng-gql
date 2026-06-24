@@ -3,16 +3,20 @@ import {deepClone, isValue} from '@axrl/common';
 import type {ScanFormType} from '@axrl/ngx-extended-form-builder';
 import type {BehaviorSubject, Observable} from 'rxjs';
 import {
+  EMPTY,
   catchError,
   combineLatest,
   concatMap,
+  distinctUntilChanged,
   distinctUntilKeyChanged,
   exhaustMap,
   filter,
+  from,
   fromEvent,
   map,
   mergeWith,
   of,
+  scan,
   startWith,
   switchMap,
 } from 'rxjs';
@@ -31,6 +35,10 @@ import type {
   OrderModifier,
   PaymentMethod,
   PickupPoint,
+  PromoCodeApplyInput,
+  PromoCodeApplyMutationInput,
+  PromoCodeResetInput,
+  PromotionCodeResponse,
   RemoveOrSetAmountToDish,
   SendOrderInput,
   SetDishCommentInput,
@@ -59,13 +67,13 @@ export class NgOrderService {
   private _orderBus = new EventEmitter<CartBusEvent>();
 
   private readonly _order$: Observable<Order> = this._storageWrapper.storageOrderIdToken$.pipe(
-    switchMap(storageOrderIdToken =>
-      fromEvent<StorageEvent>(window, 'storage', {
+    switchMap(storageOrderIdToken => {
+      return fromEvent<StorageEvent>(window, 'storage', {
         passive: true,
       }).pipe(
         startWith(this._storageWrapper.startStorageEventFactory(storageOrderIdToken)),
         filter(event => event.key === storageOrderIdToken),
-        distinctUntilKeyChanged('key'),
+        distinctUntilChanged((a, b) => a.newValue === b.newValue),
         switchMap(event => {
           const storageOrderId = this._storageWrapper.getOrderId(
             storageOrderIdToken,
@@ -73,8 +81,8 @@ export class NgOrderService {
           );
           return this._loadCurrentOrNewOrder(storageOrderId, storageOrderIdToken);
         }),
-      ),
-    ),
+      );
+    }),
     switchMap(order => {
       const storageOrderId = order.id;
 
@@ -163,7 +171,7 @@ export class NgOrderService {
    */
   private readonly _orderBus$: Observable<void | (() => void)> = this._orderBus.asObservable().pipe(
     concatMap(busEvent => {
-      const reducer = (busEventData: CartBusEvent): Observable<Order | CheckResponse> => {
+      const reducer = (busEventData: CartBusEvent): Observable<Order | CheckResponse | PromotionCodeResponse> => {
         switch (busEventData.event) {
           case 'add':
             return this._addDishToOrder$(busEventData.data);
@@ -177,19 +185,26 @@ export class NgOrderService {
             return this._cloneOrder$(busEventData.data);
           case 'update':
             return this._updateOrder$(busEventData.data);
+          case 'promoCodeApply':
+            return this._applyPromoCode$(busEventData.data);
+          case 'promoCodeReset':
+            return this._resetPromoCode$(busEventData.data);
           case 'setDishAmount':
             return this._setDishAmount$(busEventData.data);
           case 'setCommentToDish':
             return this._setDishComment$(busEventData.data);
         }
       };
+      if (isValue(busEvent.isLoading)) {
+        busEvent.isLoading.next(true);
+      }
       return reducer(busEvent).pipe(
         map(result => {
           if (isValue(busEvent.isLoading)) {
             busEvent.isLoading.next(false);
           }
           if (isValue(busEvent.successCb)) {
-            busEvent.successCb(<Order & CheckResponse>result);
+            busEvent.successCb(<Order & CheckResponse & PromotionCodeResponse>result);
           }
 
           if (isValue(result.message) && typeof result.message === 'object') {
@@ -344,6 +359,51 @@ export class NgOrderService {
   }
 
   /**
+   * @method loadOrdersByIds$()
+   *
+   * Загружает несколько заказов по массиву orderIds одним запросом и подписывается на их обновления
+   * через одну WebSocket-подписку. При изменении любого из заказов сервер присылает обновлённый объект,
+   * который мерджится в локальный массив по id.
+   *
+   * @param orderIds - массив id загружаемых заказов.
+   */
+  loadOrdersByIds$(orderIds: string[]): Observable<Order[]> {
+    return this._requestService
+      .customQuery$<Order, 'orders', {orderIds: string[]}>(
+        'orders',
+        this._defaultOrderFragments,
+        {orderIds},
+        {fieldsTypeMap: new Map([['orderIds', '[String!]!']])},
+      )
+      .pipe(
+        map(data => (Array.isArray(data.orders) ? data.orders : [data.orders])),
+        switchMap(orders => {
+          const subscribeIds = orders.map(o => o.id).filter(isValue);
+          return this._requestService
+            .customSubscribe$<Order, 'orders', {orderIds: string[]}>(
+              'orders',
+              this._defaultOrderFragments,
+              {orderIds: subscribeIds},
+              {fieldsTypeMap: new Map([['orderIds', '[String!]!']])},
+            )
+            .pipe(
+              startWith(null),
+              scan((store, updated) => {
+                if (!updated) return store;
+                const idx = store.findIndex(o => o.id === updated.id);
+                if (idx >= 0) {
+                  const next = [...store];
+                  next[idx] = {...store[idx], ...updated};
+                  return next;
+                }
+                return store;
+              }, orders),
+            );
+        }),
+      );
+  }
+
+  /**
    * @method loadOrder$()
    *
    * Метод загружает заказ и делает подписку для получения по нему обновлений.
@@ -351,7 +411,7 @@ export class NgOrderService {
    * (например, данные для страницы "Спасибо за заказ").
    *
    * @param id - id загружаемого заказа.
-   *  */
+   */
   loadOrder$(id: string, isShort: boolean = false): Observable<Order> {
     return this._requestService
       .queryAndSubscribe<Order, 'order', 'order', {orderId: string} | {shortId: string}>(
@@ -502,6 +562,50 @@ export class NgOrderService {
       });
     } else {
       console.error(`NG-GQL > updateOrder has no order.id`)
+    }
+  }
+
+  applyPromoCode(options: {
+    orderId: string;
+    promocode: string;
+    loading?: BehaviorSubject<boolean>;
+    successCb?: (response: PromotionCodeResponse) => void;
+    errorCb?: (err: unknown) => void;
+  }): void {
+    if (isValue(options.orderId)) {
+      this._orderBus.emit({
+        event: 'promoCodeApply',
+        data: {
+          orderId: options.orderId,
+          promocode: options.promocode,
+        },
+        isLoading: options.loading,
+        errorCb: options.errorCb,
+        successCb: options.successCb,
+      });
+    } else {
+      console.error(`NG-GQL > applyPromoCode has no orderId`)
+    }
+  }
+
+  resetPromoCode(options: {
+    orderId: string;
+    loading?: BehaviorSubject<boolean>;
+    successCb?: (response: PromotionCodeResponse) => void;
+    errorCb?: (err: unknown) => void;
+  }): void {
+    if (isValue(options.orderId)) {
+      this._orderBus.emit({
+        event: 'promoCodeReset',
+        data: {
+          orderId: options.orderId,
+        },
+        isLoading: options.loading,
+        errorCb: options.errorCb,
+        successCb: options.successCb,
+      });
+    } else {
+      console.error(`NG-GQL > resetPromoCode has no orderId`)
     }
   }
 
@@ -891,6 +995,60 @@ export class NgOrderService {
       .pipe(map(data => data.orderUpdate));
   }
 
+  private _applyPromoCode$(data: PromoCodeApplyInput): Observable<PromotionCodeResponse> {
+    return from(this._getPromoCodeCaptcha(data)).pipe(
+      switchMap(captcha =>
+        this._requestService.customMutation$<
+          PromotionCodeResponse,
+          'orderPromocodeApply',
+          PromoCodeApplyMutationInput
+        >(
+          'orderPromocodeApply',
+          this._promotionCodeResponseFragments(),
+          {...data, captcha},
+          {
+            requiredFields: ['orderId', 'promocode'],
+            fieldsTypeMap: new Map([['captcha', 'Captcha!']]),
+          },
+        ),
+      ),
+      map(data => data.orderPromocodeApply),
+    );
+  }
+
+  private _resetPromoCode$(data: PromoCodeResetInput): Observable<PromotionCodeResponse> {
+    return this._requestService
+      .customMutation$<
+        PromotionCodeResponse,
+        'orderPromocodeReset',
+        PromoCodeResetInput
+      >('orderPromocodeReset', this._promotionCodeResponseFragments(), data, {
+        requiredFields: ['orderId'],
+      })
+      .pipe(map(data => data.orderPromocodeReset));
+  }
+
+  private async _getPromoCodeCaptcha(data: PromoCodeApplyInput): Promise<PromoCodeApplyMutationInput['captcha']> {
+    const captcha = await this._ngGqlUser.captchaGetJob(
+      `orderPromocodeApply:${data.orderId}:${data.promocode}`,
+    );
+    const solution = await this._ngGqlUser.getCaptchaSolution(captcha.task);
+    return {
+      id: captcha.id,
+      solution: String(solution),
+    };
+  }
+
+  private _promotionCodeResponseFragments(): ValuesOrBoolean<PromotionCodeResponse> {
+    return {
+      order: this._defaultOrderFragments,
+      promocodeValid: true,
+      promotionCodeString: true,
+      promotionCodeDescription: true,
+      message: this._defaultMessageFragments,
+    };
+  }
+
   private _sendOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {
     return this._requestService
       .customMutation$<CheckResponse, 'sendOrder', {orderId: string}>(
@@ -918,7 +1076,16 @@ export class NgOrderService {
                 this._storageWrapper.removeOrderId(newOrderId);
               }
             } else {
-              this._storageWrapper.removeOrderId();
+              // Проверяем: если _loadCurrentOrNewOrder уже записал новый id в storage
+              // (через subscription, которая пришла раньше), не стираем его —
+              // иначе _order$ сгенерирует ещё один лишний id.
+              const currentStorageId = this._storageWrapper.currentStorageOrderIdToken
+                ? this._storageWrapper.getOrderId(this._storageWrapper.currentStorageOrderIdToken)
+                : null;
+              const alreadyRotated = isValue(currentStorageId) && currentStorageId !== sendOrderData.orderId;
+              if (!alreadyRotated) {
+                this._storageWrapper.removeOrderId();
+              }
             }
           }
           return data.sendOrder;
@@ -933,7 +1100,7 @@ export class NgOrderService {
         'orderAddDish',
         AddToOrderInput
       >('orderAddDish', this._defaultOrderFragments, data)
-      .pipe(map(data => data.orderAddDish));
+      .pipe(map(res => res.orderAddDish));
   }
 
   private _removeDishFromOrder$(data: RemoveOrSetAmountToDish): Observable<Order> {
@@ -951,8 +1118,11 @@ export class NgOrderService {
       // If rejected order keeps emitting updates, do not restart the new-cart request loop.
       exhaustMap(order => {
         if (order.state === 'ORDER' || order.state === 'DONE' || order.state === 'REJECT') {
-          const newId = this._storageWrapper.getOrderId(token, undefined, true);
-          return this.loadOrder$(newId);
+          // Ротируем id через storageWrapper с диспатчем storage event —
+          // это переключит switchMap в _order$ на новый id и завершит
+          // текущую подписку на старый заказ, предотвращая бесконечную генерацию.
+          this._storageWrapper.rotateOrderId();
+          return EMPTY;
         } else {
           return of(order);
         }
