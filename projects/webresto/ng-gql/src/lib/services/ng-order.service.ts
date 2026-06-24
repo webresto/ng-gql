@@ -11,6 +11,7 @@ import {
   distinctUntilKeyChanged,
   exhaustMap,
   filter,
+  from,
   fromEvent,
   map,
   mergeWith,
@@ -34,6 +35,10 @@ import type {
   OrderModifier,
   PaymentMethod,
   PickupPoint,
+  PromoCodeApplyInput,
+  PromoCodeApplyMutationInput,
+  PromoCodeResetInput,
+  PromotionCodeResponse,
   RemoveOrSetAmountToDish,
   SendOrderInput,
   SetDishCommentInput,
@@ -166,7 +171,7 @@ export class NgOrderService {
    */
   private readonly _orderBus$: Observable<void | (() => void)> = this._orderBus.asObservable().pipe(
     concatMap(busEvent => {
-      const reducer = (busEventData: CartBusEvent): Observable<Order | CheckResponse> => {
+      const reducer = (busEventData: CartBusEvent): Observable<Order | CheckResponse | PromotionCodeResponse> => {
         switch (busEventData.event) {
           case 'add':
             return this._addDishToOrder$(busEventData.data);
@@ -180,19 +185,26 @@ export class NgOrderService {
             return this._cloneOrder$(busEventData.data);
           case 'update':
             return this._updateOrder$(busEventData.data);
+          case 'promoCodeApply':
+            return this._applyPromoCode$(busEventData.data);
+          case 'promoCodeReset':
+            return this._resetPromoCode$(busEventData.data);
           case 'setDishAmount':
             return this._setDishAmount$(busEventData.data);
           case 'setCommentToDish':
             return this._setDishComment$(busEventData.data);
         }
       };
+      if (isValue(busEvent.isLoading)) {
+        busEvent.isLoading.next(true);
+      }
       return reducer(busEvent).pipe(
         map(result => {
           if (isValue(busEvent.isLoading)) {
             busEvent.isLoading.next(false);
           }
           if (isValue(busEvent.successCb)) {
-            busEvent.successCb(<Order & CheckResponse>result);
+            busEvent.successCb(<Order & CheckResponse & PromotionCodeResponse>result);
           }
 
           if (isValue(result.message) && typeof result.message === 'object') {
@@ -544,6 +556,50 @@ export class NgOrderService {
       });
     } else {
       console.error(`NG-GQL > updateOrder has no order.id`)
+    }
+  }
+
+  applyPromoCode(options: {
+    orderId: string;
+    promocode: string;
+    loading?: BehaviorSubject<boolean>;
+    successCb?: (response: PromotionCodeResponse) => void;
+    errorCb?: (err: unknown) => void;
+  }): void {
+    if (isValue(options.orderId)) {
+      this._orderBus.emit({
+        event: 'promoCodeApply',
+        data: {
+          orderId: options.orderId,
+          promocode: options.promocode,
+        },
+        isLoading: options.loading,
+        errorCb: options.errorCb,
+        successCb: options.successCb,
+      });
+    } else {
+      console.error(`NG-GQL > applyPromoCode has no orderId`)
+    }
+  }
+
+  resetPromoCode(options: {
+    orderId: string;
+    loading?: BehaviorSubject<boolean>;
+    successCb?: (response: PromotionCodeResponse) => void;
+    errorCb?: (err: unknown) => void;
+  }): void {
+    if (isValue(options.orderId)) {
+      this._orderBus.emit({
+        event: 'promoCodeReset',
+        data: {
+          orderId: options.orderId,
+        },
+        isLoading: options.loading,
+        errorCb: options.errorCb,
+        successCb: options.successCb,
+      });
+    } else {
+      console.error(`NG-GQL > resetPromoCode has no orderId`)
     }
   }
 
@@ -927,6 +983,60 @@ export class NgOrderService {
         },
       )
       .pipe(map(data => data.orderUpdate));
+  }
+
+  private _applyPromoCode$(data: PromoCodeApplyInput): Observable<PromotionCodeResponse> {
+    return from(this._getPromoCodeCaptcha(data)).pipe(
+      switchMap(captcha =>
+        this._requestService.customMutation$<
+          PromotionCodeResponse,
+          'orderPromocodeApply',
+          PromoCodeApplyMutationInput
+        >(
+          'orderPromocodeApply',
+          this._promotionCodeResponseFragments(),
+          {...data, captcha},
+          {
+            requiredFields: ['orderId', 'promocode'],
+            fieldsTypeMap: new Map([['captcha', 'Captcha!']]),
+          },
+        ),
+      ),
+      map(data => data.orderPromocodeApply),
+    );
+  }
+
+  private _resetPromoCode$(data: PromoCodeResetInput): Observable<PromotionCodeResponse> {
+    return this._requestService
+      .customMutation$<
+        PromotionCodeResponse,
+        'orderPromocodeReset',
+        PromoCodeResetInput
+      >('orderPromocodeReset', this._promotionCodeResponseFragments(), data, {
+        requiredFields: ['orderId'],
+      })
+      .pipe(map(data => data.orderPromocodeReset));
+  }
+
+  private async _getPromoCodeCaptcha(data: PromoCodeApplyInput): Promise<PromoCodeApplyMutationInput['captcha']> {
+    const captcha = await this._ngGqlUser.captchaGetJob(
+      `orderPromocodeApply:${data.orderId}:${data.promocode}`,
+    );
+    const solution = await this._ngGqlUser.getCaptchaSolution(captcha.task);
+    return {
+      id: captcha.id,
+      solution: String(solution),
+    };
+  }
+
+  private _promotionCodeResponseFragments(): ValuesOrBoolean<PromotionCodeResponse> {
+    return {
+      order: this._defaultOrderFragments,
+      promocodeValid: true,
+      promotionCodeString: true,
+      promotionCodeDescription: true,
+      message: this._defaultMessageFragments,
+    };
   }
 
   private _sendOrder$(sendOrderData: SendOrderInput): Observable<CheckResponse> {

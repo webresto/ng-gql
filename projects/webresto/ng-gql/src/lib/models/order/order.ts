@@ -63,6 +63,7 @@ export interface Order<T extends Dish = Dish> extends BaseModelWithCustomData {
   bonusesTotal: number;
   promotionUnorderable: boolean;
   promotionCodeString: string | null;
+  promotionCodeDescription: string | null;
   delivery: OrderDeliveryState | null;
 }
 
@@ -134,6 +135,14 @@ export interface CheckResponse {
   order: Partial<Order>;
   message: Partial<Message> | null;
   action: Partial<Action> | null;
+}
+
+export interface PromotionCodeResponse {
+  order: Order;
+  promocodeValid: boolean | null;
+  promotionCodeString: string | null;
+  promotionCodeDescription: string | null;
+  message: Partial<Message> | null;
 }
 
 export interface OrderAdditionalFields {
