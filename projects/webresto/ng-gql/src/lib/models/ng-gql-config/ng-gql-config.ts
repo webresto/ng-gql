@@ -36,7 +36,7 @@ export interface NgGqlConfig {
   orderIdStorageToken?: string | null;
 
   /**
-   * Платформа, которая будет отправляться в checkOrder.
+   * Идентификатор платформы, который будет отправляться в checkOrder.
    * Например: `web`, `ios`, `android`, `telegram-webapp`.
    */
   platform?: string | null;
@@ -65,9 +65,4 @@ export interface NgGqlConfig {
    */
   debugMode?: boolean;
 
-  /**
-   * Идентификатор платформы (например 'web', 'pwa-ios', 'app-android').
-   * Может быть геттером для динамического определения платформы.
-   */
-  platform?: string | undefined;
 }
