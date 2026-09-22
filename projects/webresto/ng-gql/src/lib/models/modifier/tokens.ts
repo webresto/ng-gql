@@ -25,7 +25,6 @@ export const MODIFIER_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Modifier>>(
           weight: true,
           balance: true,
           tags: true,
-          groupId: true,
           parentGroup: {
             id: true,
             slug: true,

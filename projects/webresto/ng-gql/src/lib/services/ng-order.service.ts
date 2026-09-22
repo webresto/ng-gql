@@ -480,7 +480,7 @@ export class NgOrderService {
           id: dishModifier.dish?.id,
           amount: dishModifier.amount,
           dish: dishModifier.dish,
-          groupId: dishModifier.dish?.parentGroup?.id ?? dishModifier.dish?.groupId,
+          groupId: dishModifier.dish?.parentGroup?.id,
         })),
         amount: options.amount ?? 1,
         comment: options.comment,

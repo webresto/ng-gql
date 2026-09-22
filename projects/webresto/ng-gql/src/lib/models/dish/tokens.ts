@@ -37,7 +37,6 @@ export const DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Dish>>('DISH_FR
       measureUnit: true,
       images: imageFragments,
       modifiers: groupModifierFragments,
-      groupId: true,
       parentGroup: {
         id: true,
         slug: true,
