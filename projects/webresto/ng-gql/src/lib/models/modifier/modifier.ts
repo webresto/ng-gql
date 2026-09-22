@@ -25,7 +25,6 @@ export interface Modifier<T extends Dish = Dish> {
     | 'weight'
     | 'balance'
     | 'tags'
-    | 'groupId'
     | 'parentGroup'
     | 'images'
   >;

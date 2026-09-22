@@ -20,7 +20,6 @@ export interface Dish extends BaseModelWithCustomData {
   tags?: Array<Partial<DishTag>>;
   additionalInfo?: string | number | {[key: string]: string | any} | null;
   images: Array<Partial<Image>>;
-  groupId?: string;
   parentGroup: Partial<Pick<Group, 'id' | 'slug' | 'dishesPlaceholder'>>;
   modifiers?: Array<Partial<GroupModifier<Dish>>> | undefined;
   carbohydrateAmount?: number;
