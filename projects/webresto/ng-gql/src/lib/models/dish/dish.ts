@@ -39,6 +39,8 @@ export interface Dish extends BaseModelWithCustomData {
   seoText: string | null;
   seoTitle: string | null;
   notForSale: boolean
+  /** Shown in the menu. Core does not filter by it, hiding is up to the client */
+  visible?: boolean;
 }
 
 export interface DishTag {

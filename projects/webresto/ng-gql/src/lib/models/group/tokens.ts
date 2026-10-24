@@ -21,6 +21,7 @@ export const GROUP_FRAGMENTS = new InjectionToken<ValuesOrBoolean<Group>>('GROUP
       dishesPlaceholder: imageFragments,
       dishes: {
         id: true,
+        visible: true,
       },
       parentGroup: {
         id: true,
