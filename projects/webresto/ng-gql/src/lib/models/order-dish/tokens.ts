@@ -31,6 +31,7 @@ export const ORDER_DISH_FRAGMENTS = new InjectionToken<ValuesOrBoolean<OrderDish
         comment: true,
         totalWeight: true,
         itemTotal: true,
+        addedBy: true,
       };
     },
   },

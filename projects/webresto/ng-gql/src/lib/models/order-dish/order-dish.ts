@@ -14,5 +14,7 @@ export interface OrderDish<T extends Dish = Dish> {
   comment: string | null;
   totalWeight: number;
   total?: number;
+  /** Кто добавил позицию: 'promotion' — акция (например, подарок), гость её не меняет */
+  addedBy?: 'user' | 'promotion' | 'core' | 'custom';
   modifiers: Array<Partial<OrderModifier<T>>>;
 }
